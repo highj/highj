@@ -50,4 +50,4 @@ Everything else in highJ follows this scheme.
 
 For classes with two type arguments there is a `__` (2 underscores) wrapper class and a `TC2` interface. CL and CR are classes which help to "curry" a `TC2` into a `TC`, so you can write e.g. a functor for Pairs, which works only on the first (or second) argument. 
 
-I know the short names are confusing at first, but the type signatures are already rather long and I didn't wanted to make them even longer.
+I know the short names are confusing at first, but the type signatures are already rather long and I didn't want to make them even longer.
