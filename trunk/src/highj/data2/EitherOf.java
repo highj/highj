@@ -62,8 +62,9 @@ public class EitherOf implements TC2<EitherOf> {
 
     @Override
     public void setAccessor(Accessor2<EitherOf> accessor) {
-        assert this.accessor == null;
-        this.accessor = accessor;
+        if(this.accessor == null) {
+           this.accessor = accessor;
+        }
     }
 
 }

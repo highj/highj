@@ -39,8 +39,9 @@ public class PairOf implements TC2<PairOf> {
 
     @Override
     public void setAccessor(Accessor2<PairOf> accessor) {
-       assert this.accessor == null;
-       this.accessor = accessor;
+        if(this.accessor == null) {
+           this.accessor = accessor;
+        }
     }
     
     private static final PairOf INSTANCE = new PairOf();

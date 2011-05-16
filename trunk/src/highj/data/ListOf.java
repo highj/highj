@@ -24,8 +24,9 @@ public final class ListOf implements TC<ListOf>  {
     
     @Override
     public void setAccessor(Accessor<ListOf> accessor) {
-        assert this.accessor == null;
-        this.accessor = accessor;
+        if(this.accessor == null) {
+           this.accessor = accessor;
+        }
     }
     
     public <T> _<ListOf, T> wrap(List<T> list) {

@@ -65,7 +65,8 @@ public final class OptionOf implements TC<OptionOf> {
 
     @Override
     public void setAccessor(Accessor<OptionOf> accessor) {
-        assert this.accessor == null;
-        this.accessor = accessor;
+        if(this.accessor == null) {
+           this.accessor = accessor;
+        }
     }
 }
