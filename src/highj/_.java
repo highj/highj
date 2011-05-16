@@ -30,7 +30,7 @@ public final class _<Ctor extends TC<Ctor>, T> {
         }
         
         public <T> Object read(_<Ctor, T> a) {
-            if (a.clazz  != clazz) {
+            if (a == null || a.clazz  != clazz) {
                 throw new IllegalArgumentException();
             }
             return a.data;
