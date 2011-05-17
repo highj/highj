@@ -80,7 +80,7 @@ public class Main {
         System.out.println("\n---Monad.sequence---");
         Monad<OptionOf> monad = OptionMonadPlus.getInstance();
         OptionOf optionOf = OptionOf.getInstance();
-        ListOf listOf = ListOf.getInstance();
+        final ListOf listOf = ListOf.getInstance();
         _<OptionOf, Integer> one = optionOf.some(1);
         _<OptionOf, Integer> two = optionOf.some(2);
         _<OptionOf, Integer> three = optionOf.some(3);
@@ -94,6 +94,18 @@ public class Main {
                 listOf.wrap(List.list(one, none, three));
         _<OptionOf,_<ListOf, Integer>> optionOfListWithNone = monad.sequence(listOfOptionsWithNone);
         System.out.println("sequence [Some(1), None, Some(3)] =  " + optionOfListWithNone);
+        
+        _<ListOf,Integer> list12 = listOf.wrap(List.list(1,2));
+        _<ListOf,Integer> list3 = listOf.wrap(List.list(3));
+        _<ListOf,Integer> list456 = listOf.wrap(List.list(4,5,6));
+        _<ListOf,_<ListOf, Integer>> list = listOf.wrap(List.list(list12,list3,list456));
+        _<ListOf,_<ListOf, Integer>> sequencedList = ListMonadPlus.getInstance().sequence(list);
+        System.out.println("sequence [[1,2],[3],[4,5,6]] = " + listOf.unwrap(sequencedList).map(new F<_<ListOf, Integer>,String>(){
+            @Override
+            public String f(_<ListOf, Integer> a) {
+                return listOf.toString(a);
+            }
+        }).toCollection());
     }
     
     private static void testEither() {
