@@ -5,6 +5,7 @@
 package highj.typeclasses.category;
 
 import fj.F;
+import fj.Unit;
 import fj.data.List;
 import highj.TC;
 import highj._;
@@ -29,6 +30,10 @@ public interface Monad<Ctor extends TC<Ctor>> extends Applicative<Ctor> {
     public <A> _<Ctor, _<ListOf, A>> sequence(_<ListOf, _<Ctor, A>> list);
     // "flat" version of sequence
     public <A> _<Ctor, List<A>> sequenceFlat(List<_<Ctor, A>> list);
+    // sequence_ (Control.Monad)
+    public <A> _<Ctor, Unit> sequence_(_<ListOf, _<Ctor, A>> list);
+    // "flat" version of sequence_ 
+    public <A> _<Ctor, Unit> sequence_Flat(List<_<Ctor, A>> list); 
     // mapM (Control.Monad)
     public <A, B> _<Ctor, _<ListOf, B>> mapM(F<A, _<Ctor, B>> fn, _<ListOf, A> list);
     // "flat" version of mapM

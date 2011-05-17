@@ -5,7 +5,9 @@
 package highj.typeclasses.category;
 
 import fj.F;
+import fj.F2;
 import fj.Function;
+import fj.Unit;
 import fj.data.List;
 import highj.TC;
 import highj._;
@@ -63,24 +65,51 @@ public abstract class MonadAbstract<Ctor extends TC<Ctor>> extends ApplicativeAb
     // sequence (Control.Monad)
     public <A> _<Ctor, _<ListOf, A>> sequence(_<ListOf, _<Ctor, A>> ms) {
        final ListOf listOf = ListOf.getInstance(); 
-       final List<_<Ctor, A>> list = listOf.unwrap(ms); 
+       return fmap(new F<List<A>,_<ListOf, A>>(){
+            @Override
+            public _<ListOf, A> f(List<A> a) {
+                return listOf.wrap(a);
+            }
+         },sequenceFlat(listOf.unwrap(ms)));
+    }
+    
+    @Override
+    // "flat" version of sequence
+    public <A> _<Ctor, List<A>> sequenceFlat(List<_<Ctor, A>> list) {
        if (list.isEmpty()) {
-           return returnM(listOf.wrap(List.<A>nil()));
+           return returnM(List.<A>nil());
        } else {
            final _<Ctor, A> ctorHead = list.head();
-           final _<Ctor, _<ListOf, A>> ctorTail = sequence(listOf.wrap(list.tail()));
-           return bind(ctorTail, new F<_<ListOf, A>,_<Ctor, _<ListOf, A>>>(){
+           final _<Ctor, List<A>> ctorTail = sequenceFlat(list.tail());
+           return bind(ctorTail, new F<List<A>,_<Ctor, List<A>>>(){
                 @Override
-                public _<Ctor, _<ListOf, A>> f(final _<ListOf, A> tail) {
-                    return MonadAbstract.this.bind(ctorHead, new F<A, _<Ctor, _<ListOf, A>>>(){
+                public _<Ctor, List<A>> f(final List<A> tail) {
+                    return MonadAbstract.this.bind(ctorHead, new F<A, _<Ctor, List<A>>>(){
                         @Override
-                        public _<Ctor, _<ListOf, A>> f(A head) {
-                            return returnM(listOf.wrap(List.cons(head, listOf.unwrap(tail))));
+                        public _<Ctor, List<A>> f(A head) {
+                            return returnM(List.cons(head, tail));
                         }
                     });
                 }
            });
        }
+    }
+    
+    // sequence_ (Control.Monad)
+    @Override
+    public <A> _<Ctor, Unit> sequence_(_<ListOf, _<Ctor, A>> list){
+        return sequence_Flat(ListOf.getInstance().unwrap(list));
+    }
+    
+    // "flat" version of sequence_ 
+    @Override
+    public <A> _<Ctor, Unit> sequence_Flat(List<_<Ctor, A>> list) {
+        return list.foldRight(new F2<_<Ctor, A>, _<Ctor, Unit>, _<Ctor, Unit>>(){
+            @Override
+            public _<Ctor, Unit> f(_<Ctor, A> a, _<Ctor, Unit> b) {
+                return semicolon(a,b);
+            }
+        }, returnM(Unit.unit()));
     }
 
     @Override
@@ -104,28 +133,6 @@ public abstract class MonadAbstract<Ctor extends TC<Ctor>> extends ApplicativeAb
                 return MonadAbstract.this.bind(f.f(a), g);
             }
         };
-    }
-
-    @Override
-    // "flat" version of sequence
-    public <A> _<Ctor, List<A>> sequenceFlat(List<_<Ctor, A>> list) {
-       if (list.isEmpty()) {
-           return returnM(List.<A>nil());
-       } else {
-           final _<Ctor, A> ctorHead = list.head();
-           final _<Ctor, List<A>> ctorTail = sequenceFlat(list.tail());
-           return bind(ctorTail, new F<List<A>,_<Ctor, List<A>>>(){
-                @Override
-                public _<Ctor, List<A>> f(final List<A> tail) {
-                    return MonadAbstract.this.bind(ctorHead, new F<A, _<Ctor, List<A>>>(){
-                        @Override
-                        public _<Ctor, List<A>> f(A head) {
-                            return returnM(List.cons(head, tail));
-                        }
-                    });
-                }
-           });
-       }
     }
 
     @Override
