@@ -26,6 +26,9 @@ public final class OptionOf implements TC<OptionOf> {
     }
     
     public <T> _<OptionOf, T> some(T t) {
+        if (t == null) {
+            throw new IllegalArgumentException("Null value not allowed");
+        }
         return wrap(Option.some(t));
     }
 
@@ -50,11 +53,18 @@ public final class OptionOf implements TC<OptionOf> {
     }
 
     public <T> T orSome(_<OptionOf, T> ow, T t) {
+        if (t == null) {
+            throw new IllegalArgumentException("Null value not allowed");
+        }
         return unwrap(ow).orSome(t);
     }
 
     public <T> T get(_<OptionOf, T> ow) {
-        return unwrap(ow).valueE("No such element");
+        try {
+          return unwrap(ow).valueE("No such element");
+        } catch (Error e) {
+           throw new IllegalArgumentException(e.getMessage()); 
+        }
     }
     
     private static final OptionOf INSTANCE = new OptionOf();
