@@ -24,9 +24,6 @@ public class ListFoldableTest {
     private ListOf listOf;
     private Foldable<ListOf> foldable;
     
-    public ListFoldableTest() {
-    }
-
     @Before
     public void setUp() {
         listOf = ListOf.getInstance();
