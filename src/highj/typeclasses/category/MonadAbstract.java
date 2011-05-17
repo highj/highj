@@ -11,7 +11,6 @@ import highj.TC;
 import highj._;
 import highj.data.ListMonadPlus;
 import highj.data.ListOf;
-import highj.typeclasses.category.Monad;
 
 /**
  *

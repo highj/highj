@@ -8,13 +8,14 @@ import fj.F;
 import fj.Function;
 import highj.__;
 import highj.typeclasses.category2.Category;
+import highj.typeclasses.category2.CategoryAbstract;
 
 
 /**
  *
  * @author DGronau
  */
-public class FunctionCategory implements Category<FunctionOf> {
+public class FunctionCategory extends CategoryAbstract<FunctionOf> {
 
     @Override
     public <A> __<FunctionOf, A, A> id() {
