@@ -21,9 +21,8 @@ public class PairBifunctor extends BifunctorAbstract<PairOf> {
     @Override
     // bimap (Data.Bifunctor)
     public <A, B, C, D> __<PairOf, B, D> bimap(F<A, B> fn1, F<C, D> fn2, __<PairOf, A, C> nestedAC) {
-        PairOf pairOf = PairOf.getInstance();
-        P2<A, C> pair = pairOf.unwrap(nestedAC);
-        return pairOf.wrap(P.p(fn1.f(pair._1()), fn2.f(pair._2())));
+        P2<A, C> pair = PairOf.unwrap(nestedAC);
+        return PairOf.wrap(P.p(fn1.f(pair._1()), fn2.f(pair._2())));
     }
 
     public static PairBifunctor getInstance() {

@@ -22,7 +22,6 @@ import static org.junit.Assert.*;
 public class MonadAbstractTest {
     
     private ListMonadPlus monad;
-    private ListOf listOf;
     
     public MonadAbstractTest() {
     }
@@ -30,20 +29,18 @@ public class MonadAbstractTest {
     @Before
     public void setUp() {
         monad = ListMonadPlus.getInstance();
-        listOf = ListOf.getInstance();
     }
     
     @After
     public void tearDown() {
         monad = null;
-        listOf = null;
     }
 
     @Test
     public void testSemicolon() {
-        _<ListOf,Integer> intList = listOf.wrap(List.list(1,2,3));
-        _<ListOf,String> stringList = listOf.wrap(List.list("a","b"));
-        List<String> resultList = listOf.unwrap(monad.semicolon(intList,stringList));
+        _<ListOf,Integer> intList = ListOf.wrap(List.list(1,2,3));
+        _<ListOf,String> stringList = ListOf.wrap(List.list("a","b"));
+        List<String> resultList = ListOf.unwrap(monad.semicolon(intList,stringList));
         List<String> expectedList = List.list("a","b","a","b","a","b");
         Show<List<String>> show = Show.listShow(Show.stringShow);
         assertEquals(show.showS(expectedList), show.showS(resultList));
@@ -51,13 +48,13 @@ public class MonadAbstractTest {
 
     @Test
     public void testJoin() {
-        _<ListOf,_<ListOf, Integer>> nestedIntList = listOf.wrap(List.list(
-           listOf.wrap(List.list(1,2,3)),
-           listOf.wrap(List.<Integer>list()),
-           listOf.wrap(List.list(4,5)),
-           listOf.wrap(List.list(6))
+        _<ListOf,_<ListOf, Integer>> nestedIntList = ListOf.wrap(List.list(
+           ListOf.wrap(List.list(1,2,3)),
+           ListOf.wrap(List.<Integer>list()),
+           ListOf.wrap(List.list(4,5)),
+           ListOf.wrap(List.list(6))
         ));
-        List<Integer> resultList = listOf.unwrap(monad.join(nestedIntList));
+        List<Integer> resultList = ListOf.unwrap(monad.join(nestedIntList));
         List<Integer> expectedList = List.list(1,2,3,4,5,6);
         
         Show<List<Integer>> show = Show.listShow(Show.intShow);
@@ -83,17 +80,17 @@ public class MonadAbstractTest {
 
     @Test
     public void testSequence() {
-        _<ListOf,_<ListOf, Integer>> list = listOf.wrap(List.list(
-                listOf.wrap(List.list(1,2)),
-                listOf.wrap(List.list(3)),
-                listOf.wrap(List.list(4,5,6))
+        _<ListOf,_<ListOf, Integer>> list = ListOf.wrap(List.list(
+                ListOf.wrap(List.list(1,2)),
+                ListOf.wrap(List.list(3)),
+                ListOf.wrap(List.list(4,5,6))
          ));
         _<ListOf,_<ListOf, Integer>> sequencedListWrapped = monad.sequence(list);
-        List<List<Integer>> sequencedList = listOf.unwrap(sequencedListWrapped).map(
+        List<List<Integer>> sequencedList = ListOf.unwrap(sequencedListWrapped).map(
                  new F<_<ListOf, Integer>,List<Integer>>(){
             @Override
             public List<Integer> f(_<ListOf, Integer> a) {
-                return listOf.unwrap(a);
+                return ListOf.unwrap(a);
             }
         });
         //Haskell gives [[1,3,4],[1,3,5],[1,3,6],[2,3,4],[2,3,5],[2,3,6]]

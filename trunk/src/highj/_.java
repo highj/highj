@@ -8,42 +8,28 @@ package highj;
  *
  * @author DGronau
  */
-public final class _<Ctor extends TC<Ctor>, T> {
+public final class _<Ctor, T> {
     
-    private final Class<Ctor> clazz;
     private final Object data;
     
-    private _(Object data, Class<Ctor> clazz){
+     public _(Ctor ctor, Object data) {
+        if (ctor == null) {
+            throw new IllegalArgumentException();
+        }
         this.data = data;
-        this.clazz = clazz;
     }
-
-    public static class Accessor<Ctor extends TC<Ctor>> {
-        private final Class<Ctor> clazz;
-        
-        private Accessor(Class<Ctor> clazz){
-            this.clazz = clazz;
+    
+    public Object read(Ctor ctor) {
+        if (ctor == null) {
+            throw new IllegalArgumentException();
         }
-        
-        public <T> _<Ctor, T> make(Object data) {
-            return new _<Ctor, T>(data, clazz);
-        }
-        
-        public <T> Object read(_<Ctor, T> a) {
-            if (a == null || a.clazz  != clazz) {
-                throw new IllegalArgumentException();
-            }
-            return a.data;
-        }
-    }
+        return data;
+    }     
 
     @Override
     public String toString() {
-        return clazz.getSimpleName() + "(" + data + ")";
+        return data.toString();
     }
     
-    public static <Ctor extends TC<Ctor>> void register(Ctor ctor) {
-        ctor.setAccessor(new Accessor<Ctor>((Class<Ctor>) ctor.getClass()));
-    }
     
 }

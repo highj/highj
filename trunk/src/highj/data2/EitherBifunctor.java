@@ -20,12 +20,11 @@ public class EitherBifunctor extends BifunctorAbstract<EitherOf> {
     @Override
     // bimap (Data.Bifunctor)
     public <A, B, C, D> __<EitherOf, B, D> bimap(F<A, B> fn1, F<C, D> fn2, __<EitherOf, A, C> nestedAC) {
-        EitherOf eitherOf = EitherOf.getInstance();
-        Either<A, C> either = eitherOf.unwrap(nestedAC);
+        Either<A, C> either = EitherOf.unwrap(nestedAC);
         if(either.isLeft()) {
-            return eitherOf.<B,D>wrap(Either.<B,D>left(fn1.f(either.left().value())));
+            return EitherOf.<B,D>wrap(Either.<B,D>left(fn1.f(either.left().value())));
         } else {
-            return eitherOf.<B,D>wrap(Either.<B,D>right(fn2.f(either.right().value())));
+            return EitherOf.<B,D>wrap(Either.<B,D>right(fn2.f(either.right().value())));
         }
     }
 

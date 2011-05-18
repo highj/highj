@@ -4,12 +4,10 @@
  */
 package highj.typeclasses.category2;
 
-import highj.TC2;
-
 /**
  *
  * @author dgronau
  */
-public abstract class CategoryAbstract<Ctor extends TC2<Ctor>> implements Category<Ctor> {
+public abstract class CategoryAbstract<Ctor> implements Category<Ctor> {
     
 }

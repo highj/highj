@@ -16,11 +16,10 @@ public class FunctionFunctor<X> extends CLFunctor<FunctionOf, X> {
 
     @Override
     public <A, B> __<FunctionOf, X, B> fmap(final F<A, B> fn, final __<FunctionOf, X, A> nestedA) {
-        final FunctionOf functionOf = FunctionOf.getInstance();
-        return functionOf.wrap(new F<X,B>(){
+        return FunctionOf.wrap(new F<X,B>(){
             @Override
             public B f(X x) {
-                return fn.f(functionOf.apply(nestedA, x));
+                return fn.f(FunctionOf.apply(nestedA, x));
             }
         });
     }

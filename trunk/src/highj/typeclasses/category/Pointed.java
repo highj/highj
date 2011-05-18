@@ -4,13 +4,12 @@
  */
 package highj.typeclasses.category;
 
-import highj.TC;
 import highj._;
 /**
  *
  * @author DGronau
  */
-public interface Pointed<Ctor extends TC<Ctor>> extends Functor<Ctor> {
+public interface Pointed<Ctor> extends Functor<Ctor> {
     // pure (Data.Pointed)
     public <A> _<Ctor, A> pure(A a); 
 }

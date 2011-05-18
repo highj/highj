@@ -5,49 +5,33 @@
 package highj.data2;
 
 import fj.P2;
-import highj.TC2;
 import highj.__;
-import highj.__.Accessor2;
 
 /**
  *
  * @author DGronau
  */
-public class PairOf implements TC2<PairOf> {
+public final class PairOf {
 
-    private Accessor2<PairOf> accessor;
+    private final static PairOf hidden = new PairOf();
 
-    public PairOf() {
-        __.register(this);
+    private PairOf() {
     }
     
-    public <A, B> __<PairOf, A, B> wrap(P2<A, B> either) {
-        return accessor.make(either);
+    public static <A, B> __<PairOf, A, B> wrap(P2<A, B> pair) {
+        return new __<PairOf, A, B>(hidden, pair);
     }
 
-    public <A, B> P2<A, B> unwrap(__<PairOf, A, B> wrapped) {
-        return (P2<A, B>) accessor.read(wrapped);
+    public  static<A, B> P2<A, B> unwrap(__<PairOf, A, B> wrapped) {
+        return (P2<A, B>) wrapped.read(hidden);
     }
     
-    public <A, B> A fst(__<PairOf, A, B> wrapped) {
+    public static <A, B> A fst(__<PairOf, A, B> wrapped) {
         return unwrap(wrapped)._1();
     }
 
-    public <A, B> B snd(__<PairOf, A, B> wrapped) {
+    public static <A, B> B snd(__<PairOf, A, B> wrapped) {
         return unwrap(wrapped)._2();
-    }
-
-    @Override
-    public void setAccessor(Accessor2<PairOf> accessor) {
-        if(this.accessor == null) {
-           this.accessor = accessor;
-        }
-    }
-    
-    private static final PairOf INSTANCE = new PairOf();
-
-    public static PairOf getInstance() {
-        return INSTANCE;
     }
 
 }

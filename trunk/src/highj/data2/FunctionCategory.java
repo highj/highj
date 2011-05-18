@@ -15,21 +15,20 @@ import highj.typeclasses.category2.CategoryAbstract;
  *
  * @author DGronau
  */
-public class FunctionCategory extends CategoryAbstract<FunctionOf> {
+public class FunctionCategory extends CategoryAbstract<FunctionOf> implements Category<FunctionOf> {
 
     @Override
     public <A> __<FunctionOf, A, A> id() {
-        return FunctionOf.getInstance().wrap(Function.<A>identity());
+        return FunctionOf.wrap(Function.<A>identity());
     }
 
     @Override
     public <A, B, C> __<FunctionOf, A, C> dot(final __<FunctionOf, B, C> bc, 
                                               final __<FunctionOf, A, B> ab) {
-        final FunctionOf functionOf = FunctionOf.getInstance();
-        return functionOf.wrap(new F<A,C>() {
+        return FunctionOf.wrap(new F<A,C>() {
             @Override
             public C f(A a) {
-                return functionOf.apply(bc, functionOf.apply(ab, a));
+                return FunctionOf.apply(bc, FunctionOf.apply(ab, a));
             }
         });
     }

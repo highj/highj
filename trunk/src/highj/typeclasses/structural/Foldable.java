@@ -7,14 +7,13 @@ package highj.typeclasses.structural;
 import fj.F;
 import fj.F2;
 import fj.Monoid;
-import highj.TC;
 import highj._;
 
 /**
  *
  * @author DGronau
  */
-public interface Foldable<Ctor extends TC<Ctor>> {
+public interface Foldable<Ctor> {
     
    public <A> A fold(Monoid<A> ma, _<Ctor, A> nestedA);
 

@@ -5,78 +5,62 @@
 package highj.data;
 
 import fj.data.Option;
-import highj.TC;
 import highj._;
-import highj._.Accessor;
 
 /**
  *
  * @author DGronau
  */
-public final class OptionOf implements TC<OptionOf> {
-    
-   private Accessor<OptionOf> accessor;
-    
-   public OptionOf() {
-       _.register(this);
-   }
-    
-    public <T> _<OptionOf, T> option(T t) {
-        return t == null ? this.<T>none() : some(t);
+public final class OptionOf {
+
+    private static final OptionOf hidden = new OptionOf();
+
+    private OptionOf() {
     }
-    
-    public <T> _<OptionOf, T> some(T t) {
+
+    public static <T> _<OptionOf, T> option(T t) {
+        return t == null ? OptionOf.<T>none() : some(t);
+    }
+
+    public static <T> _<OptionOf, T> some(T t) {
         if (t == null) {
             throw new IllegalArgumentException("Null value not allowed");
         }
         return wrap(Option.some(t));
     }
 
-    public <T> _<OptionOf, T> none() {
+    public static <T> _<OptionOf, T> none() {
         return wrap(Option.<T>none());
     }
-    
-    public <T> _<OptionOf, T> wrap(Option<T> ot) {
-        return accessor.make(ot);
+
+    public static <T> _<OptionOf, T> wrap(Option<T> ot) {
+        return new _<OptionOf, T>(hidden, ot);
     }
 
-    public <T> Option<T> unwrap(_<OptionOf, T> ow) {
-        return (Option<T>) accessor.read(ow);
+    public static <T> Option<T> unwrap(_<OptionOf, T> ow) {
+        return (Option<T>) ow.read(hidden);
     }
 
-    public boolean isSome(_<OptionOf, ?> ow) {
+    public static boolean isSome(_<OptionOf, ?> ow) {
         return unwrap(ow).isSome();
     }
 
-    public boolean isNone(_<OptionOf, ?> ow) {
+    public static boolean isNone(_<OptionOf, ?> ow) {
         return unwrap(ow).isNone();
     }
 
-    public <T> T orSome(_<OptionOf, T> ow, T t) {
+    public static <T> T orSome(_<OptionOf, T> ow, T t) {
         if (t == null) {
             throw new IllegalArgumentException("Null value not allowed");
         }
         return unwrap(ow).orSome(t);
     }
 
-    public <T> T get(_<OptionOf, T> ow) {
+    public static <T> T get(_<OptionOf, T> ow) {
         try {
-          return unwrap(ow).valueE("No such element");
+            return unwrap(ow).valueE("No such element");
         } catch (Error e) {
-           throw new IllegalArgumentException(e.getMessage()); 
-        }
-    }
-    
-    private static final OptionOf INSTANCE = new OptionOf();
-
-    public static OptionOf getInstance() {
-        return INSTANCE;
-    }
-
-    @Override
-    public void setAccessor(Accessor<OptionOf> accessor) {
-        if(this.accessor == null) {
-           this.accessor = accessor;
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 }

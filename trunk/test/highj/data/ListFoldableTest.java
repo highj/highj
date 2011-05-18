@@ -21,18 +21,15 @@ import static org.junit.Assert.*;
  */
 public class ListFoldableTest {
     
-    private ListOf listOf;
     private Foldable<ListOf> foldable;
     
     @Before
     public void setUp() {
-        listOf = ListOf.getInstance();
         foldable = ListFoldable.getInstance();
     }
     
     @After
     public void tearDown() {
-        listOf = null;
         foldable = null;
     }
 
@@ -48,7 +45,7 @@ public class ListFoldableTest {
             }
             
         };
-        _<ListOf,String> list = listOf.wrap(List.list("one","two","three","four"));
+        _<ListOf,String> list = ListOf.wrap(List.list("one","two","three","four"));
         
         //then length of the individual strings "backwards"
         int lengths = foldable.foldr(fn, 0, list); 
@@ -70,7 +67,7 @@ public class ListFoldableTest {
             }
             
         };
-        _<ListOf,String> list = listOf.wrap(List.list("one","two","three","four"));
+        _<ListOf,String> list = ListOf.wrap(List.list("one","two","three","four"));
         
         //then length of the individual strings "forward"
         int lengths = foldable.foldl(fn, 0, list); 
@@ -82,14 +79,14 @@ public class ListFoldableTest {
     
     @Test
     public void testFold() {
-        _<ListOf,String> list = listOf.wrap(List.list("one","two","three","four"));
+        _<ListOf,String> list = ListOf.wrap(List.list("one","two","three","four"));
         String foldedString = foldable.fold(Monoid.stringMonoid, list);
         assertEquals("onetwothreefour", foldedString);
     }
     
     @Test
     public void testFoldMap() {
-        _<ListOf,String> list = listOf.wrap(List.list("one","two","three","four"));
+        _<ListOf,String> list = ListOf.wrap(List.list("one","two","three","four"));
         F<String,Integer> fn = new F<String,Integer>() {
             @Override
             public Integer f(String a) {
@@ -102,7 +99,7 @@ public class ListFoldableTest {
     }
     
     @Test public void testFoldr1() {
-        _<ListOf,Integer> list = listOf.wrap(List.list(1, 10, 100, 1000));
+        _<ListOf,Integer> list = ListOf.wrap(List.list(1, 10, 100, 1000));
         F2<Integer, Integer, Integer> fn = new F2<Integer, Integer, Integer>() {
             @Override
             public Integer f(Integer a, Integer b) {
@@ -117,7 +114,7 @@ public class ListFoldableTest {
     }
 
     @Test public void testFoldl1() {
-        _<ListOf,Integer> list = listOf.wrap(List.list(1000, 100, 10, 1));
+        _<ListOf,Integer> list = ListOf.wrap(List.list(1000, 100, 10, 1));
         F2<Integer, Integer, Integer> fn = new F2<Integer, Integer, Integer>() {
             @Override
             public Integer f(Integer a, Integer b) {

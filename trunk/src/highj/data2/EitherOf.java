@@ -5,47 +5,44 @@
 package highj.data2;
 
 import fj.data.Either;
-import highj.TC2;
 import highj.__;
-import highj.__.Accessor2;
 
 /**
  *
  * @author DGronau
  */
-public class EitherOf implements TC2<EitherOf> {
-       private Accessor2<EitherOf> accessor;
+public class EitherOf {
+   private static final EitherOf hidden = new EitherOf();
     
-   public EitherOf() {
-       __.register(this);
+   private EitherOf() {
    }
     
-    public <A, B> __<EitherOf, A, B> left(A a) {
+    public static <A, B> __<EitherOf, A, B> left(A a) {
         return wrap(Either.<A,B>left(a));
     }
 
-    public <A, B> __<EitherOf, A, B> right(B b) {
+    public static <A, B> __<EitherOf, A, B> right(B b) {
         return wrap(Either.<A,B>right(b));
     }
 
     
-    public <A, B> __<EitherOf, A, B> wrap(Either<A, B> either) {
-        return accessor.make(either);
+    public static <A, B> __<EitherOf, A, B> wrap(Either<A, B> either) {
+        return new __<EitherOf, A, B>(hidden, either);
     }
 
-    public <A, B> Either<A, B> unwrap(__<EitherOf, A, B> wrapped) {
-        return (Either<A, B>) accessor.read(wrapped);
+    public static <A, B> Either<A, B> unwrap(__<EitherOf, A, B> wrapped) {
+        return (Either<A, B>) wrapped.read(hidden);
     }
 
-    public boolean isLeft(__<EitherOf, ?, ?> wrapped) {
+    public static boolean isLeft(__<EitherOf, ?, ?> wrapped) {
         return unwrap(wrapped).isLeft();
     }
 
-    public boolean isRight(__<EitherOf, ?, ?> wrapped) {
+    public static boolean isRight(__<EitherOf, ?, ?> wrapped) {
         return unwrap(wrapped).isLeft();
     }
 
-    public String toString(__<EitherOf, ?, ?> wrapped) {
+    public static String toString(__<EitherOf, ?, ?> wrapped) {
         Either<?, ?> either = unwrap(wrapped);
         if (either.isLeft()) {
             return "Left(" + either.left().value() + ")";
@@ -54,17 +51,4 @@ public class EitherOf implements TC2<EitherOf> {
         }
     }
     
-    private static final EitherOf INSTANCE = new EitherOf();
-
-    public static EitherOf getInstance() {
-        return INSTANCE;
-    }
-
-    @Override
-    public void setAccessor(Accessor2<EitherOf> accessor) {
-        if(this.accessor == null) {
-           this.accessor = accessor;
-        }
-    }
-
 }
