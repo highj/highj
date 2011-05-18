@@ -17,39 +17,36 @@ public class OptionMonadPlus extends MonadPlusAbstract<OptionOf> implements Mona
 
     @Override
     public <A, B> _<OptionOf, B> bind(_<OptionOf, A> ta, F<A, _<OptionOf, B>> f) {
-        OptionOf optionOf = OptionOf.getInstance();
-        return optionOf.isSome(ta) ? f.f(optionOf.get(ta)) : optionOf.<B>none();
+        return OptionOf.isSome(ta) ? f.f(OptionOf.get(ta)) : OptionOf.<B>none();
     }
 
     @Override
     public <A, B> _<OptionOf, B> fmap(F<A, B> f, _<OptionOf, A> ta) {
-        OptionOf optionOf = OptionOf.getInstance();
-        return optionOf.isSome(ta)
-                ? optionOf.some(f.f(optionOf.get(ta)))
-                : optionOf.<B>none();
+        return OptionOf.isSome(ta)
+                ? OptionOf.some(f.f(OptionOf.get(ta)))
+                : OptionOf.<B>none();
     }
 
     @Override
     public <T> _<OptionOf, T> pure(T t) {
-        return OptionOf.getInstance().some(t);
+        return OptionOf.some(t);
     }
 
     @Override
     public <A, B> _<OptionOf, B> star(_<OptionOf, F<A, B>> fun, _<OptionOf, A> ta) {
-        OptionOf optionOf = OptionOf.getInstance();
-        return optionOf.isSome(fun) && optionOf.isSome(ta)
-                ? optionOf.some(optionOf.get(fun).f(optionOf.get(ta)))
-                : optionOf.<B>none();
+        return OptionOf.isSome(fun) && OptionOf.isSome(ta)
+                ? OptionOf.some(OptionOf.get(fun).f(OptionOf.get(ta)))
+                : OptionOf.<B>none();
     }
 
     @Override
     public <A> _<OptionOf, A> empty() {
-        return OptionOf.getInstance().<A>none();
+        return OptionOf.<A>none();
     }
 
     @Override
     public <A> _<OptionOf, A> or(_<OptionOf, A> first, _<OptionOf, A> second) {
-        return OptionOf.getInstance().isSome(first) ? first : second;
+        return OptionOf.isSome(first) ? first : second;
     }
 
     private static OptionMonadPlus INSTANCE = new OptionMonadPlus();

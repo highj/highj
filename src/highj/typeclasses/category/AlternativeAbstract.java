@@ -8,14 +8,13 @@ import fj.F;
 import fj.F2;
 import fj.Monoid;
 import fj.data.Option;
-import highj.TC;
 import highj._;
 import highj.data.OptionOf;
 /**
  *
  * @author DGronau
  */
-public abstract class AlternativeAbstract<Ctor extends TC<Ctor>> extends ApplicativeAbstract<Ctor> implements Alternative<Ctor> {
+public abstract class AlternativeAbstract<Ctor> extends ApplicativeAbstract<Ctor> implements Alternative<Ctor> {
 
     
     @Override
@@ -36,13 +35,12 @@ public abstract class AlternativeAbstract<Ctor extends TC<Ctor>> extends Applica
 
     @Override
     public <A> _<Ctor, _<OptionOf, A>> optional(_<Ctor, A> nestedA) {
-        final OptionOf optionOf = OptionOf.getInstance();
         return or(fmap(new F<A,_<OptionOf,A>>(){
             @Override
             public _<OptionOf, A> f(A a) {
-                return optionOf.some(a);
+                return OptionOf.some(a);
             }
-        }, nestedA), pure(optionOf.<A>none()));
+        }, nestedA), pure(OptionOf.<A>none()));
     }
 
     @Override
@@ -61,11 +59,11 @@ public abstract class AlternativeAbstract<Ctor extends TC<Ctor>> extends Applica
         return asMonoid(this);
     }
     
-    public static <C extends TC<C>,T>  Monoid<_<C, T>> asMonoid(final Alternative<C> alt) {
-        return Monoid.<_<C, T>>monoid(new F2<_<C, T>, _<C, T>, _<C, T>>(){
+    public static <Ctor,T>  Monoid<_<Ctor, T>> asMonoid(final Alternative<Ctor> alt) {
+        return Monoid.<_<Ctor, T>>monoid(new F2<_<Ctor, T>, _<Ctor, T>, _<Ctor, T>>(){
 
             @Override
-            public _<C, T> f(_<C, T> a, _<C, T> b) {
+            public _<Ctor, T> f(_<Ctor, T> a, _<Ctor, T> b) {
                 return alt.or(a, b);
             }
         }, alt.<T>empty());

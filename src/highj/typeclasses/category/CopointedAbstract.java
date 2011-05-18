@@ -4,12 +4,10 @@
  */
 package highj.typeclasses.category;
 
-import highj.TC;
-
 /**
  *
  * @author dgronau
  */
-public abstract class CopointedAbstract<Ctor extends TC<Ctor>> implements Copointed<Ctor> {
+public abstract class CopointedAbstract<Ctor> implements Copointed<Ctor> {
     
 }

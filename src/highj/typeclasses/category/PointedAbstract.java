@@ -4,15 +4,13 @@
  */
 package highj.typeclasses.category;
 
-import highj.TC;
 import highj._;
-import highj.typeclasses.category.Pointed;
 
 /**
  *
  * @author DGronau
  */
-public abstract class PointedAbstract<Ctor extends TC<Ctor>> extends FunctorAbstract<Ctor> 
+public abstract class PointedAbstract<Ctor> extends FunctorAbstract<Ctor> 
    implements Pointed<Ctor> {
 
     @Override

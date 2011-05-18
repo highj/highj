@@ -7,15 +7,13 @@ package highj.typeclasses.category;
 import fj.F;
 import fj.Function;
 import fj.Unit;
-import highj.TC;
 import highj._;
-import highj.typeclasses.category.Functor;
 
 /**
  *
  * @author DGronau
  */
-public abstract class FunctorAbstract<Ctor extends TC<Ctor>> implements Functor<Ctor> {
+public abstract class FunctorAbstract<Ctor> implements Functor<Ctor> {
 
    
     @Override
@@ -35,16 +33,16 @@ public abstract class FunctorAbstract<Ctor extends TC<Ctor>> implements Functor<
 
     @Override
     //.: and binary (Data.Functor.Syntax)
-    public <A, B, C2 extends TC<C2>> _<Ctor, _<C2, B>> binary(
-            final Functor<C2> functor2, final F<A, B> fn, _<Ctor, _<C2, A>> nestedA) {
+    public <A, B, Ctor2> _<Ctor, _<Ctor2, B>> binary(
+            final Functor<Ctor2> functor2, final F<A, B> fn, _<Ctor, _<Ctor2, A>> nestedA) {
         return fmap(functor2.<A, B>fmapFunction().f(fn), nestedA);
     }
 
     @Override
     //.:: and trinary (Data.Functor.Syntax)
-    public <A, B, C2 extends TC<C2>, C3 extends TC<C3>> _<Ctor, _<C2, _<C3, B>>> 
-            trinary(final Functor<C2> functor2, final Functor<C3> functor3, 
-            final F<A, B> fn, _<Ctor, _<C2, _<C3, A>>> nestedNestedA) {
+    public <A, B, Ctor2, Ctor3> _<Ctor, _<Ctor2, _<Ctor3, B>>> 
+            trinary(final Functor<Ctor2> functor2, final Functor<Ctor3> functor3, 
+            final F<A, B> fn, _<Ctor, _<Ctor2, _<Ctor3, A>>> nestedNestedA) {
         return binary(functor2, functor3.<A,B>fmapFunction().f(fn), nestedNestedA);
     }
 

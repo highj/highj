@@ -5,14 +5,13 @@
 package highj.typeclasses.category;
 
 import fj.F;
-import highj.TC;
 import highj._;
 
 /**
  *
  * @author DGronau
  */
-public interface Applicative<Ctor extends TC<Ctor>> extends Pointed<Ctor> {
+public interface Applicative<Ctor> extends Pointed<Ctor> {
     
     @Override
     // pure (Control.Applicative, Data.Pointed)

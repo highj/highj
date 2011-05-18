@@ -5,7 +5,6 @@
 package highj.typeclasses.category;
 
 import fj.data.List;
-import highj.TC;
 import highj._;
 import highj.data.ListOf;
 
@@ -13,7 +12,7 @@ import highj.data.ListOf;
  *
  * @author DGronau
  */
-public interface MonadPlus<Ctor extends TC<Ctor>> extends Monad<Ctor>, Alternative<Ctor> {
+public interface MonadPlus<Ctor> extends Monad<Ctor>, Alternative<Ctor> {
 
     // mzero (Control.Monad)
     // equivalent to Alternative.empty

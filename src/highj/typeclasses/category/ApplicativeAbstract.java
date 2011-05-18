@@ -6,15 +6,13 @@ package highj.typeclasses.category;
 
 import fj.F;
 import fj.Function;
-import highj.TC;
 import highj._;
-import highj.typeclasses.category.Applicative;
 
 /**
  *
  * @author DGronau
  */
-public abstract class ApplicativeAbstract<Ctor extends TC<Ctor>> extends PointedAbstract<Ctor> implements Applicative<Ctor> {
+public abstract class ApplicativeAbstract<Ctor> extends PointedAbstract<Ctor> implements Applicative<Ctor> {
 
 
     @Override

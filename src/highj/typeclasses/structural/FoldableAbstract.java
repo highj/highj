@@ -9,14 +9,13 @@ import fj.F2;
 import fj.Function;
 import fj.Monoid;
 import fj.data.Option;
-import highj.TC;
 import highj._;
 
 /**
  * 
  * @author DGronau
  */
-public abstract class FoldableAbstract<Ctor extends TC<Ctor>> implements Foldable<Ctor> {
+public abstract class FoldableAbstract<Ctor> implements Foldable<Ctor> {
 
     @Override
     public <A> A fold(Monoid<A> ma, _<Ctor, A> nestedA) {

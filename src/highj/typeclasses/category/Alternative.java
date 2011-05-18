@@ -6,7 +6,6 @@ package highj.typeclasses.category;
 
 import fj.Monoid;
 import fj.data.Option;
-import highj.TC;
 import highj._;
 import highj.data.OptionOf;
 
@@ -14,7 +13,7 @@ import highj.data.OptionOf;
  *
  * @author DGronau
  */
-public interface Alternative<Ctor extends TC<Ctor>> extends Applicative<Ctor> {
+public interface Alternative<Ctor> extends Applicative<Ctor> {
     //empty (Control.Applicative)
     public <A> _<Ctor, A> empty();
     

@@ -18,7 +18,6 @@ public class FunctionFunctorTest {
     
     @Test
     public void testFmap() {
-        FunctionOf functionOf = FunctionOf.getInstance();
         Functor<CL<FunctionOf,String>> functor = new FunctionFunctor<String>();
         
         F<String, Integer> length = new F<String, Integer>(){
@@ -35,8 +34,8 @@ public class FunctionFunctorTest {
             }
         };
 
-        F<String, Double> sqrtOfLength = functionOf.unwrapCL(
-                functor.fmap(sqrt, functionOf.wrapCL(length)));
+        F<String, Double> sqrtOfLength = FunctionOf.unwrapCL(
+                functor.fmap(sqrt, FunctionOf.wrapCL(length)));
         
         assertEquals(Double.valueOf(3.0), sqrtOfLength.f("123456789"));
     }

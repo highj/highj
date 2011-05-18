@@ -8,7 +8,6 @@ import fj.F;
 import fj.Function;
 import highj.CL;
 import highj.CR;
-import highj.TC2;
 import highj.__;
 import highj.typeclasses.category.Functor;
 
@@ -17,7 +16,7 @@ import highj.typeclasses.category.Functor;
  * have an infinite loop
  * @author DGronau
  */
-public abstract class BifunctorAbstract<Ctor extends TC2<Ctor>> implements Bifunctor<Ctor> {
+public abstract class BifunctorAbstract<Ctor> implements Bifunctor<Ctor> {
 
     @Override
     // bimap (Data.Bifunctor)

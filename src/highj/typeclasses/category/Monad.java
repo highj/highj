@@ -7,7 +7,6 @@ package highj.typeclasses.category;
 import fj.F;
 import fj.Unit;
 import fj.data.List;
-import highj.TC;
 import highj._;
 import highj.data.ListOf;
 
@@ -15,7 +14,7 @@ import highj.data.ListOf;
  *
  * @author DGronau
  */
-public interface Monad<Ctor extends TC<Ctor>> extends Applicative<Ctor> {
+public interface Monad<Ctor> extends Applicative<Ctor> {
     
     // (>>=) (Control.Monad)
     public <A,B> _<Ctor, B> bind(_<Ctor, A> nestedA, F<A, _<Ctor, B>> fn);

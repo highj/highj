@@ -4,14 +4,13 @@
  */
 package highj.typeclasses.category2;
 
-import highj.TC2;
 import highj.__;
 
 /**
  *
  * @author DGronau
  */
-public interface Category<Ctor extends TC2<Ctor>> {
+public interface Category<Ctor> {
     
     // id (Control.Category)
     public <A> __<Ctor, A, A> id();

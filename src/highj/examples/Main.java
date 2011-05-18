@@ -31,11 +31,10 @@ public class Main {
     private static void testApplicative() {
         System.out.println("\n---Functor.fmap---");
         
-        ListOf listOf = ListOf.getInstance();
         Applicative<ListOf> applicative = new ListMonadPlus();
         
-        _<ListOf, String> strList = listOf.wrap(List.list("one","two","three"));
-        System.out.println("fmap(String.length(), " + listOf.toString(strList) + ")");
+        _<ListOf, String> strList = ListOf.wrap(List.list("one","two","three"));
+        System.out.println("fmap(String.length(), " + ListOf.toString(strList) + ")");
         
         //length of String
         F<String,Integer> f = new F<String,Integer>(){
@@ -44,7 +43,7 @@ public class Main {
                 return a.length();
             }
         };
-        System.out.println(listOf.toString(applicative.fmap(f, strList))); 
+        System.out.println(ListOf.toString(applicative.fmap(f, strList))); 
         
         //Index of letter 'e'
         F<String,Integer> fe = new F<String,Integer>(){
@@ -53,23 +52,22 @@ public class Main {
                 return a.indexOf('e');
             }
         };
-        _<ListOf, F<String,Integer>> funList = listOf.wrap(List.cons(f, List.single(fe)));
+        _<ListOf, F<String,Integer>> funList = ListOf.wrap(List.cons(f, List.single(fe)));
         System.out.println("\n---Applicative.<*>---");
         System.out.println("[String.length(), String.indexOf('e')] <*> [\"one\",\"two\",\"three\"]");
-        System.out.println(listOf.toString(applicative.star(funList, strList)));
+        System.out.println(ListOf.toString(applicative.star(funList, strList)));
     }
     
     private static void testJoin() {
         System.out.println("\n---Monad.join---");
         
         Monad<OptionOf> monad = OptionMonadPlus.getInstance();
-        OptionOf optionOf = OptionOf.getInstance();
         
-        _<OptionOf, String> some = optionOf.some("rotfl");
-        _<OptionOf, String> none = optionOf.none();
-        _<OptionOf, _<OptionOf,String>> someSome = optionOf.some(some);
-        _<OptionOf, _<OptionOf,String>> someNone = optionOf.some(none);
-        _<OptionOf, _<OptionOf,String>> noneNone = optionOf.none();
+        _<OptionOf, String> some = OptionOf.some("rotfl");
+        _<OptionOf, String> none = OptionOf.none();
+        _<OptionOf, _<OptionOf,String>> someSome = OptionOf.some(some);
+        _<OptionOf, _<OptionOf,String>> someNone = OptionOf.some(none);
+        _<OptionOf, _<OptionOf,String>> noneNone = OptionOf.none();
         
         System.out.println("join (Some(Some(\"rotfl\"))) = "  + monad.join(someSome));
         System.out.println("join (Some(None)) = "  +monad.join(someNone));
@@ -79,38 +77,35 @@ public class Main {
     private static void testSequence() {
         System.out.println("\n---Monad.sequence---");
         Monad<OptionOf> monad = OptionMonadPlus.getInstance();
-        OptionOf optionOf = OptionOf.getInstance();
-        final ListOf listOf = ListOf.getInstance();
-        _<OptionOf, Integer> one = optionOf.some(1);
-        _<OptionOf, Integer> two = optionOf.some(2);
-        _<OptionOf, Integer> three = optionOf.some(3);
-        _<ListOf,_<OptionOf, Integer>> listOfOptions = 
-                listOf.wrap(List.list(one, two, three));
-        _<OptionOf,_<ListOf, Integer>> optionOfList = monad.sequence(listOfOptions);
+        _<OptionOf, Integer> one = OptionOf.some(1);
+        _<OptionOf, Integer> two = OptionOf.some(2);
+        _<OptionOf, Integer> three = OptionOf.some(3);
+        _<ListOf,_<OptionOf, Integer>> ListOfOptions = 
+                ListOf.wrap(List.list(one, two, three));
+        _<OptionOf,_<ListOf, Integer>> optionOfList = monad.sequence(ListOfOptions);
         System.out.println("sequence [Some(1), Some(2), Some(3)] =  " + optionOfList);
         
-        _<OptionOf, Integer> none = optionOf.none();
-        _<ListOf,_<OptionOf, Integer>> listOfOptionsWithNone = 
-                listOf.wrap(List.list(one, none, three));
-        _<OptionOf,_<ListOf, Integer>> optionOfListWithNone = monad.sequence(listOfOptionsWithNone);
+        _<OptionOf, Integer> none = OptionOf.none();
+        _<ListOf,_<OptionOf, Integer>> ListOfOptionsWithNone = 
+                ListOf.wrap(List.list(one, none, three));
+        _<OptionOf,_<ListOf, Integer>> optionOfListWithNone = monad.sequence(ListOfOptionsWithNone);
         System.out.println("sequence [Some(1), None, Some(3)] =  " + optionOfListWithNone);
         
-        _<ListOf,Integer> list12 = listOf.wrap(List.list(1,2));
-        _<ListOf,Integer> list3 = listOf.wrap(List.list(3));
-        _<ListOf,Integer> list456 = listOf.wrap(List.list(4,5,6));
-        _<ListOf,_<ListOf, Integer>> list = listOf.wrap(List.list(list12,list3,list456));
+        _<ListOf,Integer> list12 = ListOf.wrap(List.list(1,2));
+        _<ListOf,Integer> list3 = ListOf.wrap(List.list(3));
+        _<ListOf,Integer> list456 = ListOf.wrap(List.list(4,5,6));
+        _<ListOf,_<ListOf, Integer>> list = ListOf.wrap(List.list(list12,list3,list456));
         _<ListOf,_<ListOf, Integer>> sequencedList = ListMonadPlus.getInstance().sequence(list);
-        System.out.println("sequence [[1,2],[3],[4,5,6]] = " + listOf.unwrap(sequencedList).map(new F<_<ListOf, Integer>,String>(){
+        System.out.println("sequence [[1,2],[3],[4,5,6]] = " + ListOf.unwrap(sequencedList).map(new F<_<ListOf, Integer>,String>(){
             @Override
             public String f(_<ListOf, Integer> a) {
-                return listOf.toString(a);
+                return ListOf.toString(a);
             }
         }).toCollection());
     }
     
     private static void testEither() {
         System.out.println("\n---Either.bimap---");
-        EitherOf eitherOf = EitherOf.getInstance();
         EitherBifunctor bifunctor = EitherBifunctor.getInstance();
         F<String,Integer> f1 = new F<String,Integer>(){
             @Override
@@ -124,31 +119,29 @@ public class Main {
                 return Math.sqrt(a);
             }
         };
-        __<EitherOf, String, Integer> left = eitherOf.left("Hello");
+        __<EitherOf, String, Integer> left = EitherOf.left("Hello");
         System.out.println("bimap(Left(Hello), String.length, Math.sqrt) = " +
                 bifunctor.bimap(f1, f2, left));
-        __<EitherOf, String, Integer> right = eitherOf.right(16);
+        __<EitherOf, String, Integer> right = EitherOf.right(16);
         System.out.println("bimap(Right(16), String.length, Math.sqrt) = " +
                 bifunctor.bimap(f1, f2, right));
 
         System.out.println("\n---Either.fmap (curried)---");
-        CL<EitherOf, String> cl = new CL<EitherOf, String>();
         Functor<CL<EitherOf,String>> functor = bifunctor.<String>getCLFunctor();
         System.out.println("map(Left(Hello), Math.sqrt) = " +
-                cl.uncurry(functor.fmap(f2, cl.curry(left))));
+                CL.uncurry(functor.fmap(f2, CL.curry(left))));
         System.out.println("map(Right(16), Math.sqrt) = " +
-                cl.uncurry(functor.fmap(f2, cl.curry(right))));
+                CL.uncurry(functor.fmap(f2, CL.curry(right))));
         
     }
 
     private static void testFoldable() {
         System.out.println("\n---ListFoldable---");
 
-        ListOf listOf = ListOf.getInstance();
         Foldable<ListOf> foldable = ListFoldable.getInstance();
         
-        _<ListOf, String> strList = listOf.wrap(List.list("one","two","three"));
-        System.out.print("foldl((+), \"zero\", " + listOf.toString(strList) + ") = ");
+        _<ListOf, String> strList = ListOf.wrap(List.list("one","two","three"));
+        System.out.print("foldl((+), \"zero\", " + ListOf.toString(strList) + ") = ");
         
         //length of String
         F2<String,String,String> f = new F2<String,String,String>(){
@@ -159,7 +152,7 @@ public class Main {
         };
         System.out.println(foldable.foldl(f, "zero", strList)); 
 
-        System.out.print("foldr((+), \"zero\", " + listOf.toString(strList) + ") = ");
+        System.out.print("foldr((+), \"zero\", " + ListOf.toString(strList) + ") = ");
         System.out.println(foldable.foldr(f, "zero", strList)); 
     }
     

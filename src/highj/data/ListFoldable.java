@@ -23,11 +23,11 @@ public class ListFoldable extends FoldableAbstract<ListOf> {
 
     @Override
     public <A, B> B foldr(F<A, F<B, B>> fn, B b, _<ListOf, A> nestedA) {
-        return ListOf.getInstance().unwrap(nestedA).foldRight(fn, b);
+        return ListOf.unwrap(nestedA).foldRight(fn, b);
     }
 
     @Override
      public <A,B> A foldl(F<A,F<B,A>> fn, A a, _<ListOf, B> nestedB) {
-        return ListOf.getInstance().unwrap(nestedB).foldLeft(fn, a);
+        return ListOf.unwrap(nestedB).foldLeft(fn, a);
     }    
 }

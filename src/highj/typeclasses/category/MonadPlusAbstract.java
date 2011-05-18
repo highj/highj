@@ -8,7 +8,6 @@ import fj.F;
 import fj.Monoid;
 import fj.data.List;
 import fj.data.Option;
-import highj.TC;
 import highj._;
 
 import highj.data.ListOf;
@@ -18,11 +17,11 @@ import highj.data.OptionOf;
  *
  * @author DGronau
  */
-public abstract class MonadPlusAbstract<Ctor extends TC<Ctor>> extends MonadAbstract<Ctor> implements MonadPlus<Ctor> {
+public abstract class MonadPlusAbstract<Ctor> extends MonadAbstract<Ctor> implements MonadPlus<Ctor> {
 
     @Override
     public <A> _<Ctor, A> msum(_<ListOf, _<Ctor, A>> list) {
-        List<_<Ctor, A>> as = ListOf.getInstance().unwrap(list);
+        List<_<Ctor, A>> as = ListOf.unwrap(list);
         _<Ctor, A> result = mzero(); 
         for(_<Ctor, A> a : as) {
            result = mplus(result, a);
@@ -52,13 +51,12 @@ public abstract class MonadPlusAbstract<Ctor extends TC<Ctor>> extends MonadAbst
     @Override
     //duplicated from AlternativeAbstract
     public <A> _<Ctor, _<OptionOf, A>> optional(_<Ctor, A> nestedA) {
-        final OptionOf optionOf = OptionOf.getInstance();
         return or(fmap(new F<A,_<OptionOf,A>>(){
             @Override
             public _<OptionOf, A> f(A a) {
-                return optionOf.some(a);
+                return OptionOf.some(a);
             }
-        }, nestedA), pure(optionOf.<A>none()));
+        }, nestedA), pure(OptionOf.<A>none()));
     }
 
     @Override

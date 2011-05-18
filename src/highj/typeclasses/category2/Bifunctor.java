@@ -7,7 +7,6 @@ package highj.typeclasses.category2;
 import fj.F;
 import highj.CL;
 import highj.CR;
-import highj.TC2;
 import highj.__;
 import highj.typeclasses.category.Functor;
 
@@ -15,7 +14,7 @@ import highj.typeclasses.category.Functor;
  *
  * @author DGronau
  */
-public interface Bifunctor<Ctor extends TC2<Ctor>> {
+public interface Bifunctor<Ctor> {
 
     // bimap (Data.Bifunctor)
     public <A, B, C, D> __<Ctor, B, D> bimap(F<A, B> fn1, F<C, D> fn2, __<Ctor, A, C> nestedAC);

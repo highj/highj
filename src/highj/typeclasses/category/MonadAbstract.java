@@ -9,7 +9,6 @@ import fj.F2;
 import fj.Function;
 import fj.Unit;
 import fj.data.List;
-import highj.TC;
 import highj._;
 import highj.data.ListMonadPlus;
 import highj.data.ListOf;
@@ -18,7 +17,7 @@ import highj.data.ListOf;
  *
  * @author DGronau
  */
-public abstract class MonadAbstract<Ctor extends TC<Ctor>> extends ApplicativeAbstract<Ctor> implements Monad<Ctor> {
+public abstract class MonadAbstract<Ctor> extends ApplicativeAbstract<Ctor> implements Monad<Ctor> {
 
     
     @Override
@@ -64,13 +63,12 @@ public abstract class MonadAbstract<Ctor extends TC<Ctor>> extends ApplicativeAb
     @Override
     // sequence (Control.Monad)
     public <A> _<Ctor, _<ListOf, A>> sequence(_<ListOf, _<Ctor, A>> ms) {
-       final ListOf listOf = ListOf.getInstance(); 
        return fmap(new F<List<A>,_<ListOf, A>>(){
             @Override
             public _<ListOf, A> f(List<A> a) {
-                return listOf.wrap(a);
+                return ListOf.wrap(a);
             }
-         },sequenceFlat(listOf.unwrap(ms)));
+         },sequenceFlat(ListOf.unwrap(ms)));
     }
     
     @Override
@@ -99,7 +97,7 @@ public abstract class MonadAbstract<Ctor extends TC<Ctor>> extends ApplicativeAb
     // sequence_ (Control.Monad) 
     @Override
     public <A> _<Ctor, Unit> sequence_(_<ListOf, _<Ctor, A>> list){
-        return sequence_Flat(ListOf.getInstance().unwrap(list));
+        return sequence_Flat(ListOf.unwrap(list));
     }
     
     // "flat" version of sequence_ 
@@ -128,7 +126,7 @@ public abstract class MonadAbstract<Ctor extends TC<Ctor>> extends ApplicativeAb
     @Override
     // mapM_ (Control.Monad)
     public <A, B> _<Ctor, Unit> mapM_(F<A, _<Ctor, B>> fn, _<ListOf, A> list) {
-        return mapM_Flat(fn, ListOf.getInstance().unwrap(list));         
+        return mapM_Flat(fn, ListOf.unwrap(list));         
     }
     
     @Override
