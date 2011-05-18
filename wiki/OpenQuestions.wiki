@@ -4,7 +4,7 @@
 
 == Does inheritance for type constructors make sense? ==
 
-E.g. How should something like an IterableOf work?
+E.g. How should something like an `IterableOf` work?
 
 == Should we use composition over inheritance for type classes? ==
 
