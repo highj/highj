@@ -26,6 +26,7 @@ Would it be better to work _always_ with a curried version like `_<CL<Ctor,A>,B>
 
   * Is it correct that MonadPlus inherits from Alternative? 
   * Is it correct that Copointed inherits from Functor?
+  * The Comonad part didn't look standardized (e.g. Copointed vs Extend)
   * Do we need MonadZero between Monad and MonadPlus?
   * What to do with the imfamous Monad.fail method?
 
