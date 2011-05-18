@@ -76,26 +76,27 @@ public abstract class MonadAbstract<Ctor extends TC<Ctor>> extends ApplicativeAb
     @Override
     // "flat" version of sequence
     public <A> _<Ctor, List<A>> sequenceFlat(List<_<Ctor, A>> list) {
-       if (list.isEmpty()) {
-           return returnM(List.<A>nil());
-       } else {
-           final _<Ctor, A> ctorHead = list.head();
-           final _<Ctor, List<A>> ctorTail = sequenceFlat(list.tail());
-           return bind(ctorTail, new F<List<A>,_<Ctor, List<A>>>(){
-                @Override
-                public _<Ctor, List<A>> f(final List<A> tail) {
-                    return MonadAbstract.this.bind(ctorHead, new F<A, _<Ctor, List<A>>>(){
-                        @Override
-                        public _<Ctor, List<A>> f(A head) {
-                            return returnM(List.cons(head, tail));
-                        }
-                    });
-                }
-           });
-       }
+      //  sequence ms = foldr k (return []) ms
+      //      where k m m' = do { x <- m; xs <- m'; return (x:xs) }
+      return list.foldRight(new F2<_<Ctor, A>,_<Ctor, List<A>>,_<Ctor, List<A>>>(){
+            @Override
+            public _<Ctor, List<A>> f(_<Ctor, A> m, final _<Ctor, List<A>> m_) {
+                return bind(m, new F<A, _<Ctor, List<A>>>(){
+                    @Override
+                    public _<Ctor, List<A>> f(final A a) {
+                        return bind(m_, new F<List<A>, _<Ctor, List<A>>>(){
+                            @Override
+                            public _<Ctor, List<A>> f(List<A> listA) {
+                                return returnM(listA.cons(a));
+                            }
+                        });
+                    }
+                });
+            }
+        }, returnM(List.<A>nil()));
     }
     
-    // sequence_ (Control.Monad)
+    // sequence_ (Control.Monad) 
     @Override
     public <A> _<Ctor, Unit> sequence_(_<ListOf, _<Ctor, A>> list){
         return sequence_Flat(ListOf.getInstance().unwrap(list));
