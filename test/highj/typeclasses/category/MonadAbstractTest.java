@@ -67,52 +67,18 @@ public class MonadAbstractTest {
      /* 
     @Test
     public void testLiftM() {
-        System.out.println("liftM");
-        F<A, B> fn = null;
-        _<Ctor, A> nestedA = null;
-        MonadAbstract instance = new MonadAbstractImpl();
-        _ expResult = null;
-        _ result = instance.liftM(fn, nestedA);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
     }
 
     @Test
     public void testLiftM2() {
-        System.out.println("liftM2");
-        F<A, F<B, C>> f = null;
-        _<Ctor, A> ta = null;
-        _<Ctor, B> tb = null;
-        MonadAbstract instance = new MonadAbstractImpl();
-        _ expResult = null;
-        _ result = instance.liftM2(f, ta, tb);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
     }
 
     @Test
     public void testLiftM3() {
-        System.out.println("liftM3");
-        F<A, F<B, F<C, D>>> f = null;
-        _<Ctor, A> ta = null;
-        _<Ctor, B> tb = null;
-        _<Ctor, C> tc = null;
-        MonadAbstract instance = new MonadAbstractImpl();
-        _ expResult = null;
-        _ result = instance.liftM3(f, ta, tb, tc);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
     }
 
     @Test
     public void testReturnM() {
-        System.out.println("returnM");
-        Object a = null;
-        MonadAbstract instance = new MonadAbstractImpl();
-        _ expResult = null;
-        _ result = instance.returnM(a);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
     }*/
 
     @Test
@@ -141,61 +107,30 @@ public class MonadAbstractTest {
 
     /*@Test
     public void testMapM() {
-        System.out.println("mapM");
-        F<A, _<Ctor, B>> fn = null;
-        _<ListOf, A> list = null;
-        MonadAbstract instance = new MonadAbstractImpl();
-        _ expResult = null;
-        _ result = instance.mapM(fn, list);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
     }
 
     @Test
     public void testMapMFlat() {
-        System.out.println("mapMFlat");
-        F<A, _<Ctor, B>> fn = null;
-        List<A> list = null;
-        MonadAbstract instance = new MonadAbstractImpl();
-        _ expResult = null;
-        _ result = instance.mapMFlat(fn, list);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+    }
+
+    @Test
+    public void testMapM_() {
+    }
+
+    @Test
+    public void testMapM_Flat() {
     }
 
     @Test
     public void testKleisli() {
-        System.out.println("kleisli");
-        F<A, _<Ctor, B>> f = null;
-        F<B, _<Ctor, C>> g = null;
-        MonadAbstract instance = new MonadAbstractImpl();
-        F expResult = null;
-        F result = instance.kleisli(f, g);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
     }
 
     @Test
     public void testSequenceFlat() {
-        System.out.println("sequenceFlat");
-        List<_<Ctor, A>> list = null;
-        MonadAbstract instance = new MonadAbstractImpl();
-        _ expResult = null;
-        _ result = instance.sequenceFlat(list);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
     }
 
     @Test
     public void testAp() {
-        System.out.println("ap");
-        _<Ctor, F<A, B>> nestedFn = null;
-        _<Ctor, A> nestedA = null;
-        MonadAbstract instance = new MonadAbstractImpl();
-        _ expResult = null;
-        _ result = instance.ap(nestedFn, nestedA);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
     }*/
 
   

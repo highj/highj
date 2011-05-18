@@ -38,6 +38,10 @@ public interface Monad<Ctor extends TC<Ctor>> extends Applicative<Ctor> {
     public <A, B> _<Ctor, _<ListOf, B>> mapM(F<A, _<Ctor, B>> fn, _<ListOf, A> list);
     // "flat" version of mapM
     public <A, B> _<Ctor, List<B>> mapMFlat(F<A, _<Ctor, B>> fn, List<A> list);
+    // mapM_ (Control.Monad)
+    public <A, B> _<Ctor, Unit> mapM_(F<A, _<Ctor, B>> fn, _<ListOf, A> list);
+    // "flat" version of mapM_
+    public <A, B> _<Ctor, Unit> mapM_Flat(F<A, _<Ctor, B>> fn, List<A> list);
     // >=> (Control.Monad)
     public <A, B, C> F<A, _<Ctor, C>> kleisli(F<A, _<Ctor, B>> fn, F<B, _<Ctor, C>> gn);
         
