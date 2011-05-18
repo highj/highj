@@ -84,7 +84,7 @@ public abstract class MonadAbstract<Ctor extends TC<Ctor>> extends ApplicativeAb
                 return bind(m, new F<A, _<Ctor, List<A>>>(){
                     @Override
                     public _<Ctor, List<A>> f(final A a) {
-                        return bind(m_, new F<List<A>, _<Ctor, List<A>>>(){
+                        return MonadAbstract.this.bind(m_, new F<List<A>, _<Ctor, List<A>>>(){
                             @Override
                             public _<Ctor, List<A>> f(List<A> listA) {
                                 return returnM(listA.cons(a));
@@ -123,6 +123,18 @@ public abstract class MonadAbstract<Ctor extends TC<Ctor>> extends ApplicativeAb
     // "flat" version of mapM
     public <A,B> _<Ctor, List<B>> mapMFlat(F<A,_<Ctor, B>> fn, List<A> list) {
         return sequenceFlat(list.map(fn));
+    }
+    
+    @Override
+    // mapM_ (Control.Monad)
+    public <A, B> _<Ctor, Unit> mapM_(F<A, _<Ctor, B>> fn, _<ListOf, A> list) {
+        return mapM_Flat(fn, ListOf.getInstance().unwrap(list));         
+    }
+    
+    @Override
+    // "flat" version of mapM_
+    public <A, B> _<Ctor, Unit> mapM_Flat(F<A, _<Ctor, B>> fn, List<A> list) {
+        return sequence_Flat(list.map(fn));
     }
    
     @Override
