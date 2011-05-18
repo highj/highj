@@ -9,14 +9,18 @@ E.g. How should something like an IterableOf work?
 == Should we use composition over inheritance for type classes? ==
 
 E.g. Pointed would not longer inherit from Functor, but have a getFunctor method. Applicative would have a getPointed (and for convenience a getFunctor) method etc. 
-Pro: Implementation easier and more reuseable. 
-Con: Usage gets probably more complicated.
+
+*Pro:* Implementation easier and more reuseable. 
+
+*Con:* Usage gets probably more complicated.
 
 == Curried binary Type Constructors ==
 
 Would it be better to work _always_ with a curried version like `_<CL<Ctor,A>,B>` instead of `_<Ctor2,A,B>`? 
-Pro: Can be used immediately in unary type classes.
-Con: Asymmetric, would need a "flip" operation. 
+
+*Pro:* Can be used immediately in unary type classes.
+
+*Con:* Asymmetric, would need a "flip" operation. 
 
 == Categorie Package ==
 
