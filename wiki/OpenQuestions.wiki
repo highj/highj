@@ -16,19 +16,19 @@ E.g. Pointed would not longer inherit from Functor, but have a getFunctor method
 
 == Curried binary Type Constructors ==
 
-Would it be better to work _always_ with a curried version like `_<CL<Ctor,A>,B>` instead of `_<Ctor2,A,B>`? 
+Would it be possible to work _always_ with a curried version like `_<CL<Ctor,A>,B>` instead of `_<Ctor2,A,B>`? 
 
-*Pro:* Can be used immediately in unary type classes.
+*Pro:* Can be used immediately in unary type classes. Same mechanism as Haskell.
 
-*Con:* Asymmetric, would need a "flip" operation. 
+*Con:* Asymmetric, would need a "Flip" typeclass or so to change the order. 
 
-== Categorie Package ==
+== Category Package ==
 
   * Is it correct that MonadPlus inherits from Alternative? 
   * Is it correct that Copointed inherits from Functor?
   * The Comonad part didn't look standardized (e.g. Copointed vs Extend)
   * Do we need MonadZero between Monad and MonadPlus?
-  * What to do with the imfamous Monad.fail method?
+  * What to do with the infamous Monad.fail method?
 
 == Crazy Things ===
 
