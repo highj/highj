@@ -26,9 +26,15 @@ Would it be possible to work _always_ with a curried version like `_<CL<Ctor,A>,
 
   * Is it correct that MonadPlus inherits from Alternative? 
   * Is it correct that Copointed inherits from Functor?
-  * The Comonad part didn't look standardized (e.g. Copointed vs Extend)
+  * The Comonad part didn't look standardized in Haskell (e.g. Copointed vs Extend)
   * Do we need MonadZero between Monad and MonadPlus?
   * What to do with the infamous Monad.fail method?
+  * Can we implement monad transformers?
+
+== Type Classes ==
+
+  * Which other data type classes would be useful? Set, Map..?
+  * Which monads would be useful? IO, Reader, Writer, State..?
 
 == Crazy Things ===
 
