@@ -21,52 +21,50 @@ import static org.junit.Assert.*;
  */
 public class MonadAbstractTest {
     
+    private ListMonadPlus monad;
+    private ListOf listOf;
+    
     public MonadAbstractTest() {
     }
   
     @Before
     public void setUp() {
+        monad = ListMonadPlus.getInstance();
+        listOf = ListOf.getInstance();
     }
     
     @After
     public void tearDown() {
-    }
-
-    /*@Test
-    public void testBind() {
-        System.out.println("bind");
-        _<Ctor, A> nestedA = null;
-        F<A, _<Ctor, B>> fn = null;
-        MonadAbstract instance = new MonadAbstractImpl();
-        _ expResult = null;
-        _ result = instance.bind(nestedA, fn);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+        monad = null;
+        listOf = null;
     }
 
     @Test
     public void testSemicolon() {
-        System.out.println("semicolon");
-        _<Ctor, A> nestedA = null;
-        _<Ctor, B> nestedB = null;
-        MonadAbstract instance = new MonadAbstractImpl();
-        _ expResult = null;
-        _ result = instance.semicolon(nestedA, nestedB);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+        _<ListOf,Integer> intList = listOf.wrap(List.list(1,2,3));
+        _<ListOf,String> stringList = listOf.wrap(List.list("a","b"));
+        List<String> resultList = listOf.unwrap(monad.semicolon(intList,stringList));
+        List<String> expectedList = List.list("a","b","a","b","a","b");
+        Show<List<String>> show = Show.listShow(Show.stringShow);
+        assertEquals(show.showS(expectedList), show.showS(resultList));
     }
 
     @Test
     public void testJoin() {
-        System.out.println("join");
-        _<Ctor, _<Ctor, A>> nestedNestedA = null;
-        MonadAbstract instance = new MonadAbstractImpl();
-        _ expResult = null;
-        _ result = instance.join(nestedNestedA);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+        _<ListOf,_<ListOf, Integer>> nestedIntList = listOf.wrap(List.list(
+           listOf.wrap(List.list(1,2,3)),
+           listOf.wrap(List.<Integer>list()),
+           listOf.wrap(List.list(4,5)),
+           listOf.wrap(List.list(6))
+        ));
+        List<Integer> resultList = listOf.unwrap(monad.join(nestedIntList));
+        List<Integer> expectedList = List.list(1,2,3,4,5,6);
+        
+        Show<List<Integer>> show = Show.listShow(Show.intShow);
+        assertEquals(show.showS(expectedList), show.showS(resultList));
     }
 
+     /* 
     @Test
     public void testLiftM() {
         System.out.println("liftM");
@@ -119,12 +117,11 @@ public class MonadAbstractTest {
 
     @Test
     public void testSequence() {
-        final Monad<ListOf> monad = ListMonadPlus.getInstance();
-        final ListOf listOf = ListOf.getInstance();
-        _<ListOf,Integer> list12 = listOf.wrap(List.list(1,2));
-        _<ListOf,Integer> list3 = listOf.wrap(List.list(3));
-        _<ListOf,Integer> list456 = listOf.wrap(List.list(4,5,6));
-        _<ListOf,_<ListOf, Integer>> list = listOf.wrap(List.list(list12,list3,list456));
+        _<ListOf,_<ListOf, Integer>> list = listOf.wrap(List.list(
+                listOf.wrap(List.list(1,2)),
+                listOf.wrap(List.list(3)),
+                listOf.wrap(List.list(4,5,6))
+         ));
         _<ListOf,_<ListOf, Integer>> sequencedListWrapped = monad.sequence(list);
         List<List<Integer>> sequencedList = listOf.unwrap(sequencedListWrapped).map(
                  new F<_<ListOf, Integer>,List<Integer>>(){
