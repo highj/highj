@@ -36,6 +36,6 @@ public interface Functor<Ctor> {
     public <A, B> _<Ctor, B> flip(_<Ctor, F<A, B>> nestedFn, A a);
     
     //fmap as an instance of F 
-    public <A, B> F<F<A, B>, F<_<Ctor, A>, _<Ctor, B>>> fmapFunction();
+    public <A, B> F<F<A, B>, F<_<Ctor, A>, _<Ctor, B>>> fmapFn();
     
 }

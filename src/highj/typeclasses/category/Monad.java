@@ -54,4 +54,8 @@ public interface Monad<Ctor> extends Applicative<Ctor> {
     public <A> _<Ctor, A> returnM(A a);
     // ap (Control.Monad)
     public <A, B> _<Ctor, B> ap(_<Ctor, F<A,B>> nestedFn, _<Ctor,A> nestedA);
+
+    
+    // liftM as instance of F
+    public <A,B> F<F<A, B>,F<_<Ctor, A>,_<Ctor, B>>> liftMFn();
 }
