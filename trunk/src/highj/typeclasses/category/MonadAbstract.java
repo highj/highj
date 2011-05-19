@@ -41,6 +41,18 @@ public abstract class MonadAbstract<Ctor> extends ApplicativeAbstract<Ctor> impl
     public <A, B> _<Ctor, B> liftM(F<A, B> fn, _<Ctor, A> nestedA) {
         return liftA(fn, nestedA);
     }
+    
+    @Override
+    // liftM as instance of F
+    public <A,B> F<F<A, B>,F<_<Ctor, A>,_<Ctor, B>>> liftMFn() {
+        return new F2<F<A, B>,_<Ctor, A>,_<Ctor, B>>() {
+            @Override
+            public _<Ctor, B> f(F<A, B> fn, _<Ctor, A> nestedA) {
+                return liftM(fn, nestedA);
+            }
+        }.curry();
+    }
+
 
     @Override
     // liftM2 (Control.Monad)

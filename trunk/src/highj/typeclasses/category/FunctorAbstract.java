@@ -35,7 +35,7 @@ public abstract class FunctorAbstract<Ctor> implements Functor<Ctor> {
     //.: and binary (Data.Functor.Syntax)
     public <A, B, Ctor2> _<Ctor, _<Ctor2, B>> binary(
             final Functor<Ctor2> functor2, final F<A, B> fn, _<Ctor, _<Ctor2, A>> nestedA) {
-        return fmap(functor2.<A, B>fmapFunction().f(fn), nestedA);
+        return fmap(functor2.<A, B>fmapFn().f(fn), nestedA);
     }
 
     @Override
@@ -43,7 +43,7 @@ public abstract class FunctorAbstract<Ctor> implements Functor<Ctor> {
     public <A, B, Ctor2, Ctor3> _<Ctor, _<Ctor2, _<Ctor3, B>>> 
             trinary(final Functor<Ctor2> functor2, final Functor<Ctor3> functor3, 
             final F<A, B> fn, _<Ctor, _<Ctor2, _<Ctor3, A>>> nestedNestedA) {
-        return binary(functor2, functor3.<A,B>fmapFunction().f(fn), nestedNestedA);
+        return binary(functor2, functor3.<A,B>fmapFn().f(fn), nestedNestedA);
     }
 
     @Override
@@ -58,7 +58,7 @@ public abstract class FunctorAbstract<Ctor> implements Functor<Ctor> {
     }
     
     @Override
-    public <A, B> F<F<A,B>,F< _<Ctor, A>,_<Ctor, B>>> fmapFunction() {
+    public <A, B> F<F<A,B>,F< _<Ctor, A>,_<Ctor, B>>> fmapFn() {
         return new F<F<A,B>,F< _<Ctor, A>,_<Ctor, B>>>(){
             @Override
             public F<_<Ctor, A>, _<Ctor, B>> f(final F<A, B> f) {

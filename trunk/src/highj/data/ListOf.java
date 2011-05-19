@@ -27,6 +27,10 @@ public final class ListOf  {
         return wrap(List.<T>nil());
     }
 
+    public static <T> _<ListOf, T> list(T ... ts) {
+        return wrap(List.list(ts));
+    }
+
     public static <T> boolean isEmpty(_<ListOf, T> listWrapper) {
         return unwrap(listWrapper).isEmpty();
     }
