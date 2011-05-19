@@ -29,12 +29,12 @@ The only way to simulate higher order type polymorphism in Java is to use the ab
 
 In order to make things more readable and to draw the attention to `List` instead of `Something`, I used `_` (underscore) as name for the `Something` class. Further I can't use `List` as type parameter, because it is generic. So I wrote a class `ListOf` which both serves as type parameter, and as "translator" between `List<A>` and the wrapped version `_<ListOf, A>`. The translation in a class like `ListOf` is usually implemented by providing a `wrap` and an `unwrap` method, and a small set of other useful utility functions (e.g. for `List`s an `isEmpty` method). 
 
-The remaining problem is just one of security:  We need to make sure that only a `ListOf` is allowed to read data from a `_<ListOf, A>`, because only `ListOf` "knows" what's really "inside" that wrapper (and needs to do the dirty casts). There are several ways to achieve that. The route I took was defining a `TC` interface (for "type constructor"), that every class like `ListOf` must implement, e.g. `ListOf implements TC<ListOf>`. This allows to implement an mechanism to give *only* the class mentioned in the type paramter access to the content of the wrapper. But as long as you don't want to implement a `TC` yourself, you don't need to know the details.
+The remaining problem is just one of security:  We need to make sure that only a `ListOf` is allowed to read data from a `_<ListOf, A>`, because only `ListOf` "knows" what's really "inside" that wrapper (and needs to do the dirty casts). There are several ways to achieve that. In my implementation type constructor classes like `ListOf` need to ensure that no other classes ever get an instance of them, so they can use their own instances as a kind of identity proof. But as long as you don't want to implement a type constructor yourself, you don't need to know the details.
 
-The important thing is that we can finally write a general functor interface, and implement it for arbitrary `TC` wrappers:
+The important thing is that we can finally write a general functor interface, and implement it for arbitrary type constructors:
 
 {{{
-public interface Functor<X extends TC<X>> {
+public interface Functor<X> {
   public <A,B> _<X,B> fmap(F<A,B> fn, _<X,A> source);
 }
 
@@ -47,6 +47,6 @@ public class ListFunctor implements Functor<ListOf> {
 
 Everything else in highJ follows this scheme. 
 
-For classes with two type arguments there is a `__` (2 underscores) wrapper class and a `TC2` interface. CL and CR are classes which help to "curry" a `TC2` into a `TC`, so you can write e.g. a functor for Pairs, which works only on the first (or second) argument. 
+For classes with two type arguments there is a `__` (2 underscores) wrapper class. CL and CR are classes which help to "curry" a `__` into a `_`, so you can write e.g. a functor for pairs, which works only on the first (or second) argument. 
 
 I know the short names are confusing at first, but the type signatures are already rather long and I didn't want to make them even longer.
