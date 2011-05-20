@@ -18,7 +18,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
+ * Back-to-back test with Haskell
  * @author dgronau
  */
 public class FunctorAbstractTest {
@@ -32,7 +32,6 @@ public class FunctorAbstractTest {
         optionFunctor = OptionMonadPlus.getInstance();
         listFunctor = ListMonadPlus.getInstance();
         lengthFn = new F<String, Integer>() {
-
             @Override
             public Integer f(String a) {
                 return a.length();
@@ -49,10 +48,16 @@ public class FunctorAbstractTest {
 
     @Test
     public void testLeft$() {
+        //"3" <$ Just 5
+        //-- Just "3"
         assertEquals("3", OptionOf.get(optionFunctor.left$("3", OptionOf.some(5))));
+        //"3" <$ Nothing
+        //-- Nothing
         assertEquals(true, OptionOf.isNone(optionFunctor.left$("3", OptionOf.<Integer>none())));
+        //"x" <$ [1,1,1]
+        //-- ["x","x","x"]
         assertEquals("[x, x, x]", ListOf.toString(
-                listFunctor.left$("x", ListOf.wrap(List.list(1, 1, 1)))));
+                listFunctor.left$("x", ListOf.list(1, 1, 1))));
     }
 
     @Test
@@ -66,27 +71,9 @@ public class FunctorAbstractTest {
     }
 
     @Test
-    public void testBinary() {
-        _<OptionOf, _<ListOf, String>> optStrings =
-                OptionOf.some(ListOf.list("one", "two", "three"));
-        _<OptionOf, _<ListOf, Integer>> optInts =
-                optionFunctor.binary(listFunctor, lengthFn, optStrings);
-        assertEquals("[3, 3, 5]", ListOf.toString(OptionOf.get(optInts)));
-    }
-
-    @Test
-    public void testTrinary() {
-        _<OptionOf, _<OptionOf, _<ListOf, String>>> optStrings =
-                OptionOf.some(OptionOf.some(ListOf.list("one", "two", "three")));
-        _<OptionOf, _<OptionOf, _<ListOf, Integer>>> optInts =
-                optionFunctor.trinary(optionFunctor, listFunctor, lengthFn, optStrings);
-        assertEquals("[3, 3, 5]", ListOf.toString(OptionOf.get(OptionOf.get(optInts))));
-    }
-
-    @Test
     public void testFlip() {
         _<OptionOf, F<String, Integer>> optFn =
-                OptionOf.<F<String, Integer>>some(lengthFn);
+                OptionOf.some(lengthFn);
         _<OptionOf, Integer> result = optionFunctor.flip(optFn, "123456789");
         assertEquals(Integer.valueOf(9), OptionOf.get(result));
         _<OptionOf, Integer> resultEmpty =
