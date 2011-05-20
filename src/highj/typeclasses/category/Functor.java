@@ -23,15 +23,6 @@ public interface Functor<Ctor> {
     //void (Control.Monad)
     public <A> _<Ctor, Unit> voidF(_<Ctor, A> nestedA);
     
-    //.: and binary (Data.Functor.Syntax)
-    public <A, B, Ctor2> _<Ctor, _<Ctor2,B>> binary (Functor<Ctor2> functor2, 
-             F<A, B> fn, _<Ctor, _<Ctor2, A>> nestedA);
-    
-    //.:: and trinary (Data.Functor.Syntax)
-    public <A, B, Ctor2, Ctor3> _<Ctor, _<Ctor2, _<Ctor3, B>>> 
-            trinary (Functor<Ctor2> functor2, Functor<Ctor3> functor3,
-             F<A, B> fn, _<Ctor, _<Ctor2, _<Ctor3, A>>> nestedNestedA);
-
     //flip (Data.Functor.Syntax)
     public <A, B> _<Ctor, B> flip(_<Ctor, F<A, B>> nestedFn, A a);
     
