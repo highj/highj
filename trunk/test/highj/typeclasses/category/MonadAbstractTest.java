@@ -81,67 +81,6 @@ public class MonadAbstractTest {
         assertEquals(show.showS(expectedList), show.showS(resultList));
     }
 
-      
-    @Test
-    public void testLiftM() {
-        //liftM length ["one","two","three"]
-        //-- [3,3,5]
-        _<ListOf,Integer> result = listMonad.<String,Integer>liftM(lengthFn, ListOf.list("one","two","three"));
-        assertEquals("[3, 3, 5]", ListOf.toString(result));
-    }
-
-    @Test
-    public void testLiftMFn() {
-        F<_<ListOf, String>, _<ListOf, Integer>> fn = listMonad.<String,Integer>liftMFn().f(lengthFn);
-        //liftM length []
-        //-- []
-        assertEquals("[]", ListOf.toString(fn.f(ListOf.<String>empty())));
-        //liftM length ["one","two","three"]
-        //-- [3,3,5]
-        assertEquals("[3, 3, 5]", ListOf.toString(fn.f(ListOf.list("one","two","three"))));
-    }
-
-      
-    @Test
-    public void testLiftM2() {
-        //liftM2 (\x y -> show x ++ show y) [1,2,3] [True, False]
-        //-- ["1True","1False","2True","2False","3True","3False"]
-        F<Integer, F<Boolean,String>> fn2 = new F2<Integer,Boolean,String>(){
-
-            @Override
-            public String f(Integer a, Boolean b) {
-                return "" + a + b;
-            }
-        
-        }.curry();
-        _<ListOf,String> result = listMonad.liftM2(fn2, ListOf.list(1,2,3), ListOf.list(true,false));
-        assertEquals("[1true, 1false, 2true, 2false, 3true, 3false]", ListOf.toString(result));
-    }
-
-    @Test
-    public void testLiftM3() {
-        //liftM3 (\x y z -> concat[show x,show y,show z]) [1,2,3] [True, False] [0.1,0.2]
-        //-- ["1True0.1","1True0.2","1False0.1","1False0.2","2True0.1","2True0.2","2False0.1",
-        //-- "2False0.2","3True0.1","3True0.2","3False0.1","3False0.2"]
-        F<Integer, F<Boolean,F<Double,String>>> fn3 = new F<Integer, F<Boolean,F<Double,String>>>(){
-
-            @Override
-            public F<Boolean, F<Double, String>> f(final Integer a) {
-                return new F2<Boolean, Double, String>() {
-
-                    @Override
-                    public String f(Boolean b, Double c) {
-                        return "" + a + b + c;
-                    }
-                    
-                }.curry();
-            }
-        };
-        _<ListOf,String> result = listMonad.liftM3(fn3, ListOf.list(1,2), ListOf.list(true,false), ListOf.list(0.1, 0.2));
-        assertEquals("[1true0.1, 1true0.2, 1false0.1, 1false0.2, 2true0.1, 2true0.2, 2false0.1, 2false0.2]",
-                ListOf.toString(result));
-    }
-    
     @Test
     public void testReturnM() {
         //(return 42) :: [Int]

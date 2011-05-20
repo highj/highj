@@ -37,36 +37,6 @@ public abstract class MonadAbstract<Ctor> extends ApplicativeAbstract<Ctor> impl
     }
 
     @Override
-    // liftM (Control.Monad)
-    public <A, B> _<Ctor, B> liftM(F<A, B> fn, _<Ctor, A> nestedA) {
-        return liftA(fn, nestedA);
-    }
-    
-    @Override
-    // liftM as instance of F
-    public <A,B> F<F<A, B>,F<_<Ctor, A>,_<Ctor, B>>> liftMFn() {
-        return new F2<F<A, B>,_<Ctor, A>,_<Ctor, B>>() {
-            @Override
-            public _<Ctor, B> f(F<A, B> fn, _<Ctor, A> nestedA) {
-                return liftM(fn, nestedA);
-            }
-        }.curry();
-    }
-
-
-    @Override
-    // liftM2 (Control.Monad)
-    public <A, B, C> _<Ctor, C> liftM2(F<A, F<B, C>> f, _<Ctor, A> ta, _<Ctor, B> tb) {
-        return liftA2(f, ta, tb);
-    }
-
-    @Override
-    // liftM3 (Control.Monad)
-    public <A, B, C, D> _<Ctor, D> liftM3(F<A, F<B, F<C, D>>> f, _<Ctor, A> ta, _<Ctor, B> tb, _<Ctor, C> tc) {
-        return liftA3(f, ta, tb, tc);
-    }
-
-    @Override
     // return (Control.Monad)
     public <A> _<Ctor, A> returnM(A a) {
         return pure(a);
@@ -161,6 +131,6 @@ public abstract class MonadAbstract<Ctor> extends ApplicativeAbstract<Ctor> impl
     @Override
     // ap (Control.Monad)
     public <A, B> _<Ctor, B> ap(_<Ctor, F<A, B>> nestedFn, _<Ctor, A> nestedA) {
-        return liftM2(Function.<F<A,B>>identity(), nestedFn, nestedA);
+        return lift(Function.<F<A,B>>identity(), nestedFn, nestedA);
     }
 }

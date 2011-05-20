@@ -13,13 +13,8 @@ import highj._;
  */
 public interface Applicative<Ctor> extends Pointed<Ctor> {
     
-    @Override
-    // pure (Control.Applicative, Data.Pointed)
-    public <A> _<Ctor,A> pure(A a);
-    
     // <*> (Control.Applicative)
     public <A,B> _<Ctor,B> star(_<Ctor, F<A,B>> fn, _<Ctor,A> nestedA);
-   
    
     // (*>) (Control.Applicative)
     public <A,B> _<Ctor,B> rightSeq(_<Ctor,A> nestedA, _<Ctor,B> nestedB);
@@ -27,10 +22,19 @@ public interface Applicative<Ctor> extends Pointed<Ctor> {
     // (<*) (Control.Applicative)
     public <A,B> _<Ctor,A> leftSeq(_<Ctor,A> nestedA, _<Ctor,B> nestedB);
     
-    // liftA (Control.Applicative)
-    public <A,B> _<Ctor,B> liftA(F<A,B> fn, _<Ctor,A> nestedA);
-    // liftA2 (Control.Applicative)
-    public <A,B,C> _<Ctor,C> liftA2(F<A,F<B,C>> fn, _<Ctor,A> nestedA, _<Ctor,B> nestedB);
-    // liftA3 (Control.Applicative)
-    public <A,B,C,D> _<Ctor,D> liftA3(F<A,F<B,F<C,D>>> fn, _<Ctor,A> nestedA, _<Ctor,B> nestedB, _<Ctor,C> nestedC);
+    // liftA (Control.Applicative), liftM (Control.Monad)
+    public <A,B> _<Ctor,B> lift(F<A,B> fn, _<Ctor,A> nestedA);
+    
+    // liftA2 (Control.Applicative), liftM2 (Control.Monad)
+    public <A,B,C> _<Ctor,C> lift(F<A,F<B,C>> fn, _<Ctor,A> nestedA, _<Ctor,B> nestedB);
+    
+    // liftA3 (Control.Applicative), liftM3 (Control.Monad)
+    public <A,B,C,D> _<Ctor,D> lift(F<A,F<B,F<C,D>>> fn, _<Ctor,A> nestedA, _<Ctor,B> nestedB, _<Ctor,C> nestedC);
+    
+    // liftA and liftM as instance of F
+    public <A,B> F<F<A, B>,F<_<Ctor, A>,_<Ctor, B>>> liftFn();
+
+    // liftA2 and liftM2 as instance of F
+    public <A,B,C> F<F<A, F<B,C>>,F<_<Ctor, A>,F<_<Ctor, B>,_<Ctor,C>>>> liftFn2();
+
 }

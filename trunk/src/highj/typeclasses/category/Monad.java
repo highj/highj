@@ -44,18 +44,9 @@ public interface Monad<Ctor> extends Applicative<Ctor> {
     // >=> (Control.Monad)
     public <A, B, C> F<A, _<Ctor, C>> kleisli(F<A, _<Ctor, B>> fn, F<B, _<Ctor, C>> gn);
         
-    // liftM (Control.Monad)
-    public <A,B> _<Ctor, B> liftM(F<A, B> fn, _<Ctor, A> nestedA);
-    // liftM2 (Control.Monad)
-    public <A,B,C> _<Ctor, C> liftM2(F<A, F<B, C>> fn, _<Ctor, A> nestedA, _<Ctor, B> nestedB);
-    // liftM3 (Control.Monad)
-    public <A, B, C, D> _<Ctor, D> liftM3(F<A, F<B, F<C, D>>> fn, _<Ctor, A> nestedA, _<Ctor, B> nestedB, _<Ctor, C> nestedC);
     // return (Control.Monad) is Pointed.pure
     public <A> _<Ctor, A> returnM(A a);
     // ap (Control.Monad)
     public <A, B> _<Ctor, B> ap(_<Ctor, F<A,B>> nestedFn, _<Ctor,A> nestedA);
-
     
-    // liftM as instance of F
-    public <A,B> F<F<A, B>,F<_<Ctor, A>,_<Ctor, B>>> liftMFn();
 }
