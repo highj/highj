@@ -5,6 +5,9 @@
 package highj.data2;
 
 import fj.data.Either;
+import highj.CL;
+import highj.CR;
+import highj._;
 import highj.__;
 
 /**
@@ -33,6 +36,22 @@ public class EitherOf {
     public static <A, B> Either<A, B> unwrap(__<EitherOf, A, B> wrapped) {
         return (Either<A, B>) wrapped.read(hidden);
     }
+
+    public static <A, B> _<CL<EitherOf, A>, B> wrapCL(Either<A, B> either) {
+        return CL.curry(wrap(either));
+    }
+
+    public static <A, B> _<CR<EitherOf, B>, A> wrapCR(Either<A, B> either) {
+        return CR.curry(wrap(either));
+    }
+    
+    public static <A, B> Either<A, B> unwrapCL(_<CL<EitherOf, A>, B> curried) {
+        return unwrap(CL.uncurry(curried));
+    }
+
+    public static <A, B> Either<A, B> unwrapCR(_<CR<EitherOf, B>, A> curried) {
+        return unwrap(CR.uncurry(curried));
+    }    
 
     public static boolean isLeft(__<EitherOf, ?, ?> wrapped) {
         return unwrap(wrapped).isLeft();
