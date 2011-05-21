@@ -35,7 +35,6 @@ public class ApplicativeAbstractTest {
             public Integer f(String a) {
                 return a.length();
             }
-            
         };
     }
     
