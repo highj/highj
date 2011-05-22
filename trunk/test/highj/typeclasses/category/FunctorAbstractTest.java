@@ -82,9 +82,9 @@ public class FunctorAbstractTest {
     }
 
     @Test
-    public void testFmapFn() {
+    public void testLift() {
         F<_<OptionOf, String>, _<OptionOf, Integer>> fn =
-                optionFunctor.<String, Integer>fmapFn().f(lengthFn);
+                optionFunctor.lift(lengthFn);
         assertEquals(Integer.valueOf(9), OptionOf.get(fn.f(OptionOf.some("123456789"))));
         assertEquals(true, OptionOf.isNone(fn.f(OptionOf.<String>none())));
     }

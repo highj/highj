@@ -14,7 +14,7 @@ import highj.__;
  *
  * @author DGronau
  */
-public class EitherOf {
+public final class EitherOf {
    private static final EitherOf hidden = new EitherOf();
     
    private EitherOf() {

@@ -4,6 +4,7 @@
  */
 package highj.typeclasses.category;
 
+import fj.F;
 import fj.data.List;
 import highj._;
 import highj.data.ListOf;
@@ -27,4 +28,6 @@ public interface MonadPlus<Ctor> extends Monad<Ctor>, Alternative<Ctor> {
 
     // "flat" version of msum
     public <A> _<Ctor, A> msumFlat(List<_<Ctor, A>> list);
+    
+    public <A> _<Ctor, A> mfilter(F<A, Boolean> fn, _<Ctor, A> nestedA);
 }

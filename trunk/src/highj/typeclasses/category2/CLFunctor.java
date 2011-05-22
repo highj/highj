@@ -9,6 +9,8 @@ import highj.CL;
 import highj._;
 import highj.__;
 import highj.typeclasses.category.FunctorAbstract;
+import highj.typeclasses.category.FunctorBounded;
+import highj.typeclasses.category.FunctorBoundedAbstract;
 
 /**
  * Takes care of left-currying the arguments when implementing a Functor 
@@ -16,13 +18,12 @@ import highj.typeclasses.category.FunctorAbstract;
  * 
  * @author DGronau
  */
-public abstract class CLFunctor<Ctor, X> extends FunctorAbstract<CL<Ctor,X>> {
+public abstract class CLFunctor<Ctor, X> extends FunctorAbstract<CL<Ctor, X>> {
+
+    public abstract <A, B> __<Ctor, X, B> fmap(F<A, B> fn, __<Ctor, X, A> nestedA);
 
     @Override
     public <A, B> _<CL<Ctor, X>, B> fmap(F<A, B> fn, _<CL<Ctor, X>, A> nestedA) {
         return CL.curry(fmap(fn, CL.uncurry(nestedA)));
     }
-
-    public abstract <A, B> __<Ctor, X, B> fmap(F<A, B> fn, __<Ctor, X, A> nestedA);
-    
 }

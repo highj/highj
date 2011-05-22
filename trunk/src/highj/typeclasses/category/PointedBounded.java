@@ -9,11 +9,7 @@ import highj._;
  *
  * @author DGronau
  */
-public interface Pointed<Ctor> extends PointedBounded<Ctor, Object>, Functor<Ctor> {
+public interface PointedBounded<Ctor, Bound> extends FunctorBounded<Ctor, Bound> {
     // pure (Data.Pointed)
-    
-    @Override
-    public <A> _<Ctor, A> pure(A a); 
-    
-    
+    public <A extends Bound> _<Ctor, A> pure(A a); 
 }

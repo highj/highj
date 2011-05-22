@@ -5,7 +5,9 @@
 package highj.typeclasses.category;
 
 import fj.F;
+import fj.F2;
 import fj.Function;
+import fj.P2;
 import fj.Unit;
 import highj._;
 
@@ -13,18 +15,9 @@ import highj._;
  *
  * @author DGronau
  */
-public abstract class FunctorAbstract<Ctor> implements Functor<Ctor> {
+public abstract class FunctorAbstract<Ctor> extends FunctorBoundedAbstract<Ctor, Object> implements Functor<Ctor> {
 
    
-    @Override
-    public abstract <A, B> _<Ctor, B> fmap(F<A, B> fn, _<Ctor, A> nestedA);
-    
-    @Override
-    // (<$)
-    public <A, B> _<Ctor, A> left$(A a, _<Ctor, B> nestedB) {
-        return fmap(Function.<B,A>constant().f(a), nestedB);
-    }
-
     @Override
     //void (Control.Monad)
     public <A> _<Ctor, Unit> voidF(_<Ctor, A> nestedA) {
@@ -40,21 +33,6 @@ public abstract class FunctorAbstract<Ctor> implements Functor<Ctor> {
                 return fun.f(a);
             }
         }, nestedFn); 
-    }
-    
-    @Override
-    public <A, B> F<F<A,B>,F< _<Ctor, A>,_<Ctor, B>>> fmapFn() {
-        return new F<F<A,B>,F< _<Ctor, A>,_<Ctor, B>>>(){
-            @Override
-            public F<_<Ctor, A>, _<Ctor, B>> f(final F<A, B> f) {
-                return new F<_<Ctor, A>, _<Ctor, B>>() {
-                    @Override
-                    public _<Ctor, B> f(_<Ctor, A> a) {
-                        return fmap(f,a);
-                    }
-                };
-            }
-        }; 
     }
     
 }

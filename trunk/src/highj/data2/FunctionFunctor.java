@@ -23,5 +23,6 @@ public class FunctionFunctor<X> extends CLFunctor<FunctionOf, X> {
             }
         });
     }
+ 
     
 }

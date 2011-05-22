@@ -75,5 +75,17 @@ public abstract class MonadPlusAbstract<Ctor> extends MonadAbstract<Ctor> implem
     public <A> Monoid<_<Ctor, A>> asMonoid() {
         return AlternativeAbstract.asMonoid(this);
     }
+    
+    @Override
+    public <A> _<Ctor, A> mfilter(final F<A, Boolean> fn, _<Ctor, A> nestedA) {
+        return bind(nestedA, new F<A, _<Ctor,A>>() {
+
+            @Override
+            public _<Ctor, A> f(A a) {
+                return (fn.f(a)) ? returnM(a) : MonadPlusAbstract.this.<A>mzero();
+            }
+        });
+    }
+
 
 }
