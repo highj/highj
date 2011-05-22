@@ -129,8 +129,8 @@ public abstract class MonadAbstract<Ctor> extends ApplicativeAbstract<Ctor> impl
     }
 
     @Override
-    // ap (Control.Monad)
+    // ap (Control.Monad), same as star (Control.Applicative)
     public <A, B> _<Ctor, B> ap(_<Ctor, F<A, B>> nestedFn, _<Ctor, A> nestedA) {
-        return lift(Function.<F<A,B>>identity(), nestedFn, nestedA);
+        return star(nestedFn, nestedA);
     }
 }

@@ -10,12 +10,12 @@ import highj.__;
  *
  * @author DGronau
  */
-public interface Category<Ctor> {
+public interface Category<A> {
     
     // id (Control.Category)
-    public <A> __<Ctor, A, A> id();
+    public <B> __<A, B, B> id();
     
-    // (.) (Control.Category)
-    public <A, B, C> __<Ctor, A, C> dot(__<Ctor, B, C> bc, __<Ctor, A, B> ab);
+    // (.) and (<<<) (Control.Category)
+    public <B, C, D> __<A, B, D> dot(__<A, C, D> cd, __<A, B, C> bc);
 
 }

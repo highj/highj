@@ -11,9 +11,10 @@ import highj._;
  * @author DGronau
  */
 public abstract class PointedAbstract<Ctor> extends FunctorAbstract<Ctor> 
-   implements Pointed<Ctor> {
+    implements Pointed<Ctor> {
 
     @Override
     public abstract <A> _<Ctor, A> pure(A a);
+
     
 }

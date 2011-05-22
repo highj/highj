@@ -18,11 +18,6 @@ import highj.typeclasses.category.MonadPlusAbstract;
 public class ListMonadPlus extends MonadPlusAbstract<ListOf> implements MonadPlus<ListOf> {
 
     @Override
-    public <T> _<ListOf, T> pure(T t) {
-        return ListOf.wrap(List.single(t));
-    }
-
-    @Override
     public <A, B> _<ListOf, B> star(_<ListOf, F<A, B>> fun, _<ListOf, A> ta) {
         List<B> tb = List.nil();
         List<F<A, B>> funs = ListOf.unwrap(fun).reverse();
@@ -32,15 +27,6 @@ public class ListMonadPlus extends MonadPlusAbstract<ListOf> implements MonadPlu
             }
         }
         return ListOf.wrap(tb);
-    }
-
-    @Override
-    public <A, B> _<ListOf, B> fmap(F<A, B> f, _<ListOf, A> ta) {
-        List<B> tb = List.nil();
-        for (A a : ListOf.unwrap(ta)) {
-            tb = tb.cons(f.f(a));
-        }
-        return ListOf.wrap(tb.reverse());
     }
 
     @Override
@@ -67,9 +53,24 @@ public class ListMonadPlus extends MonadPlusAbstract<ListOf> implements MonadPlu
         return ListOf.wrap(ListOf.unwrap(first).append(ListOf.unwrap(second)));
     }
 
+    @Override
+    public <A, B> _<ListOf, B> fmap(F<A, B> fn, _<ListOf, A> nestedA) {
+        List<B> tb = List.nil();
+        for (A a : ListOf.unwrap(nestedA)) {
+            tb = tb.cons(fn.f(a));
+        }
+        return ListOf.wrap(tb.reverse());
+    }
+
+    @Override
+    public <A> _<ListOf, A> pure(A a) {
+        return ListOf.wrap(List.single(a));
+    }
+    
     private static ListMonadPlus INSTANCE = new ListMonadPlus();
 
     public static ListMonadPlus getInstance() {
         return INSTANCE;
     }
+
 }

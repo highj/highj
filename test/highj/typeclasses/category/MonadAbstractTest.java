@@ -6,7 +6,6 @@ package highj.typeclasses.category;
 
 import fj.Unit;
 import highj.data.OptionOf;
-import fj.F2;
 import fj.Show;
 import highj.data.ListMonadPlus;
 import fj.F;
