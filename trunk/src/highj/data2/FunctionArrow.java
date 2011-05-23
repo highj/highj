@@ -49,6 +49,18 @@ public class FunctionArrow extends ArrowAbstract<FunctionOf> implements Arrow<Fu
             }
         });
     }
+    
+    @Override
+    //overwriting ArrowAbstract implementation for better performance
+    public <B,C,D> __<FunctionOf, P2<D,B>, P2<D,C>> second(final __<FunctionOf,B,C> arrow) {
+        return FunctionOf.wrap(new F<P2<D, B>, P2<D, C>>(){
+            @Override
+            public P2<D, C> f(P2<D, B> pair) {
+                return P.p( pair._1(), FunctionOf.apply(arrow, pair._2()));
+            }
+        });
+    }
+    
     private static final Arrow<FunctionOf> INSTANCE = new FunctionArrow();
     
     public static Arrow<FunctionOf> getInstance() {

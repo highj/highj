@@ -80,7 +80,7 @@ public class FunctionArrowTest {
 
     @Test
     public void testFirst() {
-        //first length $ ("PIZZA", 3.14)
+        //first length ("PIZZA", 3.14)
         //(5,3.14)
         __<FunctionOf, String, Integer> lengthArrow = FunctionOf.wrap(lengthFn);
         __<FunctionOf, P2<String, Double>, P2<Integer, Double>> fst = arrow.first(lengthArrow);
