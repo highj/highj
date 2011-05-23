@@ -4,6 +4,7 @@
  */
 package highj.typeclasses.category;
 
+import fj.F2;
 import fj.Unit;
 import highj.data.OptionOf;
 import fj.Show;
@@ -248,4 +249,33 @@ public class MonadAbstractTest {
         assertEquals(true, OptionOf.isNone(resultEmpty2));
     }
 
+    @Test
+    public void testFoldM() {
+        //foldM (\x y -> [0,x + length y]) 0 ["one","two","three"]
+        //-- [0,5,0,8,0,5,0,11]
+        _<ListOf,String> list = ListOf.list("one","two","three");
+        F<Integer, F<String, _<ListOf,Integer>>> listFn = new F2<Integer, String,_<ListOf,Integer>>(){
+            @Override
+            public _<ListOf, Integer> f(Integer a, String b) {
+                return ListOf.list(0, a + b.length());
+            }
+        }.curry();
+        _<ListOf,Integer> result = listMonad.foldM(listFn, 0, list);
+        assertEquals("[0, 5, 0, 8, 0, 5, 0, 11]", ListOf.toString(result));
+    }
+    
+   @Test
+    public void testFoldMFlat() {
+        //foldM (\x y -> [x,x + length y]) 0 ["one","two","three"]
+        //-- [0,5,3,8,3,8,6,11] 
+       List<String> list = List.list("one","two","three");
+        F2<Integer, String,_<ListOf,Integer>> listFn = new F2<Integer, String,_<ListOf,Integer>>(){
+            @Override
+            public _<ListOf, Integer> f(Integer a, String b) {
+                return ListOf.list(a, a + b.length());
+            }
+        };
+        _<ListOf,Integer> result = listMonad.foldMFlat(listFn, 0, list);
+        assertEquals("[0, 5, 3, 8, 3, 8, 6, 11]", ListOf.toString(result));
+    }    
 }

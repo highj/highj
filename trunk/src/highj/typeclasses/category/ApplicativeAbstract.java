@@ -22,6 +22,18 @@ public abstract class ApplicativeAbstract<Ctor> extends PointedAbstract<Ctor> im
     public abstract <A, B> _<Ctor, B> star(_<Ctor, F<A, B>> fn, _<Ctor, A> nestedA);
     
     @Override
+    // <*> (Control.Applicative) curried
+    public <A,B> F<_<Ctor,A>,_<Ctor,B>> star(final _<Ctor, F<A,B>> fn) {
+        return new F<_<Ctor,A>,_<Ctor,B>>() {
+            @Override
+            public _<Ctor, B> f(_<Ctor, A> a) {
+                return star(fn, a);
+            }
+        };
+    }
+
+    
+    @Override
     // *> (Control.Applicative)
     public <A, B> _<Ctor, B> rightSeq(_<Ctor, A> nestedA, _<Ctor, B> nestedB) {
         return lift2(Function.<A, F<B, B>>constant().f(Function.<B>identity())).f(nestedA, nestedB);

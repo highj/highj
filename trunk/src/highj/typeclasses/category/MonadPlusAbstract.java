@@ -87,5 +87,14 @@ public abstract class MonadPlusAbstract<Ctor> extends MonadAbstract<Ctor> implem
         });
     }
 
+    @Override
+    public <A> F<_<Ctor,A>,_<Ctor, A>> mfilter(final F<A, Boolean> fn) {
+        return new F<_<Ctor,A>,_<Ctor, A>>() {
+            @Override
+            public _<Ctor, A> f(_<Ctor, A> a) {
+                return mfilter(fn, a);
+            }
+        };
+    }
 
 }
