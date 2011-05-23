@@ -6,7 +6,9 @@ package highj.typeclasses.category2;
 
 import fj.F;
 import fj.P2;
+import highj.CL;
 import highj.__;
+import highj.typeclasses.category.Applicative;
 
 /**
  *
@@ -32,4 +34,6 @@ public interface Arrow<A> extends Category<A> {
     // (>>>) (Control.Category, Control.Arrow)
     public <B, C, D> __<A, B, D> then(__<A, B, C> bc, __<A, C, D> cd);
 
+    //the Applicative instance for a left-curried Arrow
+    public <X> Applicative<CL<A,X>> getApplicative();
 }

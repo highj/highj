@@ -21,9 +21,15 @@ public interface Bifunctor<Ctor> {
     
     //first (Data.Bifunctor)
     public <A, B, C> __<Ctor, B, C> first(F<A, B> fn, __<Ctor, A, C> nestedAC);
+
+    //first (Data.Bifunctor) curried
+    public <A, B, C> F<__<Ctor, A, C>, __<Ctor, B, C>> first(F<A, B> fn);
             
     //second (Data.Bifunctor)
     public <A, B, C> __<Ctor, A, C> second(F<B, C> fn, __<Ctor, A, B> nestedAB);
+
+    //second (Data.Bifunctor)
+    public <A, B, C> F<__<Ctor, A, B>,__<Ctor, A, C>> second(F<B, C> fn);
 
     //functionality of first as a Functor (with right-curried argumets)   
     public <X> Functor<CR<Ctor, X>> getCRFunctor();

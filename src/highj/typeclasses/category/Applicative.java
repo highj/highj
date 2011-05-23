@@ -17,6 +17,9 @@ public interface Applicative<Ctor> extends Pointed<Ctor> {
     
     // <*> (Control.Applicative)
     public <A,B> _<Ctor,B> star(_<Ctor, F<A,B>> fn, _<Ctor,A> nestedA);
+    
+    // <*> (Control.Applicative) curried
+    public <A,B> F< _<Ctor,A>,_<Ctor,B>> star(_<Ctor, F<A,B>> fn);
    
     // (*>) (Control.Applicative)
     public <A,B> _<Ctor,B> rightSeq(_<Ctor,A> nestedA, _<Ctor,B> nestedB);

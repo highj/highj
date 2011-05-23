@@ -29,5 +29,9 @@ public interface MonadPlus<Ctor> extends Monad<Ctor>, Alternative<Ctor> {
     // "flat" version of msum
     public <A> _<Ctor, A> msumFlat(List<_<Ctor, A>> list);
     
+    // mfilter (Control.Monad)
     public <A> _<Ctor, A> mfilter(F<A, Boolean> fn, _<Ctor, A> nestedA);
+
+    // mfilter (Control.Monad) curried
+    public <A> F<_<Ctor,A>,_<Ctor, A>> mfilter(F<A, Boolean> fn);
 }

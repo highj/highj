@@ -133,4 +133,59 @@ public abstract class MonadAbstract<Ctor> extends ApplicativeAbstract<Ctor> impl
     public <A, B> _<Ctor, B> ap(_<Ctor, F<A, B>> nestedFn, _<Ctor, A> nestedA) {
         return star(nestedFn, nestedA);
     }
+    
+    @Override
+    //foldM (Control.Monad) 
+    public <A, B> _<Ctor, A> foldM(F<A,F<B,_<Ctor,A>>> fn, A a, _<ListOf, B> listB){
+        return foldMFlat(Function.uncurryF2(fn), a, ListOf.unwrap(listB));
+    }
+    @Override
+    //"flat" version of foldM 
+    public <A, B> _<Ctor, A> foldMFlat(final F2<A,B,_<Ctor,A>> fn, A a, List<B> listB) {
+        _<Ctor, A> result = returnM(a);
+        final B[] b = (B[]) new Object[1];
+        F<A,_<Ctor,A>> fnBind = new F<A,_<Ctor,A>>(){
+            @Override
+            public _<Ctor, A> f(A a) {
+                return fn.f(a, b[0]);
+            }
+        };
+        while(listB.isNotEmpty()) {
+           b[0] = listB.head();
+           listB = listB.tail();
+           result = bind(result, fnBind); 
+        }  
+        return result;
+    }
+    
+    @Override
+    //foldM_ (Control.Monad)
+    public <A, B> _<Ctor, Unit> foldM_(F<A,F<B,_<Ctor,A>>> fn, A a, _<ListOf, B> listB) {
+        return semicolon(foldM(fn, a, listB), returnM(Unit.unit()));
+    }
+
+    @Override
+    //"flat" version of foldM_ 
+    public <A, B> _<Ctor, Unit> foldM_Flat(F2<A, B,_<Ctor,A>> fn, A a, List<B> listB) {
+        return semicolon(foldMFlat(fn, a, listB), returnM(Unit.unit()));
+    }
+    
+    //replicateM (Control.Monad)
+    @Override
+    public <A> _<Ctor,_<ListOf,A>> replicateM(int n, _<Ctor, A> nestedA){
+         //replicateM n x    = sequence (replicate n x)
+        return sequence(ListOf.wrap(List.replicate(n, nestedA)));
+    }
+    
+    //"flat" version of replicateM 
+    @Override
+    public <A> _<Ctor,List<A>> replicateMFlat(int n, _<Ctor, A> nestedA){
+        return sequenceFlat(List.replicate(n, nestedA));   
+    }
+    
+    //replicateM_ (Control.Monad)
+    @Override
+    public <A> _<Ctor, Unit> replicateM_(int n, _<Ctor, A> nestedA){
+        return sequence_Flat(List.replicate(n, nestedA));
+    }
 }
