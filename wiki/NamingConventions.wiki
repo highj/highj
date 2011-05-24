@@ -30,4 +30,4 @@ Type classes have type constructors as parameters. Here I usually use the abbrev
 
 = Curried Types =
 
-You can't use a `__<X,A,B>` directly in a type class which expects a type with only one type parameter, like `Functor`. So there are two classes LC ("left curry") and RC ("right curry") to translate that type to the "curried" forms `_<LC<X,A>,B>` or `_<RC<X,B>,A`, which have the right structure.
+You can't use a `__<X,A,B>` directly in a type class which expects a type with only one type parameter, like `Functor`. So there are two classes LC ("left curry") and RC ("right curry") to translate that type to the "curried" forms `_<LC<X,A>,B>` or `_<RC<X,B>,A>`, which have the right structure (e.g. you can implement a `Functor<LC<X,A>>`, which operates only on the B type parameter).
