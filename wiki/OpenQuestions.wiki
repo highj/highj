@@ -16,11 +16,11 @@ E.g. Pointed would not longer inherit from Functor, but have a getFunctor method
 
 == Curried binary Type Constructors ==
 
-Would it be possible to work _always_ with a curried version like `_<CL<Ctor,A>,B>` instead of `_<Ctor2,A,B>`? 
+Would it be possible to work _always_ with a curried version like `_<LC<Ctor,A>,B>` instead of `__<Ctor2,A,B>`? 
 
 *Pro:* Can be used immediately in unary type classes. Same mechanism as Haskell.
 
-*Con:* Asymmetric, would need a "Flip" typeclass or so to change the order. 
+*Con:* Asymmetric, would need a "Flip" typeclass or so to change the order. Type classes like Arrow would read awkward. Security could be weakened.
 
 == Category Package ==
 
