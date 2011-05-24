@@ -202,7 +202,7 @@ public class MonadAbstractTest {
             
         };
         F<String, _<OptionOf, Double>> lengthSqrtOptFn = optionMonad.kleisli(lengthOptFn, sqrtOptFn);
-        //$ "123456789"
+        //... $ "123456789"
         //-- Just 3.0
         assertEquals("3.0", OptionOf.get(lengthSqrtOptFn.f("123456789")).toString());
         //... $ ""

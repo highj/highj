@@ -30,11 +30,12 @@ public abstract class ArrowAbstract<Arr> extends CategoryAbstract<Arr> implement
 
     @Override
     // second  (Control.Arrow)
+    //This is only a fallback method. Please override for better performance.
     public <B, C, D> __<Arr, P2<D, B>, P2<D, C>> second(__<Arr, B, C> arrow) {
-        __<Arr, P2<D, B>, P2<B, D>> swapBack = arr(this.<D, B>swap());
+        __<Arr, P2<D, B>, P2<B, D>> swapForth = arr(this.<D, B>swap());
         __<Arr, P2<B, D>, P2<C, D>> arrowFirst = first(arrow);
-        __<Arr, P2<C, D>, P2<D, C>> swapForth = arr(this.<C, D>swap());
-        return then(swapBack, then(arrowFirst, swapForth));
+        __<Arr, P2<C, D>, P2<D, C>> swapBack = arr(this.<C, D>swap());
+        return then(swapForth, then(arrowFirst, swapBack));
     }
 
     private <X, Y> F<P2<X, Y>, P2<Y, X>> swap() {
