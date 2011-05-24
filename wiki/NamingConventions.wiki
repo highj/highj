@@ -1,0 +1,23 @@
+#summary Naming Conventions used for highJ
+
+= Type Constructors =
+
+I call classes like `ListOf` or `PairOf` type constructors. The term "type constructor" requires an explanation for OO people: If you think about it, you'll come to the conclusion that `List` is not a real "type", because you don't create `List` objects (or at least you shouldn't, as raw types in Java are an abomination). It's more like a kind of function waiting for a type paramter to *produce* a type, e.g. `List<String>`. So the real type is something like `List<String>`, and `List` can be use to "construct" such a type.
+
+Now in highJ the "real" types look like `_<Something, String>` because we need to simulate higher order polymorphism, and the `Something` is used to construct these types (using a function like `wrap`), so it makes sense to call `Something` a type constructor.
+
+The type constructors in highJ usually have the name of the wrapped type followed by "Of", which makes them easy to identify and make the expressions more readable. If the wrapped type has an ugly name, I took the freedom to use something readable instead (e.g. `PairOf` instead `P2Of`). An exception of this rule are type constructors that take another type constructor as parameter, where the "Of" would be too much (e.g. `Kleisli<ListOf>` instead of `KleisliOf<ListOf>`).
+
+The type constructors have (as a consequence of the higher order implementation) only static methods. The methods for constructing a higher order type are usually called `wrap()`, the deconstruction methods `unwrap()`. If the type has a function-like behavior, an `apply()` method is provided. Other methods often mimick the interface of the real class to make some tasks easier, e.g. `ListOf.list()` instead of `List.list()` or `OptionOf.isNone()` instead of `option.isNone()`.
+
+= Higher Kinded Types =
+
+The higher kinded objects of type `_` or `__` shouldn't be pronounced. They are necessary part of the mechanism, but have little own behavior. I chose that strange identifiers intentionally in order to keep them short and almost "invisible", so the attention is drawn to the more interesting type constructor name. 
+
+= Type Classes =
+
+Type class and method names follow the Haskell naming conventions, if possible. If there is a symbolic name and an alphanumeric name, I chose the alphanumeric name. If there is some standard pronunciation for a symbolic name, I used it (e.g. `bind` for `>>=`). Else I try to spell out the symbols (e.g. `star` for `<*>` or `left$` for `<$`). Symmetric functions are of little value in Java, so usually I didn't implement them (e.g. there is no `<=<` in Monad, because there is already a `>=>` called `kleisli`).
+
+Sometimes I unified some functions that are separated for  "historical" reasons in Haskell (e.g. `lift2` instead of `liftA2` and `liftM2`). I tried to introduce functions in the type class hierarchy as early as possible (e.g. `lift` in `Functor`, not in `Applicative` or `Monad`). In case of a clash with a Java keyword, I appended the first letter of the type class, e.g. `Monad.returnM` and `Functor.voidF`.
+
+Type classes have type constructors as parameters. Here I usually use the abbreviation `Ctor` (for "[type] constructor"). I'm not convinced this is a good idea, so I used `Arr` in `Arrow` to try out a different naming scheme (as the Haskell code has a strong tendency to use a b c in its signatures, where a is the name of the arrow). I'm not entirely sure which way to go here.
