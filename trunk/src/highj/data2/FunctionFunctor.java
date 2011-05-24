@@ -6,13 +6,13 @@ package highj.data2;
 
 import fj.F;
 import highj.__;
-import highj.typeclasses.category2.CLFunctor;
+import highj.typeclasses.category2.LCFunctor;
 
 /**
  *
  * @author DGronau
  */
-public class FunctionFunctor<X> extends CLFunctor<FunctionOf, X> {
+public class FunctionFunctor<X> extends LCFunctor<FunctionOf, X> {
 
     @Override
     public <A, B> __<FunctionOf, X, B> fmap(final F<A, B> fn, final __<FunctionOf, X, A> nestedA) {

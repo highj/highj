@@ -5,8 +5,8 @@
 package highj.data2;
 
 import fj.F;
-import highj.CL;
-import highj.CR;
+import highj.LC;
+import highj.RC;
 import highj._;
 import highj.__;
 
@@ -25,24 +25,24 @@ public final class FunctionOf {
         return new __<FunctionOf, A, B>(hidden, fn);
     }
 
-    public static <A, B> _<CL<FunctionOf, A>, B> wrapCL(F<A, B> fn) {
-        return CL.curry(wrap(fn));
+    public static <A, B> _<LC<FunctionOf, A>, B> wrapLC(F<A, B> fn) {
+        return LC.curry(wrap(fn));
     }
 
-    public static <A, B> _<CR<FunctionOf, B>, A> wrapCR(F<A, B> fn) {
-        return CR.curry(wrap(fn));
+    public static <A, B> _<RC<FunctionOf, B>, A> wrapRC(F<A, B> fn) {
+        return RC.curry(wrap(fn));
     }
     
     public static <A, B> F<A, B> unwrap(__<FunctionOf, A, B> wrapped) {
         return (F<A, B>) wrapped.read(hidden);
     }
 
-    public static <A, B> F<A, B> unwrapCL(_<CL<FunctionOf, A>, B> curried) {
-        return unwrap(CL.uncurry(curried));
+    public static <A, B> F<A, B> unwrapLC(_<LC<FunctionOf, A>, B> curried) {
+        return unwrap(LC.uncurry(curried));
     }
 
-    public static <A, B> F<A, B> unwrapCR(_<CR<FunctionOf, B>, A> curried) {
-        return unwrap(CR.uncurry(curried));
+    public static <A, B> F<A, B> unwrapRC(_<RC<FunctionOf, B>, A> curried) {
+        return unwrap(RC.uncurry(curried));
     }
 
     public static <A, B> B apply(__<FunctionOf, A, B> wrapped, A a) {

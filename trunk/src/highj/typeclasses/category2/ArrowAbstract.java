@@ -8,7 +8,7 @@ import fj.F;
 import fj.Function;
 import fj.P;
 import fj.P2;
-import highj.CL;
+import highj.LC;
 import highj._;
 import highj.__;
 import highj.typeclasses.category.Applicative;
@@ -77,12 +77,12 @@ public abstract class ArrowAbstract<Arr> extends CategoryAbstract<Arr> implement
 
     @Override
     //the Applicative instance for a left-curried Arrow
-    public <X> Applicative<CL<Arr, X>> getApplicative() {
-        return new ApplicativeAbstract<CL<Arr, X>>() {
+    public <X> Applicative<LC<Arr, X>> getApplicative() {
+        return new ApplicativeAbstract<LC<Arr, X>>() {
 
             @Override
-            public <A, B> _<CL<Arr, X>, B> star(_<CL<Arr, X>, F<A, B>> fn, _<CL<Arr, X>, A> nestedA) {
-                return CL.curry(then(fanout(CL.uncurry(fn), CL.uncurry(nestedA)), arr(
+            public <A, B> _<LC<Arr, X>, B> star(_<LC<Arr, X>, F<A, B>> fn, _<LC<Arr, X>, A> nestedA) {
+                return LC.curry(then(fanout(LC.uncurry(fn), LC.uncurry(nestedA)), arr(
                         new F<P2<F<A, B>, A>, B>() {
                             @Override
                             public B f(P2<F<A, B>, A> pair) {
@@ -92,13 +92,13 @@ public abstract class ArrowAbstract<Arr> extends CategoryAbstract<Arr> implement
             }
 
             @Override
-            public <A> _<CL<Arr, X>, A> pure(A a) {
-                return CL.curry(arr(Function.<X, A>constant(a)));
+            public <A> _<LC<Arr, X>, A> pure(A a) {
+                return LC.curry(arr(Function.<X, A>constant(a)));
             }
 
             @Override
-            public <A, B> _<CL<Arr, X>, B> fmap(F<A, B> fn, _<CL<Arr, X>, A> nestedA) {
-                return CL.curry(then(CL.uncurry(nestedA), arr(fn)));
+            public <A, B> _<LC<Arr, X>, B> fmap(F<A, B> fn, _<LC<Arr, X>, A> nestedA) {
+                return LC.curry(then(LC.uncurry(nestedA), arr(fn)));
             }
         };
     }

@@ -7,7 +7,7 @@ package highj.examples;
 import fj.F;
 import fj.F2;
 import fj.data.List;
-import highj.CL;
+import highj.LC;
 import highj._;
 import highj.__;
 import highj.data.ListFoldable;
@@ -127,11 +127,11 @@ public class Main {
                 bifunctor.bimap(f1, f2, right));
 
         System.out.println("\n---Either.fmap (curried)---");
-        Functor<CL<EitherOf,String>> functor = bifunctor.<String>getCLFunctor();
+        Functor<LC<EitherOf,String>> functor = bifunctor.<String>getLCFunctor();
         System.out.println("map(Left(Hello), Math.sqrt) = " +
-                CL.uncurry(functor.fmap(f2, CL.curry(left))));
+                LC.uncurry(functor.fmap(f2, LC.curry(left))));
         System.out.println("map(Right(16), Math.sqrt) = " +
-                CL.uncurry(functor.fmap(f2, CL.curry(right))));
+                LC.uncurry(functor.fmap(f2, LC.curry(right))));
         
     }
 
