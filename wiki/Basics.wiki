@@ -47,6 +47,6 @@ public class ListFunctor implements Functor<ListOf> {
 
 Everything else in highJ follows this scheme. 
 
-For classes with two type arguments there is a `__` (2 underscores) wrapper class. CL and CR are classes which help to "curry" a `__` into a `_`, so you can write e.g. a functor for pairs, which works only on the first (or second) argument. 
+For classes with two type arguments there is a `__` (2 underscores) wrapper class. LC and RC are classes which help to "curry" a `__` into a `_`, so you can write e.g. a functor for pairs, which works only on the first (or second) argument. 
 
 I know the short names are confusing at first, but the type signatures are already rather long and I didn't want to make them even longer.
