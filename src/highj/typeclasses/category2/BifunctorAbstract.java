@@ -6,8 +6,8 @@ package highj.typeclasses.category2;
 
 import fj.F;
 import fj.Function;
-import highj.CL;
-import highj.CR;
+import highj.LC;
+import highj.RC;
 import highj.__;
 import highj.typeclasses.category.Functor;
 
@@ -38,8 +38,8 @@ public abstract class BifunctorAbstract<Ctor> implements Bifunctor<Ctor> {
     
     @Override
     //functionality of second as a Functor (with left-curried argumets)   
-    public <X> Functor<CL<Ctor, X>> getCLFunctor() {
-        return new CLFunctor<Ctor,X>() {
+    public <X> Functor<LC<Ctor, X>> getLCFunctor() {
+        return new LCFunctor<Ctor,X>() {
             @Override
             public <A,B> __<Ctor, X, B> fmap(F<A,B> fn, __<Ctor, X, A> nestedA) {
                 return BifunctorAbstract.this.second(fn, nestedA);
@@ -49,8 +49,8 @@ public abstract class BifunctorAbstract<Ctor> implements Bifunctor<Ctor> {
 
     @Override
     //functionality of first as a Functor (with right-curried argumets)   
-    public <X> Functor<CR<Ctor, X>> getCRFunctor() {
-        return new CRFunctor<Ctor,X>() {
+    public <X> Functor<RC<Ctor, X>> getRCFunctor() {
+        return new RCFunctor<Ctor,X>() {
             @Override
             public <A,B> __<Ctor, B, X> fmap(F<A,B> fn, __<Ctor, A, X> nestedA) {
                 return BifunctorAbstract.this.first(fn, nestedA);

@@ -5,8 +5,8 @@
 package highj.data2;
 
 import fj.data.Either;
-import highj.CL;
-import highj.CR;
+import highj.LC;
+import highj.RC;
 import highj._;
 import highj.__;
 
@@ -37,20 +37,20 @@ public final class EitherOf {
         return (Either<A, B>) wrapped.read(hidden);
     }
 
-    public static <A, B> _<CL<EitherOf, A>, B> wrapCL(Either<A, B> either) {
-        return CL.curry(wrap(either));
+    public static <A, B> _<LC<EitherOf, A>, B> wrapLC(Either<A, B> either) {
+        return LC.curry(wrap(either));
     }
 
-    public static <A, B> _<CR<EitherOf, B>, A> wrapCR(Either<A, B> either) {
-        return CR.curry(wrap(either));
+    public static <A, B> _<RC<EitherOf, B>, A> wrapRC(Either<A, B> either) {
+        return RC.curry(wrap(either));
     }
     
-    public static <A, B> Either<A, B> unwrapCL(_<CL<EitherOf, A>, B> curried) {
-        return unwrap(CL.uncurry(curried));
+    public static <A, B> Either<A, B> unwrapLC(_<LC<EitherOf, A>, B> curried) {
+        return unwrap(LC.uncurry(curried));
     }
 
-    public static <A, B> Either<A, B> unwrapCR(_<CR<EitherOf, B>, A> curried) {
-        return unwrap(CR.uncurry(curried));
+    public static <A, B> Either<A, B> unwrapRC(_<RC<EitherOf, B>, A> curried) {
+        return unwrap(RC.uncurry(curried));
     }    
 
     public static boolean isLeft(__<EitherOf, ?, ?> wrapped) {

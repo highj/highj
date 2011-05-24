@@ -12,6 +12,8 @@ import highj._;
  */
 public final class StringOf {
     private static StringOf hidden = new StringOf();
+    
+    private StringOf(){ }
 
     public static <A extends Character> _<StringOf, A> wrap(String string) {
         return new _<StringOf, A>(hidden, string);
