@@ -20,4 +20,12 @@ Type class and method names follow the Haskell naming conventions, if possible. 
 
 Sometimes I unified some functions that are separated for  "historical" reasons in Haskell (e.g. `lift2` instead of `liftA2` and `liftM2`). I tried to introduce functions in the type class hierarchy as early as possible (e.g. `lift` in `Functor`, not in `Applicative` or `Monad`). In case of a clash with a Java keyword, I appended the first letter of the type class, e.g. `Monad.returnM` and `Functor.voidF`.
 
+For convience I provide `...Flat` methods, where arguments or return types are "normal" classes instead of `_` objects, if possible. E.g. in `Monad` there is not only a `sequence(_<ListOf, _<Ctor, A>> list)` method, but also a `sequenceFlat(List<_<Ctor, A>> list)` method, which might be easier to work with.
+
+Methods which take a `Function` as first argument and one or more other arguments are usually not implemented as `m(fn,a,b)` but as `m(fn)`, returning another `Function` object you can call with the arguments `a` and `b`. This form is more flexible, e.g. you can store the returned function and reuse it. To apply all arguments, simply write `m(fn).f(a,b)`. An example for this approach are the `lift...` functions in `Functor` and `Applicative`.
+
 Type classes have type constructors as parameters. Here I usually use the abbreviation `Ctor` (for "[type] constructor"). I'm not convinced this is a good idea, so I used `Arr` in `Arrow` to try out a different naming scheme (as the Haskell code has a strong tendency to use a b c in its signatures, where a is the name of the arrow). I'm not entirely sure which way to go here.
+
+= Curried Types =
+
+You can't use a `__<X,A,B>` directly in a type class which expects a type with only one type parameter, like `Functor`. So there are two classes LC ("left curry") and RC ("right curry") to translate that type to the "curried" forms `_<LC<X,A>,B>` or `_<RC<X,B>,A`, which have the right structure.
