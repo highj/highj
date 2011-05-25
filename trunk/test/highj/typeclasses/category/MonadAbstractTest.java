@@ -121,13 +121,14 @@ public class MonadAbstractTest {
                 return a.equals(0) ? OptionOf.<Integer>none() : OptionOf.some(2*a);
             }
         };
+        F<_<ListOf,Integer>,_<OptionOf,_<ListOf,Integer>>> mappedFn = optionMonad.mapM(fn);
         //mapM (\x -> if x == 0 then Nothing else Just (2*x)) [1,2,3]
         //-- Just [2,4,6]        
-        _<OptionOf,_<ListOf,Integer>> result = optionMonad.mapM(fn, ListOf.list(1,2,3));
+        _<OptionOf,_<ListOf,Integer>> result = mappedFn.f(ListOf.list(1,2,3));
         assertEquals("[2, 4, 6]", ListOf.toString(OptionOf.get(result)));
         //mapM (\x -> if x == 0 then Nothing else Just (2*x)) [1,2,0,3]
         //-- Nothing
-        _<OptionOf,_<ListOf,Integer>> resultEmpty = optionMonad.mapM(fn, ListOf.list(1,2,0,3));
+        _<OptionOf,_<ListOf,Integer>> resultEmpty = mappedFn.f(ListOf.list(1,2,0,3));
         assertEquals(true, OptionOf.isNone(resultEmpty));
     }
 
@@ -140,13 +141,14 @@ public class MonadAbstractTest {
                 return a.equals(0) ? OptionOf.<Integer>none() : OptionOf.some(2*a);
             }
         };
+        F<List<Integer>,_<OptionOf,List<Integer>>> mappedFn = optionMonad.mapMFlat(fn);
         //mapM (\x -> if x == 0 then Nothing else Just (2*x)) [1,2,3]
         //-- Just [2,4,6]        
-        _<OptionOf,List<Integer>> result = optionMonad.mapMFlat(fn, List.list(1,2,3));
+        _<OptionOf,List<Integer>> result = mappedFn.f(List.list(1,2,3));
         assertEquals("[2, 4, 6]", OptionOf.get(result).toCollection().toString());
         //mapM (\x -> if x == 0 then Nothing else Just (2*x)) [1,2,0,3]
         //-- Nothing
-        _<OptionOf, List<Integer>> resultEmpty = optionMonad.mapMFlat(fn, List.list(1,2,0,3));
+        _<OptionOf, List<Integer>> resultEmpty = mappedFn.f(List.list(1,2,0,3));
         assertEquals(true, OptionOf.isNone(resultEmpty));
     }
 
@@ -160,7 +162,7 @@ public class MonadAbstractTest {
                 return ListOf.list(a,a);
             }
         };
-        _<ListOf, Unit> result = listMonad.mapM_(fn, ListOf.list(1,2,3));
+        _<ListOf, Unit> result = listMonad.mapM_(fn).f(ListOf.list(1,2,3));
         assertEquals(8, ListOf.unwrap(result).length());
         assertEquals(Unit.unit(), ListOf.unwrap(result).head());
         assertEquals(Unit.unit(), ListOf.unwrap(result).last());
@@ -176,7 +178,7 @@ public class MonadAbstractTest {
                 return ListOf.list(a,a);
             }
         };
-        _<ListOf, Unit> result = listMonad.mapM_Flat(fn, List.list(1,2,3));
+        _<ListOf, Unit> result = listMonad.mapM_Flat(fn).f(List.list(1,2,3));
         assertEquals(8, ListOf.unwrap(result).length());
         assertEquals(Unit.unit(), ListOf.unwrap(result).head());
         assertEquals(Unit.unit(), ListOf.unwrap(result).last());
@@ -260,7 +262,7 @@ public class MonadAbstractTest {
                 return ListOf.list(0, a + b.length());
             }
         }.curry();
-        _<ListOf,Integer> result = listMonad.foldM(listFn, 0, list);
+        _<ListOf,Integer> result = listMonad.foldM(listFn).f(0, list);
         assertEquals("[0, 5, 0, 8, 0, 5, 0, 11]", ListOf.toString(result));
     }
     
@@ -275,7 +277,7 @@ public class MonadAbstractTest {
                 return ListOf.list(a, a + b.length());
             }
         };
-        _<ListOf,Integer> result = listMonad.foldMFlat(listFn, 0, list);
+        _<ListOf,Integer> result = listMonad.foldMFlat(listFn).f(0, list);
         assertEquals("[0, 5, 3, 8, 3, 8, 6, 11]", ListOf.toString(result));
     }    
 }

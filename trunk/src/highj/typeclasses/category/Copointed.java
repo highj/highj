@@ -4,6 +4,7 @@
  */
 package highj.typeclasses.category;
 
+import fj.F;
 import highj._;
 
 /**
@@ -11,7 +12,8 @@ import highj._;
  * @author dgronau
  */
 public interface  Copointed<Ctor> extends Functor<Ctor> {
+
+    public <A> A extract(_<Ctor,A> nestedA);
     
-    // copoint (Data.Copointed)
-    public <A> A copoint(_<Ctor,A> nestedA);
+    public <A> F<_<Ctor,A>, A> extract();
 }

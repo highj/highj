@@ -14,6 +14,8 @@ import highj._;
 public final class ListOf  {
     
     private static ListOf hidden = new ListOf();
+    
+    private ListOf(){ }
 
     public static <T> _<ListOf, T> wrap(List<T> list) {
         return new _<ListOf, T>(hidden, list);

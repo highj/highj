@@ -45,22 +45,22 @@ public interface Monad<Ctor> extends Applicative<Ctor> {
     public <A> _<Ctor, Unit> sequence_Flat(List<_<Ctor, A>> list); 
     
     // mapM (Control.Monad)
-    public <A, B> _<Ctor, _<ListOf, B>> mapM(F<A, _<Ctor, B>> fn, _<ListOf, A> list);
+    public <A, B> F<_<ListOf, A>,_<Ctor, _<ListOf, B>>> mapM(F<A, _<Ctor, B>> fn);
     // "flat" version of mapM
-    public <A, B> _<Ctor, List<B>> mapMFlat(F<A, _<Ctor, B>> fn, List<A> list);
+    public <A, B> F<List<A>,_<Ctor, List<B>>> mapMFlat(F<A, _<Ctor, B>> fn);
     // mapM_ (Control.Monad)
-    public <A, B> _<Ctor, Unit> mapM_(F<A, _<Ctor, B>> fn, _<ListOf, A> list);
+    public <A, B> F<_<ListOf, A>,_<Ctor, Unit>> mapM_(F<A, _<Ctor, B>> fn);
     // "flat" version of mapM_
-    public <A, B> _<Ctor, Unit> mapM_Flat(F<A, _<Ctor, B>> fn, List<A> list);
+    public <A, B> F<List<A>,_<Ctor, Unit>> mapM_Flat(F<A, _<Ctor, B>> fn);
         
     //foldM (Control.Monad) 
-    public <A, B> _<Ctor, A> foldM(F<A,F<B,_<Ctor,A>>> fn, A a, _<ListOf, B> listB);
+    public <A, B> F2<A,_<ListOf, B>,_<Ctor, A>> foldM(F<A,F<B,_<Ctor,A>>> fn);
     //"flat" version of foldM 
-    public <A, B> _<Ctor, A> foldMFlat(F2<A,B,_<Ctor,A>> fn, A a, List<B> listB);
+    public <A, B> F2<A,List<B>,_<Ctor, A>> foldMFlat(F2<A,B,_<Ctor,A>> fn);
     //foldM_ (Control.Monad)
-    public <A, B> _<Ctor, Unit> foldM_(F<A,F<B,_<Ctor,A>>> fn, A a, _<ListOf, B> listB);
+    public <A, B> F2<A, _<ListOf, B>,_<Ctor, Unit>> foldM_(F<A,F<B,_<Ctor,A>>> fn); 
     //"flat" version of foldM_ 
-    public <A, B> _<Ctor, Unit> foldM_Flat(F2<A, B,_<Ctor,A>> fn, A a, List<B> listB);
+    public <A, B> F2<A,List<B> ,_<Ctor, Unit>> foldM_Flat(F2<A, B,_<Ctor,A>> fn);
 
     //replicateM (Control.Monad)
     public <A> _<Ctor,_<ListOf,A>> replicateM(int n, _<Ctor, A> nestedA);
