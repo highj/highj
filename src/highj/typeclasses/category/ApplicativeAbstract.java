@@ -65,5 +65,16 @@ public abstract class ApplicativeAbstract<Ctor> extends PointedAbstract<Ctor> im
             }
         };
     }
+    
+    @Override
+    public <A,B,C> F2<_<Ctor, A>,_<Ctor,B>,_<Ctor, C>> lift2Flat(F2<A, B, C> fn){
+        return lift2(fn.curry());
+    }
+
+    @Override
+    public <A,B,C,D> F3<_<Ctor, A>,_<Ctor,B>,_<Ctor, C>,_<Ctor,D>> lift3Flat(F3<A, B, C, D> fn){
+        return lift3(Function.curry(fn));
+    }
+    
 
 }

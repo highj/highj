@@ -30,5 +30,9 @@ public interface Applicative<Ctor> extends Pointed<Ctor> {
     public <A,B,C> F2<_<Ctor, A>,_<Ctor,B>,_<Ctor, C>> lift2(F<A, F<B, C>> fn);
 
     public <A,B,C,D> F3<_<Ctor, A>,_<Ctor,B>,_<Ctor, C>,_<Ctor,D>> lift3(F<A, F<B, F<C, D>>> fn);
+
+    public <A,B,C> F2<_<Ctor, A>,_<Ctor,B>,_<Ctor, C>> lift2Flat(F2<A, B, C> fn);
+
+    public <A,B,C,D> F3<_<Ctor, A>,_<Ctor,B>,_<Ctor, C>,_<Ctor,D>> lift3Flat(F3<A, B, C, D> fn);
     
 }
