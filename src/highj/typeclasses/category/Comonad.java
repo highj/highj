@@ -7,6 +7,7 @@ package highj.typeclasses.category;
 import fj.F;
 import fj.P2;
 import fj.data.List;
+import fj.data.Stream;
 import highj._;
 import highj.__;
 import highj.data.ListOf;
@@ -38,9 +39,9 @@ public interface Comonad<Ctor> extends Copointed<Ctor> {
 
     public <A> List<_<Ctor,A>> parallelWFlat(_<Ctor, List<A>> nestedList);
 
-    public <A,B> F<_<Ctor,B>, _<ListOf,A>> unfoldW(F<_<Ctor, A>, __<PairOf,A,B>> fn);
-
-    public <A,B> F<_<Ctor,B>, List<A>> unfoldWFlat(F<_<Ctor, A>, P2<A,B>> fn);
+    public <A,B> F<_<Ctor,A>, Stream<B>> unfoldW(F<_<Ctor, A>, __<PairOf,B,A>> fn);
+    
+    public <A,B> F<_<Ctor,A>, Stream<B>> unfoldWFlat(F<_<Ctor, A>, P2<B,A>> fn);
 
     public <A,B> _<ListOf,B> sequenceW(_<ListOf,F<_<Ctor,A>,B>> fnList, _<Ctor, A> nestedA);
 
