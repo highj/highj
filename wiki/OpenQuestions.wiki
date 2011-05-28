@@ -36,6 +36,10 @@ Would it be possible to work _always_ with a curried version like `_<LC<Ctor,A>,
   * Which other data type classes would be useful? Set, Map..?
   * Which monads would be useful? IO, Reader, Writer, State..?
 
-== Crazy Things ===
+== Crazy Things ==
 
   * Can we simulate Haskells do-notation?
+
+== Examples ==
+
+  * What would be a good, non-trivial example? Maybe something from Haskell can be translated (but lazyness could be an issue)?
