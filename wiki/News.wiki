@@ -1,0 +1,7 @@
+#summary News
+
+= 2011-05-28 =
+
+I found out that it is hard to stay consistent given all the "historical" quirks in Haskell. Fortunately I got pointed to the semigroupoid Haskell package which tries to overcome these gaps, and has a solid theoretical background. It contains a nice [http://hackage.haskell.org/package/semigroupoids-1.2.2 overview of the type class hierarchy], which will be my new treasure map. I got a very friendly response from the maintainer of that package, Edward Kmett, so I can get help when I'm really stuck. 
+
+I'll start to refactor the type class part right now, so you before you rely on anything in the current structure, please take a look at the semigroupoid package description in order to see if that part will change or not.
