@@ -31,7 +31,7 @@ public class KleisliArrow<M> extends ArrowAbstract<Kleisli<M>> implements Arrow<
         return Kleisli.wrap(new F<B,_<M,C>>(){
             @Override
             public _<M, C> f(B b) {
-                return monad.returnM(fn.f(b));
+                return monad.pure(fn.f(b));
             }
         });
     }
@@ -44,7 +44,7 @@ public class KleisliArrow<M> extends ArrowAbstract<Kleisli<M>> implements Arrow<
                 return monad.bind(Kleisli.apply(f, bd._1()), new F<C, _<M,P2<C,D>>>(){
                     @Override
                     public _<M, P2<C, D>> f(C c) {
-                        return monad.returnM(P.p(c, bd._2()));
+                        return monad.pure(P.p(c, bd._2()));
                     }
                 });
             }
@@ -61,7 +61,7 @@ public class KleisliArrow<M> extends ArrowAbstract<Kleisli<M>> implements Arrow<
                 return monad.bind(Kleisli.apply(f, db._2()), new F<C, _<M, P2<D,C>>>(){
                     @Override
                     public _<M, P2<D, C>> f(C c) {
-                        return monad.returnM(P.p(db._1(), c));
+                        return monad.pure(P.p(db._1(), c));
                     }
                 });
             }
@@ -74,7 +74,7 @@ public class KleisliArrow<M> extends ArrowAbstract<Kleisli<M>> implements Arrow<
     }
 
     @Override
-    public <B, C, D> __<Kleisli<M>, B, D> dot(final __<Kleisli<M>, C, D> f, final __<Kleisli<M>, B, C> g) {
+    public <B, C, D> __<Kleisli<M>, B, D> o(final __<Kleisli<M>, C, D> f, final __<Kleisli<M>, B, C> g) {
         return Kleisli.wrap(new F<B,_<M,D>>(){
             @Override
             public _<M, D> f(B b) {

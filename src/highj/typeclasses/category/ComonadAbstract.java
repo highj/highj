@@ -122,6 +122,7 @@ public abstract class ComonadAbstract<Ctor> extends CopointedAbstract<Ctor> impl
     }
     
     @Override
+    //TODO: replace stream by IterableW
     public <A,B> F<_<Ctor,A>, Stream<B>> unfoldW(final F<_<Ctor, A>, __<PairOf,B,A>> fn){
         return unfoldWFlat(fn.andThen(new F<__<PairOf,B,A>,P2<B,A>>(){
 
@@ -133,7 +134,7 @@ public abstract class ComonadAbstract<Ctor> extends CopointedAbstract<Ctor> impl
     }
     
     @Override
-    //Could this cause stack overflows???
+    //TODO: replace stream by IterableW
     public <A,B> F<_<Ctor,A>, Stream<B>> unfoldWFlat(final F<_<Ctor, A>, P2<B,A>> fn) {
         final F<_<Ctor, A>, A> fnSnd = fn.andThen(P2.<B,A>__2());
         return new F<_<Ctor,A>, Stream<B>>() {

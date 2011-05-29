@@ -91,19 +91,19 @@ public class EitherCLMonadTest {
         //(Left 42.0 <*> Left 12) :: Either Double Int
         //-- Left 42.0
         assertEquals("Left(42.0)", EitherOf.toString(LC.uncurry(
-                monad.star(fourtyTwo, twelve))));
+                monad.ap(fourtyTwo, twelve))));
         //(Left 42.0 <*> Right "test") :: Either Double Int
         //-- Left 42.0
         assertEquals("Left(42.0)", EitherOf.toString(LC.uncurry(
-                monad.star(fourtyTwo, test))));
+                monad.ap(fourtyTwo, test))));
         //(Right length <*> Left 12.0) :: Either Double Int
         //-- Left 12.0
         assertEquals("Left(12.0)", EitherOf.toString(LC.uncurry(
-                monad.star(lengthFnEither, twelve))));
+                monad.ap(lengthFnEither, twelve))));
         //(Right length <*> Right "test") :: Either Double Int
         //-- Right 4
         assertEquals("Right(4)", EitherOf.toString(LC.uncurry(
-                monad.star(lengthFnEither, test))));
+                monad.ap(lengthFnEither, test))));
     }
 
     @Test

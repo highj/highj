@@ -8,6 +8,6 @@ package highj.typeclasses.category2;
  *
  * @author dgronau
  */
-public abstract class CategoryAbstract<Ctor> implements Category<Ctor> {
+public abstract class CategoryAbstract<A> extends SemigroupoidAbstract<A> implements Category<A> {
     
 }

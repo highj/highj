@@ -31,9 +31,6 @@ public interface Arrow<A> extends Category<A> {
     // (&&&) (Control.Arrow)
     public <B,C, CC> __<A, B, P2<C,CC>> fanout(__<A,B,C> arr1, __<A,B,CC> arr2);
 
-    // (>>>) (Control.Category, Control.Arrow)
-    public <B, C, D> __<A, B, D> then(__<A, B, C> bc, __<A, C, D> cd);
-
     //the Applicative instance for a left-curried Arrow
     public <X> Applicative<LC<A,X>> getApplicative();
 }

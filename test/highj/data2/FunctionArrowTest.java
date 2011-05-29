@@ -63,7 +63,7 @@ public class FunctionArrowTest {
         //-- 25        
         __<FunctionOf, Integer, Integer> sqrArrow = FunctionOf.wrap(sqrFn);
         __<FunctionOf, String, Integer> lengthArrow = FunctionOf.wrap(lengthFn);
-        __<FunctionOf, String, Integer> dotArrow = arrow.dot(sqrArrow, lengthArrow);
+        __<FunctionOf, String, Integer> dotArrow = arrow.o(sqrArrow, lengthArrow);
         assertEquals(Integer.valueOf(25), FunctionOf.apply(dotArrow, "PIZZA"));
     }
 

@@ -5,7 +5,6 @@
 package highj.typeclasses.category;
 
 import fj.F;
-import fj.F2;
 import fj.Monoid;
 import fj.data.Option;
 import highj._;
@@ -16,12 +15,22 @@ import highj.data.OptionOf;
  */
 public abstract class AlternativeAbstract<Ctor> extends ApplicativeAbstract<Ctor> implements Alternative<Ctor> {
 
+    private final Plus plus;
+    
+    public AlternativeAbstract(Plus<Ctor> plus) {
+        this.plus = plus;
+    }
     
     @Override
-    public abstract <A> _<Ctor, A> empty();
+    public <A> _<Ctor, A> empty(){
+        return plus.empty();
+    }
+            
 
     @Override
-    public abstract <A> _<Ctor, A> or(_<Ctor, A> first, _<Ctor, A> second);
+    public <A> _<Ctor, A> or(_<Ctor, A> first, _<Ctor, A> second) {
+        return plus.empty();
+    }
 
     /*@Override
     public <A> _<Ctor, _<ListOf, A>> some(_<Ctor, A> ta) {
@@ -56,16 +65,7 @@ public abstract class AlternativeAbstract<Ctor> extends ApplicativeAbstract<Ctor
 
     @Override
     public <A> Monoid<_<Ctor, A>> asMonoid() {
-        return asMonoid(this);
+        return plus.asMonoid();
     }
-    
-    public static <Ctor,T>  Monoid<_<Ctor, T>> asMonoid(final Alternative<Ctor> alt) {
-        return Monoid.<_<Ctor, T>>monoid(new F2<_<Ctor, T>, _<Ctor, T>, _<Ctor, T>>(){
-
-            @Override
-            public _<Ctor, T> f(_<Ctor, T> a, _<Ctor, T> b) {
-                return alt.or(a, b);
-            }
-        }, alt.<T>empty());
-    }
+  
 }

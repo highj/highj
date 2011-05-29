@@ -102,7 +102,7 @@ public class KleisliArrowTest {
                 return a*a;
             }
         });
-        __<Kleisli<OptionOf>, String, Integer> dotArrow = arrow.dot(sqrArrow, kleisliLength);
+        __<Kleisli<OptionOf>, String, Integer> dotArrow = arrow.o(sqrArrow, kleisliLength);
         assertEquals(Integer.valueOf(25), OptionOf.get(Kleisli.apply(dotArrow, "PIZZA")));
         
     }

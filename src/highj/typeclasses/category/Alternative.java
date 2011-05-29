@@ -13,11 +13,14 @@ import highj.data.OptionOf;
  *
  * @author DGronau
  */
-public interface Alternative<Ctor> extends Applicative<Ctor> {
+public interface Alternative<Ctor> extends Applicative<Ctor>, Plus<Ctor> {
+    
     //empty (Control.Applicative)
+    @Override
     public <A> _<Ctor, A> empty();
     
     //<|> (Control.Applicative)
+    @Override
     public <A> _<Ctor, A> or(_<Ctor, A> first, _<Ctor, A> second);
     
     //optional (Control.Applicative)
@@ -26,11 +29,8 @@ public interface Alternative<Ctor> extends Applicative<Ctor> {
     //"flat" version of optional 
     public <A> _<Ctor, Option<A>> optionalFlat(_<Ctor, A> nestedA);
     
-    public <A> Monoid<_<Ctor, A>> asMonoid();
-    
     //How to implement these? (preferably iterative)
     //public <A> _<Ctor, _<ListOf,A>> some(_<Ctor, A> ta);
     //public <A> _<Ctor, _<ListOf,A>> many(_<Ctor, A> ta);
-    
 
 }

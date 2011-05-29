@@ -85,7 +85,7 @@ public class MonadAbstractTest {
     public void testReturnM() {
         //(return 42) :: [Int]
         //-- [42]
-        assertEquals("[42]", ListOf.toString(listMonad.returnM(42)));
+        assertEquals("[42]", ListOf.toString(listMonad.pure(42)));
     }
 
     @Test
