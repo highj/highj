@@ -15,14 +15,14 @@ import static org.junit.Assert.*;
  * @author DGronau
  */
 public class StringPointedTest {
-    private StringPointed pointed;
+    private StringFunctor pointed;
     private F<Character, Character> fn;
     
     
 
     @Before
     public void setUp() {
-        pointed = new StringPointed();
+        pointed = new StringFunctor();
         fn = new F<Character, Character>() {
             @Override
             public Character f(Character a) {

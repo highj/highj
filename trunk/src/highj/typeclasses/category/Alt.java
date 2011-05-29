@@ -5,11 +5,14 @@
 package highj.typeclasses.category;
 
 import highj._;
+
 /**
  *
  * @author DGronau
  */
-public interface PointedBounded<Ctor, Bound> extends FunctorBounded<Ctor, Bound> {
-    // pure (Data.Pointed)
-    public <A extends Bound> _<Ctor, A> pure(A a); 
+public interface Alt<Ctor> extends Functor<Ctor> {
+    
+    //<|> (Control.Applicative), <!> (Data.Functor.Alt)
+    public <A> _<Ctor, A> or(_<Ctor, A> first, _<Ctor, A> second);
+    
 }

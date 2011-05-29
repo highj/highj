@@ -35,7 +35,7 @@ public abstract class ArrowAbstract<Arr> extends CategoryAbstract<Arr> implement
         __<Arr, P2<D, B>, P2<B, D>> swapForth = arr(this.<D, B>swap());
         __<Arr, P2<B, D>, P2<C, D>> arrowFirst = first(arrow);
         __<Arr, P2<C, D>, P2<D, C>> swapBack = arr(this.<C, D>swap());
-        return then(swapForth, then(arrowFirst, swapBack));
+        return then(swapForth, arrowFirst, swapBack);
     }
 
     private <X, Y> F<P2<X, Y>, P2<Y, X>> swap() {
@@ -71,18 +71,12 @@ public abstract class ArrowAbstract<Arr> extends CategoryAbstract<Arr> implement
     }
 
     @Override
-    // (>>>) (Control.Category, Control.Arrow)
-    public <B, C, D> __<Arr, B, D> then(__<Arr, B, C> bc, __<Arr, C, D> cd) {
-        return dot(cd, bc);
-    }
-
-    @Override
     //the Applicative instance for a left-curried Arrow
     public <X> Applicative<LC<Arr, X>> getApplicative() {
         return new ApplicativeAbstract<LC<Arr, X>>() {
 
             @Override
-            public <A, B> _<LC<Arr, X>, B> star(_<LC<Arr, X>, F<A, B>> fn, _<LC<Arr, X>, A> nestedA) {
+            public <A, B> _<LC<Arr, X>, B> ap(_<LC<Arr, X>, F<A, B>> fn, _<LC<Arr, X>, A> nestedA) {
                 return LC.curry(then(fanout(LC.uncurry(fn), LC.uncurry(nestedA)), arr(
                         new F<P2<F<A, B>, A>, B>() {
                             @Override

@@ -17,8 +17,29 @@ import highj.data.OptionOf;
  *
  * @author DGronau
  */
-public abstract class MonadPlusAbstract<Ctor> extends MonadAbstract<Ctor> implements MonadPlus<Ctor> {
+public abstract class MonadPlusAbstract<Ctor> extends MonadAbstract<Ctor> implements MonadPlus<Ctor>, Alternative<Ctor> {
+    
+    private final AlternativeAbstract<Ctor> alternative;
 
+    public MonadPlusAbstract(Plus<Ctor> plus) {
+        alternative = new AlternativeAbstract<Ctor>(plus){
+            @Override
+            public <A> _<Ctor, A> pure(A a) {
+                return MonadPlusAbstract.this.pure(a);
+            }
+
+            @Override
+            public <A, B> _<Ctor, B> ap(_<Ctor, F<A, B>> fn, _<Ctor, A> nestedA) {
+                return MonadPlusAbstract.this.ap(fn, nestedA);
+            }
+
+            @Override
+            public <A, B> _<Ctor, B> fmap(F<A, B> fn, _<Ctor, A> nestedA) {
+                return MonadPlusAbstract.this.fmap(fn, nestedA);
+            }
+        };
+    }
+    
     @Override
     public <A> _<Ctor, A> msum(_<ListOf, _<Ctor, A>> list) {
         List<_<Ctor, A>> as = ListOf.unwrap(list);
@@ -49,31 +70,8 @@ public abstract class MonadPlusAbstract<Ctor> extends MonadAbstract<Ctor> implem
     }
 
     @Override
-    //duplicated from AlternativeAbstract
-    public <A> _<Ctor, _<OptionOf, A>> optional(_<Ctor, A> nestedA) {
-        return or(fmap(new F<A,_<OptionOf,A>>(){
-            @Override
-            public _<OptionOf, A> f(A a) {
-                return OptionOf.some(a);
-            }
-        }, nestedA), pure(OptionOf.<A>none()));
-    }
-
-    @Override
-    //duplicated from AlternativeAbstract
-    //"flat" version of optional
-    public <A> _<Ctor, Option<A>> optionalFlat(_<Ctor, A> nestedA) {
-        return or(fmap(new F<A, Option<A>>(){
-            @Override
-            public Option<A> f(A a) {
-                return Option.some(a);
-            }
-        }, nestedA), pure(Option.<A>none()));
-    }
-    
-    @Override
     public <A> Monoid<_<Ctor, A>> asMonoid() {
-        return AlternativeAbstract.asMonoid(this);
+        return alternative.asMonoid();
     }
     
     @Override
@@ -82,7 +80,7 @@ public abstract class MonadPlusAbstract<Ctor> extends MonadAbstract<Ctor> implem
 
             @Override
             public _<Ctor, A> f(A a) {
-                return (fn.f(a)) ? returnM(a) : MonadPlusAbstract.this.<A>mzero();
+                return (fn.f(a)) ? pure(a) : MonadPlusAbstract.this.<A>mzero();
             }
         });
     }
@@ -95,6 +93,30 @@ public abstract class MonadPlusAbstract<Ctor> extends MonadAbstract<Ctor> implem
                 return mfilter(fn, a);
             }
         };
+    }
+
+    //empty (Control.Applicative)
+    @Override
+    public <A> _<Ctor, A> empty() {
+        return alternative.empty();
+    }
+    
+    //<|> (Control.Applicative)
+    @Override
+    public <A> _<Ctor, A> or(_<Ctor, A> first, _<Ctor, A> second) {
+        return alternative.or(first, second);
+    }
+    
+    //optional (Control.Applicative)
+    @Override
+    public <A> _<Ctor, _<OptionOf, A>> optional(_<Ctor, A> nestedA) {
+        return alternative.optional(nestedA);
+    }
+    
+    //"flat" version of optional 
+    @Override
+    public <A> _<Ctor, Option<A>> optionalFlat(_<Ctor, A> nestedA) {
+        return alternative.optionalFlat(nestedA);
     }
 
 }

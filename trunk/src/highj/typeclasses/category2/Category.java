@@ -10,12 +10,9 @@ import highj.__;
  *
  * @author DGronau
  */
-public interface Category<A> {
+public interface Category<A> extends Semigroupoid<A>{
     
     // id (Control.Category)
     public <B> __<A, B, B> id();
-    
-    // (.) and (<<<) (Control.Category)
-    public <B, C, D> __<A, B, D> dot(__<A, C, D> cd, __<A, B, C> bc);
 
 }

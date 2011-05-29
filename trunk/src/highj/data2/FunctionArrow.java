@@ -25,7 +25,7 @@ public class FunctionArrow extends ArrowAbstract<FunctionOf> implements Arrow<Fu
     }
 
     @Override
-    public <B, C, D> __<FunctionOf, B, D> dot(final __<FunctionOf, C, D> cd, 
+    public <B, C, D> __<FunctionOf, B, D> o(final __<FunctionOf, C, D> cd, 
                                               final __<FunctionOf, B, C> bc) {
         return FunctionOf.wrap(new F<B,D>() {
             @Override

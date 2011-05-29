@@ -6,14 +6,14 @@ package highj.data;
 
 import fj.F;
 import highj._;
-import highj.typeclasses.category.PointedBounded;
-import highj.typeclasses.category.PointedBoundedAbstract;
+import highj.typeclasses.category.FunctorBounded;
+import highj.typeclasses.category.FunctorBoundedAbstract;
 
 /**
  *
  * @author DGronau
  */
-public class StringPointed extends PointedBoundedAbstract<StringOf, Character> implements PointedBounded<StringOf, Character> {
+public class StringFunctor extends FunctorBoundedAbstract<StringOf, Character> implements FunctorBounded<StringOf, Character> {
 
     @Override
     public <A extends Character, B extends Character> _<StringOf, B> fmap(F<A, B> fn, _<StringOf, A> nestedA) {
@@ -24,7 +24,6 @@ public class StringPointed extends PointedBoundedAbstract<StringOf, Character> i
         return StringOf.wrap(new String(chars));
     }
 
-    @Override
     public <A extends Character> _<StringOf, A> pure(A a) {
         return StringOf.wrap(a.toString());
     }

@@ -32,7 +32,7 @@ public class WriterMonad<W> extends MonadAbstract<Writer<W>> implements Monad<Wr
     }
 
     @Override
-    public <A, B> _<Writer<W>, B> star(_<Writer<W>, F<A, B>> fn, _<Writer<W>, A> nestedA) {
+    public <A, B> _<Writer<W>, B> ap(_<Writer<W>, F<A, B>> fn, _<Writer<W>, A> nestedA) {
         return tell(fmap(Writer.getValue(fn), nestedA), Writer.getMonoidValue(fn));
     }
 

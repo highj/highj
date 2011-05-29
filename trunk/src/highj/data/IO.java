@@ -36,7 +36,7 @@ public final class IO {
         }
 
         @Override
-        public <A, B> _<IO, B> star(_<IO, F<A, B>> fn, _<IO, A> nestedA) {
+        public <A, B> _<IO, B> ap(_<IO, F<A, B>> fn, _<IO, A> nestedA) {
             return wrap(unwrap(fn).f(unwrap(nestedA)));
         }
 

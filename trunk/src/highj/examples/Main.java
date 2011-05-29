@@ -55,7 +55,7 @@ public class Main {
         _<ListOf, F<String,Integer>> funList = ListOf.wrap(List.cons(f, List.single(fe)));
         System.out.println("\n---Applicative.<*>---");
         System.out.println("[String.length(), String.indexOf('e')] <*> [\"one\",\"two\",\"three\"]");
-        System.out.println(ListOf.toString(applicative.star(funList, strList)));
+        System.out.println(ListOf.toString(applicative.ap(funList, strList)));
     }
     
     private static void testJoin() {
