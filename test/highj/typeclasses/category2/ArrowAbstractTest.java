@@ -4,6 +4,10 @@
  */
 package highj.typeclasses.category2;
 
+import fj.F2;
+import highj._;
+import highj.LC;
+import highj.typeclasses.category.Applicative;
 import highj.data2.FunctionArrow;
 import highj.data2.FunctionOf;
 import fj.F;
@@ -95,13 +99,36 @@ public class ArrowAbstractTest {
     }
 
     @Test
-    public void testThen() {
-        //length >>> (^2) $ "PIZZA"
-        //-- 25
-        __<FunctionOf, String, Integer> lengthArrow = FunctionOf.wrap(lengthFn);
-        __<FunctionOf, Integer, Integer> sqrArrow = FunctionOf.wrap(sqrFn);
-        __<FunctionOf, String, Integer> thenArrow = arrow.then(lengthArrow, sqrArrow);
-        assertEquals(Integer.valueOf(25), FunctionOf.apply(thenArrow, "PIZZA"));
-    }
+    public void testGetApplicativePure() {
+        Applicative<LC<FunctionOf,String>> applicative = arrow.getApplicative();
+        _<LC<FunctionOf, String>, Integer> pureFnLC = applicative.pure(42);
+        F<String, Integer> pureFn = FunctionOf.unwrapLC(pureFnLC);
+        assertEquals(Integer.valueOf(42), pureFn.f("PIZZA"));
+    }    
 
+    @Test
+    public void testGetApplicativeFmap() {
+        Applicative<LC<FunctionOf,String>> applicative = arrow.getApplicative();
+        _<LC<FunctionOf, String>, Integer> lengthFnLC = FunctionOf.wrapLC(lengthFn);
+        _<LC<FunctionOf, String>, Integer> lengthSqrFnLC = applicative.fmap(sqrFn, lengthFnLC);
+        F<String, Integer> lengthSqrFn = FunctionOf.unwrapLC(lengthSqrFnLC);
+        assertEquals(Integer.valueOf(25), lengthSqrFn.f("PIZZA"));
+    }        
+
+    @Test
+    public void testGetApplicativeAp() {
+        Applicative<LC<FunctionOf,String>> applicative = arrow.getApplicative();
+        _<LC<FunctionOf, String>, Integer> lengthFnLC = FunctionOf.wrapLC(lengthFn);
+        _<LC<FunctionOf, String>, F<Integer,Double>> lengthSumSqrtLC = FunctionOf.wrapLC(
+                new F2<String,Integer,Double>(){
+
+            @Override
+            public Double f(String a, Integer b) {
+                return Math.sqrt(a.length() + b);
+            }
+        }.curry());
+        _<LC<FunctionOf, String>, Double> lengthSqrtLC = applicative.ap(lengthSumSqrtLC, lengthFnLC);
+        F<String, Double> lengthSqrtFn = FunctionOf.unwrapLC(lengthSqrtLC);
+        assertEquals(Double.valueOf(4.0), lengthSqrtFn.f("12345678"));
+    }
 }
