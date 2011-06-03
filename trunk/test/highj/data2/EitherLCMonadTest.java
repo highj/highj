@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
  *
  * @author DGronau
  */
-public class EitherCLMonadTest {
+public class EitherLCMonadTest {
     private Monad<LC<EitherOf,Double>> monad;
     private F<String, Integer> lengthFn;
     
