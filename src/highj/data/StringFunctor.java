@@ -14,7 +14,7 @@ import highj.typeclasses.category.FunctorBoundedAbstract;
  * @author DGronau
  */
 public class StringFunctor extends FunctorBoundedAbstract<StringOf, Character> implements FunctorBounded<StringOf, Character> {
-
+    
     @Override
     public <A extends Character, B extends Character> _<StringOf, B> fmap(F<A, B> fn, _<StringOf, A> nestedA) {
         char[] chars = StringOf.unwrap(nestedA).toCharArray();
@@ -26,6 +26,12 @@ public class StringFunctor extends FunctorBoundedAbstract<StringOf, Character> i
 
     public <A extends Character> _<StringOf, A> pure(A a) {
         return StringOf.wrap(a.toString());
+    }
+    
+    private static StringFunctor INSTANCE = new StringFunctor();
+
+    public static StringFunctor getInstance() {
+        return INSTANCE;
     }
     
 }

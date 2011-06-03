@@ -4,6 +4,7 @@
  */
 package highj.typeclasses.category;
 
+import fj.function.Strings;
 import fj.F2;
 import fj.Unit;
 import highj.data.OptionOf;
@@ -27,7 +28,6 @@ public class MonadAbstractTest {
     
     private Monad<ListOf> listMonad;
     private Monad<OptionOf> optionMonad;
-    private F<String, Integer> lengthFn;
     
     public MonadAbstractTest() {
     }
@@ -36,20 +36,12 @@ public class MonadAbstractTest {
     public void setUp() {
         listMonad = ListMonadPlus.getInstance();
         optionMonad = OptionMonadPlus.getInstance();
-        lengthFn = new F<String, Integer>() {
-            @Override
-            public Integer f(String a) {
-                return a.length();
-            }
-            
-        };
     }
     
     @After
     public void tearDown() {
         listMonad = null;
         optionMonad = null;
-        lengthFn = null;
     }
 
     @Test
@@ -239,7 +231,7 @@ public class MonadAbstractTest {
     public void testAp() {
         //Just length `ap` Just "12345"
         //-- Just 5
-        _<OptionOf, Integer> result = optionMonad.ap(OptionOf.some(lengthFn), OptionOf.some("12345"));
+        _<OptionOf, Integer> result = optionMonad.ap(OptionOf.some(Strings.length), OptionOf.some("12345"));
         assertEquals(Integer.valueOf(5), OptionOf.get(result));
         //Nothing `ap` Just "12345"
         //-- Nothing
@@ -247,7 +239,7 @@ public class MonadAbstractTest {
         assertEquals(true, OptionOf.isNone(resultEmpty1));
         //Just length `ap` Nothing"
         //-- Nothing
-        _<OptionOf, Integer> resultEmpty2 = optionMonad.ap(OptionOf.some(lengthFn), OptionOf.<String>none());
+        _<OptionOf, Integer> resultEmpty2 = optionMonad.ap(OptionOf.some(Strings.length), OptionOf.<String>none());
         assertEquals(true, OptionOf.isNone(resultEmpty2));
     }
 

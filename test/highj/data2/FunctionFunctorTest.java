@@ -4,6 +4,7 @@
  */
 package highj.data2;
 
+import fj.function.Strings;
 import highj.typeclasses.category.Functor;
 import highj.LC;
 import fj.F;
@@ -20,13 +21,6 @@ public class FunctionFunctorTest {
     public void testFmap() {
         Functor<LC<FunctionOf,String>> functor = new FunctionFunctor<String>();
         
-        F<String, Integer> length = new F<String, Integer>(){
-            @Override
-            public Integer f(String a) {
-                return a.length();
-            }
-        };
-
         F<Integer, Double> sqrt = new F<Integer, Double>() {
             @Override
             public Double f(Integer a) {
@@ -35,7 +29,7 @@ public class FunctionFunctorTest {
         };
 
         F<String, Double> sqrtOfLength = FunctionOf.unwrapLC(
-                functor.fmap(sqrt, FunctionOf.wrapLC(length)));
+                functor.fmap(sqrt, FunctionOf.wrapLC(Strings.length)));
         
         assertEquals(Double.valueOf(3.0), sqrtOfLength.f("123456789"));
     }

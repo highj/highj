@@ -14,15 +14,15 @@ import static org.junit.Assert.*;
  *
  * @author DGronau
  */
-public class StringPointedTest {
-    private StringFunctor pointed;
+public class StringFunctorTest {
+    private StringFunctor functor;
     private F<Character, Character> fn;
     
     
 
     @Before
     public void setUp() {
-        pointed = new StringFunctor();
+        functor = new StringFunctor();
         fn = new F<Character, Character>() {
             @Override
             public Character f(Character a) {
@@ -33,17 +33,17 @@ public class StringPointedTest {
     
     @After
     public void tearDown() {
-        pointed = null;
+        functor = null;
         fn = null;
     }
 
     @Test
     public void testFmap() {
-        assertEquals("UPPERCASE", StringOf.unwrap(pointed.fmap(fn, StringOf.wrap("uPpErcaSe"))));
+        assertEquals("UPPERCASE", StringOf.unwrap(functor.fmap(fn, StringOf.wrap("uPpErcaSe"))));
     }
     
     @Test
     public void testPure() {
-        assertEquals("x", StringOf.unwrap(pointed.pure(Character.valueOf('x'))));
+        assertEquals("x", StringOf.unwrap(functor.pure(Character.valueOf('x'))));
     }    
 }

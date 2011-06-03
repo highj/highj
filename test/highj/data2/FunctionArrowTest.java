@@ -4,6 +4,7 @@
  */
 package highj.data2;
 
+import fj.function.Strings;
 import fj.P;
 import fj.Show;
 import fj.P2;
@@ -22,19 +23,12 @@ import static org.junit.Assert.*;
 public class FunctionArrowTest {
   
     private Arrow<FunctionOf> arrow;
-    private F<String, Integer> lengthFn;
     private F<Integer, Integer> sqrFn;
     
     @Before
     public void setUp() {
         arrow = new FunctionArrow();
-        lengthFn = new F<String,Integer>(){
-            @Override
-            public Integer f(String a) {
-                return a.length();
-            }
-        };
-      sqrFn = new F<Integer, Integer>() {
+        sqrFn = new F<Integer, Integer>() {
             @Override
             public Integer f(Integer a) {
                return a*a;
@@ -45,7 +39,6 @@ public class FunctionArrowTest {
     @After
     public void tearDown() {
         arrow = null;
-        lengthFn = null;
         sqrFn = null;
     }
 
@@ -62,14 +55,14 @@ public class FunctionArrowTest {
         //(^2) <<< length $ "PIZZA"
         //-- 25        
         __<FunctionOf, Integer, Integer> sqrArrow = FunctionOf.wrap(sqrFn);
-        __<FunctionOf, String, Integer> lengthArrow = FunctionOf.wrap(lengthFn);
+        __<FunctionOf, String, Integer> lengthArrow = FunctionOf.wrap(Strings.length);
         __<FunctionOf, String, Integer> dotArrow = arrow.o(sqrArrow, lengthArrow);
         assertEquals(Integer.valueOf(25), FunctionOf.apply(dotArrow, "PIZZA"));
     }
 
     @Test
     public void testArr() {
-        __<FunctionOf, String, Integer> lengthArrow = arrow.arr(lengthFn);
+        __<FunctionOf, String, Integer> lengthArrow = arrow.arr(Strings.length);
         //arr length $ ""
         //-- 0
         assertEquals(Integer.valueOf(0), FunctionOf.apply(lengthArrow, ""));
@@ -82,7 +75,7 @@ public class FunctionArrowTest {
     public void testFirst() {
         //first length ("PIZZA", 3.14)
         //(5,3.14)
-        __<FunctionOf, String, Integer> lengthArrow = FunctionOf.wrap(lengthFn);
+        __<FunctionOf, String, Integer> lengthArrow = FunctionOf.wrap(Strings.length);
         __<FunctionOf, P2<String, Double>, P2<Integer, Double>> fst = arrow.first(lengthArrow);
         Show<P2<Integer, Double>> show = Show.p2Show(Show.intShow, Show.doubleShow);
         assertEquals("(5,3.14)", show.showS(FunctionOf.apply(fst, P.p("PIZZA", 3.14))));
