@@ -4,6 +4,7 @@
  */
 package highj.data2;
 
+import fj.function.Strings;
 import highj.typeclasses.category.Monad;
 import highj._;
 import highj.LC;
@@ -20,24 +21,66 @@ import static org.junit.Assert.*;
  */
 public class EitherLCMonadTest {
     private Monad<LC<EitherOf,Double>> monad;
-    private F<String, Integer> lengthFn;
     
     @Before
     public void setUp() {
-        lengthFn = new F<String, Integer>() {
-            @Override
-            public Integer f(String a) {
-                return a.length();
-            }
-        };
         monad = new EitherLCMonad<Double>();
     }
     
     @After
     public void tearDown() {
-        lengthFn = null;
         monad = null;
     }
+
+    @Test
+    public void testStar() {
+        _<LC<EitherOf, Double>,F<String,Integer>> fourtyTwo = 
+                EitherOf.wrapLC(Either.<Double,F<String,Integer>>left(42.0));
+        _<LC<EitherOf, Double>,F<String,Integer>> lengthFnEither = 
+                EitherOf.wrapLC(Either.<Double,F<String,Integer>>right(Strings.length));
+        _<LC<EitherOf, Double>,String> twelve = 
+                EitherOf.wrapLC(Either.<Double,String>left(12.0));
+        _<LC<EitherOf, Double>,String> test = 
+                EitherOf.wrapLC(Either.<Double,String>right("test"));
+        
+        //(Left 42.0 <*> Left 12) :: Either Double Int
+        //-- Left 42.0
+        assertEquals("Left(42.0)", EitherOf.toString(LC.uncurry(
+                monad.ap(fourtyTwo, twelve))));
+        //(Left 42.0 <*> Right "test") :: Either Double Int
+        //-- Left 42.0
+        assertEquals("Left(42.0)", EitherOf.toString(LC.uncurry(
+                monad.ap(fourtyTwo, test))));
+        //(Right length <*> Left 12.0) :: Either Double Int
+        //-- Left 12.0
+        assertEquals("Left(12.0)", EitherOf.toString(LC.uncurry(
+                monad.ap(lengthFnEither, twelve))));
+        //(Right length <*> Right "test") :: Either Double Int
+        //-- Right 4
+        assertEquals("Right(4)", EitherOf.toString(LC.uncurry(
+                monad.ap(lengthFnEither, test))));
+    }
+
+    @Test
+    public void testPure() {
+        //(pure "test") :: Either Double String
+        //-- Right "test"
+        _<LC<EitherOf,Double>,String> either = monad.pure("test");
+        assertEquals("Right(test)", EitherOf.toString(LC.uncurry(either)));
+    }
+
+    @Test
+    public void testFmap() {
+        //(fmap length (Left 42.0)) :: Either Double Int
+        //-- Left 42.0
+        _<LC<EitherOf,Double>,String> left = EitherOf.wrapLC(Either.<Double,String>left(42.0));
+        assertEquals("Left(42.0)", EitherOf.toString(LC.uncurry(monad.fmap(Strings.length, left))));
+        //(fmap length (Right "RIGHT")) :: Either Double Int
+        //-- Right 5
+        _<LC<EitherOf,Double>,String> right = EitherOf.wrapLC(Either.<Double,String>right("RIGHT"));
+        assertEquals("Right(5)", EitherOf.toString(LC.uncurry(monad.fmap(Strings.length, right))));
+    }
+    
 
     @Test
     public void testBind() {
@@ -76,53 +119,5 @@ public class EitherLCMonadTest {
         assertEquals("Right(5)", EitherOf.toString(LC.uncurry(
                 monad.bind(pizza, fn))));
     }
-
-    @Test
-    public void testStar() {
-        _<LC<EitherOf, Double>,F<String,Integer>> fourtyTwo = 
-                EitherOf.wrapLC(Either.<Double,F<String,Integer>>left(42.0));
-        _<LC<EitherOf, Double>,F<String,Integer>> lengthFnEither = 
-                EitherOf.wrapLC(Either.<Double,F<String,Integer>>right(lengthFn));
-        _<LC<EitherOf, Double>,String> twelve = 
-                EitherOf.wrapLC(Either.<Double,String>left(12.0));
-        _<LC<EitherOf, Double>,String> test = 
-                EitherOf.wrapLC(Either.<Double,String>right("test"));
-        
-        //(Left 42.0 <*> Left 12) :: Either Double Int
-        //-- Left 42.0
-        assertEquals("Left(42.0)", EitherOf.toString(LC.uncurry(
-                monad.ap(fourtyTwo, twelve))));
-        //(Left 42.0 <*> Right "test") :: Either Double Int
-        //-- Left 42.0
-        assertEquals("Left(42.0)", EitherOf.toString(LC.uncurry(
-                monad.ap(fourtyTwo, test))));
-        //(Right length <*> Left 12.0) :: Either Double Int
-        //-- Left 12.0
-        assertEquals("Left(12.0)", EitherOf.toString(LC.uncurry(
-                monad.ap(lengthFnEither, twelve))));
-        //(Right length <*> Right "test") :: Either Double Int
-        //-- Right 4
-        assertEquals("Right(4)", EitherOf.toString(LC.uncurry(
-                monad.ap(lengthFnEither, test))));
-    }
-
-    @Test
-    public void testPure() {
-        //(pure "test") :: Either Double String
-        //-- Right "test"
-        _<LC<EitherOf,Double>,String> either = monad.pure("test");
-        assertEquals("Right(test)", EitherOf.toString(LC.uncurry(either)));
-    }
-
-    @Test
-    public void testFmap() {
-        //(fmap length (Left 42.0)) :: Either Double Int
-        //-- Left 42.0
-        _<LC<EitherOf,Double>,String> left = EitherOf.wrapLC(Either.<Double,String>left(42.0));
-        assertEquals("Left(42.0)", EitherOf.toString(LC.uncurry(monad.fmap(lengthFn, left))));
-        //(fmap length (Right "RIGHT")) :: Either Double Int
-        //-- Right 5
-        _<LC<EitherOf,Double>,String> right = EitherOf.wrapLC(Either.<Double,String>right("RIGHT"));
-        assertEquals("Right(5)", EitherOf.toString(LC.uncurry(monad.fmap(lengthFn, right))));
-    }
+ 
 }

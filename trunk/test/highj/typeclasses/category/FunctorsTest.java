@@ -4,7 +4,7 @@
  */
 package highj.typeclasses.category;
 
-import fj.F;
+import fj.function.Strings;
 import highj.data.ListMonadPlus;
 import highj.data.OptionMonadPlus;
 import highj.data.OptionOf;
@@ -23,26 +23,17 @@ public class FunctorsTest {
     
     private Functor<OptionOf> optionFunctor;
     private Functor<ListOf> listFunctor;
-    private F<String, Integer> lengthFn;
 
     @Before
     public void setUp() {
         optionFunctor = OptionMonadPlus.getInstance();
         listFunctor = ListMonadPlus.getInstance();
-        lengthFn = new F<String, Integer>() {
-
-            @Override
-            public Integer f(String a) {
-                return a.length();
-            }
-        };
     }
 
     @After
     public void tearDown() {
         optionFunctor = null;
         listFunctor = null;
-        lengthFn = null;
     }
     
     @Test
@@ -50,7 +41,7 @@ public class FunctorsTest {
         _<OptionOf, _<ListOf, String>> optStrings =
                 OptionOf.some(ListOf.list("one", "two", "three"));
         _<OptionOf, _<ListOf, Integer>> optInts =
-                Functors.binary(optionFunctor, listFunctor, lengthFn, optStrings);
+                Functors.binary(optionFunctor, listFunctor, Strings.length, optStrings);
         assertEquals("[3, 3, 5]", ListOf.toString(OptionOf.get(optInts)));
     }
 
@@ -59,7 +50,7 @@ public class FunctorsTest {
         _<OptionOf, _<OptionOf, _<ListOf, String>>> optStrings =
                 OptionOf.some(OptionOf.some(ListOf.list("one", "two", "three")));
         _<OptionOf, _<OptionOf, _<ListOf, Integer>>> optInts =
-                Functors.trinary(optionFunctor, optionFunctor, listFunctor, lengthFn, optStrings);
+                Functors.trinary(optionFunctor, optionFunctor, listFunctor, Strings.length, optStrings);
         assertEquals("[3, 3, 5]", ListOf.toString(OptionOf.get(OptionOf.get(optInts))));
     }
 }

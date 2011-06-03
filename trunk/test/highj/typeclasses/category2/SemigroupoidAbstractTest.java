@@ -4,6 +4,7 @@
  */
 package highj.typeclasses.category2;
 
+import fj.function.Strings;
 import highj.data2.FunctionArrow;
 import highj.data2.FunctionOf;
 import fj.F;
@@ -20,19 +21,12 @@ import static org.junit.Assert.*;
 public class SemigroupoidAbstractTest {
     
     Semigroupoid<FunctionOf> semi;
-    F<String, Integer> lengthFn;
     F<Integer, Integer> sqrFn;
     F<Integer, String> toStringFn;
     
     @Before
     public void setUp() {
         semi = FunctionArrow.getInstance();
-        lengthFn = new F<String,Integer>(){
-            @Override
-            public Integer f(String a) {
-                return a.length();
-            }
-        };
         sqrFn = new F<Integer, Integer>() {
             @Override
             public Integer f(Integer a) {
@@ -50,7 +44,6 @@ public class SemigroupoidAbstractTest {
     @After
     public void tearDown() {
         semi = null;
-        lengthFn = null;
         sqrFn = null;
     }
 
@@ -59,7 +52,7 @@ public class SemigroupoidAbstractTest {
     public void testThen() {
         //length >>> (^2) $ "PIZZA"
         //-- 25
-        __<FunctionOf, String, Integer> lengthArrow = FunctionOf.wrap(lengthFn);
+        __<FunctionOf, String, Integer> lengthArrow = FunctionOf.wrap(Strings.length);
         __<FunctionOf, Integer, Integer> sqrArrow = FunctionOf.wrap(sqrFn);
         __<FunctionOf, String, Integer> thenArrow = semi.then(lengthArrow, sqrArrow);
         assertEquals(Integer.valueOf(25), FunctionOf.apply(thenArrow, "PIZZA"));
@@ -69,7 +62,7 @@ public class SemigroupoidAbstractTest {
     public void testThen2() {
         //Prelude Control.Arrow> length >>> (^2) >>> show $ "PIZZA"
         //"25"
-        __<FunctionOf, String, Integer> lengthArrow = FunctionOf.wrap(lengthFn);
+        __<FunctionOf, String, Integer> lengthArrow = FunctionOf.wrap(Strings.length);
         __<FunctionOf, Integer, Integer> sqrArrow = FunctionOf.wrap(sqrFn);
         __<FunctionOf, Integer, String> toStringArrow = FunctionOf.wrap(toStringFn);
         __<FunctionOf, String, String> thenArrow = semi.then(lengthArrow, sqrArrow, toStringArrow);
@@ -80,7 +73,7 @@ public class SemigroupoidAbstractTest {
     public void testThen3() {
         //Prelude Control.Arrow> length >>> (^2) >>> show >>> length $ "PIZZAPIZZA"
         //-- 3
-        __<FunctionOf, String, Integer> lengthArrow = FunctionOf.wrap(lengthFn);
+        __<FunctionOf, String, Integer> lengthArrow = FunctionOf.wrap(Strings.length);
         __<FunctionOf, Integer, Integer> sqrArrow = FunctionOf.wrap(sqrFn);
         __<FunctionOf, Integer, String> toStringArrow = FunctionOf.wrap(toStringFn);
         __<FunctionOf, String, Integer> thenArrow = 

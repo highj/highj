@@ -4,6 +4,7 @@
  */
 package highj.typeclasses.category;
 
+import fj.function.Strings;
 import fj.data.List;
 import fj.F;
 import fj.Unit;
@@ -25,39 +26,17 @@ public class FunctorAbstractTest {
 
     private Functor<OptionOf> optionFunctor;
     private Functor<ListOf> listFunctor;
-    private F<String, Integer> lengthFn;
 
     @Before
     public void setUp() {
         optionFunctor = OptionMonadPlus.getInstance();
         listFunctor = ListMonadPlus.getInstance();
-        lengthFn = new F<String, Integer>() {
-            @Override
-            public Integer f(String a) {
-                return a.length();
-            }
-        };
     }
 
     @After
     public void tearDown() {
         optionFunctor = null;
         listFunctor = null;
-        lengthFn = null;
-    }
-
-    @Test
-    public void testLeft$() {
-        //"3" <$ Just 5
-        //-- Just "3"
-        assertEquals("3", OptionOf.get(optionFunctor.left$("3", OptionOf.some(5))));
-        //"3" <$ Nothing
-        //-- Nothing
-        assertEquals(true, OptionOf.isNone(optionFunctor.left$("3", OptionOf.<Integer>none())));
-        //"x" <$ [1,1,1]
-        //-- ["x","x","x"]
-        assertEquals("[x, x, x]", ListOf.toString(
-                listFunctor.left$("x", ListOf.list(1, 1, 1))));
     }
 
     @Test
@@ -73,7 +52,7 @@ public class FunctorAbstractTest {
     @Test
     public void testFlip() {
         _<OptionOf, F<String, Integer>> optFn =
-                OptionOf.some(lengthFn);
+                OptionOf.some(Strings.length);
         _<OptionOf, Integer> result = optionFunctor.flip(optFn, "123456789");
         assertEquals(Integer.valueOf(9), OptionOf.get(result));
         _<OptionOf, Integer> resultEmpty =
@@ -81,11 +60,5 @@ public class FunctorAbstractTest {
         assertEquals(true, OptionOf.isNone(resultEmpty));
     }
 
-    @Test
-    public void testLift() {
-        F<_<OptionOf, String>, _<OptionOf, Integer>> fn =
-                optionFunctor.lift(lengthFn);
-        assertEquals(Integer.valueOf(9), OptionOf.get(fn.f(OptionOf.some("123456789"))));
-        assertEquals(true, OptionOf.isNone(fn.f(OptionOf.<String>none())));
-    }
 }
+
