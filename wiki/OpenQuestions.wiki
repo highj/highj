@@ -24,7 +24,7 @@ Would it be possible to work _always_ with a curried version like `_<LC<Ctor,A>,
 
 == Category Package ==
 
-  * How to support instances that implement multiple extensions of Monad (MonadPlus, MonadFix...) or Arrow (ArrowChoice, ArrowLoop...) with predefined methods (until defender methods arrive in Java)? 
+  * How to support instances that implement multiple extensions of Monad (`MonadPlus`, `MonadFix`...) or Arrow (`ArrowChoice`, `ArrowLoop`...) with predefined methods (until defender methods arrive in Java)? 
   * Is it correct that Copointed inherits from Functor?
   * The Comonad part didn't look standardized in Haskell (e.g. Copointed vs Extend)
   * What to do with the infamous Monad.fail method?
