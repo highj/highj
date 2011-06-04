@@ -4,7 +4,6 @@
  */
 package highj.typeclasses.category;
 
-import fj.function.Strings;
 import fj.F2;
 import fj.Unit;
 import highj.data.OptionOf;
@@ -28,10 +27,7 @@ public class MonadAbstractTest {
     
     private Monad<ListOf> listMonad;
     private Monad<OptionOf> optionMonad;
-    
-    public MonadAbstractTest() {
-    }
-  
+ 
     @Before
     public void setUp() {
         listMonad = ListMonadPlus.getInstance();
@@ -42,42 +38,6 @@ public class MonadAbstractTest {
     public void tearDown() {
         listMonad = null;
         optionMonad = null;
-    }
-
-    @Test
-    public void testSemicolon() {
-        //[1,2,3] >> ['a','b'] 
-        //-- "ababab"
-        _<ListOf,Integer> intList = ListOf.list(1,2,3);
-        _<ListOf,String> stringList = ListOf.list("a","b");
-        List<String> resultList = ListOf.unwrap(listMonad.semicolon(intList,stringList));
-        List<String> expectedList = List.list("a","b","a","b","a","b");
-        Show<List<String>> show = Show.listShow(Show.stringShow);
-        assertEquals(show.showS(expectedList), show.showS(resultList));
-    }
-
-    @Test
-    public void testJoin() {
-        //join [[1,2,3],[],[4,5],[6]]
-        //-- [1,2,3,4,5,6]
-        _<ListOf,_<ListOf, Integer>> nestedIntList = ListOf.list(
-           ListOf.list(1,2,3),
-           ListOf.<Integer>list(),
-           ListOf.list(4,5),
-           ListOf.list(6)
-        );
-        List<Integer> resultList = ListOf.unwrap(listMonad.join(nestedIntList));
-        List<Integer> expectedList = List.list(1,2,3,4,5,6);
-        
-        Show<List<Integer>> show = Show.listShow(Show.intShow);
-        assertEquals(show.showS(expectedList), show.showS(resultList));
-    }
-
-    @Test
-    public void testReturnM() {
-        //(return 42) :: [Int]
-        //-- [42]
-        assertEquals("[42]", ListOf.toString(listMonad.pure(42)));
     }
 
     @Test
@@ -175,39 +135,7 @@ public class MonadAbstractTest {
         assertEquals(Unit.unit(), ListOf.unwrap(result).head());
         assertEquals(Unit.unit(), ListOf.unwrap(result).last());
     }
-
-    
-    @Test
-    public void testKleisli() {
-        //(\x -> if x == "null" then Nothing else Just (length x)) 
-        // >=> (\x -> if x == 0 then Nothing else Just(sqrt $ fromIntegral x)) 
-        //...
-        F<String,_<OptionOf, Integer>> lengthOptFn = new F<String,_<OptionOf, Integer>>() {
-            @Override
-            public _<OptionOf, Integer> f(String a) {
-                return a == null ? OptionOf.<Integer>none() : OptionOf.some(a.length());
-            }
-        };
-        F<Integer,_<OptionOf, Double>> sqrtOptFn = new F<Integer,_<OptionOf, Double>>() {
-            @Override
-            public _<OptionOf, Double> f(Integer a) {
-                return a == 0 ? OptionOf.<Double>none() : OptionOf.some(Math.sqrt(a));
-            }
-            
-        };
-        F<String, _<OptionOf, Double>> lengthSqrtOptFn = optionMonad.kleisli(lengthOptFn, sqrtOptFn);
-        //... $ "123456789"
-        //-- Just 3.0
-        assertEquals("3.0", OptionOf.get(lengthSqrtOptFn.f("123456789")).toString());
-        //... $ ""
-        //-- Nothing
-        assertEquals(true, OptionOf.isNone(lengthSqrtOptFn.f("")));
-        //... $ "null"
-        //-- Nothing
-        assertEquals(true, OptionOf.isNone(lengthSqrtOptFn.f(null)));
-    }
-
-    
+   
     @Test
     public void testSequenceFlat() {
         //sequence [[1,2],[3],[4,5,6]]
@@ -227,6 +155,7 @@ public class MonadAbstractTest {
         assertEquals(show.showS(expectedList), show.showS(sequencedList));
     }
 
+    /* TODO: move to OptionMonadTest or so later
     @Test
     public void testAp() {
         //Just length `ap` Just "12345"
@@ -241,7 +170,7 @@ public class MonadAbstractTest {
         //-- Nothing
         _<OptionOf, Integer> resultEmpty2 = optionMonad.ap(OptionOf.some(Strings.length), OptionOf.<String>none());
         assertEquals(true, OptionOf.isNone(resultEmpty2));
-    }
+    }*/
 
     @Test
     public void testFoldM() {

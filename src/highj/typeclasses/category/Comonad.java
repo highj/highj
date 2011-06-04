@@ -14,17 +14,15 @@ import highj.data.ListOf;
 import highj.data2.PairOf;
 
 /**
- * http://hackage.haskell.org/packages/archive/category-extras/latest/doc/html/Control-Comonad.html
- * 
- * TODO: replace by http://hackage.haskell.org/package/comonad-1.1.0
+ * http://hackage.haskell.org/packages/archive/comonad/1.0.1/doc/html/Control-Comonad.html
  * 
  * @author DGronau
  */
-public interface Comonad<Ctor> extends Copointed<Ctor> {
+public interface Comonad<Ctor> extends Extend<Ctor> {
     
-    public <A> _<Ctor,_<Ctor,A>> duplicate(_<Ctor, A> nestedA);
+    public <A> A extract(_<Ctor,A> nestedA);
     
-    public <A,B> F<_<Ctor, A>,_<Ctor,B>> extend(F<_<Ctor,A>, B> fn);
+    public <A> F<_<Ctor,A>, A> extract();
     
     //(=>>)
     public <A,B> _<Ctor,B> unbind(_<Ctor, A> nestedA, F<_<Ctor,A>, B> fn); 
