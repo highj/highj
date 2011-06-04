@@ -15,6 +15,9 @@ import highj.data2.PairOf;
 
 /**
  * http://hackage.haskell.org/packages/archive/category-extras/latest/doc/html/Control-Comonad.html
+ * 
+ * TODO: replace by http://hackage.haskell.org/package/comonad-1.1.0
+ * 
  * @author DGronau
  */
 public interface Comonad<Ctor> extends Copointed<Ctor> {

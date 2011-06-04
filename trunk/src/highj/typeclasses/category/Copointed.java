@@ -8,7 +8,8 @@ import fj.F;
 import highj._;
 
 /**
- *
+ * TODO: deprecate, use Extend from
+ * http://hackage.haskell.org/packages/archive/comonad/1.1.0/doc/html/Data-Functor-Extend.html
  * @author dgronau
  */
 public interface  Copointed<Ctor> extends Functor<Ctor> {

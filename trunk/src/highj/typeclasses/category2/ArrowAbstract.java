@@ -19,7 +19,6 @@ import highj.typeclasses.category.ApplicativeAbstract;
  * @author DGronau
  */
 public abstract class ArrowAbstract<Arr> extends CategoryAbstract<Arr> implements Arrow<Arr> {
-
     @Override
     // arr  (Control.Arrow)
     public abstract <B, C> __<Arr, B, C> arr(F<B, C> fn);
@@ -40,7 +39,6 @@ public abstract class ArrowAbstract<Arr> extends CategoryAbstract<Arr> implement
 
     private <X, Y> F<P2<X, Y>, P2<Y, X>> swap() {
         return new F<P2<X, Y>, P2<Y, X>>() {
-
             @Override
             public P2<Y, X> f(P2<X, Y> pair) {
                 return pair.swap();
@@ -60,7 +58,6 @@ public abstract class ArrowAbstract<Arr> extends CategoryAbstract<Arr> implement
     // (&&&) (Control.Arrow)
     public <B, C, CC> __<Arr, B, P2<C, CC>> fanout(__<Arr, B, C> f, __<Arr, B, CC> g) {
         __<Arr, B, P2<B, B>> duplicated = arr(new F<B, P2<B, B>>() {
-
             @Override
             public P2<B, B> f(B a) {
                 return P.p(a, a);
@@ -70,11 +67,46 @@ public abstract class ArrowAbstract<Arr> extends CategoryAbstract<Arr> implement
         return then(duplicated, splitted);
     }
 
+    //returnA (Control.Arrow)
+    @Override
+    public <B> __<Arr, B, B> returnA() {
+        return arr(Function.<B>identity());
+    }
+
+    // (^>>) (Control.Arrow)
+    @Override
+    public <B, C, D> F<__<Arr, C, D>, __<Arr, B, D>> precomposition(final F<B, C> fn) {
+        //(^>>) :: Arrow a => (b -> c) -> a c d -> a b d
+        //f ^>> a = arr f >>> a
+        return new F<__<Arr, C, D>, __<Arr, B, D>>() {
+            private __<Arr, B, C> arrow = arr(fn);
+
+            @Override
+            public __<Arr, B, D> f(__<Arr, C, D> a) {
+                return then(arrow, a);
+            }
+        };
+    }
+
+    // (^<<) (Control.Arrow)
+    @Override
+    public <B, C, D> F<__<Arr, B, C>, __<Arr, B, D>> postcomposition(final F<C, D> fn) {
+        //(^<<) :: Arrow a => (c -> d) -> a b c -> a b d
+        //f ^<< a = arr f <<< a 
+        return new F<__<Arr, B, C>, __<Arr, B, D>>() {
+            private __<Arr, C, D> arrow = arr(fn);
+
+            @Override
+            public __<Arr, B, D> f(__<Arr, B, C> a) {
+                return then(a, arrow);
+            }
+        };
+    }
+
     @Override
     //the Applicative instance for a left-curried Arrow
     public <X> Applicative<LC<Arr, X>> getApplicative() {
         return new ApplicativeAbstract<LC<Arr, X>>() {
-
             @Override
             public <A, B> _<LC<Arr, X>, B> ap(_<LC<Arr, X>, F<A, B>> fn, _<LC<Arr, X>, A> nestedA) {
                 return LC.curry(then(fanout(LC.uncurry(fn), LC.uncurry(nestedA)), arr(
@@ -97,5 +129,4 @@ public abstract class ArrowAbstract<Arr> extends CategoryAbstract<Arr> implement
             }
         };
     }
-    
 }
