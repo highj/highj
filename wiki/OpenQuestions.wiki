@@ -8,7 +8,7 @@ E.g. How should something like an `IterableOf` work?
 
 == Should we use composition over inheritance for type classes? ==
 
-E.g. Pointed would not longer inherit from Functor, but have a getFunctor method. Applicative would have a getPointed (and for convenience a getFunctor) method etc. 
+E.g. Apply would not longer inherit from Functor, but have a getFunctor method. Applicative would have a getApply (and for convenience a getFunctor) method etc. 
 
 *Pro:* Implementation easier and more reuseable. 
 
