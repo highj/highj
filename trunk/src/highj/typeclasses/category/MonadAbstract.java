@@ -18,6 +18,7 @@ import highj.data.ListOf;
  */
 public abstract class MonadAbstract<Ctor> extends BindAbstract<Ctor> implements Monad<Ctor> {
     
+    private final _<Ctor, Unit> RETURN_UNIT = pure(Unit.unit());
 
     @Override
     // return (Control.Monad)
@@ -136,7 +137,7 @@ public abstract class MonadAbstract<Ctor> extends BindAbstract<Ctor> implements 
                     listB = listB.tail();
                     result = bind(result, fnBind);
                 }
-                return pure(Unit.unit());
+                return RETURN_UNIT;
             }
         };
     }
@@ -160,7 +161,7 @@ public abstract class MonadAbstract<Ctor> extends BindAbstract<Ctor> implements 
                     listB = listB.tail();
                     result = bind(result, fnBind);
                 }
-                return pure(Unit.unit());
+                return RETURN_UNIT;
             }
         };
     }
@@ -188,12 +189,7 @@ public abstract class MonadAbstract<Ctor> extends BindAbstract<Ctor> implements 
    // sequence (Control.Monad)
     @Override
     public <A> _<Ctor, _<ListOf, A>> sequence(_<ListOf, _<Ctor, A>> ms) {
-        return fmap(new F<List<A>, _<ListOf, A>>() {
-            @Override
-            public _<ListOf, A> f(List<A> a) {
-                return ListOf.wrap(a);
-            }
-        }, sequenceFlat(ListOf.unwrap(ms)));
+        return fmap(ListOf.<A>wrap(), sequenceFlat(ListOf.unwrap(ms)));
     }
 
     // "flat" version of sequence
@@ -233,7 +229,7 @@ public abstract class MonadAbstract<Ctor> extends BindAbstract<Ctor> implements 
             public _<Ctor, Unit> f(_<Ctor, A> a, _<Ctor, Unit> b) {
                 return semicolon(a, b);
             }
-        }, pure(Unit.unit()));
+        }, RETURN_UNIT);
     }    
 
   

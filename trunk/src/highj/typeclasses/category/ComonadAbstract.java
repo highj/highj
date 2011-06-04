@@ -16,28 +16,23 @@ import highj.data.ListOf;
 import highj.data2.PairOf;
 
 /**
- * http://hackage.haskell.org/packages/archive/category-extras/latest/doc/html/Control-Comonad.html
+ * http://hackage.haskell.org/packages/archive/comonad/1.0.1/doc/html/Control-Comonad.html
  * 
  * Minimal definition: implement either duplicate or extend
  * @author DGronau
  */
-public abstract class ComonadAbstract<Ctor> extends CopointedAbstract<Ctor> implements Comonad<Ctor> {
+public abstract class ComonadAbstract<Ctor> extends ExtendAbstract<Ctor> implements Comonad<Ctor> {
 
     @Override
-    public <A> _<Ctor, _<Ctor, A>> duplicate(_<Ctor, A> nestedA) {
-        return extend(Function.<_<Ctor, A>>identity()).f(nestedA);
-    }
-
-    @Override
-    public <A, B> F<_<Ctor, A>, _<Ctor, B>> extend(final F<_<Ctor, A>, B> fn) {
-        return new F<_<Ctor, A>, _<Ctor, B>>(){
+    public <A> F<_<Ctor,A>, A> extract() {
+       return new F<_<Ctor,A>, A>(){
             @Override
-            public _<Ctor, B> f(_<Ctor, A> a) {
-                return fmap(fn, duplicate(a));
+            public A f(_<Ctor, A> a) {
+                return extract(a);
             }
-        };
+       };
     }
-
+    
     @Override
     //(=>>)
     public <A, B> _<Ctor, B> unbind(_<Ctor, A> nestedA, F<_<Ctor, A>, B> fn) {

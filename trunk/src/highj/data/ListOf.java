@@ -4,6 +4,7 @@
  */
 package highj.data;
 
+import fj.F;
 import fj.data.List;
 import highj._;
 
@@ -19,6 +20,15 @@ public final class ListOf  {
 
     public static <T> _<ListOf, T> wrap(List<T> list) {
         return new _<ListOf, T>(hidden, list);
+    }
+
+    public static <T> F<List<T>,_<ListOf, T>> wrap() {
+        return new F<List<T>,_<ListOf, T>>() {
+            @Override
+            public _<ListOf, T> f(List<T> list) {
+                return new _<ListOf, T>(hidden, list);
+            }
+        };
     }
     
     public static <T> List<T> unwrap(_<ListOf, T> listWrapper) {
