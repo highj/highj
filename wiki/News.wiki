@@ -2,6 +2,12 @@
 
 = 2011-06-05 =
 
+I started an experiment to simulate Haskell's do-notation. You can use `highj.example.DoTest` as starting point. Currently only two "variables" are supported, but I'm pondering about ways to increase that number without combinatoric explosion...
+
+Furthermore, highJ has a new logo. Thank you, Sabine!
+
+= 2011-06-04 =
+
 The transition to [http://hackage.haskell.org/package/semigroupoids-1.2.2 semigroupoids] is nearly finished (the `Foldable` stuff isn't adapted yet). I changed from `Copointed` to `Extend` and adapted `Comonad`. Test coverage increases slowly. Next thing I want to work on are type-classes extending `Monad` and `Arrow`, but I'm still not sure how to avoid code duplication. Need more instances, too.
 
 I'm looking for a good, real world example I could translate.
