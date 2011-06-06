@@ -13,6 +13,7 @@ import highj._;
  * @author DGronau
  */
 public interface Extend<Ctor> extends Functor<Ctor> {
+    
     public <A> _<Ctor, _<Ctor, A>> duplicate(_<Ctor, A> nestedA);
     
     public <A> F<_<Ctor, A>,_<Ctor, _<Ctor, A>>> duplicate();
