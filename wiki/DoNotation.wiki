@@ -1,0 +1,41 @@
+#summary Simulation of Haskell's do notation
+
+= Introduction =
+
+Assume the following Haskell snippet using do notation:
+
+{{{
+minusIfPossible a b = if a >= b then Just (a-b) else Nothing
+
+result = do v1 <- Just 42
+            v2 <- Just 20
+            minusIfPossible v1 v2 
+}}}
+
+Now that we have monads, wouldn't it be nice to have this notation, too? The best I could come up with is this:
+
+{{{
+F<Integer, _<OptionOf,Integer>> halfIfPossible = 
+new F<Integer, _<OptionOf,Integer>>(){
+   public _<OptionOf, Integer> f(Integer a) {
+       return a % 2 == 0 
+              ? OptionOf.some(a/2) 
+              : OptionOf.<Integer>none();
+    }
+};
+
+Monad<OptionOf> monad = OptionMonadPlus.getInstance();
+
+_<OptionOf, Integer> result =
+       Do.with(monad)
+      .assign1(OptionOf.some(42))
+      .assign2(OptionOf.some(20))
+      .bind12(minusIfPossible)
+      .return_(); 
+}}}
+
+(taken from `highj.example.DoTest`)
+
+I guess there is no way to have "variable" names like v1, so we have to use numbered arguments instead. So `assign1` assigns the first variable, `assign2` assigns the second variable etc.
+
+Currently the number of variables is limited to two, which is clearly not enough. If there is no way to get an unlimited number, I plan to support at least five variables, maybe six (more would be overkill due to the combinatorical explosion of methods). The reason for the limited number, and for separate methods like `assign1(bla)` instead of `assign(1,bla)` is type safety, as every variable may have a different type I need to keep track of.
