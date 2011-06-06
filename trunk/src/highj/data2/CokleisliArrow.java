@@ -33,8 +33,8 @@ public class CokleisliArrow<M> extends ArrowAbstract<Cokleisli<M>> implements Ar
 
     @Override
     public <B, C, D> __<Cokleisli<M>, P2<B, D>, P2<C, D>> first(final __<Cokleisli<M>, B, C> arrow) {
-        final F<_<M, P2<B, D>>,_<M,B>> f1 = comonad.lift(this.<B, D>fst());
-        final F<_<M, P2<B, D>>,_<M,D>> f2 = comonad.lift(this.<B, D>snd());
+        final F<_<M, P2<B, D>>,_<M,B>> f1 = comonad.lift(P2.<B, D>__1());
+        final F<_<M, P2<B, D>>,_<M,D>> f2 = comonad.lift(P2.<B, D>__2());
         F<_<M, P2<B, D>>, P2<C, D>> fn = new F<_<M, P2<B, D>>, P2<C, D>>(){
 
             @Override
@@ -48,8 +48,8 @@ public class CokleisliArrow<M> extends ArrowAbstract<Cokleisli<M>> implements Ar
     
     @Override
     public <B, C, D> __<Cokleisli<M>, P2<D,B>, P2<D,C>> second(final __<Cokleisli<M>,B,C> arrow) {
-        final F<_<M, P2<D, B>>,_<M,D>> f1 = comonad.lift(this.<D, B>fst());
-        final F<_<M, P2<D, B>>,_<M,B>> f2 = comonad.lift(this.<D, B>snd());
+        final F<_<M, P2<D, B>>,_<M,D>> f1 = comonad.lift(P2.<D, B>__1());
+        final F<_<M, P2<D, B>>,_<M,B>> f2 = comonad.lift(P2.<D, B>__2());
         F<_<M, P2<D, B>>, P2<D, C>> fn = new F<_<M, P2<D, B>>, P2<D, C>>(){
 
             @Override
@@ -59,24 +59,6 @@ public class CokleisliArrow<M> extends ArrowAbstract<Cokleisli<M>> implements Ar
             
         };
         return Cokleisli.wrap(fn);
-    }
-
-    private <A,B> F<P2<A,B>,A> fst() {
-        return new F<P2<A,B>,A>() {
-            @Override
-            public A f(P2<A, B> pair) {
-                return pair._1();
-            }
-        };
-    }
-
-    private <A,B> F<P2<A,B>,B> snd() {
-        return new F<P2<A,B>,B>() {
-            @Override
-            public B f(P2<A, B> pair) {
-                return pair._2();
-            }
-        };
     }
 
     @Override
