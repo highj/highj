@@ -14,30 +14,16 @@ E.g. Apply would not longer inherit from Functor, but have a getFunctor method. 
 
 *Con:* Usage gets probably more complicated.
 
-== Curried binary Type Constructors ==
-
-Would it be possible to work _always_ with a curried version like `_<LC<Ctor,A>,B>` instead of `__<Ctor2,A,B>`? 
-
-*Pro:* Can be used immediately in unary type classes. Same mechanism as Haskell.
-
-*Con:* Asymmetric, would need a "Flip" typeclass or so to change the order. Type classes like Arrow would read awkward. Security could be weakened.
-
 == Category Package ==
 
   * How to support instances that implement multiple extensions of Monad (`MonadPlus`, `MonadFix`...) or Arrow (`ArrowChoice`, `ArrowLoop`...) with predefined methods (until defender methods arrive in Java)? 
-  * Is it correct that Copointed inherits from Functor?
-  * The Comonad part didn't look standardized in Haskell (e.g. Copointed vs Extend)
   * What to do with the infamous Monad.fail method?
   * Can we implement monad transformers?
 
 == Type Classes ==
 
   * Which other data type classes would be useful? Set, Map..?
-  * Which monads would be useful? IO, Reader, Writer, State..?
-
-== Crazy Things ==
-
-  * Can we simulate Haskells do-notation?
+  * Which monads would be useful?
 
 == Examples ==
 
