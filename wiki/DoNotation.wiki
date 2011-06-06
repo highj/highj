@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Assume the following Haskell snippet using do notation:
+Consider the following Haskell snippet using do notation:
 
 {{{
 minusIfPossible a b = if a >= b then Just (a-b) else Nothing
@@ -38,4 +38,4 @@ _<OptionOf, Integer> result =
 
 I guess there is no way to have "variable" names like v1, so we have to use numbered arguments instead. So `assign1` assigns the first variable, `assign2` assigns the second variable etc.
 
-Currently the number of variables is limited to two, which is clearly not enough. If there is no way to get an unlimited number, I plan to support at least five variables, maybe six (more would be overkill due to the combinatorical explosion of methods). The reason for the limited number, and for separate methods like `assign1(bla)` instead of `assign(1,bla)` is type safety, as every variable may have a different type I need to keep track of.
+Currently the number of variables is limited to two, which is clearly not enough. If there is no way to get an unlimited number, I plan to support at least five variables, maybe six (more would be overkill due to the combinatorical explosion of methods). The reason for the limited number of variables, and for separate methods like `assign1(bla)` instead of `assign(1,bla)` is type safety, as every variable may have a different type I need to keep track of.
