@@ -1,5 +1,9 @@
 #summary News
 
+= 2011-06-06 =
+
+Uploaded highj-0.4.jar
+
 = 2011-06-05 =
 
 I started an experiment to simulate Haskell's do-notation. You can use `highj.example.DoTest` as starting point. Currently only two "variables" are supported, but I'm pondering about ways to increase that number without combinatoric explosion...
