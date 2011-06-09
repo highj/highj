@@ -1,5 +1,9 @@
 #summary News
 
+= 2011-06-10 =
+
+Changed do-notation to six variables. The signatures are really insane, but it seems to work well...
+
 = 2011-06-06 =
 
 Uploaded highj-0.4.jar
