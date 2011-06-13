@@ -109,23 +109,23 @@ public abstract class ArrowAbstract<Arr> extends CategoryAbstract<Arr> implement
         return new ApplicativeAbstract<LC<Arr, X>>() {
             @Override
             public <A, B> _<LC<Arr, X>, B> ap(_<LC<Arr, X>, F<A, B>> fn, _<LC<Arr, X>, A> nestedA) {
-                return LC.curry(then(fanout(LC.uncurry(fn), LC.uncurry(nestedA)), arr(
+                return then(fanout(LC.uncurry(fn), LC.uncurry(nestedA)), arr(
                         new F<P2<F<A, B>, A>, B>() {
                             @Override
                             public B f(P2<F<A, B>, A> pair) {
                                 return pair._1().f(pair._2());
                             }
-                        })));
+                        })).leftCurry();
             }
 
             @Override
             public <A> _<LC<Arr, X>, A> pure(A a) {
-                return LC.curry(arr(Function.<X, A>constant(a)));
+                return arr(Function.<X, A>constant(a)).leftCurry();
             }
 
             @Override
             public <A, B> _<LC<Arr, X>, B> fmap(F<A, B> fn, _<LC<Arr, X>, A> nestedA) {
-                return LC.curry(then(LC.uncurry(nestedA), arr(fn)));
+                return then(LC.uncurry(nestedA), arr(fn)).leftCurry();
             }
         };
     }

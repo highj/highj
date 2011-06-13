@@ -22,7 +22,7 @@ public abstract class RCFunctor<Ctor, X> extends FunctorAbstract<RC<Ctor,X>> {
 
     @Override
     public <A, B> _<RC<Ctor, X>, B> fmap(F<A, B> fn, _<RC<Ctor, X>, A> nestedA) {
-        return RC.curry(fmap(fn, RC.uncurry(nestedA)));
+        return fmap(fn, RC.uncurry(nestedA)).rightCurry();
     }
 
     
