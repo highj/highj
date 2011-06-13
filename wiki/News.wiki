@@ -1,5 +1,9 @@
 #summary News
 
+= 2011-06-13 = 
+
+I had yesterday problems with SVN. I _think_ I got everything right now, but if you encounter anything strange, please let me know.
+
 = 2011-06-10 =
 
 Changed do-notation to six variables. The signatures are really insane, but it seems to work well...
