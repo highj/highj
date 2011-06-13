@@ -55,4 +55,14 @@ public class EitherLCMonad<X> extends MonadAbstract<LC<EitherOf, X>> implements 
     public <A> _<LC<EitherOf, X>, A> pure(A a) {
         return EitherOf.wrapLC(Either.<X, A>right(a));
     }
+
+    @Override
+    public <A> F<A, _<LC<EitherOf, X>, A>> pure() {
+        return new F<A, _<LC<EitherOf, X>, A>>() {
+            @Override
+            public _<LC<EitherOf, X>, A> f(A a) {
+                return pure(a);
+            }
+        };
+    }
 }

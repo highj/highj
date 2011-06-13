@@ -26,11 +26,11 @@ public final class PairOf {
     }
 
     public static <A, B> _<LC<PairOf, A>, B> wrapLC(P2<A, B> pair) {
-        return LC.curry(wrap(pair));
+        return wrap(pair).leftCurry();
     }
 
     public static <A, B> _<RC<PairOf, B>, A> wrapRC(P2<A, B> pair) {
-        return RC.curry(wrap(pair));
+        return wrap(pair).rightCurry();
     }
 
     public  static<A, B> P2<A, B> unwrap(__<PairOf, A, B> wrapped) {

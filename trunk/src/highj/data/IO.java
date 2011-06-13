@@ -46,6 +46,16 @@ public final class IO {
         }
 
         @Override
+        public <A> F<A, _<IO, A>> pure() {
+            return new F<A, _<IO, A>>() {
+                @Override
+                public _<IO, A> f(A a) {
+                    return pure(a);
+                }
+            };
+        }
+
+        @Override
         public <A, B> _<IO, B> fmap(F<A, B> fn, _<IO, A> nestedA) {
             return wrap(fn.f(unwrap(nestedA)));
         }

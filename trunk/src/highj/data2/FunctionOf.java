@@ -26,11 +26,11 @@ public final class FunctionOf {
     }
 
     public static <A, B> _<LC<FunctionOf, A>, B> wrapLC(F<A, B> fn) {
-        return LC.curry(wrap(fn));
+        return wrap(fn).leftCurry();
     }
 
     public static <A, B> _<RC<FunctionOf, B>, A> wrapRC(F<A, B> fn) {
-        return RC.curry(wrap(fn));
+        return wrap(fn).rightCurry();
     }
     
     public static <A, B> F<A, B> unwrap(__<FunctionOf, A, B> wrapped) {
