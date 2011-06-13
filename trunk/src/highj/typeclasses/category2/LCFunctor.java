@@ -22,6 +22,6 @@ public abstract class LCFunctor<Ctor, X> extends FunctorAbstract<LC<Ctor, X>> {
 
     @Override
     public <A, B> _<LC<Ctor, X>, B> fmap(F<A, B> fn, _<LC<Ctor, X>, A> nestedA) {
-        return LC.curry(fmap(fn, LC.uncurry(nestedA)));
+        return fmap(fn, LC.uncurry(nestedA)).leftCurry();
     }
 }
