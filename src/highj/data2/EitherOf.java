@@ -38,11 +38,11 @@ public final class EitherOf {
     }
 
     public static <A, B> _<LC<EitherOf, A>, B> wrapLC(Either<A, B> either) {
-        return LC.curry(wrap(either));
+        return wrap(either).leftCurry();
     }
 
     public static <A, B> _<RC<EitherOf, B>, A> wrapRC(Either<A, B> either) {
-        return RC.curry(wrap(either));
+        return wrap(either).rightCurry();
     }
     
     public static <A, B> Either<A, B> unwrapLC(_<LC<EitherOf, A>, B> curried) {

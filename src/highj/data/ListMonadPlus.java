@@ -60,10 +60,17 @@ public class ListMonadPlus extends MonadPlusAbstract<ListOf> implements MonadPlu
     public <A> _<ListOf, A> pure(A a) {
         return ListOf.wrap(List.single(a));
     }
-    private static ListMonadPlus INSTANCE = new ListMonadPlus();
 
-    public static ListMonadPlus getInstance() {
-        return INSTANCE;
+    @Override
+    public <A> F<A, _<ListOf, A>> pure() {
+        return new F<A, _<ListOf, A>>(){
+
+            @Override
+            public _<ListOf, A> f(A a) {
+                return pure(a);
+            }
+            
+        };
     }
 
     private static class ListPlus extends PlusAbstract<ListOf> {
@@ -86,4 +93,11 @@ public class ListMonadPlus extends MonadPlusAbstract<ListOf> implements MonadPlu
             return ListOf.wrap(tb.reverse());
         }
     }
+    
+    private static ListMonadPlus INSTANCE = new ListMonadPlus();
+
+    public static ListMonadPlus getInstance() {
+        return INSTANCE;
+    }
+    
 }

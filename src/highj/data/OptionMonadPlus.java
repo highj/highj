@@ -44,6 +44,18 @@ public class OptionMonadPlus extends MonadPlusAbstract<OptionOf> implements Mona
         return OptionOf.some(a);
     }
     
+    @Override
+    public <A> F<A, _<OptionOf, A>> pure() {
+        return new F<A, _<OptionOf, A>>(){
+
+            @Override
+            public _<OptionOf, A> f(A a) {
+                return pure(a);
+            }
+            
+        };
+    }
+  
     private static OptionMonadPlus INSTANCE = new OptionMonadPlus();
 
     public static OptionMonadPlus getInstance() {

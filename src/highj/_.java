@@ -31,5 +31,16 @@ public final class _<Ctor, T> {
         return data.toString();
     }
     
-    
+    @Override
+    public boolean equals(Object o){
+        if(data != null && o instanceof _) {
+           return data.equals(((_)o).data);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.data == null ? 0 : this.data.hashCode();
+    }
 }

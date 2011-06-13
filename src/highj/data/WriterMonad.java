@@ -40,7 +40,19 @@ public class WriterMonad<W> extends MonadAbstract<Writer<W>> implements Monad<Wr
     public <A> _<Writer<W>, A> pure(A a) {
         return Writer.wrap(a, monoid.zero());
     }
+    
+    @Override
+    public <A> F<A, _<Writer<W>, A>> pure() {
+        return new F<A, _<Writer<W>, A>>(){
 
+            @Override
+            public _<Writer<W>, A> f(A a) {
+                return pure(a);
+            }
+            
+        };
+    }
+  
     @Override
     public <A, B> _<Writer<W>, B> fmap(F<A, B> fn, _<Writer<W>, A> nestedA) {
         return Writer.wrap(fn.f(Writer.getValue(nestedA)), Writer.getMonoidValue(nestedA));

@@ -4,6 +4,7 @@
  */
 package highj.typeclasses.category;
 
+import fj.F;
 import highj._;
 
 /**
@@ -15,5 +16,7 @@ public interface Applicative<Ctor> extends Apply<Ctor> {
     // pure (Data.Pointed)
     public <A> _<Ctor, A> pure(A a);
 
+    // curried version of pure
+    public <A> F<A,_<Ctor, A>> pure();
    
 }
