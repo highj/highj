@@ -33,13 +33,6 @@ public class OptionMonadPlus extends MonadPlusAbstract<OptionOf> implements Mona
     }
 
     @Override
-    public <A, B> _<OptionOf, B> fmap(F<A, B> fn, _<OptionOf, A> nestedA) {
-        return OptionOf.isSome(nestedA)
-                ? OptionOf.some(fn.f(OptionOf.get(nestedA)))
-                : OptionOf.<B>none();
-    }
-
-    @Override
     public <A> _<OptionOf, A> pure(A a) {
         return OptionOf.some(a);
     }

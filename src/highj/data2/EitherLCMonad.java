@@ -45,13 +45,6 @@ public class EitherLCMonad<X> extends MonadAbstract<LC<EitherOf, X>> implements 
     }
 
     @Override
-    public <A, B> _<LC<EitherOf, X>, B> fmap(F<A, B> fn, _<LC<EitherOf, X>, A> nestedA) {
-        Either<X, A> eitherA = EitherOf.unwrapLC(nestedA);
-        Either<X, B> eitherB = Either.<X, A, B>rightMap_().f(fn).f(eitherA);
-        return EitherOf.wrapLC(eitherB);
-    }
-
-    @Override
     public <A> _<LC<EitherOf, X>, A> pure(A a) {
         return EitherOf.wrapLC(Either.<X, A>right(a));
     }

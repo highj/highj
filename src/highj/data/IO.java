@@ -54,12 +54,7 @@ public final class IO {
                 }
             };
         }
-
-        @Override
-        public <A, B> _<IO, B> fmap(F<A, B> fn, _<IO, A> nestedA) {
-            return wrap(fn.f(unwrap(nestedA)));
-        }
-        
+   
     };
     
 }
