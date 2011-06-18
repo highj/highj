@@ -124,6 +124,7 @@ public abstract class ArrowAbstract<Arr> extends CategoryAbstract<Arr> implement
             }
 
             @Override
+            //left for performance
             public <A, B> _<LC<Arr, X>, B> fmap(F<A, B> fn, _<LC<Arr, X>, A> nestedA) {
                 return then(LC.uncurry(nestedA), arr(fn)).leftCurry();
             }

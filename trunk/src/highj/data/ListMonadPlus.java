@@ -48,15 +48,6 @@ public class ListMonadPlus extends MonadPlusAbstract<ListOf> implements MonadPlu
     }
 
     @Override
-    public <A, B> _<ListOf, B> fmap(F<A, B> fn, _<ListOf, A> nestedA) {
-        List<B> tb = List.nil();
-        for (A a : ListOf.unwrap(nestedA)) {
-            tb = tb.cons(fn.f(a));
-        }
-        return ListOf.wrap(tb.reverse());
-    }
-
-    @Override
     public <A> _<ListOf, A> pure(A a) {
         return ListOf.wrap(List.single(a));
     }

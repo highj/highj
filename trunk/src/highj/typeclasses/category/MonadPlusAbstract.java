@@ -41,12 +41,6 @@ public abstract class MonadPlusAbstract<Ctor> extends MonadAbstract<Ctor> implem
             public <A, B> _<Ctor, B> ap(_<Ctor, F<A, B>> fn, _<Ctor, A> nestedA) {
                 return MonadPlusAbstract.this.ap(fn, nestedA);
             }
-
-            @Override
-            public <A, B> _<Ctor, B> fmap(F<A, B> fn, _<Ctor, A> nestedA) {
-                return MonadPlusAbstract.this.fmap(fn, nestedA);
-            }
-
         };
     }
     

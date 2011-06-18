@@ -25,5 +25,10 @@ public abstract class ApplicativeAbstract<Ctor> extends ApplyAbstract<Ctor> impl
             }
         };
     }
+    
+    @Override
+    public <A, B> _<Ctor, B> fmap(F<A, B> fn, _<Ctor, A> nestedA) {
+        return ap(pure(fn), nestedA);
+    }
 
 }
