@@ -6,14 +6,14 @@ package highj.typeclasses.category;
 
 import fj.F;
 import fj.Function;
-import fj.P1;
 import fj.P2;
+import fj.data.IterableW;
 import fj.data.List;
-import fj.data.Stream;
 import highj._;
 import highj.__;
 import highj.data.ListOf;
 import highj.data2.PairOf;
+import java.util.Iterator;
 
 /**
  * http://hackage.haskell.org/packages/archive/comonad/1.0.1/doc/html/Control-Comonad.html
@@ -117,8 +117,7 @@ public abstract class ComonadAbstract<Ctor> extends ExtendAbstract<Ctor> impleme
     }
     
     @Override
-    //TODO: replace stream by IterableW
-    public <A,B> F<_<Ctor,A>, Stream<B>> unfoldW(final F<_<Ctor, A>, __<PairOf,B,A>> fn){
+    public <A,B> F<_<Ctor,A>, IterableW<B>> unfoldW(final F<_<Ctor, A>, __<PairOf,B,A>> fn){
         return unfoldWFlat(fn.andThen(new F<__<PairOf,B,A>,P2<B,A>>(){
 
             @Override
@@ -129,22 +128,39 @@ public abstract class ComonadAbstract<Ctor> extends ExtendAbstract<Ctor> impleme
     }
     
     @Override
-    //TODO: replace stream by IterableW
-    public <A,B> F<_<Ctor,A>, Stream<B>> unfoldWFlat(final F<_<Ctor, A>, P2<B,A>> fn) {
-        final F<_<Ctor, A>, A> fnSnd = fn.andThen(P2.<B,A>__2());
-        return new F<_<Ctor,A>, Stream<B>>() {
+    public <A,B> F<_<Ctor,A>, IterableW<B>> unfoldWFlat(final F<_<Ctor, A>, P2<B,A>> fn) {
+        return new F<_<Ctor,A>,IterableW<B>>(){
             @Override
-            public Stream<B> f(final _<Ctor, A> a) {
-                return Stream.cons(fn.f(a)._1(), new P1<Stream<B>>(){
+            public IterableW<B> f(final _<Ctor, A> nestedA) {
+                return IterableW.wrap(new Iterable<B>(){
                     @Override
-                    public Stream<B> _1() {
-                        return unfoldWFlat(fn).f(unbind(a, fnSnd));
+                    public Iterator<B> iterator() {
+                        return new Iterator<B>(){
+
+                            private P2<B,A> current = fn.f(nestedA);
+                            
+                            @Override
+                            public boolean hasNext() {
+                                return true;
+                            }
+
+                            @Override
+                            public B next() {
+                                B result = current._1();
+                                current = fn.f(inject(nestedA, current._2()));
+                                return result;
+                            }
+
+                            @Override
+                            public void remove() {
+                                throw new UnsupportedOperationException("Not supported.");
+                            }
+                        };
                     }
                 });
             }
         };
-    }
-
+    }    
 
     @Override
     public <A, B> _<ListOf, B> sequenceW(_<ListOf, F<_<Ctor, A>, B>> fnList, _<Ctor, A> nestedA) {
