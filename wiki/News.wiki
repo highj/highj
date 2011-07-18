@@ -6,6 +6,8 @@ Hey, I'm still alive. Made some small changes on Comonads, added some PairOf ins
 
 I was pondering a lot about the future of highJ lately. It would be really useful to make the data types subclasses of the underscore-class, e.g. have something like `List<A> extends _<List.Of, A>`, which mean you can use the instances in the type classes without wrapping (unwrapping would be still required, though). But this would mean breaking with Functional Java, which is definitely a Bad Thing (tm). So I'm between a rock and a hard place...
 
+Oh, I added a new jar (version 0.5) since the old one was old...
+
 = 2011-06-13 = 
 
 I had yesterday problems with SVN. I _think_ I got everything right now, but if you encounter anything strange, please let me know.
