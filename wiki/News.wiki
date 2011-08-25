@@ -2,7 +2,7 @@
 
 = 2011-08-25 =
 
-I changed SetOf to use `java.util.Set`s, and added `IteratorOf`, and added `Applicative` instances for both. Note that `IteratorApplicative` behaves like a Haskell `ZipList` applicative instance, not like a list. I stopped the infinite stream experiment, iterators should be good enough for most purposes.
+I changed `SetOf` to use `java.util.Set`s, and added `IteratorOf`, and added `Applicative` instances for both. Note that `IteratorApplicative` behaves like a Haskell `ZipList` applicative instance, not like a list. I stopped the infinite stream experiment, iterators should be good enough for most purposes.
 
 I did some experiments with Java 7, but decided that it's too soon to abandon Java 5 and 6 support.
 
