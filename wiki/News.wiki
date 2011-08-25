@@ -1,8 +1,16 @@
 #summary News
 
+= 2011-08-25 =
+
+I changed SetOf to use `java.util.Set`s, and added `IteratorOf`, and added `Applicative` instances for both. Note that `IteratorApplicative` behaves like a Haskell `ZipList` applicative instance, not like a list. I stopped the infinite stream experiment, iterators should be good enough for most purposes.
+
+I did some experiments with Java 7, but decided that it's too soon to abandon Java 5 and 6 support.
+
+Regarding the subclassing idea I might switch to a dual approach: Allow it where it makes sense, e.g. when I can implement an interface and delegate all the stuff, but keep the wrapping approach (e.g. for the functional java classes) working. This needs definitely more thinking...
+
 = 2011-07-18 =
 
-Hey, I'm still alive. Made some small changes on Comonads, added some PairOf instances. There is a class for infinite streams in the pipe, but I'm not sure if this is a good idea.
+Hey, I'm still alive. Made some small changes in `Comonad`s, added some `PairOf` instances. There is a class for infinite streams in the pipe, but I'm not sure if this is a good idea.
 
 I was pondering a lot about the future of highJ lately. It would be really useful to make the data types subclasses of the underscore-class, e.g. have something like `List<A> extends _<List.Of, A>`, which mean you can use the instances in the type classes without wrapping (unwrapping would be still required, though). But this would mean breaking with Functional Java, which is definitely a Bad Thing (tm). So I'm between a rock and a hard place...
 
