@@ -4,10 +4,16 @@
  */
 package highj.data;
 
-import fj.Ord;
-import fj.data.Set;
 import highj._;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
+/*
+ * Note that java.util.Set is used here, as fj.data.Set needs an Ord for construction,
+ * which makes it unusable for most type classes, as in Haskell.
+ */
 public final class SetOf {
 
     private final static SetOf hidden = new SetOf();
@@ -27,15 +33,20 @@ public final class SetOf {
         return unwrap(wrapped).isEmpty();
     }
 
-    public static <A> boolean member(_<SetOf, A> wrapped, A a) {
-        return unwrap(wrapped).member(a);
+    public static <A> boolean contains(_<SetOf, A> wrapped, A a) {
+        return unwrap(wrapped).contains(a);
     }
 
-    public static <A> _<SetOf, A> empty(Ord<A> ord) {
-        return wrap(Set.empty(ord));
+    public static <A> _<SetOf, A> set(A ... as) {
+        return wrap(new HashSet<A>(Arrays.asList(as)));
     }
 
-    public static <A> _<SetOf, A> insert(_<SetOf, A> wrapped, A a) {
-        return wrap(unwrap(wrapped).insert(a));
+    public static <A> _<SetOf, A> set(Collection<A> as) {
+        return wrap(new HashSet<A>(as));
     }
+
+    public static <A> void add(_<SetOf, A> wrapped, A a) {
+        unwrap(wrapped).add(a);
+    }
+    
 }
