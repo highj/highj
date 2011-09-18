@@ -5,7 +5,7 @@
 No changes in the library, but I'm playing around with several changes bundled in a high2 project:
   * make `_` non-final, remove the data
   * extend `_` directly, e.g. `class List<X> extends _<List.Of, X>` where `List.Of` is an inner static class only `List` can instantiate
-  * do the same for `__`, but derive it from `_` for "automatic" left-curryinf of the type: `class __<X, A, B> extends _<__.Curry<X,A>, B>`
+  * do the same for `__`, but derive it from `_` for "automatic" left-currying of that type: `class __<X, A, B> extends _<__.Curry<X,A>, B>`
   * For a typeclass `Foo` I have an interface `FooCore` with just the essential methods, an interface `Foo` extending it with other useful methods, and a `FooImpl` class, which takes a `FooCore` as constructor argument and implements all methods using it. Seems to be quite flexible.
 
 In highj2 I don't rely on functionaljava any longer, and I use Java 7. I'll see if something useful comes out of this (the lazy lists are at least interesting). If this is the case, I'll create a new branch, so no "old" highj code will be lost.
