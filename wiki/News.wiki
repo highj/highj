@@ -1,5 +1,11 @@
 #summary News
 
+= 2012-01-22 =
+
+I'm still evaluating the possibilities mentioned int the last entry. It seems that I'll go that route (except the idea with the "core" interfaces part). I'm dedicated to have a solid foundation, so I won't push out anything until I'm sure it works better as the old stuff.
+
+Dropping the functionaljava dependencies gives me a lot of freedom, but means a lot of work for building my own data types. If possible, I'll provide adapters to functionaljava in a separate jar. Further I think Google Guice support would be a nice addition, so I think about adding a Module for type class injection in another separate jar.  
+
 = 2011-09-18 =
 
 No changes in the library, but I'm playing around with several changes bundled in a high2 project:
