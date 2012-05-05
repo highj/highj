@@ -1,5 +1,11 @@
 #summary News
 
+= 2012-05-05 =
+
+It has been some time, but I didn't give up the project. I'm working on a mojor overhaul as hinted in the last entries. As this will be incompatible with the former version, I'll need to have a stable core first, before I kill the old code and drop in the new one. This will take time, as I want to provide my own set of collections (not as sophisticated as functionaljava, but enough to do some work). In the mean time, I have to ask for your patience.
+
+You might be interested in another project I'm participating in, a language called [http://code.google.com/p/frege/ Frege], which is very similar to Haskell, but running on the JVM.
+
 = 2012-01-22 =
 
 I'm still evaluating the possibilities mentioned int the last entry. It seems that I'll go that route (except the idea with the "core" interfaces part). I'm dedicated to have a solid foundation, so I won't push out anything until I'm sure it works better as the old stuff.
