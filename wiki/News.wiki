@@ -1,5 +1,9 @@
 #summary News
 
+= 2012-05-13 =
+
+Now I start to see how a new highJ library could look like. It is still considerably smaller than the current version, but nevertheless I'll start with a first release soon. Before I can do this, I have to think about the package structure, need to include some essentional classes, and plan to increase test coverage. But fear not, I'll put a jar of the old 0.5 sources into the download section.
+
 = 2012-05-05 =
 
 It has been some time, but I didn't give up the project. I'm working on a major overhaul as hinted in the last entries. As this will be incompatible with the former version, I'll need to have a stable core first, before I kill the old code and drop in the new one. This will take time, as I want to provide my own set of collections (not as sophisticated as functionaljava, but enough to do some work). In the mean time, I have to ask for your patience.
