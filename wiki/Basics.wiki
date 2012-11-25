@@ -47,6 +47,6 @@ public class ListFunctor implements Functor<List.µ> {
 
 Everything else in highJ follows this scheme. 
 
-For classes with two type arguments there is a `__` (2 underscores) wrapper class as "curried" subclass of `_`, so you can write functor instances for types like `Either<A,B>` as well. You can even go fancy with `___` (3 underscores) subclass of `__`, taking 3 arguments.
+For classes with two type arguments there is a `__` (2 underscores) wrapper class as "curried" subclass of `_`, so you can write functor instances for types like `Either<A,B>` as well. If you want, you can go fancy with the classes `___` and `____` (3 and 4 underscores).
 
 I know the short names like `_` and `µ` (and `$` for function application) are confusing at first, but the type signatures are already rather long and I didn't want to make them even longer.
