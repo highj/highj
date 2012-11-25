@@ -10,9 +10,8 @@ E.g. How should something like an `IterableOf` work?
 
 E.g. Apply would not longer inherit from Functor, but have a getFunctor method. Applicative would have a getApply (and for convenience a getFunctor) method etc. 
 
-*Pro:* Implementation easier and more reuseable. 
-
-*Con:* Usage gets probably more complicated.
+  * *Pro:* Implementation easier and more reuseable. 
+  * *Con:* Usage gets probably more complicated.
 
 == Category Package ==
 
@@ -28,3 +27,7 @@ E.g. Apply would not longer inherit from Functor, but have a getFunctor method. 
 == Examples ==
 
   * What would be a good, non-trivial example? Maybe something from Haskell can be translated (but lazyness could be an issue)?
+
+== Do notation ==
+
+  * To do or not to do?
