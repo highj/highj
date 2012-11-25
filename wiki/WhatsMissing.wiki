@@ -1,0 +1,19 @@
+#List of missing features
+
+= What's Missing =
+
+== Tests ==
+
+Tests, tests, tests.
+
+== Monad Subclasses ==
+
+So far, there is only `MonadZero` and `MonadPlus`. As Java doesn't support multiple inheritance, I use a dirty hack: `MonadAbstract` contains already all default implementations of methods for such subclasses, but doesn't actually implements the interfaces. The idea is to write for a type `Foo` a `FooMonad extends MonadAbstract implements MonadPlus, MonadCont...` class providing the mandatory method implementations. But it feels dirty, which might be the reason I hesitate.
+
+== MonadTransformers ==
+
+Seems to be a must, especially `StateT` and `ContT`. Very complicated stuff, even for `MaybeT`. 
+
+== Do Notation ==
+
+Dunno how useful it is. Maybe I should review the concept, and give it another spin...
