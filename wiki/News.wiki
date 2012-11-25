@@ -6,7 +6,7 @@ Yeah, I did it! I just committed the shiny new syntax version of the project. I'
   * More natural syntax (the "real" class became the outer and the "witness" the inner class)
   * left currying for two, three and four parameter type classes _by inheritance_
   * Removed dependencies to functionaljava, used own collections
-  * Maven 3 POM instead of silly NetBeans project files
+  * Maven 3 POM instead of silly `NetBeans` project files
 
 There is a lot of usefule non-higher-kinded stuff included (like groups) and it would be cool to put this in a separate lib, but unfortunately I'm not sure what to do with my function classes, which need to be higher-kinded. 
 
