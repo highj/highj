@@ -1,5 +1,7 @@
 #summary Simulation of Haskell's do notation
 
+THIS DOCUMENT DESCRIBES HOW DO-NOTATION WORKED IN FORMER VERSIONS. RIGHT NOW I HAVEN'T IMPLEMENTED THAT FEATURE, BUT I'LL CONSIDER ADDING IT AGAIN.
+
 = Introduction =
 
 Consider the following Haskell snippet using do notation:
