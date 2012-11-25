@@ -3,7 +3,7 @@
 = 2012-11-25 =
 
 Yeah, I did it! I just committed the shiny new syntax version of the project. I'm far from finished, but I think it's time to show what I have. Sadly, my test coverage is still bad (maybe I never get the hang of TDD). Changes include:
-  * More natural syntax (the "real" class became the outer and the witness is the inner class)
+  * More natural syntax (the "real" class became the outer and the "witness" the inner class)
   * Removed dependencies to functionaljava, used own collections
   * Maven 3 POM instead of silly NetBeans project files
 
