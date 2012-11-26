@@ -56,7 +56,7 @@ public class T2Test {
                 return Tuple.of("bar", 2 * value);
             }
         };
-        F1<Integer, _<__.µ<T2.µ,String>,Integer>> castedDoubleBar = F1.contravariant(doubleBar);
+        F1<Integer, _<__.µ<T2.µ,String>,Integer>> castedDoubleBar = F1.<Integer,_<__.µ<T2.µ,String>,Integer>,T2<String, Integer>>contravariant(doubleBar);
         T2<String, Integer> fooBar = T2.narrow(monad.bind(foo, castedDoubleBar));
         assertEquals("(foobar,28)", fooBar.toString());
     }

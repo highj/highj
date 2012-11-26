@@ -115,7 +115,7 @@ public abstract class Maybe<A> extends _<Maybe.µ, A> implements Iterable<A> {
     public abstract <B> B cata(B defaultValue, F1<A, B> fn);
 
     public <B> Maybe<B> map(F1<A, B> fn) {
-        return cata(Maybe.<B>Nothing(), F1.compose(Maybe.<B>just(), fn));
+        return cata(Maybe.<B>Nothing(), fn.andThen(Maybe.<B>just()));
     }
 
     @SuppressWarnings("unchecked")

@@ -140,7 +140,7 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
         return empty();
     }
 
-    @SafeVarargs
+    //@SafeVarargs
     public static <A,B> Map<A,B> of(T2<A,B> ... abs) {
         return Map.<A,B>empty().plus(abs);
     }
@@ -149,7 +149,7 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
         return Map.<A,B>empty().plus(abs);
     }
 
-    @SafeVarargs
+    //@SafeVarargs
     public final Map<A,B> plus(T2<A,B> ... abs) {
         Map<A,B> result = this;
         for(T2<A,B> ab : abs) {
@@ -158,7 +158,7 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
         return result;
     }
 
-    @SafeVarargs
+    //@SafeVarargs
     public final Map<A,B> minus(A ... as) {
         Map<A,B> result = this;
         for(A a : as) {

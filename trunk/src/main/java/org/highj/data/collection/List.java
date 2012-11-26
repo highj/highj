@@ -57,7 +57,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         return Nil();
     }
 
-    @SafeVarargs
+    //@SafeVarargs
     public static <A> List<A> of(final A... as) {
         return of(Arrays.asList(as));
     }
@@ -142,7 +142,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         }
     }
 
-    @SafeVarargs
+    //@SafeVarargs
     public final List<A> minusAll(A... as) {
         if (isEmpty()) {
             return this;
@@ -313,7 +313,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         return range(from, 1);
     }
 
-    @SafeVarargs
+    //@SafeVarargs
     public static <A> List<A> cycle(final A... as) {
         List<A> result = Cons(as[as.length - 1], new F0<List<A>>() {
 
