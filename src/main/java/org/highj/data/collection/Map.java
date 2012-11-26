@@ -46,7 +46,7 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A,B> Map<A,B> narrow(__<µ, A, B> value) {
+    public static <A,B> Map<A,B> narrow(_<__.µ<Map.µ,A>, B> value) {
         return (Map) value;
     }
 
@@ -65,12 +65,12 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
         }
         int ahc = a.hashCode();
         if (hc == ahc) {
-            return bucket.contains(new F1<T2<A,B>,Boolean>(){
+            return new Map<A,B>(hc, bucket.filter(new F1<T2<A,B>,Boolean>(){
                 @Override
                 public Boolean $(T2<A,B> ab) {
-                    return ab._1() == a;
+                    return ! ab._1().equals(a);
                 }
-            }) ? this : new Map<A,B>(hc, bucket.cons(Tuple.of(a,b)), left, right);
+            }).cons(Tuple.of(a,b)), left, right);
         } else if (ahc < hc) {
             Map<A,B> newLeft = left.plus(a,b);
             return left == newLeft ? this : new Map<A,B>(hc, bucket, newLeft, right);
@@ -202,11 +202,12 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
     }
 
     public String toString() {
+        if (isEmpty()) return "Map()";
         StringBuilder sb = new StringBuilder();
         for(T2<A,B> ab : this) {
            sb.append(sb.length() == 0 ? "Map(" : ",").append(ab._1()).append("->").append(ab._2());
         }
-        return sb.toString();
+        return sb.append(')').toString();
     }
 
     /*public static MonadPlus<µ> monadPlus = new MapMonadPlus();
