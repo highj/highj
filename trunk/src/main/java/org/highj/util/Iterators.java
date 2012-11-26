@@ -77,7 +77,7 @@ public enum Iterators {
 
                 @Override
                 public A next() {
-                    Contracts.require(hasNext(), "next() called on mzero iterator", NoSuchElementException.class);
+                    Contracts.require(hasNext(), "next() called on empty iterator", NoSuchElementException.class);
                     return it.next();
                 }
             };
