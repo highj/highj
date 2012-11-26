@@ -17,7 +17,7 @@ public enum Contracts {
      * @param varargs   optional arguments that should be included
      * @throws IllegalArgumentException
      */
-    @SafeVarargs
+    //@SafeVarargs
     public static void require(boolean condition, String message, Object... varargs) {
         if (!condition) {
             throw new IllegalArgumentException(String.format(message, varargs));
@@ -33,7 +33,7 @@ public enum Contracts {
      * @param varargs   optional arguments that should be included
      * @throws RuntimeException of type exClass
      */
-    @SafeVarargs
+    //@SafeVarargs
     public static void require(boolean condition, Class<? extends RuntimeException> exClass, String message, Object... varargs) {
         if (!condition) {
             try {
@@ -53,7 +53,7 @@ public enum Contracts {
      * @param varargs   optional arguments that should be included
      * @throws AssertionError
      */
-    @SafeVarargs
+    //@SafeVarargs
     public static void ensure(boolean condition, String message, Object... varargs) {
         if (!condition) {
             throw new AssertionError(String.format(message, varargs));
@@ -69,7 +69,7 @@ public enum Contracts {
      * @param varargs   optional arguments that should be included
      * @throws RuntimeException of type exClass
      */
-    @SafeVarargs
+    //@SafeVarargs
     public static void ensure(boolean condition, Class<? extends RuntimeException> exClass, String message, Object... varargs) {
         require(condition, exClass, message, varargs);
     }
@@ -81,7 +81,7 @@ public enum Contracts {
      * @param varargs optional arguments that should be included
      * @throws AssertionError
      */
-    @SafeVarargs
+    //@SafeVarargs
     public static void fail(String message, Object... varargs) {
         ensure(false, message, varargs);
     }

@@ -176,7 +176,7 @@ public abstract class Stream<A> extends _<Stream.µ, A> implements Iterable<A> {
         return range(from, 1);
     }
 
-    @SafeVarargs
+    //@SafeVarargs
     public static <A> Stream<A> of(final A... as) {
         Stream<A> result = Cons(as[as.length - 1], new F0<Stream<A>>() {
 

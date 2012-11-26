@@ -33,7 +33,7 @@ public enum Predicates {
         };
     }
 
-    @SafeVarargs
+    //@SafeVarargs
     public final static <A> F1<A, Boolean> and(final F1<A, Boolean>... predicates) {
         return new F1<A, Boolean>() {
 
@@ -58,7 +58,7 @@ public enum Predicates {
         };
     }
 
-    @SafeVarargs
+    //@SafeVarargs
     public final static <A> F1<A, Boolean> or(final F1<A, Boolean>... predicates) {
         return new F1<A, Boolean>() {
 

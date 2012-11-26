@@ -253,17 +253,17 @@ public class MaybeTest {
         assertEquals("Just(1)", monad.mfilter(Integers.odd, one).toString());
         assertEquals("Nothing", monad.mfilter(Integers.even, one).toString());
         //mplus
-        List<_<Maybe.µ,String>> fooBarBaz = List.contravariant(List.of(foo, bar, baz));
+        List<_<Maybe.µ,String>> fooBarBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, bar, baz));
         assertEquals("Just(foo)", monad.msum(fooBarBaz).toString());
-        List<_<Maybe.µ,String>> fooBarNothing = List.contravariant(List.of(foo, bar, nothing));
+        List<_<Maybe.µ,String>> fooBarNothing = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, bar, nothing));
         assertEquals("Just(foo)", monad.msum(fooBarNothing).toString());
-        List<_<Maybe.µ,String>> fooNothingBaz = List.contravariant(List.of(foo, nothing, baz));
+        List<_<Maybe.µ,String>> fooNothingBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, nothing, baz));
         assertEquals("Just(foo)", monad.msum(fooNothingBaz).toString());
-        List<_<Maybe.µ,String>> nothingNothingBaz = List.contravariant(List.of(nothing, nothing, baz));
+        List<_<Maybe.µ,String>> nothingNothingBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(nothing, nothing, baz));
         assertEquals("Just(baz)", monad.msum(nothingNothingBaz).toString());
-        List<_<Maybe.µ,String>> nothingBarNothing = List.contravariant(List.of(nothing, bar, nothing));
+        List<_<Maybe.µ,String>> nothingBarNothing = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(nothing, bar, nothing));
         assertEquals("Just(bar)", monad.msum(nothingBarNothing).toString());
-        List<_<Maybe.µ,String>> nothingNothingNothing = List.contravariant(List.of(nothing, nothing, nothing));
+        List<_<Maybe.µ,String>> nothingNothingNothing = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(nothing, nothing, nothing));
         assertEquals("Nothing", monad.msum(nothingNothingNothing).toString());
     }
 

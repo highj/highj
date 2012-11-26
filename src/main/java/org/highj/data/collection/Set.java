@@ -125,7 +125,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
         return empty();
     }
 
-    @SafeVarargs
+    //@SafeVarargs
     public static <A> Set<A> of(A ... as) {
         return Set.<A>empty().plus(as);
     }
@@ -134,7 +134,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
         return Set.<A>empty().plus(as);
     }
 
-    @SafeVarargs
+    //@SafeVarargs
     public final Set<A> plus(A ... as) {
         Set<A> result = this;
         for(A a : as) {
@@ -143,7 +143,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
         return result;
     }
 
-    @SafeVarargs
+    //@SafeVarargs
     public final Set<A> minus(A ... as) {
         Set<A> result = this;
         for(A a : as) {
