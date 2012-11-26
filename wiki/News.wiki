@@ -1,5 +1,9 @@
 #summary News
 
+= 2012-11-26 =
+
+Oops, incompatibilities! I just removed Java 1.7 specific stuff like `@SaveVarargs`. I think the advantages of Java 1.7 are not big enough to justify dropping Java 1.6 support. So the code is now Java 1.6 compatible, but `highj-06.jar` still needs Java 1.7. I'll publish a new jar ASAP.
+
 = 2012-11-25 =
 
 Yeah, I did it! I just committed the shiny new syntax version of the project. I'm far from finished, but I think it's time to show what I have. Sadly, my test coverage is still bad (maybe I never get the hang of TDD). Changes include:
