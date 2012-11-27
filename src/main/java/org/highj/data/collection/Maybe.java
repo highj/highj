@@ -203,7 +203,7 @@ public abstract class Maybe<A> extends _<Maybe.µ, A> implements Iterable<A> {
         return getOrElse(F0.<A>error(message));
     }
 
-    public A get() {
+    public A get() throws NoSuchElementException {
         return getOrError(NoSuchElementException.class);
     }
 

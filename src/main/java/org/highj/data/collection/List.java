@@ -53,6 +53,10 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         return (List) list;
     }
 
+    public static <A> List<A> empty() {
+        return Nil();
+    }
+
     public static <A> List<A> of() {
         return Nil();
     }

@@ -4,16 +4,16 @@ import org.highj._;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
 import org.highj.function.F1;
+import org.highj.function.Strings;
 import org.highj.typeclass.monad.MonadAbstract;
 import org.highj.typeclass.monad.MonadPlus;
 import org.highj.util.Iterators;
-import org.highj.function.Strings;
 
 import java.util.Iterator;
 
 /**
  * A crude, hash-based Set implementation.
- *
+ * <p/>
  * Note that the provided monad instance could be considered a hack, based on the fact that every
  * Java Object has a hashCode and an equals implementation, which might be rather useless in some cases.
  *
@@ -28,10 +28,10 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
         }
     }
 
-    @SuppressWarnings("unchecked")    
+    @SuppressWarnings("unchecked")
     private final static Set EMPTY = new Set(Integer.MIN_VALUE, List.Nil(), null, null) {
     };
-    
+
     private final Set<A> left;
     private final Set<A> right;
     private final List<A> bucket;
@@ -51,12 +51,23 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
     }
 
     public boolean $(A value) {
-        for (A a : this) {
-            if (a == value) {
-                return true;
-            }
+        if (isEmpty()) {
+            return false;
         }
-        return false;
+
+        int vhc = value.hashCode();
+        if (vhc < hc) {
+            return left.$(value);
+        } else if (vhc > hc) {
+            return right.$(value);
+        } else {
+            for (A a : bucket) {
+                if (a == value) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     public Set<A> plus(A a) {
@@ -84,7 +95,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
             List<A> newBucket = bucket.minus(a);
             if (bucket == newBucket) {
                 return this;
-            } else if (! newBucket.isEmpty()) {
+            } else if (!newBucket.isEmpty()) {
                 return new Set<A>(hc, newBucket, left, right);
             } else if (left.isEmpty()) {
                 return right;
@@ -126,7 +137,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
     }
 
     //@SafeVarargs
-    public static <A> Set<A> of(A ... as) {
+    public static <A> Set<A> of(A... as) {
         return Set.<A>empty().plus(as);
     }
 
@@ -135,18 +146,18 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
     }
 
     //@SafeVarargs
-    public final Set<A> plus(A ... as) {
+    public final Set<A> plus(A... as) {
         Set<A> result = this;
-        for(A a : as) {
+        for (A a : as) {
             result = result.plus(a);
         }
         return result;
     }
 
     //@SafeVarargs
-    public final Set<A> minus(A ... as) {
+    public final Set<A> minus(A... as) {
         Set<A> result = this;
-        for(A a : as) {
+        for (A a : as) {
             result = result.minus(a);
         }
         return result;
@@ -154,7 +165,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
 
     public Set<A> plus(Iterable<A> as) {
         Set<A> result = this;
-        for(A a : as) {
+        for (A a : as) {
             result = result.plus(a);
         }
         return result;
@@ -162,7 +173,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
 
     public Set<A> minus(Iterable<A> as) {
         Set<A> result = this;
-        for(A a : as) {
+        for (A a : as) {
             result = result.minus(a);
         }
         return result;
@@ -172,7 +183,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
         return isEmpty() ? 0 : 1 + left.size() + right.size();
     }
 
-    public F1<A, Boolean> F1(){
+    public F1<A, Boolean> F1() {
         return new F1<A, Boolean>() {
 
             @Override
@@ -181,13 +192,21 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
             }
         };
     }
-    
+
     public Iterator<A> iterator() {
         return isEmpty() ? Iterators.<A>emptyIterator() : Iterators.concat(left.iterator(), bucket.iterator(), right.iterator());
     }
 
     public String toString() {
         return Strings.mkString("Set(", ",", ")", this);
+    }
+
+    public <B> Set<B> map(F1<A,B> fn) {
+        Set<B> result = empty();
+        for (A a : this) {
+            result.plus(fn.$(a));
+        }
+        return result;
     }
 
     public static MonadPlus<µ> monadPlus = new SetMonadPlus();
@@ -201,8 +220,8 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
         @Override
         public <A, B> _<µ, B> ap(_<µ, F1<A, B>> fn, _<µ, A> nestedA) {
             Set<B> result = empty();
-            for(F1<A,B> f : narrow(fn)) {
-                for(A a : narrow(nestedA)) {
+            for (F1<A, B> f : narrow(fn)) {
+                for (A a : narrow(nestedA)) {
                     result.plus(f.$(a));
                 }
             }
@@ -211,11 +230,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
 
         @Override
         public <A, B> _<µ, B> map(F1<A, B> fn, _<µ, A> nestedA) {
-            Set<B> result = empty();
-            for(A a : narrow(nestedA)) {
-               result.plus(fn.$(a));
-            }
-            return result;
+            return narrow(nestedA).map(fn);
         }
 
         @Override
@@ -231,8 +246,8 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
         @Override
         public <A> _<µ, A> join(_<µ, _<µ, A>> nestedNestedA) {
             Set<A> result = empty();
-            for(_<µ, A> innerSet : narrow(nestedNestedA)) {
-               result.plus(narrow(innerSet));
+            for (_<µ, A> innerSet : narrow(nestedNestedA)) {
+                result.plus(narrow(innerSet));
             }
             return result;
         }

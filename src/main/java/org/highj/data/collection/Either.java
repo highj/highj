@@ -9,6 +9,8 @@ import org.highj.typeclass.alternative.AltAbstract;
 import org.highj.typeclass.monad.Monad;
 import org.highj.typeclass.monad.MonadAbstract;
 
+import java.util.NoSuchElementException;
+
 public abstract class Either<A, B> extends __<Either.µ, A, B> {
     private static final µ hidden = new µ();
 
@@ -255,8 +257,9 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
      *
      * @return the Left value, mplus throws an exception if none exists
      */
-    public A getLeft() {
-        return cata(F1.<A>id(), F1.<B, A>constant(F0.<A>error("getLeft called on a Right")));
+    public A getLeft() throws NoSuchElementException {
+        return cata(F1.<A>id(), F1.<B, A>constant(
+                F0.<A>error(NoSuchElementException.class, "getLeft called on a Right")));
     }
 
     /**
@@ -264,8 +267,9 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
      *
      * @return the Right value, mplus throws an exception if none exists
      */
-    public B getRight() {
-        return cata(F1.<A, B>constant(F0.<B>error("getRight called on a Left")), F2.<B>id());
+    public B getRight() throws NoSuchElementException {
+        return cata(F1.<A, B>constant(
+                F0.<B>error(NoSuchElementException.class, "getRight called on a Left")), F2.<B>id());
     }
 
     /**
