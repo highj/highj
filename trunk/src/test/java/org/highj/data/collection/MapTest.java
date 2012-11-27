@@ -5,12 +5,15 @@ import org.highj.__;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
 import org.highj.function.F1;
+import org.highj.function.Integers;
 import org.junit.Test;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class MapTest {
 
@@ -30,6 +33,23 @@ public class MapTest {
     public void test$() throws Exception {
         assertEquals("Just(5)", aMap.$("y").toString());
         assertEquals("Nothing", aMap.$("a").toString());
+    }
+
+    @Test
+    public void testGetOrElse() throws Exception {
+        assertEquals("5", aMap.getOrElse("y",42).toString());
+        assertEquals("42", aMap.getOrElse("a", 42).toString());
+    }
+
+    @Test
+    public void testGet() throws Exception {
+        assertEquals("5", aMap.get("y").toString());
+        try {
+            aMap.get("a").toString();
+            fail();
+        } catch (NoSuchElementException ex) {
+            /* expected */
+        }
     }
 
     @Test
@@ -142,5 +162,23 @@ public class MapTest {
         assertEquals("Map()", Map.empty().toString());
         assertEquals("Map(x->3,y->5,z->10)", aMap.toString());
     }
+
+    @Test
+    public void testKeys() throws Exception {
+       assertEquals("Set()", Map.empty().keys().toString());
+       assertEquals("Set(x,y,z)", aMap.keys().toString());
+    }
+
+    @Test
+    public void testValues() throws Exception {
+        assertEquals("Set()", Map.empty().values().toString());
+        assertEquals("Set(3,5,10)", aMap.values().toString());
+    }
+
+    @Test
+    public void testMap() throws Exception {
+        assertEquals("Map(x->-3,y->-5,z->-10)", aMap.map(Integers.negate).toString());
+    }
+
 
 }

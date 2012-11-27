@@ -5,11 +5,14 @@ import org.highj.__;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
 import org.highj.function.F1;
+import org.highj.typeclass.monad.Functor;
+import org.highj.typeclass.monad.FunctorAbstract;
 import org.highj.typeclass.monad.MonadAbstract;
 import org.highj.typeclass.monad.MonadPlus;
 import org.highj.util.Iterators;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * A crude, hash-based Map implementation.
@@ -50,13 +53,32 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
         return (Map) value;
     }
 
-    public Maybe<B> $(A value) {
-        for (T2<A,B> ab : this) {
-            if (ab._1() == value) {
-                return Maybe.Just(ab._2());
-            }
+    public Maybe<B> $(A key) {
+        if (isEmpty()) {
+            return Maybe.Nothing();
         }
-        return Maybe.Nothing();
+
+        int khc = key.hashCode();
+        if (khc < hc) {
+            return left.$(key);
+        } else if (khc > hc) {
+            return right.$(key);
+        } else {
+            for(T2<A,B> t2 : bucket) {
+                if (key.equals(t2._1())) {
+                    return Maybe.Just(t2._2());
+                }
+            }
+            return Maybe.Nothing();
+        }
+    }
+
+    public B getOrElse(A key, B defaultValue) {
+        return $(key).getOrElse(defaultValue);
+    }
+
+    public B get(A key) throws NoSuchElementException {
+        return $(key).get();
     }
 
     public Map<A,B> plus(final A a, final B b) {
@@ -208,6 +230,41 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
            sb.append(sb.length() == 0 ? "Map(" : ",").append(ab._1()).append("->").append(ab._2());
         }
         return sb.append(')').toString();
+    }
+
+    public Set<A> keys() {
+        Set<A> keySet = Set.empty();
+        for(T2<A,B> t2 : this)
+            keySet = keySet.plus(t2._1());
+        return keySet;
+    }
+
+    public Set<B> values() {
+        Set<B> valueSet = Set.empty();
+        for(T2<A,B> t2 : this)
+            valueSet = valueSet.plus(t2._2());
+        return valueSet;
+    }
+
+    public <C> Map<A,C> map(F1<B,C> fn) {
+        if (isEmpty()) {
+            return Map.empty();
+        } else {
+            List<T2<A,C>> newBucket = List.of();
+            for(T2<A,B> t2 : bucket) {
+                newBucket = newBucket.cons(t2.map_2(fn));
+            }
+            return new Map<A,C>(hc, newBucket, left.map(fn), right.map(fn));
+        }
+    }
+
+    private static <S> Functor<__.µ<µ, S>> functor() {
+        return new FunctorAbstract<__.µ<µ, S>>() {
+            @Override
+            public <A, B> _<__.µ<µ, S>, B> map(F1<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
+                return narrow(nestedA).map(fn);
+            }
+        };
     }
 
     /*public static MonadPlus<µ> monadPlus = new MapMonadPlus();
