@@ -277,6 +277,21 @@ public enum Tuple {
     }
 
     /**
+     * Function for extracting the element of a Cell
+     * @param <A> first wrapped type
+     * @return A function that returns the element
+     */
+    public static <A> F1<T1<A>,A> fst1() {
+        return new F1<T1<A>,A>() {
+
+            @Override
+            public A $(T1<A> t1) {
+                return t1._1();
+            }
+        };
+    }
+
+    /**
      * Function for extracting the first element of a Pair
      * @param <A> first wrapped type
      * @return A function that returns the first element
