@@ -11,7 +11,11 @@ import org.highj.typeclass.alternative.Alt;
 import org.highj.typeclass.alternative.AltAbstract;
 import org.highj.typeclass.foldable.Foldable;
 import org.highj.typeclass.foldable.FoldableAbstract;
-import org.highj.typeclass.monad.*;
+import org.highj.typeclass.monad.Applicative;
+import org.highj.typeclass.monad.ApplicativeAbstract;
+import org.highj.typeclass.monad.MonadAbstract;
+import org.highj.typeclass.monad.MonadPlus;
+import org.highj.util.ArrayUtils;
 import org.highj.util.Lazy;
 import org.highj.util.ReadOnlyIterator;
 
@@ -62,8 +66,48 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     }
 
     //@SafeVarargs
-    public static <A> List<A> of(final A... as) {
+    public static <A> List<A> of(A... as) {
         return of(Arrays.asList(as));
+    }
+
+    public static List<Boolean> of(boolean[] as) {
+        return of(ArrayUtils.asList(as));
+    }
+
+    public static List<Byte> of(byte[] as) {
+        return of(ArrayUtils.asList(as));
+    }
+
+    public static List<Character> of(char[] as) {
+        return of(ArrayUtils.asList(as));
+    }
+
+    public static List<Short> of(short[] as) {
+        return of(ArrayUtils.asList(as));
+    }
+
+    public static List<Integer> of(int[] as) {
+        return of(ArrayUtils.asList(as));
+    }
+
+    public static List<Long> of(long[] as) {
+        return of(ArrayUtils.asList(as));
+    }
+
+    public static List<Float> of(float[] as) {
+        return of(ArrayUtils.asList(as));
+    }
+
+    public static List<Double> of(double[] as) {
+        return of(ArrayUtils.asList(as));
+    }
+
+    public static <A> List<A> of(Iterable<A> as) {
+        List<A> result = Nil();
+        for (A a : as) {
+            result = result.cons(a);
+        }
+        return result.reverse();
     }
 
     public static <A> List<A> of(java.util.List<A> as) {
@@ -192,7 +236,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         return false;
     }
 
-    public boolean contains(F1<A,Boolean> predicate) {
+    public boolean contains(F1<A, Boolean> predicate) {
         for (A a : this) {
             if (predicate.$(a)) {
                 return true;
@@ -201,7 +245,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         return false;
     }
 
-    public int count(F1<A,Boolean> predicate) {
+    public int count(F1<A, Boolean> predicate) {
         int result = 0;
         for (A a : this) {
             if (predicate.$(a)) {
@@ -519,7 +563,9 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
             List<A> listTwo = narrow(two);
             return append(listOne, listTwo);
         }
-    };
+    }
+
+    ;
 
     public final static Alt<µ> alt = new AltAbstract<µ>() {
         @Override

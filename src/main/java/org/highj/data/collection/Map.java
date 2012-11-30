@@ -171,6 +171,31 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
         return Map.<A,B>empty().plus(abs);
     }
 
+    public static <A,B> Map<A,B> ofKeys(F1<A,B> fn, A ... keys) {
+        Map<A,B> result = empty();
+        for(A key : keys) {
+            result = result.plus(key, fn.$(key));
+        }
+        return result;
+    }
+
+    public static <A,B> Map<A,B> ofValues(F1<B,A> fn, B ... values) {
+        Map<A,B> result = empty();
+        for(B value : values) {
+            result = result.plus(fn.$(value), value);
+        }
+        return result;
+    }
+
+    public static <A,B,C> Map<A,B> of(F1<C,T2<A,B>> fn, C ... cs) {
+        Map<A,B> result = empty();
+        for(C c : cs) {
+            result = result.plus(fn.$(c));
+        }
+        return result;
+    }
+
+
     //@SafeVarargs
     public final Map<A,B> plus(T2<A,B> ... abs) {
         Map<A,B> result = this;

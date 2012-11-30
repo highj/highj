@@ -7,6 +7,7 @@ import org.highj.function.F1;
 import org.highj.function.Strings;
 import org.highj.typeclass.monad.MonadAbstract;
 import org.highj.typeclass.monad.MonadPlus;
+import org.highj.util.ArrayUtils;
 import org.highj.util.Iterators;
 
 import java.util.Iterator;
@@ -141,6 +142,38 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
         return Set.<A>empty().plus(as);
     }
 
+    public static Set<Boolean> of(boolean[] as) {
+        return Set.of(ArrayUtils.asSet(as));
+    }
+
+    public static Set<Byte> of(byte[] as) {
+        return Set.of(ArrayUtils.asSet(as));
+    }
+
+    public static Set<Character> of(char[] as) {
+        return Set.of(ArrayUtils.asSet(as));
+    }
+
+    public static Set<Short> of(short[] as) {
+        return Set.of(ArrayUtils.asSet(as));
+    }
+
+    public static Set<Integer> of(int[] as) {
+        return Set.of(ArrayUtils.asSet(as));
+    }
+
+    public static Set<Long> of(long[] as) {
+        return Set.of(ArrayUtils.asSet(as));
+    }
+
+    public static Set<Float> of(float[] as) {
+        return Set.of(ArrayUtils.asSet(as));
+    }
+
+    public static Set<Double> of(double[] as) {
+        return Set.of(ArrayUtils.asSet(as));
+    }
+
     public static <A> Set<A> of(Iterable<A> as) {
         return Set.<A>empty().plus(as);
     }
@@ -201,7 +234,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
         return Strings.mkString("Set(", ",", ")", this);
     }
 
-    public <B> Set<B> map(F1<A,B> fn) {
+    public <B> Set<B> map(F1<A, B> fn) {
         Set<B> result = empty();
         for (A a : this) {
             result.plus(fn.$(a));
