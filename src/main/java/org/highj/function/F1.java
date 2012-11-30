@@ -20,6 +20,13 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
 
     private static final µ hidden = new µ();
 
+    @SuppressWarnings("rawtype")
+    private static final F1 ID = new F1() {
+        @Override
+        public Object $(Object a) {
+            return a;
+        }
+    };
     public static class µ {
         private µ() {
         }
@@ -45,17 +52,13 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
         return (F1) function;
     }
 
-    public <C> F1<A, C> andThen(F1<B, C> that) {
-        return compose(that, this);
+    public <C> F1<A, C> andThen(_<__.µ<µ, B>, C> that) {
+        return compose_(that, this);
     }
 
+    @SuppressWarnings("unchecked")
     public static <A> F1<A, A> id() {
-        return new F1<A, A>() {
-            @Override
-            public A $(A a) {
-                return a;
-            }
-        };
+        return (F1)ID;
     }
 
     public static <A, B> F1<A, B> constant(final B b) {
@@ -76,12 +79,30 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
         };
     }
 
+    public static <A, B, C> F1<A, C> compose_(_<__.µ<µ, B>, C> f, _<__.µ<µ, A>, B> g) {
+         return compose(narrow(f), narrow(g));
+    }
+
     public static <A, B, C> F1<A, C> compose(final F1<? super B, ? extends C> f, final F1<? super A, ? extends B> g) {
         return new F1<A, C>() {
 
             @Override
             public C $(A a) {
                 return f.$(g.$(a));
+            }
+        };
+    }
+
+    public static <A, B, C, D> F1<A, D> compose_(_<__.µ<µ, C>, D> f, _<__.µ<µ, B>, C> g, _<__.µ<µ, A>, B> h) {
+        return compose(narrow(f), narrow(g), narrow(h));
+    }
+
+    public static <A, B, C, D> F1<A, D> compose(final F1<? super C, ? extends D> f, final F1<? super B, ? extends C> g, final F1<? super A, ? extends B> h) {
+        return new F1<A, D>() {
+
+            @Override
+            public D $(A a) {
+                return f.$(g.$(h.$(a)));
             }
         };
     }
@@ -101,9 +122,7 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
                 new F2<_<__.µ<µ, A>, A>, _<__.µ<µ, A>, A>,_<__.µ<µ, A>, A>>() {
             @Override
             public _<__.µ<µ, A>, A> $(_<__.µ<µ, A>, A> x, _<__.µ<µ, A>, A> y) {
-                F1<A, A> fx = narrow(x);
-                F1<A, A> fy = narrow(y);
-                return fx.andThen(fy);
+                return compose_(y,x);
             }
         }, F1.<A>id());
     }
@@ -156,34 +175,43 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
 
             @Override
             public <A, B> _<__.µ<µ, R>, B> map(F1<A, B> fAB, _<__.µ<µ, R>, A> nestedA) {
-                return narrow(nestedA).andThen(fAB);
+                return compose_(fAB, nestedA);
             }
         };
     }
 
-    public static <A,B,C> F1<A,T2<B,C>> fanout(final F1<A,B> fab, final F1<A,C> fac) {
+    public static <A,B,C> F1<A,T2<B,C>> fanout(_<__.µ<µ,A>,B> fab, _<__.µ<µ,A>,C> fac) {
+        final F1<A,B> fnab = narrow(fab);
+        final F1<A,C> fnac = narrow(fac);
         return new F1<A,T2<B,C>>(){
             @Override
             public T2<B, C> $(A a) {
-                return Tuple.of(fab.$(a), fac.$(a));
+                return Tuple.of(fnab.$(a), fnac.$(a));
             }
         };
     }
 
-    public static <A,B,C,D> F1<A,T3<B,C,D>> fanout(final F1<A,B> fab, final F1<A,C> fac, final F1<A,D> fad) {
+    public static <A,B,C,D> F1<A,T3<B,C,D>> fanout(_<__.µ<µ,A>,B> fab, _<__.µ<µ,A>,C> fac, _<__.µ<µ,A>,D> fad) {
+        final F1<A,B> fnab = narrow(fab);
+        final F1<A,C> fnac = narrow(fac);
+        final F1<A,D> fnad = narrow(fad);
         return new F1<A,T3<B,C,D>>(){
             @Override
             public T3<B, C, D> $(A a) {
-                return Tuple.of(fab.$(a), fac.$(a), fad.$(a));
+                return Tuple.of(fnab.$(a), fnac.$(a), fnad.$(a));
             }
         };
     }
 
-    public static <A,B,C,D,E> F1<A,T4<B,C,D,E>> fanout(final F1<A,B> fab, final F1<A,C> fac, final F1<A,D> fad, final F1<A,E> fae) {
+    public static <A,B,C,D,E> F1<A,T4<B,C,D,E>> fanout(_<__.µ<µ,A>,B> fab,_<__.µ<µ,A>,C> fac, _<__.µ<µ,A>,D> fad, _<__.µ<µ,A>,E> fae) {
+        final F1<A,B> fnab = narrow(fab);
+        final F1<A,C> fnac = narrow(fac);
+        final F1<A,D> fnad = narrow(fad);
+        final F1<A,E> fnae = narrow(fae);
         return new F1<A,T4<B,C,D,E>>(){
             @Override
             public T4<B, C, D, E> $(A a) {
-                return Tuple.of(fab.$(a), fac.$(a), fad.$(a), fae.$(a));
+                return Tuple.of(fnab.$(a), fnac.$(a), fnad.$(a), fnae.$(a));
             }
         };
     }
@@ -221,9 +249,7 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
 
         @Override
         public <A, B, C> __<µ, A, T2<B, C>> fanout(__<µ, A, B> arr1, __<µ, A, C> arr2) {
-            F1<A,B> fab = narrow(arr1);
-            F1<A,C> fac = narrow(arr2);
-            return F1.fanout(fab, fac);
+            return F1.fanout(arr1, arr2);
         }
 
         @Override
@@ -233,7 +259,7 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
 
         @Override
         public <A, B, C> __<µ, A, C> dot(__<µ, B, C> bc, __<µ, A, B> ab) {
-            return narrow(ab).andThen(narrow(bc));
+            return compose_(bc,ab);
         }
     };
 
