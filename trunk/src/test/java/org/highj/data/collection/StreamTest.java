@@ -32,7 +32,7 @@ public class StreamTest {
         assertEquals("foo", stream.head());
         stream = Cons("foo", F0.constant(of("bar", "baz")));
         assertEquals("foo", stream.head());
-        stream = unfold("foo", Strings.append.flip().$("!"));
+        stream = unfold(Strings.append.flip().$("!"),"foo");
         assertEquals("foo", stream.head());
     }
 
@@ -44,7 +44,7 @@ public class StreamTest {
         assertEquals("bar", stream.tail().head());
         stream = Cons("foo", F0.constant(of("bar", "baz")));
         assertEquals("bar", stream.tail().head());
-        stream = unfold("foo", Strings.prepend.$("!"));
+        stream = unfold(Strings.prepend.$("!"),"foo");
         assertEquals("foo!", stream.tail().head());
     }
 
@@ -59,7 +59,7 @@ public class StreamTest {
 
     @Test
     public void testStreamHeadFn() throws Exception {
-        Stream<String> stream = unfold("foo", Strings.prepend.$("!"));
+        Stream<String> stream = unfold(Strings.prepend.$("!"),"foo");
         assertEquals("foo", stream.head());
         stream = stream.tail();
         assertEquals("foo!", stream.head());
@@ -192,7 +192,7 @@ public class StreamTest {
 
     @Test
     public void testZipWith() throws Exception {
-        Stream<String> stream = zipWith(of("foo", "bar", "baz"), range(2), Strings.repeat);
+        Stream<String> stream = zipWith(Strings.repeat, of("foo", "bar", "baz"), range(2));
         assertEquals("List(foofoo,barbarbar,bazbazbazbaz,foofoofoofoofoo)", stream.take(4).toString());
     }
 

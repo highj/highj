@@ -9,6 +9,7 @@ import org.highj.typeclass.monad.MonadAbstract;
 import org.highj.util.ReadOnlyIterator;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /*
  * An infinite list.
@@ -50,7 +51,7 @@ public abstract class Stream<A> extends _<Stream.µ, A> implements Iterable<A> {
         };
     }
 
-    public static <A> Stream<A> unfold(final A a, final F1<A, A> fn) {
+    public static <A> Stream<A> unfold(final F1<A, A> fn, final A a) {
         return new Stream<A>() {
 
             @Override
@@ -60,7 +61,16 @@ public abstract class Stream<A> extends _<Stream.µ, A> implements Iterable<A> {
 
             @Override
             public Stream<A> tail() {
-                return unfold(fn.$(a), fn);
+                return unfold(fn, fn.$(a));
+            }
+        };
+    }
+
+    public static <A> F1<A, Stream<A>> unfold(final F1<A, A> fn) {
+        return new F1<A,Stream<A>>(){
+            @Override
+            public Stream<A> $(A a) {
+                return unfold(fn,a);
             }
         };
     }
@@ -96,7 +106,7 @@ public abstract class Stream<A> extends _<Stream.µ, A> implements Iterable<A> {
     }
 
     //assuming that the iterator doesn't stop
-    public static <A> Stream<A> fromIterator(final Iterator<A> iterator) {
+    public static <A> Stream<A> fromIterator(final Iterator<A> iterator) throws NoSuchElementException {
         return Cons(iterator.next(), new F0<Stream<A>>() {
 
             @Override
@@ -169,7 +179,7 @@ public abstract class Stream<A> extends _<Stream.µ, A> implements Iterable<A> {
     }
 
     public static Stream<Integer> range(final int from, final int step) {
-        return unfold(from, Integers.add.$(step));
+        return unfold(Integers.add.$(step),from);
     }
 
     public static Stream<Integer> range(final int from) {
@@ -191,6 +201,17 @@ public abstract class Stream<A> extends _<Stream.µ, A> implements Iterable<A> {
         return result;
     }
 
+    public static <A> Stream<A> append(_<List.µ, A> list, _<µ, A> stream) {
+        final List<A> listOne = List.narrow(list);
+        final Stream<A> streamTwo = narrow(stream);
+        return listOne.isEmpty() ? streamTwo : Cons(listOne.head(), new F0<Stream<A>>() {
+            @Override
+            public Stream<A> $() {
+                return append(listOne.tail(), streamTwo);
+            }
+        });
+    }
+
     public <B> Stream<B> map(final F1<? super A, ? extends B> fn) {
         return Cons(fn.$(head()),
                 new F0<Stream<B>>() {
@@ -202,17 +223,28 @@ public abstract class Stream<A> extends _<Stream.µ, A> implements Iterable<A> {
         );
     }
 
-    public static <A, B> Stream<T2<A, B>> zip(Stream<A> streamA, Stream<B> streamB) {
-        return zipWith(streamA, streamB, Tuple.<A, B>pair());
+    public static <A, B> Stream<T2<A, B>> zip(_<µ, A> streamA, _<µ, B> streamB) {
+        return zipWith(Tuple.<A, B>pair(), streamA, streamB);
     }
 
-    public static <A, B, C> Stream<C> zipWith(final Stream<A> streamA, final Stream<B> streamB, final F1<A, F1<B, C>> fn) {
-        return Cons(fn.$(streamA.head()).$(streamB.head()), new F0<Stream<C>>() {
+    public static <A, B, C> Stream<C> zipWith(final F1<A, F1<B, C>> fn, _<µ, A> streamA, _<µ, B> streamB) {
+        final Stream<A> sA = narrow(streamA);
+        final Stream<B> sB = narrow(streamB);
+        return Cons(fn.$(sA.head()).$(sB.head()), new F0<Stream<C>>() {
             @Override
             public Stream<C> $() {
-                return zipWith(streamA.tail(), streamB.tail(), fn);
+                return zipWith(fn, sA.tail(), sB.tail());
             }
         });
+    }
+
+    public static <A,B,C> F2<Stream<A>, Stream<B>, Stream<C>> zipWith(final F1<A, F1<B, C>> fn) {
+       return new F2<Stream<A>, Stream<B>, Stream<C>>() {
+           @Override
+           public Stream<C> $(Stream<A> as, Stream<B> bs) {
+               return zipWith(fn, as, bs);
+           }
+       };
     }
 
     public static <A, B> T2<Stream<A>, Stream<B>> unzip(Stream<T2<A, B>> streamAB) {
@@ -227,7 +259,7 @@ public abstract class Stream<A> extends _<Stream.µ, A> implements Iterable<A> {
 
         @Override
         public <A, B> _<µ, B> ap(_<µ, F1<A, B>> fn, _<µ, A> nestedA) {
-            return zipWith(narrow(fn), narrow(nestedA), F1.<A, B>apply());
+            return zipWith(F1.<A, B>apply(), fn, nestedA);
         }
 
         @Override
