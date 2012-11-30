@@ -3,6 +3,8 @@ package org.highj.function;
 import org.highj._;
 import org.highj.__;
 import org.highj.data.tuple.T2;
+import org.highj.data.tuple.T3;
+import org.highj.data.tuple.T4;
 import org.highj.data.tuple.Tuple;
 import org.highj.typeclass.group.MonoidAbstract;
 import org.highj.typeclass.monad.Applicative;
@@ -159,6 +161,34 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
         };
     }
 
+    public static <A,B,C> F1<A,T2<B,C>> fanout(final F1<A,B> fab, final F1<A,C> fac) {
+        return new F1<A,T2<B,C>>(){
+            @Override
+            public T2<B, C> $(A a) {
+                return Tuple.of(fab.$(a), fac.$(a));
+            }
+        };
+    }
+
+    public static <A,B,C,D> F1<A,T3<B,C,D>> fanout(final F1<A,B> fab, final F1<A,C> fac, final F1<A,D> fad) {
+        return new F1<A,T3<B,C,D>>(){
+            @Override
+            public T3<B, C, D> $(A a) {
+                return Tuple.of(fab.$(a), fac.$(a), fad.$(a));
+            }
+        };
+    }
+
+    public static <A,B,C,D,E> F1<A,T4<B,C,D,E>> fanout(final F1<A,B> fab, final F1<A,C> fac, final F1<A,D> fad, final F1<A,E> fae) {
+        return new F1<A,T4<B,C,D,E>>(){
+            @Override
+            public T4<B, C, D, E> $(A a) {
+                return Tuple.of(fab.$(a), fac.$(a), fad.$(a), fae.$(a));
+            }
+        };
+    }
+
+
     public static final Arrow<µ> arrow = new ArrowAbstract<µ>() {
         @Override
         public <A, B> __<µ, A, B> arr(F1<A, B> fn) {
@@ -187,6 +217,13 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
                     return Tuple.of(pair._1(), fn.$(pair._2()));
                 }
             };
+        }
+
+        @Override
+        public <A, B, C> __<µ, A, T2<B, C>> fanout(__<µ, A, B> arr1, __<µ, A, C> arr2) {
+            F1<A,B> fab = narrow(arr1);
+            F1<A,C> fac = narrow(arr2);
+            return F1.fanout(fab, fac);
         }
 
         @Override
