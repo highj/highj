@@ -1,9 +1,6 @@
 package org.highj.data.tuple;
 
-import org.highj.function.F1;
-import org.highj.function.F2;
-import org.highj.function.F3;
-import org.highj.function.Objects;
+import org.highj.function.*;
 
 public enum Tuple {
     ;
@@ -258,6 +255,23 @@ public enum Tuple {
             @Override
             public T3<A, B, C> $(A a, B b, C c) {
                 return of(a,b,c);
+            }
+        };
+    }
+
+    /**
+     * Quadruple function
+     * @param <A>  first wrapped type
+     * @param <B>  second wrapped type
+     * @param <C>  third wrapped type
+     * @param <D>  third wrapped type
+     * @return a function for creating a quadruple
+     */
+    public static <A,B,C, D> F4<A,B,C,D,T4<A,B,C,D>> quadruple() {
+        return new F4<A, B, C, D, T4<A, B, C, D>>() {
+            @Override
+            public T4<A, B, C, D> $(A a, B b, C c, D d) {
+                return of(a,b,c,d);
             }
         };
     }

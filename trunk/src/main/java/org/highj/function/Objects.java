@@ -32,6 +32,11 @@ public enum Objects {
         };
     }
 
+    //for better type inference
+    public static <T> F1<T,Boolean> equalsFn(T t) {
+        return Objects.<T>equalsFn().$(t);
+    }
+
     public static boolean notNull(Object... os) {
         for (Object o : os) {
             if (o == null) return false;

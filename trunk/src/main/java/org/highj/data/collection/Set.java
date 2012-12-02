@@ -10,6 +10,7 @@ import org.highj.typeclass.monad.MonadPlus;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Iterators;
 
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -51,6 +52,15 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
         return (Set) value;
     }
 
+    public static <A> F1<_<Set.µ, A>, Set<A>> narrow() {
+        return new F1<_<Set.µ, A>, Set<A>>() {
+            @Override
+            public Set<A> $(_<Set.µ, A> set) {
+                return Set.narrow(set);
+            }
+        };
+    }
+
     public boolean $(A value) {
         if (isEmpty()) {
             return false;
@@ -77,7 +87,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
         }
         int ahc = a.hashCode();
         if (hc == ahc) {
-            return bucket.$(a) ? this : new Set<A>(hc, bucket.cons(a), left, right);
+            return bucket.contains(a) ? this : new Set<A>(hc, bucket.cons(a), left, right);
         } else if (ahc < hc) {
             Set<A> newLeft = left.plus(a);
             return left == newLeft ? this : new Set<A>(hc, bucket, newLeft, right);
@@ -143,35 +153,35 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
     }
 
     public static Set<Boolean> of(boolean[] as) {
-        return Set.of(ArrayUtils.asSet(as));
+        return Set.of(ArrayUtils.box(as));
     }
 
     public static Set<Byte> of(byte[] as) {
-        return Set.of(ArrayUtils.asSet(as));
+        return Set.of(ArrayUtils.box(as));
     }
 
     public static Set<Character> of(char[] as) {
-        return Set.of(ArrayUtils.asSet(as));
+        return Set.of(ArrayUtils.box(as));
     }
 
     public static Set<Short> of(short[] as) {
-        return Set.of(ArrayUtils.asSet(as));
+        return Set.of(ArrayUtils.box(as));
     }
 
     public static Set<Integer> of(int[] as) {
-        return Set.of(ArrayUtils.asSet(as));
+        return Set.of(ArrayUtils.box(as));
     }
 
     public static Set<Long> of(long[] as) {
-        return Set.of(ArrayUtils.asSet(as));
+        return Set.of(ArrayUtils.box(as));
     }
 
     public static Set<Float> of(float[] as) {
-        return Set.of(ArrayUtils.asSet(as));
+        return Set.of(ArrayUtils.box(as));
     }
 
     public static Set<Double> of(double[] as) {
-        return Set.of(ArrayUtils.asSet(as));
+        return Set.of(ArrayUtils.box(as));
     }
 
     public static <A> Set<A> of(Iterable<A> as) {
@@ -213,7 +223,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
     }
 
     public int size() {
-        return isEmpty() ? 0 : 1 + left.size() + right.size();
+        return isEmpty() ? 0 : left.size() + bucket.size() + right.size();
     }
 
     public F1<A, Boolean> F1() {
@@ -237,7 +247,23 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
     public <B> Set<B> map(F1<A, B> fn) {
         Set<B> result = empty();
         for (A a : this) {
-            result.plus(fn.$(a));
+            result = result.plus(fn.$(a));
+        }
+        return result;
+    }
+
+    public static <A> Set<A> join(Set<Set<A>> set) {
+        Set<A> result = empty();
+        for (Set<A> innerSet : set) {
+            result = result.plus(innerSet);
+        }
+        return result;
+    }
+
+    public java.util.Set<A> toJSet() {
+        java.util.Set<A> result = new HashSet<A>();
+        for (A a : this) {
+            result.add(a);
         }
         return result;
     }
@@ -255,7 +281,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
             Set<B> result = empty();
             for (F1<A, B> f : narrow(fn)) {
                 for (A a : narrow(nestedA)) {
-                    result.plus(f.$(a));
+                    result = result.plus(f.$(a));
                 }
             }
             return result;
@@ -280,7 +306,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
         public <A> _<µ, A> join(_<µ, _<µ, A>> nestedNestedA) {
             Set<A> result = empty();
             for (_<µ, A> innerSet : narrow(nestedNestedA)) {
-                result.plus(narrow(innerSet));
+                result = result.plus(narrow(innerSet));
             }
             return result;
         }
