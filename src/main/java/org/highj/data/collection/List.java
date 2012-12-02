@@ -2,6 +2,8 @@ package org.highj.data.collection;
 
 import org.highj._;
 import org.highj.data.tuple.T2;
+import org.highj.data.tuple.T3;
+import org.highj.data.tuple.T4;
 import org.highj.data.tuple.Tuple;
 import org.highj.function.F0;
 import org.highj.function.F1;
@@ -19,7 +21,10 @@ import org.highj.util.ArrayUtils;
 import org.highj.util.Lazy;
 import org.highj.util.ReadOnlyIterator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Stack;
 
 public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
 
@@ -52,6 +57,15 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         return (List) value;
     }
 
+    public static <A> F1<_<µ, A>, List<A>> narrow() {
+        return new F1<_<List.µ, A>, List<A>>() {
+            @Override
+            public List<A> $(_<List.µ, A> list) {
+                return List.narrow(list);
+            }
+        };
+    }
+
     @SuppressWarnings("unchecked")
     public static <Super_A, A extends Super_A> List<Super_A> contravariant(List<A> list) {
         return (List) list;
@@ -71,35 +85,35 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     }
 
     public static List<Boolean> of(boolean[] as) {
-        return of(ArrayUtils.asList(as));
+        return of(ArrayUtils.box(as));
     }
 
     public static List<Byte> of(byte[] as) {
-        return of(ArrayUtils.asList(as));
+        return of(ArrayUtils.box(as));
     }
 
     public static List<Character> of(char[] as) {
-        return of(ArrayUtils.asList(as));
+        return of(ArrayUtils.box(as));
     }
 
     public static List<Short> of(short[] as) {
-        return of(ArrayUtils.asList(as));
+        return of(ArrayUtils.box(as));
     }
 
     public static List<Integer> of(int[] as) {
-        return of(ArrayUtils.asList(as));
+        return of(ArrayUtils.box(as));
     }
 
     public static List<Long> of(long[] as) {
-        return of(ArrayUtils.asList(as));
+        return of(ArrayUtils.box(as));
     }
 
     public static List<Float> of(float[] as) {
-        return of(ArrayUtils.asList(as));
+        return of(ArrayUtils.box(as));
     }
 
     public static List<Double> of(double[] as) {
-        return of(ArrayUtils.asList(as));
+        return of(ArrayUtils.box(as));
     }
 
     public static <A> List<A> of(Iterable<A> as) {
@@ -223,13 +237,35 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         return maybeTail().get();
     }
 
+    public F0<List<A>> lazyTail() {
+        return new F0<List<A>>() {
+            @Override
+            public List<A> $() {
+                return tail();
+            }
+        };
+    }
+
     public boolean isEmpty() {
         return this == NIL;
     }
 
-    public boolean $(A value) {
+    public A $(int index) throws IndexOutOfBoundsException {
+        int i = index;
+        List<A> current = this;
+        while (!current.isEmpty() && i > 0) {
+            current = current.tail();
+            i--;
+        }
+        if (i < 0 || current.isEmpty()) {
+            throw new IndexOutOfBoundsException("Index: " + index);
+        }
+        return current.head();
+    }
+
+    public boolean contains(A value) {
         for (A a : this) {
-            if (a == value) {
+            if (a.equals(value)) {
                 return true;
             }
         }
@@ -332,7 +368,6 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         for (A a : this) {
             result.add(a);
         }
-        Collections.reverse(result);
         return result;
     }
 
@@ -389,7 +424,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     }
 
     public static <A> List<A> replicate(int n, A a) {
-        return cycle(a).take(n);
+        return repeat(a).take(n);
     }
 
     public static <A> List<A> append(_<µ, A> one, _<µ, A> two) {
@@ -481,6 +516,14 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         return zipWith(listA, listB, Tuple.<A, B>pair());
     }
 
+    public static <A, B, C> List<T3<A, B, C>> zip(List<A> listA, List<B> listB, List<C> listC) {
+        return zipWith(listA, listB, listC, Tuple.<A, B, C>triple());
+    }
+
+    public static <A, B, C, D> List<T4<A, B, C, D>> zip(List<A> listA, List<B> listB, List<C> listC, List<D> listD) {
+        return zipWith(listA, listB, listC, listD, Tuple.<A, B, C, D>quadruple());
+    }
+
     public static <A, B, C> List<C> zipWith(final List<A> listA, final List<B> listB, final F1<A, F1<B, C>> fn) {
         return listA.isEmpty() || listB.isEmpty() ? List.<C>Nil() :
                 Cons(fn.$(listA.head()).$(listB.head()), new F0<List<C>>() {
@@ -491,10 +534,48 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
                 });
     }
 
+    public static <A, B, C, D> List<D> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final F1<A, F1<B, F1<C, D>>> fn) {
+        return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() ? List.<D>Nil() :
+                Cons(fn.$(listA.head()).$(listB.head()).$(listC.head()), new F0<List<D>>() {
+                    @Override
+                    public List<D> $() {
+                        return zipWith(listA.tail(), listB.tail(), listC.tail(), fn);
+                    }
+                });
+    }
+
+    public static <A, B, C, D, E> List<E> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final List<D> listD, final F1<A, F1<B, F1<C, F1<D, E>>>> fn) {
+        return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() || listD.isEmpty() ? List.<E>Nil() :
+                Cons(fn.$(listA.head()).$(listB.head()).$(listC.head()).$(listD.head()), new F0<List<E>>() {
+                    @Override
+                    public List<E> $() {
+                        return zipWith(listA.tail(), listB.tail(), listC.tail(), listD.tail(), fn);
+                    }
+                });
+    }
+
     public static <A, B> T2<List<A>, List<B>> unzip(List<T2<A, B>> listAB) {
         return Tuple.of(listAB.map(Tuple.<A>fst()), listAB.map(Tuple.<B>snd()));
     }
 
+    public static <A> List<A> join(List<List<A>> list) {
+        Stack<A> stack = new Stack<A>();
+        for (List<A> innerList : list) {
+            for (A a : innerList) {
+                stack.push(a);
+            }
+        }
+        return buildFromStack(stack);
+    }
+
+    public List<A> intersperse(final A a) {
+        return isEmpty() || tail().isEmpty() ? this : Cons(this.head(), new F0<List<A>>() {
+            @Override
+            public List<A> $() {
+                return Cons(a, tail().intersperse(a));
+            }
+        });
+    }
 
     public static final Applicative<µ> zipApplicative = new ApplicativeAbstract<µ>() {
         @Override
@@ -564,8 +645,6 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
             return append(listOne, listTwo);
         }
     }
-
-    ;
 
     public final static Alt<µ> alt = new AltAbstract<µ>() {
         @Override

@@ -13,7 +13,7 @@ public abstract class F0<A> extends T1<A> {
     public abstract A $();
 
     @Override
-    public A _1(){
+    public A _1() {
         return $();
     }
 
@@ -28,7 +28,7 @@ public abstract class F0<A> extends T1<A> {
     }
 
     @Override
-    public <B> F0<B> map(final F1<A,B> fn) {
+    public <B> F0<B> map(final F1<A, B> fn) {
         return new F0<B>() {
 
             @Override
@@ -87,7 +87,7 @@ public abstract class F0<A> extends T1<A> {
             public A $() {
                 RuntimeException exception;
                 try {
-                    exception =  exClass.getConstructor(String.class).newInstance(message);
+                    exception = exClass.getConstructor(String.class).newInstance(message);
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
@@ -126,13 +126,27 @@ public abstract class F0<A> extends T1<A> {
         };
     }
 
+    public static <A, B, C, D, E> F0<E> lazy(final F4<A, B, C, D, E> fn, final A a, final B b, final C c, final D d) {
+        return new F0<E>() {
+
+            @Override
+            public E $() {
+                return fn.$(a, b, c, d);
+            }
+        };
+    }
+
     //use a method as subclasses could switch memoizing behavior at runtime
-    public boolean isMemoizing() { return false; }
+    public boolean isMemoizing() {
+        return false;
+    }
 
     public F0<A> memoized() {
         return isMemoizing() ? this : new F0<A>() {
             @Override
-            public boolean isMemoizing() { return true; }
+            public boolean isMemoizing() {
+                return true;
+            }
 
             private A a = null;
 
