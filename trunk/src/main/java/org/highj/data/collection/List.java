@@ -439,8 +439,30 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     }
 
     //won't terminate for infinite Lists
+    @Override
     public String toString() {
         return Strings.mkString("List(", ",", ")", this);
+    }
+
+    //won't terminate for equal infinite Lists
+    @Override
+    public boolean equals(Object o){
+        if (o == this) return true;
+        if (o instanceof List) {
+            List<?> that = (List) o;
+            return this.maybeHead().equals(that.maybeHead()) && this.maybeTail().equals(that.maybeTail());
+        }
+        return false;
+    }
+
+    //won't terminate for infinite Lists
+    @Override
+    public int hashCode() {
+        int hc = 17;
+        for(A a : this) {
+            hc = 5* hc + 37 * a.hashCode();
+        }
+        return hc;
     }
 
     public <B> List<B> map(final F1<? super A, ? extends B> fn) {
