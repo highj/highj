@@ -242,6 +242,7 @@ public abstract class Maybe<A> extends _<Maybe.µ, A> implements Iterable<A> {
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) return true;
         if (obj instanceof Maybe) {
             Maybe<?> that = (Maybe) obj;
             if (this.isNothing()) return that.isNothing();

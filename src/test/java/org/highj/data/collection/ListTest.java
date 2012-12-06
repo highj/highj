@@ -35,29 +35,43 @@ public class ListTest {
 
     @Test
     public void testOf() throws Exception {
-
+        assertEquals("List()", List.of().toString());
+        assertEquals("List(1,2,3)", List.of(1, 2, 3).toString());
+        assertEquals(List.of(1, 2, 3), List.of(new int[]{1, 2, 3}));
+        assertEquals(List.of(1L, 2L, 3L), List.of(new long[]{1L, 2L, 3L}));
     }
 
 
     @Test
     public void testCons() throws Exception {
-
+        assertEquals("List(1)", List.<Integer>of().cons(1).toString());
+        assertEquals("List(4,1,2,3)", List.of(1, 2, 3).cons(4).toString());
     }
 
     @Test
     public void testFromStream() throws Exception {
-
+        assertEquals("List(1,2,3,4)", List.fromStream(Stream.range(1)).take(4).toString());
     }
 
 
     @Test
     public void testMinus() throws Exception {
-
+        assertEquals("List()", List.<Integer>of().minus(1).toString());
+        assertEquals("List()", List.of(1).minus(1).toString());
+        assertEquals("List(1,2,3)", List.of(4, 1, 2, 3).minus(4).toString());
+        assertEquals("List(1,2,3)", List.of(1, 2, 4, 3).minus(4).toString());
+        assertEquals("List(1,2,3)", List.of(1, 2, 3, 4).minus(4).toString());
     }
 
     @Test
     public void testMinusAll() throws Exception {
-
+        assertEquals("List()", List.<Integer>of().minusAll(1).toString());
+        assertEquals("List()", List.of(1).minusAll(1).toString());
+        assertEquals("List()", List.of(1, 1, 1, 1, 1).minusAll(1).toString());
+        assertEquals("List(1,2,3)", List.of(4, 1, 2, 3).minusAll(4).toString());
+        assertEquals("List(1,2,3)", List.of(1, 2, 4, 3).minusAll(4).toString());
+        assertEquals("List(1,2,3)", List.of(1, 2, 3, 4).minusAll(4).toString());
+        assertEquals("List(1,2,3)", List.of(4, 1, 4, 2, 4, 4, 4, 3, 4).minusAll(4).toString());
     }
 
     @Test
@@ -171,8 +185,8 @@ public class ListTest {
 
     @Test
     public void testIterator() throws Exception {
-         StringBuilder sb = new StringBuilder();
-        for(int i : List.of(7,2,5,9)) {
+        StringBuilder sb = new StringBuilder();
+        for (int i : List.of(7, 2, 5, 9)) {
             sb.append(i);
         }
         assertEquals("7259", sb.toString());
@@ -257,11 +271,11 @@ public class ListTest {
 
     @Test
     public void testZip() throws Exception {
-        List<Integer> intList = List.of(1,5,7,3);
-        List<String> stringList = List.of("one","five","seven","three","blubb");
+        List<Integer> intList = List.of(1, 5, 7, 3);
+        List<String> stringList = List.of("one", "five", "seven", "three", "blubb");
         List<Boolean> boolList = List.of(true, false, false, false);
-        assertEquals("List((1,one),(5,five),(7,seven),(3,three))", List.zip(intList,stringList).toString());
-        assertEquals("List((1,one,true),(5,five,false),(7,seven,false),(3,three,false))", List.zip(intList,stringList,boolList).toString());
+        assertEquals("List((1,one),(5,five),(7,seven),(3,three))", List.zip(intList, stringList).toString());
+        assertEquals("List((1,one,true),(5,five,false),(7,seven,false),(3,three,false))", List.zip(intList, stringList, boolList).toString());
     }
 
     @Test
@@ -271,7 +285,7 @@ public class ListTest {
 
     @Test
     public void testUnzip() throws Exception {
-        List<T2<Integer,String>> list = List.of(Tuple.of(1,"one"),Tuple.of(5,"five"),Tuple.of(7,"seven"),Tuple.of(3,"three"));
+        List<T2<Integer, String>> list = List.of(Tuple.of(1, "one"), Tuple.of(5, "five"), Tuple.of(7, "seven"), Tuple.of(3, "three"));
         assertEquals("(List(1,5,7,3),List(one,five,seven,three))", List.unzip(list).toString());
     }
 
