@@ -3,8 +3,12 @@ package org.highj.data.collection;
 import org.highj._;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
+import org.highj.function.F0;
 import org.highj.function.Integers;
+import org.highj.function.Strings;
 import org.junit.Test;
+
+import java.util.NoSuchElementException;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -82,27 +86,56 @@ public class ListTest {
 
     @Test
     public void testMaybeHead() throws Exception {
-
+        assertEquals("Nothing", List.of().maybeHead().toString());
+        assertEquals("Just(42)", List.of(42).maybeHead().toString());
+        assertEquals("Just(42)", List.of(42, 5, 7).maybeHead().toString());
     }
 
     @Test
     public void testMaybeTail() throws Exception {
-
+        assertEquals("Nothing", List.of().maybeTail().toString());
+        assertEquals("Just(List())", List.of(42).maybeTail().toString());
+        assertEquals("Just(List(5,7))", List.of(42, 5, 7).maybeTail().toString());
     }
 
     @Test
     public void testHead() throws Exception {
-
+        try {
+            List.of().head();
+            fail();
+        } catch (NoSuchElementException ex) {
+            /*expected*/
+        }
+        assertEquals("42", List.of(42).head().toString());
+        assertEquals("42", List.of(42, 5, 7).head().toString());
     }
 
     @Test
     public void testTail() throws Exception {
-
+        try {
+            List.of().tail();
+            fail();
+        } catch (NoSuchElementException ex) {
+            /*expected*/
+        }
+        assertEquals("List()", List.of(42).tail().toString());
+        assertEquals("List(5,7)", List.of(42, 5, 7).tail().toString());
     }
 
     @Test
     public void testLazyTail() throws Exception {
+        List<Integer> list = List.Cons(42, F0.<List<Integer>>error("Test"));
+        F0<List<Integer>> lazyTail = list.lazyTail();
+        try {
+            lazyTail.$();
+            fail();
+        } catch (RuntimeException ex) {
+            /*expected*/
+        }
 
+        List.of().lazyTail();
+
+        assertEquals("List(2,3)", List.of(1, 2, 3).lazyTail().$().toString());
     }
 
     @Test
@@ -163,18 +196,27 @@ public class ListTest {
 
     @Test
     public void testTakeWhile() throws Exception {
-
+        assertEquals("List(2,4,6)", List.of(2, 4, 6).takeWhile(Integers.even).toString());
+        assertEquals("List(2,4,6)", List.of(2, 4, 6, 7, 8, 10).takeWhile(Integers.even).toString());
+        assertEquals("List()", List.of(2, 4, 6, 7, 8, 10).takeWhile(Integers.odd).toString());
     }
 
     @Test
     public void testDrop() throws Exception {
-
+        assertEquals("List()", List.of(1,2, 3, 4).drop(10).toString());
+        assertEquals("List()", List.of(1,2, 3, 4).drop(4).toString());
+        assertEquals("List(4)", List.of(1,2, 3, 4).drop(3).toString());
+        assertEquals("List(2,3,4)", List.of(1,2, 3, 4).drop(1).toString());
+        assertEquals("List(1,2,3,4)", List.of(1,2, 3, 4).drop(0).toString());
+        assertEquals("List(1,2,3,4)", List.of(1,2, 3, 4).drop(-10).toString());
     }
 
     @Test
     public void testDropWhile() throws Exception {
-
-    }
+        assertEquals("List()", List.of(2, 4, 6).dropWhile(Integers.even).toString());
+        assertEquals("List(7,8,10)", List.of(2, 4, 6, 7, 8, 10).dropWhile(Integers.even).toString());
+        assertEquals("List(7,8,10)", List.of(7, 8, 10).dropWhile(Integers.even).toString());
+   }
 
     @Test
     public void testSize() throws Exception {
@@ -196,7 +238,6 @@ public class ListTest {
     public void testToJList() throws Exception {
         assertEquals("[1, 2, 3, 4, 5]", List.of(1, 2, 3, 4, 5).toJList().toString());
     }
-
 
     @Test
     public void testRange() throws Exception {
@@ -261,12 +302,14 @@ public class ListTest {
 
     @Test
     public void testFoldr() throws Exception {
-
+        assertEquals("xyxyxyxyxyxy",List.of(1,2,3).foldr(Strings.repeat.flip(), "xy"));
+        assertEquals(Integer.valueOf(0), List.of(1,2,3,4,5).foldr(Integers.subtract.flip(), 15));
     }
 
     @Test
     public void testFoldl() throws Exception {
-
+        assertEquals("xyxyxyxyxyxy",List.of(1,2,3).foldl("xy", Strings.repeat));
+        assertEquals(Integer.valueOf(0),List.of(1,2,3,4).foldl(10, Integers.subtract));
     }
 
     @Test
@@ -280,6 +323,9 @@ public class ListTest {
 
     @Test
     public void testZipWith() throws Exception {
+        List<Integer> intList = List.of(1, 2, 3, 2);
+        List<String> stringList = List.of("one", "two", "three", "four", "blubb");
+        assertEquals("List(one,twotwo,threethreethree,fourfour)", List.zipWith(stringList, intList, Strings.repeat).toString());
 
     }
 

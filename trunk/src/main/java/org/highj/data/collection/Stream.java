@@ -287,11 +287,11 @@ public abstract class Stream<A> extends _<Stream.µ, A> implements Iterable<A> {
         return Tuple.of(streamAB.map(Tuple.<A>fst()), streamAB.map(Tuple.<B>snd()));
     }
 
-    public static <A, B, C> T3<Stream<A>, Stream<B>,Stream<C>> unzip(Stream<T3<A, B, C>> streamABC) {
+    public static <A, B, C> T3<Stream<A>, Stream<B>,Stream<C>> unzip3(Stream<T3<A, B, C>> streamABC) {
         return Tuple.of(streamABC.map(Tuple.<A>fst3()), streamABC.map(Tuple.<B>snd3()), streamABC.map(Tuple.<C>third3()));
     }
 
-    public static <A, B, C, D> T4<Stream<A>, Stream<B>,Stream<C>, Stream<D>> unzip(Stream<T4<A, B, C,D>> streamABCD) {
+    public static <A, B, C, D> T4<Stream<A>, Stream<B>,Stream<C>, Stream<D>> unzip4(Stream<T4<A, B, C,D>> streamABCD) {
         return Tuple.of(streamABCD.map(Tuple.<A>fst4()), streamABCD.map(Tuple.<B>snd4()), streamABCD.map(Tuple.<C>third4()), streamABCD.map(Tuple.<D>fourth4()));
     }
 
