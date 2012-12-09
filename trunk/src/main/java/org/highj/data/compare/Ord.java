@@ -89,4 +89,27 @@ public abstract class Ord<T> implements Comparator<T>, Eq<T> {
         };
     }
 
+    public static <T> Ord<T>fromCompareFn(final F2<T,T,Integer> fn) {
+        return new Ord<T>() {
+
+            @Override
+            public Ordering cmp(T one, T two) {
+                int result = fn.$(one, two);
+                return result < 0 ? Ordering.LT
+                        : result > 0 ? Ordering.GT
+                        : Ordering.EQ;
+            }
+        };
+    }
+
+    public static <T> Ord<T>fromCmpFn(final F2<T,T,Ordering> fn) {
+        return new Ord<T>() {
+
+            @Override
+            public Ordering cmp(T one, T two) {
+                return fn.$(one, two);
+            }
+        };
+    }
+
 }

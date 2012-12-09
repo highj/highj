@@ -446,7 +446,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
 
     //won't terminate for equal infinite Lists
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (o == this) return true;
         if (o instanceof List) {
             List<?> that = (List) o;
@@ -459,8 +459,8 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     @Override
     public int hashCode() {
         int hc = 17;
-        for(A a : this) {
-            hc = 5* hc + 37 * a.hashCode();
+        for (A a : this) {
+            hc = 5 * hc + 37 * a.hashCode();
         }
         return hc;
     }
@@ -578,6 +578,14 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
 
     public static <A, B> T2<List<A>, List<B>> unzip(List<T2<A, B>> listAB) {
         return Tuple.of(listAB.map(Tuple.<A>fst()), listAB.map(Tuple.<B>snd()));
+    }
+
+    public static <A, B, C> T3<List<A>, List<B>, List<C>> unzip(List<T3<A, B, C>> listABC) {
+        return Tuple.of(listABC.map(Tuple.<A>fst3()), listABC.map(Tuple.<B>snd3()), listABC.map(Tuple.<C>third3()));
+    }
+
+    public static <A, B, C, D> T4<List<A>, List<B>, List<C>, List<D>> unzip(List<T4<A, B, C, D>> listABCD) {
+        return Tuple.of(listABCD.map(Tuple.<A>fst4()), listABCD.map(Tuple.<B>snd4()), listABCD.map(Tuple.<C>third4()), listABCD.map(Tuple.<D>fourth4()));
     }
 
     public static <A> List<A> join(List<List<A>> list) {

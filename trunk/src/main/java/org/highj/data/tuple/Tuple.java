@@ -379,4 +379,64 @@ public enum Tuple {
             }
         };
     }
+
+    /**
+     * Function for extracting the first element of a Quadruple
+     * @param <A> first wrapped type
+     * @return A function that returns the first element
+     */
+    public static <A> F1<T4<A,?,?,?>,A> fst4() {
+        return new F1<T4<A,?,?,?>,A>() {
+
+            @Override
+            public A $(T4<A, ?, ?,?> t4) {
+                return t4._1();
+            }
+        };
+    }
+
+    /**
+     * Function for extracting the second element of a Quadruple
+     * @param <B> second wrapped type
+     * @return A function that returns the second element
+     */
+    public static <B> F1<T4<?, B, ?,?>,B> snd4() {
+        return new F1<T4<?, B, ?,?>,B>() {
+
+            @Override
+            public B $(T4<?, B,?,?> t4) {
+                return t4._2();
+            }
+        };
+    }
+
+    /**
+     * Function for extracting the third element of a Quadruple
+     * @param <C> third wrapped type
+     * @return A function that returns the third element
+     */
+    public static <C> F1<T4<?, ?, C,?>,C> third4() {
+        return new F1<T4<?, ?, C,?>,C>() {
+
+            @Override
+            public C $(T4<?, ?, C,?> t4) {
+                return t4._3();
+            }
+        };
+    }
+
+    /**
+     * Function for extracting the fourth element of a Quadruple
+     * @param <D> fourth wrapped type
+     * @return A function that returns the third element
+     */
+    public static <D> F1<T4<?, ?, ?,D>,D> fourth4() {
+        return new F1<T4<?, ?, ?,D>,D>() {
+
+            @Override
+            public D $(T4<?, ?, ?, D> t4) {
+                return t4._4();
+            }
+        };
+    }
 }
