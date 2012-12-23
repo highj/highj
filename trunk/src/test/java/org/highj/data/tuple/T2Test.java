@@ -4,6 +4,8 @@ import org.highj._;
 import org.highj.__;
 import org.highj.data.compare.Eq;
 import org.highj.function.*;
+import org.highj.function.repo.Integers;
+import org.highj.function.repo.Strings;
 import org.highj.typeclass.monad.Monad;
 import org.junit.Test;
 

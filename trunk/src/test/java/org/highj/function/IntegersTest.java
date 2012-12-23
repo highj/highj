@@ -1,6 +1,6 @@
 package org.highj.function;
 
-import org.highj.data.collection.List;
+import org.highj.function.repo.Integers;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;

@@ -1,5 +1,7 @@
-package org.highj.function;
+package org.highj.function.repo;
 
+import org.highj.function.F1;
+import org.highj.function.F2;
 import org.highj.typeclass.group.Group;
 import org.highj.typeclass.group.GroupAbstract;
 

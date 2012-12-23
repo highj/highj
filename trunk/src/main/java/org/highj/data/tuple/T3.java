@@ -4,7 +4,6 @@ import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.function.F1;
-import org.highj.function.Objects;
 
 /**
  * A tuple of arity 3, a.k.a. "triple".

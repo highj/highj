@@ -4,8 +4,8 @@ import org.highj._;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
 import org.highj.function.F0;
-import org.highj.function.Integers;
-import org.highj.function.Strings;
+import org.highj.function.repo.Integers;
+import org.highj.function.repo.Strings;
 import org.junit.Test;
 
 import java.util.NoSuchElementException;

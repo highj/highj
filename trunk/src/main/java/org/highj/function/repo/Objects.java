@@ -1,4 +1,7 @@
-package org.highj.function;
+package org.highj.function.repo;
+
+import org.highj.function.F1;
+import org.highj.function.F2;
 
 public enum Objects {
     ;

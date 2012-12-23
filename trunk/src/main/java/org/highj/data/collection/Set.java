@@ -4,7 +4,7 @@ import org.highj._;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
 import org.highj.function.F1;
-import org.highj.function.Strings;
+import org.highj.function.repo.Strings;
 import org.highj.typeclass.monad.MonadAbstract;
 import org.highj.typeclass.monad.MonadPlus;
 import org.highj.util.ArrayUtils;

@@ -13,7 +13,7 @@ public class SemigroupAbstract<A> implements Semigroup<A> {
 
     @Override
     public A dot(A x, A y) {
-        return dotFunction.$(x,y);
+        return dotFunction.$(x, y);
     }
 
     @Override
@@ -23,12 +23,12 @@ public class SemigroupAbstract<A> implements Semigroup<A> {
 
     @Override
     public A fold(A a, List<A> as) {
-        return as.isEmpty() ? a : fold(dot(a,as.head()), as.tail()) ;
+        return as.isEmpty() ? a : fold(dot(a, as.head()), as.tail());
     }
 
     @Override
-    public A fold(A a, A ... as) {
-        return fold(a, List.of(as)) ;
+    public A fold(A a, A... as) {
+        return fold(a, List.of(as));
     }
 
 }

@@ -2,7 +2,7 @@ package org.highj.data;
 
 import org.highj._;
 import org.highj.function.F1;
-import org.highj.function.Integers;
+import org.highj.function.repo.Integers;
 import org.highj.typeclass.arrow.Category;
 import org.junit.Test;
 

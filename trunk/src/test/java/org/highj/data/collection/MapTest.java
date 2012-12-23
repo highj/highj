@@ -5,7 +5,7 @@ import org.highj.__;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
 import org.highj.function.F1;
-import org.highj.function.Integers;
+import org.highj.function.repo.Integers;
 import org.junit.Test;
 
 import java.util.Iterator;
