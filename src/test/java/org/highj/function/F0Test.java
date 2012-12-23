@@ -2,6 +2,7 @@ package org.highj.function;
 
 import org.highj.data.tuple.T0;
 import org.highj.data.collection.List;
+import org.highj.function.repo.Strings;
 import org.junit.Test;
 
 import java.util.Iterator;

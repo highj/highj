@@ -8,7 +8,7 @@ import org.highj.typeclass.monad.ApplicativeAbstract;
 
 public abstract class AlternativeAbstract<mu> extends ApplicativeAbstract<mu> implements Alternative<mu> {
 
-    private final Plus plus;
+    private final Plus<mu> plus;
 
     public AlternativeAbstract(Plus<mu> plus) {
         this.plus = plus;

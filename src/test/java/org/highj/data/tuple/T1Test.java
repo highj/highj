@@ -7,7 +7,7 @@ import org.highj.typeclass.monad.Monad;
 import org.highj.data.compare.Eq;
 import org.highj.function.F0;
 import org.highj.function.F1;
-import org.highj.function.Strings;
+import org.highj.function.repo.Strings;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;

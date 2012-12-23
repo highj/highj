@@ -3,8 +3,8 @@ package org.highj.typeclass.foldable;
 import org.highj.data.collection.List;
 import org.highj.data.collection.Maybe;
 import org.highj.function.F2;
-import org.highj.function.Integers;
-import org.highj.function.Strings;
+import org.highj.function.repo.Integers;
+import org.highj.function.repo.Strings;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

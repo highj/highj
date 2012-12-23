@@ -8,7 +8,7 @@ import org.highj.data.tuple.Tuple;
 import org.highj.function.F0;
 import org.highj.function.F1;
 import org.highj.function.F2;
-import org.highj.function.Strings;
+import org.highj.function.repo.Strings;
 import org.highj.typeclass.alternative.Alt;
 import org.highj.typeclass.alternative.AltAbstract;
 import org.highj.typeclass.foldable.Foldable;

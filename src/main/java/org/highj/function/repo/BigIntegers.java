@@ -1,6 +1,8 @@
-package org.highj.function;
+package org.highj.function.repo;
 
 import org.highj.data.compare.Eq;
+import org.highj.function.F1;
+import org.highj.function.F2;
 import org.highj.typeclass.group.*;
 
 import java.math.BigInteger;

@@ -4,7 +4,7 @@ import org.highj.data.tuple.T0;
 import org.highj._;
 import org.highj.data.collection.Maybe;
 import org.highj.function.F1;
-import org.highj.function.Strings;
+import org.highj.function.repo.Strings;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;

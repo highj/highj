@@ -1,14 +1,12 @@
 package org.highj.data.collection;
 
 import org.highj._;
-import org.highj.data.collection.Maybe;
-import org.highj.function.Integers;
+import org.highj.function.repo.Integers;
 import org.highj.typeclass.monad.Monad;
-import org.highj.data.collection.List;
 import org.highj.data.compare.Eq;
 import org.highj.function.F0;
 import org.highj.function.F1;
-import org.highj.function.Strings;
+import org.highj.function.repo.Strings;
 import org.highj.typeclass.monad.MonadPlus;
 import org.junit.Test;
 

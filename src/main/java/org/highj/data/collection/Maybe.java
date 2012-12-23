@@ -3,6 +3,8 @@ package org.highj.data.collection;
 import org.highj._;
 import org.highj.data.compare.Eq;
 import org.highj.function.*;
+import org.highj.function.repo.Objects;
+import org.highj.function.repo.Strings;
 import org.highj.typeclass.alternative.Alt;
 import org.highj.typeclass.alternative.AltAbstract;
 import org.highj.typeclass.foldable.Foldable;

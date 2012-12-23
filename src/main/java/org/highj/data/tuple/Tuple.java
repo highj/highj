@@ -1,6 +1,7 @@
 package org.highj.data.tuple;
 
 import org.highj.function.*;
+import org.highj.function.repo.Objects;
 
 public enum Tuple {
     ;

@@ -5,7 +5,6 @@ import org.highj.__;
 import org.highj.___;
 import org.highj.____;
 import org.highj.function.F1;
-import org.highj.function.Objects;
 
 public abstract class T4<A, B, C, D> extends ____<T4.µ, A, B, C, D> {
     private static final µ hidden = new µ();
