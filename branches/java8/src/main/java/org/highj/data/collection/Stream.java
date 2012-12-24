@@ -10,7 +10,6 @@ import org.highj.function.repo.Integers;
 import org.highj.function.repo.Predicates;
 import org.highj.function.repo.Strings;
 import org.highj.typeclass.monad.Monad;
-import org.highj.typeclass.monad.MonadAbstract;
 import org.highj.util.ReadOnlyIterator;
 
 import java.util.Iterator;
@@ -298,7 +297,7 @@ public abstract class Stream<A> extends _<Stream.µ, A> implements Iterable<A> {
         return Tuple.of(streamABCD.map(Tuple.<A>fst4()), streamABCD.map(Tuple.<B>snd4()), streamABCD.map(Tuple.<C>third4()), streamABCD.map(Tuple.<D>fourth4()));
     }
 
-    public static final Monad<µ> monad = new MonadAbstract<µ>() {
+    public static final Monad<µ> monad = new Monad<µ>() {
         @Override
         public <A> _<µ, A> pure(A a) {
             return of(a);

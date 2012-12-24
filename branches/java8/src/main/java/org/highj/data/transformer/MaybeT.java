@@ -4,9 +4,7 @@ import org.highj._;
 import org.highj.data.collection.Maybe;
 import org.highj.function.F1;
 import org.highj.typeclass.monad.Applicative;
-import org.highj.typeclass.monad.ApplicativeAbstract;
 import org.highj.typeclass.monad.Functor;
-import org.highj.typeclass.monad.FunctorAbstract;
 
 public class MaybeT <M, A> extends _<_<MaybeT.µ, M>, A> {
 
@@ -40,7 +38,7 @@ public class MaybeT <M, A> extends _<_<MaybeT.µ, M>, A> {
     }
 
     public static <M> Functor<_<µ, M>> functor(final Functor<M> functorM) {
-        return new FunctorAbstract<_<µ, M>>() {
+        return new Functor<_<µ, M>>() {
             @Override
             public <A, B> _<_<µ, M>, B> map(F1<A, B> fn, _<_<µ, M>, A> nestedA) {
                 MaybeT<M, A> aId = narrow(nestedA);
@@ -51,7 +49,7 @@ public class MaybeT <M, A> extends _<_<MaybeT.µ, M>, A> {
     }
 
     public static <M> Applicative<_<µ, M>> applicative(final Applicative<M> applicativeM) {
-        return new ApplicativeAbstract<_<µ, M>>() {
+        return new Applicative<_<µ, M>>() {
             @Override
             public <A, B> _<_<µ, M>, B> map(F1<A, B> fn, _<_<µ, M>, A> nestedA) {
                 MaybeT<M, A> aMaybeT = narrow(nestedA);

@@ -8,5 +8,7 @@ import org.highj.data.collection.List;
 public interface Monoid<A> extends Semigroup<A> {
     public A identity();
 
-    public A fold(List<A> as);
+    public default A fold(List<A> as) {
+        return fold(identity(), as);
+    }
 }

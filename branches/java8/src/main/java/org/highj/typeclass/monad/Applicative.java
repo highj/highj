@@ -3,12 +3,21 @@ package org.highj.typeclass.monad;
 import org.highj._;
 import org.highj.function.F1;
 
-public interface Applicative<µ> extends Apply<µ> {
+//minimal definition pure() OR pure(a)
+public interface Applicative<mu> extends Apply<mu> {
 
     // pure (Data.Pointed, Control.Applicative)
-    public <A> _<µ, A> pure(A a);
+    public default  <A> _<mu, A> pure(A a) {
+        return this.<A>pure().$(a);
+    }
 
     // curried version of pure
-    //duplicated in MonadAbstract
-    public <A> F1<A,_<µ, A>> pure();
+    public default <A> F1<A,_<mu, A>> pure() {
+        return new F1<A,_<mu, A>>(){
+            @Override
+            public _<mu, A> $(A a) {
+                return pure(a);
+            }
+        };
+    }
 }

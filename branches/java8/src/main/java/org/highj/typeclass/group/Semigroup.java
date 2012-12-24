@@ -8,11 +8,20 @@ import org.highj.function.F2;
  */
 public interface Semigroup<A> {
 
-    public A dot(A x, A y);
 
     public F2<A,A,A> dot();
 
-    public A fold(A a, List<A> as);
+    public default A dot(A x, A y) {
+        return dot().$(x, y);
+    }
 
-    public A fold(A a, A ... as);
+
+    public default A fold(A a, List<A> as) {
+        return as.isEmpty() ? a : fold(dot(a, as.head()), as.tail());
+    }
+
+    public default A fold(A a, A... as) {
+        return fold(a, List.of(as));
+    }
+
 }

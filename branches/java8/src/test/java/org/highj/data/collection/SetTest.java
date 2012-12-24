@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 import static org.junit.Assert.*;
 
@@ -124,8 +125,8 @@ public class SetTest {
 
     @Test
     public void testToJSet() {
-        java.util.Set set = Set.of(3, 5, 1, 2, 4, 6).toJSet();
-        assertEquals("[1, 2, 3, 4, 5, 6]", set.toString());
+        java.util.Set<Integer> set = Set.of(3, 5, 1, 2, 4, 6).toJSet();
+        assertEquals("[1, 2, 3, 4, 5, 6]", new TreeSet<>(set).toString());
     }
 
 }

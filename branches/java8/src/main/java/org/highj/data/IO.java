@@ -4,7 +4,6 @@ import org.highj._;
 import org.highj.function.F0;
 import org.highj.function.F1;
 import org.highj.typeclass.monad.Monad;
-import org.highj.typeclass.monad.MonadAbstract;
 
 public class IO<A> extends _<IO.µ, A> {
 
@@ -32,7 +31,7 @@ public class IO<A> extends _<IO.µ, A> {
         this.thunk = thunk;
     }
 
-    public final static Monad<IO.µ> monad = new MonadAbstract<IO.µ>() {
+    public final static Monad<IO.µ> monad = new Monad<IO.µ>() {
 
         @Override
         public <A, B> _<IO.µ, B> bind(_<IO.µ, A> nestedA, F1<A, _<IO.µ, B>> fn) {

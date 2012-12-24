@@ -4,9 +4,7 @@ import org.highj._;
 import org.highj.function.F1;
 import org.highj.function.F2;
 import org.highj.typeclass.foldable.Foldable;
-import org.highj.typeclass.foldable.FoldableAbstract;
 import org.highj.typeclass.foldable.Traversable;
-import org.highj.typeclass.foldable.TraversableAbstract;
 import org.highj.typeclass.group.Monoid;
 import org.highj.typeclass.monad.*;
 
@@ -84,7 +82,7 @@ public class IdentityT<M, A> extends _<_<IdentityT.µ, M>, A> {
     }
 
     public static <M> Functor<_<µ, M>> functor(final Functor<M> functorM) {
-        return new FunctorAbstract<_<µ, M>>() {
+        return new Functor<_<µ, M>>() {
             @Override
             public <A, B> _<_<µ, M>, B> map(F1<A, B> fn, _<_<µ, M>, A> nestedA) {
                 IdentityT<M, A> aId = narrow(nestedA);
@@ -94,7 +92,7 @@ public class IdentityT<M, A> extends _<_<IdentityT.µ, M>, A> {
     }
 
     public static <M> Applicative<_<µ, M>> applicative(final Applicative<M> applicativeM) {
-        return new ApplicativeAbstract<_<µ, M>>() {
+        return new Applicative<_<µ, M>>() {
             @Override
             public <A, B> _<_<µ, M>, B> map(F1<A, B> fn, _<_<µ, M>, A> nestedA) {
                 IdentityT<M, A> aId = narrow(nestedA);
@@ -117,7 +115,7 @@ public class IdentityT<M, A> extends _<_<IdentityT.µ, M>, A> {
 
 
     public static <M> Monad<_<µ, M>> monad(final Monad<M> monadM) {
-        return new MonadAbstract<_<µ, M>>() {
+        return new Monad<_<µ, M>>() {
             @Override
             public <A, B> _<_<µ, M>, B> map(F1<A, B> fn, _<_<µ, M>, A> nestedA) {
                 IdentityT<M, A> aId = narrow(nestedA);
@@ -148,7 +146,7 @@ public class IdentityT<M, A> extends _<_<IdentityT.µ, M>, A> {
         return new IdentityTMonadPlus<M>(monadPlusM);
     }
 
-    private static final class IdentityTMonadPlus<M> extends MonadAbstract<_<µ, M>> implements MonadPlus<_<µ, M>> {
+    private static final class IdentityTMonadPlus<M> implements MonadPlus<_<µ, M>> {
 
         private final MonadPlus<M> monadPlusM;
 
@@ -194,7 +192,7 @@ public class IdentityT<M, A> extends _<_<IdentityT.µ, M>, A> {
     }
 
     public static <M> Foldable<_<µ,M>> foldable(final Foldable<M> foldableM) {
-        return new FoldableAbstract<_<µ, M>>() {
+        return new Foldable<_<µ, M>>() {
             @Override
             public <A, B> B foldMap(Monoid<B> mb, F1<A, B> fn, _<_<µ, M>, A> nestedA) {
                 IdentityT<M, A> aId = narrow(nestedA);
@@ -204,7 +202,7 @@ public class IdentityT<M, A> extends _<_<IdentityT.µ, M>, A> {
     }
 
     public static <M> Traversable<_<µ,M>> traversable(final Traversable<M> traversableM) {
-        return new TraversableAbstract<_<µ, M>>() {
+        return new Traversable<_<µ, M>>() {
             @Override
             public <A, B> _<_<µ, M>, B> map(F1<A, B> fn, _<_<µ, M>, A> nestedA) {
                 IdentityT<M, A> aId = narrow(nestedA);

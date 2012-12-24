@@ -4,9 +4,7 @@ import org.highj._;
 import org.highj.__;
 import org.highj.function.F1;
 import org.highj.typeclass.monad.Applicative;
-import org.highj.typeclass.monad.ApplicativeAbstract;
 import org.highj.typeclass.monad.Functor;
-import org.highj.typeclass.monad.FunctorAbstract;
 import org.highj.typeclass.group.Monoid;
 
 public class Const<A,B> extends __<Const.µ,A,B> {
@@ -46,7 +44,7 @@ public class Const<A,B> extends __<Const.µ,A,B> {
    }
 
    public static <S> Functor<__.µ<µ, S>> functor() {
-       return  new FunctorAbstract<__.µ<µ, S>>(){
+       return new Functor<__.µ<µ, S>>(){
 
            @Override
            public <A, B> _<__.µ<µ, S>, B> map(F1<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
@@ -57,7 +55,7 @@ public class Const<A,B> extends __<Const.µ,A,B> {
    }
 
    public static <S> Applicative<__.µ<µ, S>>  applicative(final Monoid<S> monoid) {
-       return new ApplicativeAbstract<__.µ<µ, S>>() {
+       return new Applicative<__.µ<µ, S>>() {
            @Override
            public <A> _<__.µ<µ, S>, A> pure(A a) {
                return new Const<S,A>(monoid.identity());

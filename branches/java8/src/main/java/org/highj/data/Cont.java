@@ -4,7 +4,6 @@ import org.highj._;
 import org.highj.__;
 import org.highj.function.F1;
 import org.highj.typeclass.monad.Monad;
-import org.highj.typeclass.monad.MonadAbstract;
 
 public class Cont<R,A> extends __<Cont.µ, R, A> {
 
@@ -38,7 +37,7 @@ public class Cont<R,A> extends __<Cont.µ, R, A> {
     }
 
     private static <S> Monad<__.µ<µ, S>> monad()  {
-        return new MonadAbstract<__.µ<µ, S>>() {
+        return new Monad<__.µ<µ, S>>() {
             @Override
             public <A> _<__.µ<µ, S>, A> pure(A a) {
                 return new Cont<S,A>(F1.<A,S>flipApply().$(a));
@@ -46,11 +45,13 @@ public class Cont<R,A> extends __<Cont.µ, R, A> {
 
             @Override
             public <A, B> _<__.µ<µ, S>, B> ap(_<__.µ<µ, S>, F1<A, B>> fn, _<__.µ<µ, S>, A> nestedA) {
-                return null;
+                throw new UnsupportedOperationException("need to write this...");
             }
 
-            //bind or join...
-
+            @Override
+            public <A> _<__.µ<µ, S>, A> join( _<__.µ<µ, S>, _<__.µ<µ, S>,A>> nested) {
+               throw new UnsupportedOperationException("need to write this...");
+            }
         };
     }
 

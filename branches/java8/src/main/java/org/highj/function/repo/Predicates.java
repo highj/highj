@@ -3,7 +3,7 @@ package org.highj.function.repo;
 import org.highj.function.F1;
 import org.highj.function.F2;
 import org.highj.typeclass.group.Group;
-import org.highj.typeclass.group.GroupAbstract;
+
 
 public enum Predicates {
     ;
@@ -124,17 +124,41 @@ public enum Predicates {
     }
 
     public final static <A> Group<F1<A, Boolean>> andGroup() {
-        return new GroupAbstract<F1<A, Boolean>>(
-                Predicates.<A>and(),
-                Predicates.<A>True(),
-                Predicates.<A>not());
+        return new Group<F1<A, Boolean>>(){
+            @Override
+            public F1<F1<A, Boolean>, F1<A, Boolean>> inverse() {
+                return not();
+            }
+
+            @Override
+            public F1<A, Boolean> identity() {
+                return True();
+            }
+
+            @Override
+            public F2<F1<A, Boolean>, F1<A, Boolean>, F1<A, Boolean>> dot() {
+                return and();
+            }
+        };
     }
 
     public final static <A> Group<F1<A, Boolean>> orGroup() {
-        return new GroupAbstract<F1<A, Boolean>>(
-                Predicates.<A>or(),
-                Predicates.<A>False(),
-                Predicates.<A>not());
+        return new Group<F1<A, Boolean>>(){
+            @Override
+            public F1<F1<A, Boolean>, F1<A, Boolean>> inverse() {
+                return not();
+            }
+
+            @Override
+            public F1<A, Boolean> identity() {
+                return False();
+            }
+
+            @Override
+            public F2<F1<A, Boolean>, F1<A, Boolean>, F1<A, Boolean>> dot() {
+                return or();
+            }
+        };
     }
 
 }

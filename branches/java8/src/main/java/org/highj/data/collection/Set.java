@@ -5,7 +5,6 @@ import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
 import org.highj.function.F1;
 import org.highj.function.repo.Strings;
-import org.highj.typeclass.monad.MonadAbstract;
 import org.highj.typeclass.monad.MonadPlus;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Iterators;
@@ -270,7 +269,7 @@ public class Set<A> extends _<Set.µ, A> implements Iterable<A> {
 
     public static MonadPlus<µ> monadPlus = new SetMonadPlus();
 
-    private static class SetMonadPlus extends MonadAbstract<µ> implements MonadPlus<µ> {
+    private static class SetMonadPlus implements MonadPlus<µ> {
         @Override
         public <A> _<µ, A> pure(A a) {
             return of(a);

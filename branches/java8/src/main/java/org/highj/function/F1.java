@@ -6,12 +6,9 @@ import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.data.tuple.Tuple;
-import org.highj.typeclass.group.MonoidAbstract;
-import org.highj.typeclass.monad.Applicative;
-import org.highj.typeclass.monad.ApplicativeAbstract;
 import org.highj.typeclass.arrow.Arrow;
-import org.highj.typeclass.arrow.ArrowAbstract;
 import org.highj.typeclass.group.Monoid;
+import org.highj.typeclass.monad.Applicative;
 
 /**
  * A class representing an unary function.
@@ -27,6 +24,7 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
             return a;
         }
     };
+
     public static class µ {
         private µ() {
         }
@@ -58,7 +56,7 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
 
     @SuppressWarnings("unchecked")
     public static <A> F1<A, A> id() {
-        return (F1)ID;
+        return (F1) ID;
     }
 
     public static <A, B> F1<A, B> constant(final B b) {
@@ -80,7 +78,7 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
     }
 
     public static <A, B, C> F1<A, C> compose_(_<__.µ<µ, B>, C> f, _<__.µ<µ, A>, B> g) {
-         return compose(narrow(f), narrow(g));
+        return compose(narrow(f), narrow(g));
     }
 
     public static <A, B, C> F1<A, C> compose(final F1<? super B, ? extends C> f, final F1<? super A, ? extends B> g) {
@@ -118,40 +116,49 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
     }
 
     public static <A> Monoid<_<__.µ<µ, A>, A>> endoMonoid() {
-        return new MonoidAbstract<_<__.µ<µ, A>, A>>(
-                new F2<_<__.µ<µ, A>, A>, _<__.µ<µ, A>, A>,_<__.µ<µ, A>, A>>() {
+        return new Monoid<_<__.µ<µ, A>, A>>() {
             @Override
-            public _<__.µ<µ, A>, A> $(_<__.µ<µ, A>, A> x, _<__.µ<µ, A>, A> y) {
-                return compose_(y,x);
+            public _<__.µ<µ, A>, A> identity() {
+                return F1.<A>id();
             }
-        }, F1.<A>id());
+
+            @Override
+            public F2<_<__.µ<µ, A>, A>, _<__.µ<µ, A>, A>, _<__.µ<µ, A>, A>> dot() {
+                return new F2<_<__.µ<µ, A>, A>, _<__.µ<µ, A>, A>, _<__.µ<µ, A>, A>>() {
+                    @Override
+                    public _<__.µ<µ, A>, A> $(_<__.µ<µ, A>, A> x, _<__.µ<µ, A>, A> y) {
+                        return compose_(y, x);
+                    }
+                };
+            }
+        };
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "<F1>";
     }
 
-    public static <A,B> F2<F1<A,B>,A,B> apply() {
-       return new F2<F1<A,B>,A,B>() {
-           @Override
-           public B $(F1<A, B> fn, A a) {
-               return fn.$(a);
-           }
-       };
-    }
-
-    public static <A,B> F2<A,F1<A,B>,B> flipApply() {
-        return new F2<A,F1<A,B>,B>() {
+    public static <A, B> F2<F1<A, B>, A, B> apply() {
+        return new F2<F1<A, B>, A, B>() {
             @Override
-            public B $(A a,F1<A, B> fn) {
+            public B $(F1<A, B> fn, A a) {
                 return fn.$(a);
             }
         };
     }
 
-    public static final <R> Applicative<__.µ<µ,R>> applicative() {
-        return new ApplicativeAbstract<__.µ<µ,R>>(){
+    public static <A, B> F2<A, F1<A, B>, B> flipApply() {
+        return new F2<A, F1<A, B>, B>() {
+            @Override
+            public B $(A a, F1<A, B> fn) {
+                return fn.$(a);
+            }
+        };
+    }
+
+    public static final <R> Applicative<__.µ<µ, R>> applicative() {
+        return new Applicative<__.µ<µ, R>>() {
 
             @Override
             public <A> _<__.µ<µ, R>, A> pure(A a) {
@@ -162,9 +169,9 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
             @Override
             public <A, B> _<__.µ<µ, R>, B> ap(_<__.µ<µ, R>, F1<A, B>> fn, _<__.µ<µ, R>, A> nestedA) {
                 //(<*>) f g x = f x (g x)
-                final F1<R,F1<A,B>> fRAB = narrow(fn);
-                final F1<R,A> fRA = narrow(nestedA);
-                return new F1<R,B>(){
+                final F1<R, F1<A, B>> fRAB = narrow(fn);
+                final F1<R, A> fRA = narrow(nestedA);
+                return new F1<R, B>() {
 
                     @Override
                     public B $(R r) {
@@ -180,10 +187,10 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
         };
     }
 
-    public static <A,B,C> F1<A,T2<B,C>> fanout(_<__.µ<µ,A>,B> fab, _<__.µ<µ,A>,C> fac) {
-        final F1<A,B> fnab = narrow(fab);
-        final F1<A,C> fnac = narrow(fac);
-        return new F1<A,T2<B,C>>(){
+    public static <A, B, C> F1<A, T2<B, C>> fanout(_<__.µ<µ, A>, B> fab, _<__.µ<µ, A>, C> fac) {
+        final F1<A, B> fnab = narrow(fab);
+        final F1<A, C> fnac = narrow(fac);
+        return new F1<A, T2<B, C>>() {
             @Override
             public T2<B, C> $(A a) {
                 return Tuple.of(fnab.$(a), fnac.$(a));
@@ -191,11 +198,11 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
         };
     }
 
-    public static <A,B,C,D> F1<A,T3<B,C,D>> fanout(_<__.µ<µ,A>,B> fab, _<__.µ<µ,A>,C> fac, _<__.µ<µ,A>,D> fad) {
-        final F1<A,B> fnab = narrow(fab);
-        final F1<A,C> fnac = narrow(fac);
-        final F1<A,D> fnad = narrow(fad);
-        return new F1<A,T3<B,C,D>>(){
+    public static <A, B, C, D> F1<A, T3<B, C, D>> fanout(_<__.µ<µ, A>, B> fab, _<__.µ<µ, A>, C> fac, _<__.µ<µ, A>, D> fad) {
+        final F1<A, B> fnab = narrow(fab);
+        final F1<A, C> fnac = narrow(fac);
+        final F1<A, D> fnad = narrow(fad);
+        return new F1<A, T3<B, C, D>>() {
             @Override
             public T3<B, C, D> $(A a) {
                 return Tuple.of(fnab.$(a), fnac.$(a), fnad.$(a));
@@ -203,12 +210,12 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
         };
     }
 
-    public static <A,B,C,D,E> F1<A,T4<B,C,D,E>> fanout(_<__.µ<µ,A>,B> fab,_<__.µ<µ,A>,C> fac, _<__.µ<µ,A>,D> fad, _<__.µ<µ,A>,E> fae) {
-        final F1<A,B> fnab = narrow(fab);
-        final F1<A,C> fnac = narrow(fac);
-        final F1<A,D> fnad = narrow(fad);
-        final F1<A,E> fnae = narrow(fae);
-        return new F1<A,T4<B,C,D,E>>(){
+    public static <A, B, C, D, E> F1<A, T4<B, C, D, E>> fanout(_<__.µ<µ, A>, B> fab, _<__.µ<µ, A>, C> fac, _<__.µ<µ, A>, D> fad, _<__.µ<µ, A>, E> fae) {
+        final F1<A, B> fnab = narrow(fab);
+        final F1<A, C> fnac = narrow(fac);
+        final F1<A, D> fnad = narrow(fad);
+        final F1<A, E> fnae = narrow(fae);
+        return new F1<A, T4<B, C, D, E>>() {
             @Override
             public T4<B, C, D, E> $(A a) {
                 return Tuple.of(fnab.$(a), fnac.$(a), fnad.$(a), fnae.$(a));
@@ -217,7 +224,7 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
     }
 
 
-    public static final Arrow<µ> arrow = new ArrowAbstract<µ>() {
+    public static final Arrow<µ> arrow = new Arrow<µ>() {
         @Override
         public <A, B> __<µ, A, B> arr(F1<A, B> fn) {
             return fn;
@@ -225,8 +232,8 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
 
         @Override
         public <A, B, C> __<µ, T2<A, C>, T2<B, C>> first(__<µ, A, B> arrow) {
-            final F1<A,B> fn = narrow(arrow);
-            return new F1<T2<A,C>, T2<B, C>>(){
+            final F1<A, B> fn = narrow(arrow);
+            return new F1<T2<A, C>, T2<B, C>>() {
 
                 @Override
                 public T2<B, C> $(T2<A, C> pair) {
@@ -237,11 +244,11 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
 
         @Override
         public <A, B, C> __<µ, T2<C, A>, T2<C, B>> second(__<µ, A, B> arrow) {
-            final F1<A,B> fn = narrow(arrow);
-            return new F1<T2<C,A>, T2<C,B>>(){
+            final F1<A, B> fn = narrow(arrow);
+            return new F1<T2<C, A>, T2<C, B>>() {
 
                 @Override
-                public T2<C,B> $(T2<C,A> pair) {
+                public T2<C, B> $(T2<C, A> pair) {
                     return Tuple.of(pair._1(), fn.$(pair._2()));
                 }
             };
@@ -259,7 +266,7 @@ public abstract class F1<A, B> extends __<F1.µ, A, B> {
 
         @Override
         public <A, B, C> __<µ, A, C> dot(__<µ, B, C> bc, __<µ, A, B> ab) {
-            return compose_(bc,ab);
+            return compose_(bc, ab);
         }
     };
 

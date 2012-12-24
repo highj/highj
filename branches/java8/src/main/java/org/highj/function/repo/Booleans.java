@@ -51,9 +51,39 @@ public enum Booleans {
         }
     };
 
-    public final static Group<Boolean> andGroup = new GroupAbstract<Boolean>(and, true, not);
+    public final static Group<Boolean> andGroup = new Group<Boolean>(){
+        @Override
+        public F1<Boolean, Boolean> inverse() {
+            return not;
+        }
 
-    public final static Group<Boolean> orGroup = new GroupAbstract<Boolean>(or, false, not);
+        @Override
+        public Boolean identity() {
+            return true;
+        }
 
-    public final static Semigroup<Boolean> xorSemigroup = new SemigroupAbstract<Boolean>(xor);
+        @Override
+        public F2<Boolean, Boolean, Boolean> dot() {
+            return and;
+        }
+    };
+
+    public final static Group<Boolean> orGroup = new Group<Boolean>(){
+        @Override
+        public F1<Boolean, Boolean> inverse() {
+            return not;
+        }
+
+        @Override
+        public Boolean identity() {
+            return false;
+        }
+
+        @Override
+        public F2<Boolean, Boolean, Boolean> dot() {
+            return or;
+        }
+    };
+
+    public final static Semigroup<Boolean> xorSemigroup = () -> xor;
 }

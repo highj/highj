@@ -3,15 +3,30 @@ package org.highj.typeclass.alternative;
 import org.highj._;
 import org.highj.data.collection.List;
 import org.highj.function.F2;
+import org.highj.typeclass.group.Semigroup;
 import org.highj.typeclass.monad.Applicative;
 import org.highj.typeclass.monad.Functor;
 
-public interface Alt<µ> extends Functor<µ> {
+//minimal implementation: mplus() OR mplus(first,second)
+public interface Alt<mu> extends Functor<mu> {
 
-    //<|> (Control.Applicative), <!> (Data.Functor.Alt)
-    public <A> _<µ, A> mplus(_<µ, A> first, _<µ, A> second);
+    public default <A> _<mu, A> mplus(_<mu, A> first, _<mu, A> second) {
+        return this.<A>mplus().$(first, second);
+    }
 
-    public <A> F2<_<µ, A>,_<µ, A>,_<µ, A>> mplus();
+    // <|> (Control.Alternative), <!> (Data.Functor.Alt)
+    public default <A> F2<_<mu, A>,_<mu, A>,_<mu, A>> mplus() {
+        return new F2<_<mu, A>, _<mu, A>, _<mu, A>>() {
+            @Override
+            public _<mu, A> $(_<mu, A> one, _<mu, A> two) {
+                return mplus(one, two);
+            }
+        };
+    }
+
+    public default <A> Semigroup<_<mu, A>> asSemigroup() {
+        return () -> mplus();
+    }
 
     //public <F,A> _<F,List<A>> some(Applicative<F> applicative, _<F,A> fa);
     //public <F,A> _<F,List<A>> many(Applicative<F> applicative, _<F,A> fa);

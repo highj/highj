@@ -5,10 +5,8 @@ import org.highj.data.compare.Eq;
 import org.highj.function.F1;
 import org.highj.function.F2;
 import org.highj.typeclass.comonad.Comonad;
-import org.highj.typeclass.comonad.ComonadAbstract;
 import org.highj.typeclass.group.*;
 import org.highj.typeclass.monad.Monad;
-import org.highj.typeclass.monad.MonadAbstract;
 
 import static org.highj.data.tuple.Tuple.of;
 
@@ -28,7 +26,7 @@ public abstract class T1<A> extends _<T1.µ, A> {
         super(hidden);
     }
 
-    public static final Monad<µ> monad = new MonadAbstract<µ>() {
+    public static final Monad<µ> monad = new Monad<µ>() {
         @Override
         public <A, B> _<µ, B> map(F1<A, B> fn, _<µ, A> nestedA) {
             return narrow(nestedA).map(fn);
@@ -51,7 +49,7 @@ public abstract class T1<A> extends _<T1.µ, A> {
     };
 
     public static Comonad<µ> comonad() {
-        return new ComonadAbstract<µ>() {
+        return new Comonad<µ>() {
             @Override
             public <A> _<µ, _<µ, A>> duplicate(_<µ, A> nestedA) {
                 return Tuple.of(nestedA);
@@ -144,14 +142,49 @@ public abstract class T1<A> extends _<T1.µ, A> {
     }
 
     public static <T> Semigroup<T1<T>> semigroup(Semigroup<T> semigroup) {
-        return new SemigroupAbstract<T1<T>>(dotFn(semigroup));
+        return () ->  dotFn(semigroup);
     }
 
     public static <T> Monoid<T1<T>> monoid(Monoid<T> monoid) {
-        return new MonoidAbstract<T1<T>>(semigroup(monoid), Tuple.of(monoid.identity()));
+        return new Monoid<T1<T>>(){
+            private T1<T> id = Tuple.of(monoid.identity());
+
+            @Override
+            public T1<T> identity() {
+                return id;
+            }
+
+            @Override
+            public F2<T1<T>, T1<T>, T1<T>> dot() {
+                return new F2<T1<T>, T1<T>, T1<T>>() {
+                    @Override
+                    public T1<T> $(T1<T> x, T1<T> y) {
+                        return Tuple.of(monoid.dot(x._1(),y._1()));
+                    }
+                };
+            }
+        };
     }
 
     public static <T> Group<T1<T>> group(Group<T> group) {
-        return new GroupAbstract<T1<T>>(monoid(group), inverseFn(group));
+        return new Group<T1<T>>(){
+
+            private T1<T> id = Tuple.of(group.identity());
+
+            @Override
+            public F1<T1<T>, T1<T>> inverse() {
+                return inverseFn(group);
+            }
+
+            @Override
+            public T1<T> identity() {
+                return id;
+            }
+
+            @Override
+            public F2<T1<T>, T1<T>, T1<T>> dot() {
+                return dotFn(group);
+            }
+        };
     }
 }

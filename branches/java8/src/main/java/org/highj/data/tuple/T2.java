@@ -4,12 +4,10 @@ import org.highj._;
 import org.highj.__;
 import org.highj.function.F2;
 import org.highj.typeclass.comonad.Comonad;
-import org.highj.typeclass.comonad.ComonadAbstract;
 import org.highj.typeclass.group.*;
 import org.highj.typeclass.monad.Monad;
 import org.highj.data.compare.Eq;
 import org.highj.function.F1;
-import org.highj.typeclass.monad.MonadAbstract;
 
 /**
  * A tuple of arity 2, a.k.a. "pair".
@@ -47,7 +45,7 @@ public abstract class T2<A, B> extends __<T2.µ, A, B> {
     }
 
     public static <S> Monad<__.µ<µ, S>> monad(final Monoid<S> monoid) {
-        return new MonadAbstract<__.µ<µ, S>>() {
+        return new Monad<__.µ<µ, S>>() {
             @Override
             public <A, B> _<__.µ<T2.µ, S>, B> map(F1<A, B> fn, _<__.µ<T2.µ, S>, A> nestedA) {
                 return T2.narrow(nestedA).map_2(fn);
@@ -75,7 +73,7 @@ public abstract class T2<A, B> extends __<T2.µ, A, B> {
     }
 
     public static <S> Comonad<__.µ<µ,S>> comonad() {
-        return new ComonadAbstract<__.µ<µ,S>>(){
+        return new Comonad<__.µ<µ,S>>(){
             @Override
             public <A> _<__.µ<µ, S>, _<__.µ<µ, S>, A>> duplicate(_<__.µ<µ, S>, A> nestedA) {
                 T2<S,A> pair = narrow(nestedA);
@@ -145,15 +143,44 @@ public abstract class T2<A, B> extends __<T2.µ, A, B> {
     }
 
     public static <A,B> Semigroup<T2<A,B>> semigroup(Semigroup<A> semigroupA, Semigroup<B> semigroupB) {
-        return new SemigroupAbstract<T2<A,B>>(dotFn(semigroupA, semigroupB));
+        return () -> dotFn(semigroupA, semigroupB);
     }
 
     public static <A,B> Monoid<T2<A,B>> monoid(Monoid<A> monoidA, Monoid<B> monoidB) {
-        return new MonoidAbstract<T2<A,B>>(dotFn(monoidA, monoidB), Tuple.of(monoidA.identity(), monoidB.identity()));
+        return new Monoid<T2<A,B>>(){
+            private T2<A, B> id = Tuple.of(monoidA.identity(), monoidB.identity());
+
+            @Override
+            public T2<A, B> identity() {
+                return id;
+            }
+
+            @Override
+            public F2<T2<A, B>, T2<A, B>, T2<A, B>> dot() {
+                return dotFn(monoidA, monoidB);
+            }
+        };
     }
 
     public static <A,B> Group<T2<A,B>> group(Group<A> groupA,Group<B> groupB) {
-        return new GroupAbstract<T2<A,B>>(dotFn(groupA, groupB), Tuple.of(groupA.identity(),
-                 groupB.identity()), inverseFn(groupA, groupB));
+        return new Group<T2<A,B>>(){
+
+            private T2<A,B> id = Tuple.of(groupA.identity(),groupB.identity());
+
+            @Override
+            public F1<T2<A, B>, T2<A, B>> inverse() {
+                return inverseFn(groupA, groupB);
+            }
+
+            @Override
+            public T2<A, B> identity() {
+                return id;
+            }
+
+            @Override
+            public F2<T2<A, B>, T2<A, B>, T2<A, B>> dot() {
+                return dotFn(groupA, groupB);
+            }
+        };
     }
 }

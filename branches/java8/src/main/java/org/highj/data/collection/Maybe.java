@@ -6,13 +6,9 @@ import org.highj.function.*;
 import org.highj.function.repo.Objects;
 import org.highj.function.repo.Strings;
 import org.highj.typeclass.alternative.Alt;
-import org.highj.typeclass.alternative.AltAbstract;
 import org.highj.typeclass.foldable.Foldable;
-import org.highj.typeclass.foldable.FoldableAbstract;
 import org.highj.typeclass.group.Monoid;
-import org.highj.typeclass.group.MonoidAbstract;
 import org.highj.typeclass.group.Semigroup;
-import org.highj.typeclass.monad.MonadAbstract;
 import org.highj.typeclass.monad.MonadPlus;
 
 import java.util.Iterator;
@@ -36,7 +32,7 @@ public abstract class Maybe<A> extends _<Maybe.µ, A> implements Iterable<A> {
         super(hidden);
     }
 
-    public static Foldable<µ> foldable = new FoldableAbstract<µ>() {
+    public static Foldable<µ> foldable = new Foldable<µ>() {
         @Override
         public <A, B> B foldMap(Monoid<B> mb, F1<A, B> fn, _<µ, A> nestedA) {
             for (A a : narrow(nestedA)) {
@@ -63,26 +59,53 @@ public abstract class Maybe<A> extends _<Maybe.µ, A> implements Iterable<A> {
     };
 
     public static <A> Monoid<Maybe<A>> firstMonoid() {
-        return new MonoidAbstract<Maybe<A>>(new F2<Maybe<A>, Maybe<A>, Maybe<A>>() {
+        return new Monoid<Maybe<A>>(){
             @Override
-            public Maybe<A> $(Maybe<A> x, Maybe<A> y) {
-                return x.isJust() ? x : y;
+            public Maybe<A> identity() {
+                return Maybe.<A>Nothing();
             }
-        }, Maybe.<A>Nothing());
+
+            @Override
+            public F2<Maybe<A>, Maybe<A>, Maybe<A>> dot() {
+                return new F2<Maybe<A>, Maybe<A>, Maybe<A>>() {
+                    @Override
+                    public Maybe<A> $(Maybe<A> x, Maybe<A> y) {
+                        return x.isJust() ? x : y;
+                    }
+                };
+            }
+        };
     }
 
     public static <A> Monoid<Maybe<A>> lastMonoid() {
-        return new MonoidAbstract<Maybe<A>>(new F2<Maybe<A>, Maybe<A>, Maybe<A>>() {
+        return new Monoid<Maybe<A>>(){
             @Override
-            public Maybe<A> $(Maybe<A> x, Maybe<A> y) {
-                return y.isJust() ? y : x;
+            public Maybe<A> identity() {
+                return Maybe.<A>Nothing();
             }
-        }, Maybe.<A>Nothing());
+
+            @Override
+            public F2<Maybe<A>, Maybe<A>, Maybe<A>> dot() {
+                return new F2<Maybe<A>, Maybe<A>, Maybe<A>>() {
+                    @Override
+                    public Maybe<A> $(Maybe<A> x, Maybe<A> y) {
+                        return y.isJust() ? y : x;
+                    }
+                };
+            }
+        };
     }
 
     public static <A> Monoid<Maybe<A>> monoid(final Semigroup<A> semigroupA) {
-        return new MonoidAbstract<Maybe<A>>(
-                new F2<Maybe<A>, Maybe<A>, Maybe<A>>() {
+        return new Monoid<Maybe<A>>(){
+            @Override
+            public Maybe<A> identity() {
+                return Maybe.<A>Nothing();
+            }
+
+            @Override
+            public F2<Maybe<A>, Maybe<A>, Maybe<A>> dot() {
+                return new F2<Maybe<A>, Maybe<A>, Maybe<A>>() {
 
                     @Override
                     public Maybe<A> $(Maybe<A> mx, Maybe<A> my) {
@@ -94,7 +117,9 @@ public abstract class Maybe<A> extends _<Maybe.µ, A> implements Iterable<A> {
                         }
                         return my;
                     }
-                }, Maybe.<A>Nothing());
+                };
+            }
+        };
     }
 
     @SuppressWarnings("rawtypes")
@@ -267,7 +292,7 @@ public abstract class Maybe<A> extends _<Maybe.µ, A> implements Iterable<A> {
 
     public static final MonadPlus<µ> monad = new MaybeMonadPlus();
 
-    private static class MaybeMonadPlus extends MonadAbstract<µ> implements MonadPlus<µ> {
+    private static class MaybeMonadPlus implements MonadPlus<µ> {
         @Override
         public <A> _<µ, A> pure(A a) {
             return Just(a);
@@ -308,7 +333,7 @@ public abstract class Maybe<A> extends _<Maybe.µ, A> implements Iterable<A> {
         }
     }
 
-    public final static Alt<µ> alt = new AltAbstract<µ>() {
+    public final static Alt<µ> alt = new Alt<µ>() {
         @Override
         public <A> _<µ, A> mplus(_<µ, A> first, _<µ, A> second) {
             return narrow(first).isNothing() ? second : first;

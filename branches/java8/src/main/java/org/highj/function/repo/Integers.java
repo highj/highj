@@ -195,13 +195,58 @@ public enum Integers {
         }
     };
 
-    public final static Group<Integer> additiveGroup = new GroupAbstract<Integer>(add, 0, negate);
+    public final static Group<Integer> additiveGroup = new Group<Integer>(){
+        @Override
+        public F1<Integer, Integer> inverse() {
+            return negate;
+        }
 
-    public final static Monoid<Integer> multiplicativeMonoid = new MonoidAbstract<Integer>(multiply, 1);
+        @Override
+        public Integer identity() {
+            return 0;
+        }
 
-    public final static Monoid<Integer> minMonoid = new MonoidAbstract<Integer>(min, Integer.MAX_VALUE);
+        @Override
+        public F2<Integer, Integer, Integer> dot() {
+            return add;
+        }
+    };
 
-    public final static Monoid<Integer> maxMonoid = new MonoidAbstract<Integer>(max, Integer.MIN_VALUE);
+    public final static Monoid<Integer> multiplicativeMonoid = new Monoid<Integer>(){
+        @Override
+        public Integer identity() {
+            return 1;
+        }
 
-    public final static Semigroup<Integer> xorSemigroup = new SemigroupAbstract<Integer>(xor);
+        @Override
+        public F2<Integer, Integer, Integer> dot() {
+            return multiply;
+        }
+    };
+
+    public final static Monoid<Integer> minMonoid = new Monoid<Integer>(){
+        @Override
+        public Integer identity() {
+            return Integer.MAX_VALUE;
+        }
+
+        @Override
+        public F2<Integer, Integer, Integer> dot() {
+            return min;
+        }
+    };
+
+    public final static Monoid<Integer> maxMonoid = new Monoid<Integer>(){
+        @Override
+        public Integer identity() {
+            return Integer.MIN_VALUE;
+        }
+
+        @Override
+        public F2<Integer, Integer, Integer> dot() {
+            return max;
+        }
+    };
+
+    public final static Semigroup<Integer> xorSemigroup = () -> xor;
 }

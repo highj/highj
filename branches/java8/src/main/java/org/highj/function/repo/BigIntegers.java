@@ -173,13 +173,38 @@ public enum BigIntegers {
         }
     };
 
-    public final static Group<BigInteger> additiveGroup = new GroupAbstract<BigInteger>(add, BigInteger.ZERO, negate);
+    public final static Group<BigInteger> additiveGroup = new Group<BigInteger>(){
+        @Override
+        public F1<BigInteger, BigInteger> inverse() {
+            return negate;
+        }
 
-    public final static Monoid<BigInteger> multiplicativeMonoid = new MonoidAbstract<BigInteger>(multiply, BigInteger.ONE);
+        @Override
+        public BigInteger identity() {
+            return BigInteger.ZERO;
+        }
 
-    public final static Semigroup<BigInteger> minSemigroup = new SemigroupAbstract<BigInteger>(min);
+        @Override
+        public F2<BigInteger, BigInteger, BigInteger> dot() {
+            return add;
+        }
+    };
 
-    public final static Semigroup<BigInteger> maxSemigroup = new SemigroupAbstract<BigInteger>(max);
+    public final static Monoid<BigInteger> multiplicativeMonoid = new Monoid<BigInteger>(){
+        @Override
+        public BigInteger identity() {
+            return BigInteger.ONE;
+        }
 
-    public final static Semigroup<BigInteger> xorSemigroup = new SemigroupAbstract<BigInteger>(xor);
+        @Override
+        public F2<BigInteger, BigInteger, BigInteger> dot() {
+            return multiply;
+        }
+    };
+
+    public final static Semigroup<BigInteger> minSemigroup = () -> min;
+
+    public final static Semigroup<BigInteger> maxSemigroup = () -> max;
+
+    public final static Semigroup<BigInteger> xorSemigroup = () -> xor;
 }

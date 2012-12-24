@@ -8,9 +8,7 @@ import org.highj.function.repo.Integers;
 import org.highj.function.repo.Objects;
 import org.highj.function.repo.Strings;
 import org.highj.typeclass.alternative.Alt;
-import org.highj.typeclass.alternative.AltAbstract;
 import org.highj.typeclass.monad.Monad;
-import org.highj.typeclass.monad.MonadAbstract;
 
 import java.util.NoSuchElementException;
 
@@ -376,7 +374,7 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
      * @return the Either functor
      */
     private static <S> Monad<__.µ<µ, S>> monad() {
-        return new MonadAbstract<__.µ<µ, S>>() {
+        return new Monad<__.µ<µ, S>>() {
 
             @Override
             public <A, B> _<__.µ<µ, S>, B> map(F1<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
@@ -412,7 +410,7 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
     }
 
     public static <S> Alt<__.µ<µ, S>> alt() {
-        return new AltAbstract<__.µ<µ, S>>() {
+        return new Alt<__.µ<µ, S>>() {
 
             @Override
             public <A> _<__.µ<µ, S>, A> mplus(_<__.µ<µ, S>, A> first, _<__.µ<µ, S>, A> second) {

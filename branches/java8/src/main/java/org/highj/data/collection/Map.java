@@ -6,9 +6,6 @@ import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
 import org.highj.function.F1;
 import org.highj.typeclass.monad.Functor;
-import org.highj.typeclass.monad.FunctorAbstract;
-import org.highj.typeclass.monad.MonadAbstract;
-import org.highj.typeclass.monad.MonadPlus;
 import org.highj.util.Iterators;
 
 import java.util.Iterator;
@@ -284,7 +281,7 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
     }
 
     private static <S> Functor<__.µ<µ, S>> functor() {
-        return new FunctorAbstract<__.µ<µ, S>>() {
+        return new Functor<__.µ<µ, S>>() {
             @Override
             public <A, B> _<__.µ<µ, S>, B> map(F1<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
                 return narrow(nestedA).map(fn);
@@ -294,7 +291,7 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
 
     /*public static MonadPlus<µ> monadPlus = new MapMonadPlus();
 
-    private static class MapMonadPlus extends MonadAbstract<µ> implements MonadPlus<µ> {
+    private static class MapMonadPlus implements MonadPlus<µ> {
         @Override
         public <A> _<µ, A> pure(A a) {
             return of(a);

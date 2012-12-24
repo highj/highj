@@ -10,12 +10,8 @@ import org.highj.function.F1;
 import org.highj.function.F2;
 import org.highj.function.repo.Strings;
 import org.highj.typeclass.alternative.Alt;
-import org.highj.typeclass.alternative.AltAbstract;
 import org.highj.typeclass.foldable.Foldable;
-import org.highj.typeclass.foldable.FoldableAbstract;
 import org.highj.typeclass.monad.Applicative;
-import org.highj.typeclass.monad.ApplicativeAbstract;
-import org.highj.typeclass.monad.MonadAbstract;
 import org.highj.typeclass.monad.MonadPlus;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Lazy;
@@ -522,7 +518,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         return result;
     }
 
-    public static final Foldable<µ> foldable = new FoldableAbstract<µ>() {
+    public static final Foldable<µ> foldable = new Foldable<µ>() {
         @Override
         public <A, B> B foldr(F1<A, F1<B, B>> fn, B b, _<µ, A> nestedA) {
             return narrow(nestedA).foldr(fn, b);
@@ -607,7 +603,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         });
     }
 
-    public static final Applicative<µ> zipApplicative = new ApplicativeAbstract<µ>() {
+    public static final Applicative<µ> zipApplicative = new Applicative<µ>() {
         @Override
         public <A> _<µ, A> pure(A a) {
             return repeat(a);
@@ -626,7 +622,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
 
     public static MonadPlus<µ> monad = new ListMonad();
 
-    private static class ListMonad extends MonadAbstract<µ> implements MonadPlus<µ> {
+    private static class ListMonad implements MonadPlus<µ> {
 
         @Override
         public <A, B> _<µ, B> map(final F1<A, B> fn, _<µ, A> nestedA) {
@@ -676,7 +672,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         }
     }
 
-    public final static Alt<µ> alt = new AltAbstract<µ>() {
+    public final static Alt<µ> alt = new Alt<µ>() {
         @Override
         public <A> _<µ, A> mplus(_<µ, A> first, _<µ, A> second) {
             return append(first, second);

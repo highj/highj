@@ -8,7 +8,8 @@ import org.highj.function.F1;
  * inverse(identity) == identity
  */
 public interface Group<A> extends Monoid<A> {
-    public A inverse(A a);
+
+    public default A inverse(A a){ return inverse().$(a);}
 
     public F1<A,A> inverse();
 }

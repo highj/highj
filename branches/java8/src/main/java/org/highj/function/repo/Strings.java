@@ -4,7 +4,6 @@ import org.highj.data.compare.Eq;
 import org.highj.function.F1;
 import org.highj.function.F2;
 import org.highj.typeclass.group.Group;
-import org.highj.typeclass.group.GroupAbstract;
 import org.highj.util.ReadOnlyIterator;
 
 import java.util.Arrays;
@@ -44,7 +43,7 @@ public enum Strings {
         }
     };
 
-    public static final String reverse(String s) {
+    public static String reverse(String s) {
         return new StringBuilder(s).reverse().toString();
     }
 
@@ -73,7 +72,7 @@ public enum Strings {
         }
     };
 
-    public static final <A> F1<A, String> format(final String formatString) {
+    public static <A> F1<A, String> format(final String formatString) {
         return new F1<A, String>() {
 
             @Override
@@ -93,7 +92,22 @@ public enum Strings {
         }
     };
 
-    public static final Group<String> group = new GroupAbstract<String>(append, "", reverse);
+    public static final Group<String> group = new Group<String>(){
+        @Override
+        public F1<String, String> inverse() {
+            return reverse;
+        }
+
+        @Override
+        public String identity() {
+            return "";
+        }
+
+        @Override
+        public F2<String, String, String> dot() {
+            return append;
+        }
+    };
 
     public static String mkString(String sep, Object... values) {
         return mkString(sep, Arrays.asList(values));
