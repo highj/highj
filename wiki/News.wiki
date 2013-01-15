@@ -1,5 +1,11 @@
 #summary News
 
+= 2013-01-15 =
+
+Long time no see, but I wasn't lazy. I'm working on the Java 8 branch, and the new stuff is really fun to work with. Lambdas are great to reduce boilerplate (and I could remove a lot of my own stuff for generating functions), but the real structural improvements come from default methods. I switched from `F1` to Java's own `Function` interface without bigger problems.
+
+However I haven't commit anything yet, as I face a nasty compiler bug nobody else in the world seems to have. I'm trying out every new build, but it just doesn't work so far. If you have this ugly "arraycode A" monster yourself, and find a solution, let me know.
+
 = 2012-11-26 =
 
 Oops, incompatibilities! I just removed Java 1.7 specific stuff like `@SaveVarargs`. I think the advantages of Java 1.7 are not big enough to justify dropping Java 1.6 support. So the code is now Java 1.6 compatible, but `highj-06.jar` still needs Java 1.7. I'll publish a new jar ASAP.
