@@ -6,7 +6,7 @@ Hey, I'm back from vacation, and finally found some workarounds for some nasty c
 
 So how were things going? First of all, the default methods (a.k.a. "defender" or "extension methods") are a great help. Lambdas are good, too, although I had to fight with some bugs and limitations.
 
-As I really wanted to the `_` classes to become interfaces I dropped the security mechanism which prevents the creation of fake objects, e.g. you can now instantiate a `_<Maybe.µ, String>` which isn't actually a `Maybe<String>`. I think the usability gain is big enough to justify this, and you could do something like this before, just with casting or be using raw-types.
+As I really wanted to the `_` classes to become interfaces I dropped the security mechanism which prevents the creation of fake objects, e.g. you can now instantiate a `_<Maybe.µ, String>` which isn't actually a `Maybe<String>`. I think the usability gain is big enough to justify this, and you could do something like this before, just with casting or by using raw-types.
 
 I reorganized the package structure, added several new classes and substituted `F0` and `F1` by the built-in `Supplier` and `Function` interfaces. With monad-transformers I have the feeling that I push the limits, but I made some progress there, too.
 
