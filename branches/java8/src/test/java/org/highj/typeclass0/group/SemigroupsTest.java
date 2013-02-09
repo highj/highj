@@ -1,4 +1,4 @@
-package org.highj.typeclass.group;
+package org.highj.typeclass0.group;
 
 import org.highj.data.collection.List;
 import org.junit.Test;

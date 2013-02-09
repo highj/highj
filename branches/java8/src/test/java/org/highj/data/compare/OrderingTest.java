@@ -16,13 +16,13 @@ public class OrderingTest {
 
     @Test
     public void monoidTest() throws Exception {
-        assertEquals(EQ, monoid.identity());
-        assertEquals(EQ, monoid.dot(EQ, EQ));
-        assertEquals(LT, monoid.dot(LT, EQ));
-        assertEquals(LT, monoid.dot(LT, GT));
-        assertEquals(GT, monoid.dot(GT, EQ));
-        assertEquals(GT, monoid.dot(EQ, GT));
-        assertEquals(GT, monoid.fold(EQ, EQ, GT, LT, EQ));
+        assertEquals(EQ, group.identity());
+        assertEquals(EQ, group.dot(EQ, EQ));
+        assertEquals(LT, group.dot(LT, EQ));
+        assertEquals(LT, group.dot(LT, GT));
+        assertEquals(GT, group.dot(GT, EQ));
+        assertEquals(GT, group.dot(EQ, GT));
+        assertEquals(GT, group.fold(EQ, EQ, GT, LT, EQ));
     }
 
 }

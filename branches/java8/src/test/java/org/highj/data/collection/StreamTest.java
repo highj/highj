@@ -2,11 +2,9 @@ package org.highj.data.collection;
 
 import org.highj._;
 import org.highj.data.tuple.T2;
-import org.highj.function.F0;
-import org.highj.function.F1;
 import org.highj.function.repo.Integers;
 import org.highj.function.repo.Strings;
-import org.highj.typeclass.monad.Monad;
+import org.highj.typeclass1.monad.Monad;
 import org.highj.util.ReadOnlyIterator;
 import org.junit.Test;
 
@@ -30,9 +28,9 @@ public class StreamTest {
         assertEquals("foo", stream.head());
         stream = Cons("foo", of("bar", "baz"));
         assertEquals("foo", stream.head());
-        stream = Cons("foo", F0.constant(of("bar", "baz")));
+        stream = Cons("foo", () -> of("bar", "baz"));
         assertEquals("foo", stream.head());
-        stream = unfold(Strings.append.flip().$("!"),"foo");
+        stream = unfold(s -> s + "!","foo");
         assertEquals("foo", stream.head());
     }
 
@@ -42,9 +40,9 @@ public class StreamTest {
         assertEquals("foo", stream.tail().head());
         stream = Cons("foo", of("bar", "baz"));
         assertEquals("bar", stream.tail().head());
-        stream = Cons("foo", F0.constant(of("bar", "baz")));
+        stream = Cons("foo", () -> of("bar", "baz"));
         assertEquals("bar", stream.tail().head());
-        stream = unfold(Strings.prepend.$("!"),"foo");
+        stream = unfold(s -> s + "!","foo");
         assertEquals("foo!", stream.tail().head());
     }
 
@@ -59,7 +57,7 @@ public class StreamTest {
 
     @Test
     public void testStreamHeadFn() throws Exception {
-        Stream<String> stream = unfold(Strings.prepend.$("!"),"foo");
+        Stream<String> stream = unfold(s -> s + "!","foo");
         assertEquals("foo", stream.head());
         stream = stream.tail();
         assertEquals("foo!", stream.head());
@@ -79,7 +77,7 @@ public class StreamTest {
 
     @Test
     public void testStreamHeadThunk() throws Exception {
-        Stream<String> stream = Cons("foo", F0.constant(of("bar")));
+        Stream<String> stream = Cons("foo", () -> of("bar"));
         assertEquals("foo", stream.head());
         stream = stream.tail();
         assertEquals("bar", stream.head());
@@ -179,7 +177,7 @@ public class StreamTest {
 
     @Test
     public void testMap() throws Exception {
-        Stream<Integer> stream = of("one", "two", "three").map(Strings.length);
+        Stream<Integer> stream = of("one", "two", "three").map(String::length);
         assertEquals("List(3,3,5,3,3,5,3)", stream.take(7).toString());
 
     }
@@ -192,7 +190,7 @@ public class StreamTest {
 
     @Test
     public void testZipWith() throws Exception {
-        Stream<String> stream = zipWith(Strings.repeat, of("foo", "bar", "baz"), range(2));
+        Stream<String> stream = zipWith(s -> n -> Strings.repeat.apply(s).apply(n), of("foo", "bar", "baz"), range(2));
         assertEquals("List(foofoo,barbarbar,bazbazbazbaz,foofoofoofoofoo)", stream.take(4).toString());
     }
 
@@ -221,7 +219,7 @@ public class StreamTest {
         Monad<Stream.µ> monad = Stream.monad;
 
         Stream<String> foobars = Cons("foo", of("bars"));
-        Stream<Integer> foobarsLength = narrow(monad.map(Strings.length, foobars));
+        Stream<Integer> foobarsLength = narrow(monad.<String, Integer>map(String::length, foobars));
         assertEquals("Stream(3,4,4,4,4,4,4,4,4,4...)", foobarsLength.toString());
 
         Stream<String> foos = narrow(monad.pure("foo"));
@@ -231,12 +229,7 @@ public class StreamTest {
         assertEquals("Stream(-1,4,-3,16,-5,36,-7,64,-9,100...)", absSqr.toString());
 
         Stream<Integer> streamOfStream = narrow(monad.bind(range(1),
-                new F1<Integer, _<µ, Integer>>() {
-                    @Override
-                    public _<Stream.µ, Integer> $(Integer integer) {
-                        return range(1, integer);
-                    }
-                }));
+                integer -> range(1, integer)));
         assertEquals("Stream(1,3,7,13,21,31,43,57,73,91...)", streamOfStream.toString());
     }
 }

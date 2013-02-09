@@ -1,17 +1,18 @@
 package org.highj.data.collection;
 
 import org.highj._;
+import org.highj.function.Functions;
 import org.highj.function.repo.Integers;
-import org.highj.typeclass.monad.Monad;
+import org.highj.typeclass1.monad.Monad;
 import org.highj.data.compare.Eq;
-import org.highj.function.F0;
-import org.highj.function.F1;
-import org.highj.function.repo.Strings;
-import org.highj.typeclass.monad.MonadPlus;
+import org.highj.data.fs.F1;
+import org.highj.typeclass1.monad.MonadPlus;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static org.highj.data.collection.Maybe.*;
 import static org.junit.Assert.*;
@@ -20,20 +21,20 @@ public class MaybeTest {
     @Test
     public void testCata() {
         Maybe<String> nothing = Nothing();
-        assertEquals("foo", nothing.cata("foo", F1.<String, String>constant("bar")));
+        assertEquals("foo", nothing.cata("foo", Functions.<String, String>constant("bar")));
         Maybe<String> baz = Just("baz");
-        assertEquals("bar", baz.cata("foo", F1.<String, String>constant("bar")));
-        assertEquals("baz", baz.cata("foo", F1.<String>id()));
+        assertEquals("bar", baz.cata("foo", Functions.<String, String>constant("bar")));
+        assertEquals("baz", baz.cata("foo", Functions.<String>id()));
     }
 
     @Test
     public void testCataThunk() {
-        F0<String> thunk = F0.constant("foo");
+        Supplier<String> thunk = () -> "foo";
         Maybe<String> nothing = Nothing();
-        assertEquals("foo", nothing.cata(thunk, F1.<String, String>constant("bar")));
+        assertEquals("foo", nothing.lazyCata(thunk, Functions.<String, String>constant("bar")));
         Maybe<String> baz = Just("baz");
-        assertEquals("bar", baz.cata(thunk, F1.<String, String>constant("bar")));
-        assertEquals("baz", baz.cata(thunk, F1.<String>id()));
+        assertEquals("bar", baz.lazyCata(thunk, Functions.<String, String>constant("bar")));
+        assertEquals("baz", baz.lazyCata(thunk, Functions.<String>id()));
     }
 
     @Test
@@ -50,14 +51,14 @@ public class MaybeTest {
 
     @Test
     public void testJustFn() {
-        F1<String, Maybe<String>> just = just();
-        Maybe<String> bar = just.$("bar");
+        Function<String, Maybe<String>> just = Maybe::<String>Just;
+        Maybe<String> bar = just.apply("bar");
         assertEquals("Just(bar)", bar.toString());
     }
 
     @Test
     public void testJustThunk() {
-        F0<String> thunk = F0.constant("bar");
+        Supplier<String> thunk = () -> "bar";
         Maybe<String> bar = Just(thunk);
         assertEquals("Just(bar)", bar.toString());
     }
@@ -88,7 +89,7 @@ public class MaybeTest {
 
     @Test
     public void testGetOrElseThunk() {
-        F0<String> thunk = F0.constant("foo");
+        Supplier<String> thunk = () -> "foo";
         Maybe<String> nothing = Nothing();
         assertEquals("foo", nothing.getOrElse(thunk));
         Maybe<String> bar = Just("bar");
@@ -193,9 +194,9 @@ public class MaybeTest {
     @Test
     public void testMap() throws Exception {
         Maybe<String> nothing = Nothing();
-        assertEquals("Nothing", nothing.map(Strings.length).toString());
+        assertEquals("Nothing", nothing.map(String::length).toString());
         Maybe<String> foo = Just("foo");
-        assertEquals("Just(3)", foo.map(Strings.length).toString());
+        assertEquals("Just(3)", foo.map(String::length).toString());
     }
     
     @Test
@@ -205,24 +206,21 @@ public class MaybeTest {
         assertEquals("Just(foo)", monad.pure("foo").toString());
         //map
         Maybe<String> nothing = Nothing();
-        assertEquals("Nothing", monad.map(Strings.length, nothing).toString());
+        assertEquals("Nothing", monad.map(String::length, nothing).toString());
         Maybe<String> foo = Just("foo");
-        assertEquals("Just(3)", monad.map(Strings.length, foo).toString());
+        assertEquals("Just(3)", monad.map(String::length, foo).toString());
         //ap
-        Maybe<F1<String,Integer>> noFn = Nothing();
-        Maybe<F1<String,Integer>> lenFn = Just(Strings.length);
+        Maybe<Function<String,Integer>> noFn = Nothing();
+        Maybe<Function<String,Integer>> lenFn = Just(String::length);
         assertEquals("Nothing", monad.ap(noFn, nothing).toString());
         assertEquals("Nothing", monad.ap(lenFn, nothing).toString());
         assertEquals("Nothing", monad.ap(noFn, foo).toString());
         assertEquals("Just(3)", monad.ap(lenFn, foo).toString());
         //bind
         Maybe<String> fool = Just("fool");
-        F1<String, _<Maybe.µ, Integer>> lenIfEven = new F1<String, _<Maybe.µ, Integer>>() {
-            @Override
-            public _<Maybe.µ, Integer> $(String s) {
-                int len = s.length();
-                return len % 2 == 0 ? Just(len) : Maybe.<Integer>Nothing();
-            }
+        Function<String, _<Maybe.µ, Integer>> lenIfEven = s -> {
+            int len = s.length();
+            return len % 2 == 0 ? Just(len) : Maybe.<Integer>Nothing();
         };
         assertEquals("Nothing", monad.bind(nothing, lenIfEven).toString());
         assertEquals("Nothing", monad.bind(foo, lenIfEven).toString());
@@ -267,12 +265,11 @@ public class MaybeTest {
 
     @Test
     public void testJusts() throws Exception {
-         F0<String> thunk = F0.constant("bar");
          List<Maybe<String>> maybes = List.of(
                  Maybe.<String>Nothing(),
                  Just("foo"),
                  Maybe.<String>Nothing(),
-                 Just(thunk),
+                 Maybe.<String>Just(() -> "bar"),
                  Maybe.<String>Nothing());
          List<String> strings = justs(maybes);
          assertEquals("List(foo,bar)", strings.toString());
@@ -282,7 +279,7 @@ public class MaybeTest {
     public void testAsList() throws Exception {
         Maybe<String> foo = Just("foo");
         assertEquals("List(foo)", foo.asList().toString());
-        F0<String> thunk = F0.constant("bar");
+        Supplier<String> thunk = () -> "bar";
         Maybe<String> bar = Just(thunk);
         assertEquals("List(bar)", bar.asList().toString());
         Maybe<String> nothing = Nothing();

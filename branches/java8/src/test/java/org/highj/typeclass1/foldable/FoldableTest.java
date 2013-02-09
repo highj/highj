@@ -1,11 +1,11 @@
-package org.highj.typeclass.foldable;
+package org.highj.typeclass1.foldable;
 
 import org.highj.data.collection.List;
 import org.highj.data.collection.Maybe;
-import org.highj.function.F2;
 import org.highj.function.repo.Integers;
-import org.highj.function.repo.Strings;
 import org.junit.Test;
+
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -13,12 +13,7 @@ import static org.junit.Assert.assertTrue;
 
 public class FoldableTest {
 
-    private final F2<String, String, String> wrapFn = new F2<String, String, String>() {
-        @Override
-        public String $(String a, String b) {
-            return "(" + a + "," + b + ")";
-        }
-    };
+    private final Function<String, Function<String, String>> wrapFn = a -> b -> "(" + a + "," + b + ")";
 
     @Test
     public void testFold() throws Exception {
@@ -30,7 +25,7 @@ public class FoldableTest {
     @Test
     public void testFoldMap() throws Exception {
         List<String> strings = List.of("a", "bb", "ccc", "dddd", "eeeee");
-        int result = List.foldable.foldMap(Integers.multiplicativeMonoid, Strings.length, strings);
+        int result = List.foldable.foldMap(Integers.multiplicativeMonoid, String::length, strings);
         assertEquals(120, result);
     }
 

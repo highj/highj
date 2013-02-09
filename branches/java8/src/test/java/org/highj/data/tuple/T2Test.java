@@ -3,11 +3,14 @@ package org.highj.data.tuple;
 import org.highj._;
 import org.highj.__;
 import org.highj.data.compare.Eq;
-import org.highj.function.*;
+import org.highj.data.fs.F1;
+import org.highj.data.fs.Fs;
 import org.highj.function.repo.Integers;
 import org.highj.function.repo.Strings;
-import org.highj.typeclass.monad.Monad;
+import org.highj.typeclass1.monad.Monad;
 import org.junit.Test;
+
+import java.util.function.Supplier;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -22,18 +25,8 @@ public class T2Test {
 
     @Test
     public void pairThunkTest() throws Exception {
-        F0<String> stringThunk = new F0<String>() {
-            @Override
-            public String $() {
-                return "foo";
-            }
-        };
-        F0<Integer> intThunk = new F0<Integer>() {
-            @Override
-            public Integer $() {
-                return 42;
-            }
-        };
+        Supplier<String> stringThunk = () -> "foo";
+        Supplier<Integer> intThunk = () -> 42;
         T2<String,Integer> pair = Tuple.of(stringThunk, intThunk);
         assertEquals("(foo,42)", pair.toString());
     }
@@ -47,25 +40,19 @@ public class T2Test {
 
     @Test
     public void monadTest() throws Exception {
-        Monad<__.µ<T2.µ,String>> monad = T2.monad(Strings.group);
-        T2<String, Integer> answer = T2.narrow(monad.pure(42));
+        Monad<__.µ<T2.µ,String>> monad = Tuple.monad2(Strings.group);
+        T2<String, Integer> answer = Tuple.narrow2(monad.pure(42));
         assertEquals("(,42)", answer.toString());
         T2<String, Integer> foo = Tuple.of("foo", 14);
-        F1<Integer, T2<String, Integer>> doubleBar = new F1<Integer, T2<String, Integer>>(){
-
-            @Override
-            public T2<String, Integer> $(Integer value) {
-                return Tuple.of("bar", 2 * value);
-            }
-        };
-        F1<Integer, _<__.µ<T2.µ,String>,Integer>> castedDoubleBar = F1.<Integer,_<__.µ<T2.µ,String>,Integer>,T2<String, Integer>>contravariant(doubleBar);
-        T2<String, Integer> fooBar = T2.narrow(monad.bind(foo, castedDoubleBar));
+        F1<Integer, T2<String, Integer>> doubleBar = value -> Tuple.of("bar", 2 * value);
+        F1<Integer, _<__.µ<T2.µ,String>,Integer>> castedDoubleBar = Fs.<Integer,_<__.µ<T2.µ,String>,Integer>,T2<String, Integer>>contravariant(doubleBar);
+        T2<String, Integer> fooBar = Tuple.narrow2(monad.bind(foo, castedDoubleBar));
         assertEquals("(foobar,28)", fooBar.toString());
     }
 
     @Test
     public void eqTest() throws Exception {
-        Eq<T2<String,Integer>> eq = T2.eq(Strings.eq, Integers.eq);
+        Eq<T2<String,Integer>> eq = Tuple.eq(Strings.eq, Integers.eq);
         T2<String,Integer> a1 = Tuple.of("a", 1);
         T2<String,Integer> a2 = Tuple.of("a", 2);
         T2<String,Integer> b1 = Tuple.of("b", 1);

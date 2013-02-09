@@ -1,13 +1,13 @@
 package org.highj.data.collection;
 
 import org.highj._;
-import org.highj.function.F1;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.TreeSet;
+import java.util.function.Function;
 
 import static org.junit.Assert.*;
 
@@ -102,9 +102,9 @@ public class SetTest {
 
     @Test
     public void testMap() {
-        F1<Integer, String> fn = new F1<Integer, String>() {
+        Function<Integer, String> fn = new Function<Integer, String>() {
             @Override
-            public String $(Integer integer) {
+            public String apply(Integer integer) {
                 return "" + integer + integer;
             }
         };
@@ -117,9 +117,9 @@ public class SetTest {
 
     @Test
     public void testJoin() {
-        Set<Set<Integer>> set = Set.of(Set.of(1,3,5), Set.<Integer>of(), Set.of(6,4,2), Set.of(1,4,5));
+        Set<Set<Integer>> set = Set.of(Set.of(1, 3, 5), Set.<Integer>of(), Set.of(6, 4, 2), Set.of(1, 4, 5));
         assertEquals("Set(1,2,3,4,5,6)", Set.join(set).toString());
-        Set<_<Set.µ,Integer>> set_ = Set.<_<Set.µ,Integer>>of(Set.of(1,3,5), Set.<Integer>of(), Set.of(6,4,2), Set.of(1,4,5));
+        Set<_<Set.µ,Integer>> set_ = Set.<_<Set.µ,Integer>>of(Set.of(1, 3, 5), Set.<Integer>of(), Set.of(6, 4, 2), Set.of(1, 4, 5));
         assertEquals("Set(1,2,3,4,5,6)", Set.monadPlus.join(set_).toString());
     }
 
