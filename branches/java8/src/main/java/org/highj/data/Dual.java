@@ -2,29 +2,15 @@ package org.highj.data;
 
 import org.highj._;
 import org.highj.__;
-import org.highj.typeclass.arrow.Category;
+import org.highj.typeclass2.arrow.Category;
 
-// This code works somehow, but I don't dare thinking about it,
-// as I'm not sure whether this path leads to madness or enlightenment.
-public class Dual<M, A, B> extends __<_<Dual.µ, M>, A, B> {
+public class Dual<M, A, B> implements __<_<Dual.µ, M>, A, B> {
 
-    private static final µ hidden = new µ();
-
-    public static class µ {
-        private µ() {
-        }
-    }
-
-    public static class µµ<M> extends _<µ, M> {
-        private µµ() {
-            super(hidden);
-        }
-    }
+    public static class µ {}
 
     private final __<M, B, A> value;
 
     public Dual(__<M, B, A> value) {
-        super(new µµ<>());
         this.value = value;
     }
 

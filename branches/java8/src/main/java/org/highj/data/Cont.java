@@ -2,49 +2,42 @@ package org.highj.data;
 
 import org.highj._;
 import org.highj.__;
-import org.highj.function.F1;
-import org.highj.typeclass.monad.Monad;
+import org.highj.function.Functions;
+import org.highj.typeclass1.monad.Monad;
 
-public class Cont<R,A> extends __<Cont.µ, R, A> {
+import java.util.function.Function;
 
-    private static final µ hidden = new µ();
+public class Cont<R,A> implements __<Cont.µ, R, A> {
 
-    private F1<F1<A,R>,R> fn;
+    private Function<Function<A,R>,R> fn;
 
-    /**
-     * The witness class of Either
-     */
-    public static class µ {
-        private µ() {
-        }
-    }
+    public static class µ {}
 
-    private Cont(F1<F1<A,R>,R> fn) {
-        super(hidden);
+    private Cont(Function<Function<A,R>,R> fn) {
         this.fn = fn;
     }
 
-    public F1<F1<A,R>,R> runCont() {
+    public Function<Function<A,R>,R> runCont() {
        return fn;
     }
 
-    public Cont<R,A> mapCont(F1<R,R> transform) {
-       return new Cont<R,A>(fn.andThen(transform));
+    public Cont<R,A> mapCont(Function<R,R> transform) {
+       return new Cont<>(Functions.compose(transform,fn));
     }
 
-    public <B> Cont<R,B> withCont(F1<F1<B,R>,F1<A,R>> transform) {
-        return new Cont<R,B>(transform.andThen(fn));
+    public <B> Cont<R,B> withCont(Function<Function<B,R>,Function<A,R>> transform) {
+        return new Cont<>(Functions.compose(fn,transform));
     }
 
     private static <S> Monad<__.µ<µ, S>> monad()  {
         return new Monad<__.µ<µ, S>>() {
             @Override
             public <A> _<__.µ<µ, S>, A> pure(A a) {
-                return new Cont<S,A>(F1.<A,S>flipApply().$(a));
+                return new Cont<S,A>(Functions.<A,S>flipApply().apply(a));
             }
 
             @Override
-            public <A, B> _<__.µ<µ, S>, B> ap(_<__.µ<µ, S>, F1<A, B>> fn, _<__.µ<µ, S>, A> nestedA) {
+            public <A, B> _<__.µ<µ, S>, B> ap(_<__.µ<µ, S>, Function<A, B>> fn, _<__.µ<µ, S>, A> nestedA) {
                 throw new UnsupportedOperationException("need to write this...");
             }
 
@@ -71,7 +64,7 @@ instance MonadCont (Cont r) where
     callCC f = Cont $ \c -> runCont (f (\a -> Cont $ \_ -> c a)) c
 
 {- |
-The continuation monad transformer.
+The continuation monadTrans transformer.
 Can be used to add continuation handling to other monads.
 -}
 newtype ContT r m a = ContT { runContT :: (a -> m r) -> m r }
@@ -174,7 +167,7 @@ This line is not executed if @validateName@ fails.
 
 {-$ContTExample
 'ContT' can be used to add continuation handling to other monads.
-Here is an example how to combine it with @IO@ monad:
+Here is an example how to combine it with @IO@ monadTrans:
 
 >import Control.Monad.Cont
 >import System.IO

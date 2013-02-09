@@ -1,66 +1,52 @@
 package org.highj.data;
 
 import org.highj._;
-import org.highj.function.F0;
-import org.highj.function.F1;
-import org.highj.typeclass.monad.Monad;
+import org.highj.function.Functions;
+import org.highj.typeclass1.monad.Monad;
 
-public class IO<A> extends _<IO.µ, A> {
+import java.util.function.Function;
+import java.util.function.Supplier;
 
-    private static final µ hidden = new µ();
+public class IO<A> implements _<IO.µ, A> {
 
-    public static final class µ {
-        private µ() {
-        }
-    }
+    public static final class µ {}
 
     @SuppressWarnings("unchecked")
     public static <A> IO<A> narrow(_<µ, A> value) {
         return (IO) value;
     }
 
-    F0<A> thunk;
+    Supplier<A> thunk;
 
     private IO(A a) {
-        super(hidden);
-        thunk = F0.constant(a);
+        thunk = Functions.constantF0(a);
     }
 
-    private IO(F0<A> thunk) {
-        super(hidden);
+    private IO(Supplier<A> thunk) {
         this.thunk = thunk;
     }
 
     public final static Monad<IO.µ> monad = new Monad<IO.µ>() {
 
         @Override
-        public <A, B> _<IO.µ, B> bind(_<IO.µ, A> nestedA, F1<A, _<IO.µ, B>> fn) {
-            return fn.$(narrow(nestedA).thunk.$());
+        public <A, B> _<IO.µ, B> bind(_<IO.µ, A> nestedA, Function<A, _<µ, B>> fn) {
+            return fn.apply(narrow(nestedA).thunk.get());
         }
 
         @Override
-        public <A, B> _<IO.µ, B> ap(_<IO.µ, F1<A, B>> fn, _<IO.µ, A> nestedA) {
-            return new IO<B>(narrow(fn).thunk.$().$(narrow(nestedA).thunk.$()));
+        public <A, B> _<IO.µ, B> ap(_<IO.µ, Function<A, B>> fn, _<IO.µ, A> nestedA) {
+            return new IO<>(narrow(fn).thunk.get().apply(narrow(nestedA).thunk.get()));
         }
 
         @Override
         public <A> _<IO.µ, A> pure(A a) {
-            return new IO<A>(a);
+            return new IO<>(a);
         }
 
         @Override
-        public <A> F1<A, _<IO.µ, A>> pure() {
-            return new F1<A, _<IO.µ, A>>() {
-                @Override
-                public _<IO.µ, A> $(A a) {
-                    return pure(a);
-                }
-            };
-        }
-
-        @Override
-        public <A, B> _<µ, B> map(F1<A, B> fn, _<µ, A> nestedA) {
-            return new IO<B>(narrow(nestedA).thunk.map(fn));
+        public <A, B> _<µ, B> map(Function<A, B> fn, _<µ, A> nestedA) {
+            Supplier<A> thunk = narrow(nestedA).thunk;
+            return new IO<B>(() -> fn.apply(thunk.get()));
         }
     };
 }
