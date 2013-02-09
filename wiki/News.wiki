@@ -1,5 +1,13 @@
 #summary News
 
+= 2013-02-09 =
+
+Hay, I'm back from vacation, and finally found some workarounds for some nasty compiler bugs in the Java 8 ea. After so many changes, I had to fight with SVN, too, so don't be surprised by the change list. 
+
+So how were things going? First of all, the default methods (a.k.a. "defender" or "extension methods") are a great help. Lambdas are good, too, although I had to fight with some bugs and limitations.
+
+As I really wanted to the `_` classes to become I dropped the security mechanism which prevents the creation of fake objects, e.g. you can now instantiate a `_<Maybe.µ, String>` which isn't actually a `Maybe<String>`. I think the usability gain is big enough to justify this, and you could do something like this before, just with casting or be using raw-types.
+
 = 2013-01-15 =
 
 Long time no see, but I wasn't lazy. I'm working on the Java 8 branch, and the new stuff is really fun to work with. Lambdas are great to reduce boilerplate (and I could remove a lot of my own stuff for generating functions), but the real structural improvements come from default methods. I switched from `F1` to Java's own `Function` interface without bigger problems.
