@@ -1,12 +1,12 @@
 package org.highj.util;
 
 
-import org.highj.data.collection.Maybe;
+import java.util.function.Supplier;
 
 /**
  * A wrapper for a mutable value
  */
-public class Mutable<A> {
+public class Mutable<A> implements Supplier<A> {
 
     private A value;
 

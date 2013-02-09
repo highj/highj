@@ -352,4 +352,21 @@ public enum ArrayUtils {
         }
     }
 
+    public static <A> Iterable<A> reverseIterable(A ... as) {
+        return () -> new ReadOnlyIterator<A>() {
+
+            private int i = as.length - 1;
+
+            @Override
+            public boolean hasNext() {
+                return i >= 0;
+            }
+
+            @Override
+            public A next() {
+                if (! hasNext()) throw new NoSuchElementException();
+                return as[i--];
+            }
+        };
+    }
 }

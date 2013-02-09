@@ -26,13 +26,13 @@ public enum Iterators {
         return EMPTY_ITERATOR;
     }
 
-    //@SafeVarargs
-    public static final <A> Iterator<A> valueIterator(A... as) {
+    @SafeVarargs
+    public static <A> Iterator<A> valueIterator(A... as) {
         return Arrays.asList(as).iterator();
     }
 
-    //@SafeVarargs
-    public static final <A> Iterator<A> cyclicIterator(final A... as) {
+    @SafeVarargs
+    public static <A> Iterator<A> cyclicIterator(final A... as) {
         if (as.length == 0) {
             return emptyIterator();
         } else {
@@ -57,8 +57,8 @@ public enum Iterators {
         }
     }
 
-    //@SafeVarargs
-    public static final <A> Iterator<A> concat(final Iterator<A>... its) {
+    @SafeVarargs
+    public static <A> Iterator<A> concat(final Iterator<A>... its) {
         if (its.length == 0) {
             return emptyIterator();
         } else {
