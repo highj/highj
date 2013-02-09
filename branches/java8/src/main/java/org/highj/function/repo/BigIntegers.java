@@ -1,182 +1,35 @@
 package org.highj.function.repo;
 
-import org.highj.data.compare.Eq;
-import org.highj.function.F1;
-import org.highj.function.F2;
-import org.highj.typeclass.group.*;
+import org.highj.typeclass0.group.*;
 
 import java.math.BigInteger;
+import java.util.function.Function;
 
 public enum BigIntegers {
     ;
 
-    public final static Eq<BigInteger> eq = new Eq.JavaEq<BigInteger>();
+    public final static Function<BigInteger, BigInteger> sqr = x -> x.pow(2);
 
-    public final static F1<BigInteger, BigInteger> abs = new F1<BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger bigInteger) {
-            return bigInteger.abs();
-        }
-    };
+    public final static Function<BigInteger, BigInteger> succ = x -> x.add(BigInteger.ONE);
 
-    public final static F1<BigInteger, BigInteger> negate = new F1<BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger bigInteger) {
-            return bigInteger.negate();
-        }
-    };
+    public final static Function<BigInteger, BigInteger> pred = x -> x.subtract(BigInteger.ONE);
 
-    public final static F1<BigInteger, BigInteger> sqr = new F1<BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger bigInteger) {
-            return bigInteger.pow(2);
-        }
-    };
+    public final static Function<BigInteger, Function<BigInteger, BigInteger>> pow = a -> b -> a.pow(b.intValue());
 
-    public final static F1<BigInteger, BigInteger> not = new F1<BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger bigInteger) {
-            return bigInteger.not();
-        }
-    };
+    public final static Function<BigInteger, Boolean> negative = bigInteger -> bigInteger.compareTo(BigInteger.ZERO) < 0;
 
-    public final static F1<BigInteger, BigInteger> succ = new F1<BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger bigInteger) {
-            return bigInteger.add(BigInteger.ONE);
-        }
-    };
+    public final static Function<BigInteger, Boolean> positive = bigInteger -> bigInteger.compareTo(BigInteger.ZERO) > 0;
 
-    public final static F1<BigInteger, BigInteger> pred = new F1<BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger bigInteger) {
-            return bigInteger.subtract(BigInteger.ONE);
-        }
-    };
+    public final static Function<BigInteger, Boolean> zero = bigInteger -> bigInteger.equals(BigInteger.ZERO);
 
-    public final static F2<BigInteger, BigInteger, BigInteger> add = new F2<BigInteger, BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger a, BigInteger b) {
-            return a.add(b);
-        }
-    };
+    public final static Function<BigInteger, Boolean> even = bigInteger -> !bigInteger.testBit(0);
 
-    public final static F2<BigInteger, BigInteger, BigInteger> subtract = new F2<BigInteger, BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger a, BigInteger b) {
-            return a.subtract(b);
-        }
-    };
-
-    public final static F2<BigInteger, BigInteger, BigInteger> multiply = new F2<BigInteger, BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger a, BigInteger b) {
-            return a.multiply(b);
-        }
-    };
-
-    public final static F2<BigInteger, BigInteger, BigInteger> divide = new F2<BigInteger, BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger a, BigInteger b) {
-            return a.divide(b);
-        }
-    };
-
-    public final static F2<BigInteger, BigInteger, BigInteger> pow = new F2<BigInteger, BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger a, BigInteger b) {
-            return a.pow(b.intValue());
-        }
-    };
-
-    public final static F2<BigInteger, BigInteger, BigInteger> mod = new F2<BigInteger, BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger a, BigInteger b) {
-            return a.mod(b);
-        }
-    };
-
-    public final static F2<BigInteger, BigInteger, BigInteger> and = new F2<BigInteger, BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger a, BigInteger b) {
-            return a.and(b);
-        }
-    };
-
-    public final static F2<BigInteger, BigInteger, BigInteger> or = new F2<BigInteger, BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger a, BigInteger b) {
-            return a.or(b);
-        }
-    };
-
-    public final static F2<BigInteger, BigInteger, BigInteger> xor = new F2<BigInteger, BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger a, BigInteger b) {
-            return a.xor(b);
-        }
-    };
-
-    public final static F2<BigInteger, BigInteger, BigInteger> min = new F2<BigInteger, BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger a, BigInteger b) {
-            return a.min(b);
-        }
-    };
-
-    public final static F2<BigInteger, BigInteger, BigInteger> gcd = new F2<BigInteger, BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger a, BigInteger b) {
-            return a.gcd(b);
-        }
-    };
-
-    public final static F2<BigInteger, BigInteger, BigInteger> max = new F2<BigInteger, BigInteger, BigInteger>() {
-        @Override
-        public BigInteger $(BigInteger a, BigInteger b) {
-            return a.max(b);
-        }
-    };
-
-    public final static F1<BigInteger, Boolean> negative = new F1<BigInteger, Boolean>() {
-        @Override
-        public Boolean $(BigInteger bigInteger) {
-            return bigInteger.compareTo(BigInteger.ZERO) < 0;
-        }
-    };
-
-    public final static F1<BigInteger, Boolean> positive = new F1<BigInteger, Boolean>() {
-        @Override
-        public Boolean $(BigInteger bigInteger) {
-            return bigInteger.compareTo(BigInteger.ZERO) > 0;
-        }
-    };
-
-    public final static F1<BigInteger, Boolean> zero = new F1<BigInteger, Boolean>() {
-        @Override
-        public Boolean $(BigInteger bigInteger) {
-            return bigInteger.equals(BigInteger.ZERO);
-        }
-    };
-
-    public final static F1<BigInteger, Boolean> even = new F1<BigInteger, Boolean>() {
-        @Override
-        public Boolean $(BigInteger bigInteger) {
-            return !bigInteger.testBit(0);
-        }
-    };
-
-    public final static F1<BigInteger, Boolean> odd = new F1<BigInteger, Boolean>() {
-        @Override
-        public Boolean $(BigInteger bigInteger) {
-            return bigInteger.testBit(0);
-        }
-    };
+    public final static Function<BigInteger, Boolean> odd = bigInteger -> bigInteger.testBit(0);
 
     public final static Group<BigInteger> additiveGroup = new Group<BigInteger>(){
         @Override
-        public F1<BigInteger, BigInteger> inverse() {
-            return negate;
+        public BigInteger inverse(BigInteger x) {
+            return x.negate();
         }
 
         @Override
@@ -185,8 +38,8 @@ public enum BigIntegers {
         }
 
         @Override
-        public F2<BigInteger, BigInteger, BigInteger> dot() {
-            return add;
+        public BigInteger dot(BigInteger x, BigInteger y) {
+            return x.add(y);
         }
     };
 
@@ -197,14 +50,14 @@ public enum BigIntegers {
         }
 
         @Override
-        public F2<BigInteger, BigInteger, BigInteger> dot() {
-            return multiply;
+        public BigInteger dot(BigInteger x, BigInteger y) {
+            return x.multiply(y);
         }
     };
 
-    public final static Semigroup<BigInteger> minSemigroup = () -> min;
+    public final static Semigroup<BigInteger> minSemigroup = BigInteger::min;
 
-    public final static Semigroup<BigInteger> maxSemigroup = () -> max;
+    public final static Semigroup<BigInteger> maxSemigroup = BigInteger::max;
 
-    public final static Semigroup<BigInteger> xorSemigroup = () -> xor;
+    public final static Semigroup<BigInteger> xorSemigroup = BigInteger::xor;
 }

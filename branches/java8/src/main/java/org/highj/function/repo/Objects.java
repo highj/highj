@@ -1,43 +1,25 @@
 package org.highj.function.repo;
 
-import org.highj.function.F1;
-import org.highj.function.F2;
+import java.util.function.Function;
 
 public enum Objects {
     ;
 
-    public static <T> F1<T, String> toStringFn() {
-        return new F1<T, String>() {
-
-            @Override
-            public String $(T o) {
-                return o == null ? "" : o.toString();
-            }
-        };
+    public static <T> Function<T, String> toStringFn() {
+        return o -> o == null ? "" : o.toString();
     }
 
-    public static <T> F1<T, Integer> hashCodeFn() {
-        return new F1<T, Integer>() {
-
-            @Override
-            public Integer $(T o) {
-                return o == null ? 0 : o.hashCode();
-            }
-        };
+    public static <T> Function<T, Integer> hashCodeFn() {
+        return o -> o == null ? 0 : o.hashCode();
     }
 
-    public static <T> F2<T, T, Boolean> equalsFn() {
-        return new F2<T, T, Boolean>() {
-            @Override
-            public Boolean $(T one, T two) {
-                return one == null ? two == null : one.equals(two);
-            }
-        };
+    public static <T> Function<T, Function<T, Boolean>> equalsFn() {
+        return one -> two -> one == null ? two == null : one.equals(two);
     }
 
     //for better type inference
-    public static <T> F1<T,Boolean> equalsFn(T t) {
-        return Objects.<T>equalsFn().$(t);
+    public static <T> Function<T,Boolean> equalsFn(T t) {
+        return Objects.<T>equalsFn().apply(t);
     }
 
     public static boolean notNull(Object... os) {
