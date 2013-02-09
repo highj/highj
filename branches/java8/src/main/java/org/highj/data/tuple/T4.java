@@ -1,22 +1,11 @@
 package org.highj.data.tuple;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
 import org.highj.____;
-import org.highj.function.F1;
 
-public abstract class T4<A, B, C, D> extends ____<T4.µ, A, B, C, D> {
-    private static final µ hidden = new µ();
+import java.util.function.Function;
 
-    public static class µ {
-        private µ() {
-        }
-    }
-
-    T4() {
-        super(hidden);
-    }
+public abstract class T4<A, B, C, D> implements  ____<T4.µ, A, B, C, D> {
+    public static class µ {}
 
     public abstract A _1();
 
@@ -26,25 +15,20 @@ public abstract class T4<A, B, C, D> extends ____<T4.µ, A, B, C, D> {
 
     public abstract D _4();
 
-    @SuppressWarnings("unchecked")
-    public static <A, B, C, D> T4<A, B, C, D> narrow(_<__.µ<___.µ<____.µ<µ, A>, B>, C>, D> value) {
-        return (T4) value;
+    public <AA> T4<AA,B,C,D> map_1(Function<? super A,? extends AA> fn) {
+        return Tuple.of(fn.apply(_1()), _2(),_3(),_4());
     }
 
-    public <AA> T4<AA,B,C,D> map_1(F1<A,AA> fn) {
-        return Tuple.of(fn.$(_1()), _2(),_3(),_4());
+    public <BB> T4<A,BB,C,D> map_2(Function<? super B,? extends BB> fn) {
+        return Tuple.of(_1(), fn.apply(_2()),_3(),_4());
     }
 
-    public <BB> T4<A,BB,C,D> map_2(F1<B,BB> fn) {
-        return Tuple.of(_1(), fn.$(_2()),_3(),_4());
+    public <CC> T4<A,B,CC,D> map_3(Function<? super C,? extends CC> fn) {
+        return Tuple.of(_1(), _2(), fn.apply(_3()),_4());
     }
 
-    public <CC> T4<A,B,CC,D> map_3(F1<C,CC> fn) {
-        return Tuple.of(_1(), _2(), fn.$(_3()),_4());
-    }
-
-    public <DD> T4<A,B,C,DD> map_4(F1<D,DD> fn) {
-        return Tuple.of(_1(), _2(), _3(), fn.$(_4()));
+    public <DD> T4<A,B,C,DD> map_4(Function<? super D,? extends DD> fn) {
+        return Tuple.of(_1(), _2(), _3(), fn.apply(_4()));
     }
 
     @Override
