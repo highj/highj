@@ -4,32 +4,27 @@ import org.highj._;
 import org.highj.__;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
-import org.highj.function.F1;
-import org.highj.typeclass.monad.Functor;
+import org.highj.typeclass1.monad.Apply;
 import org.highj.util.Iterators;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 
 /**
  * A crude, hash-based Map implementation.
  *
- * Note that the provided monad instance could be considered a hack, based on the fact that every
+ * Note that the provided monadTrans instance could be considered a hack, based on the fact that every
  * Java Object has a hashCode and an equals implementation, which might be rather useless in some cases.
  *
  * @param <A> The element type.
  */
-public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
+public class Map<A,B> implements __<Map.µ, A, B>, Iterable<T2<A,B>>, Function<A,Maybe<B>> {
 
-    private static final µ hidden = new µ();
-
-    public static class µ {
-        private µ() {
-        }
-    }
+    public static class µ {}
 
     @SuppressWarnings("unchecked")
-    private final static Map EMPTY = new Map(Integer.MIN_VALUE, List.Nil(), null, null) {
+    private final static Map EMPTY = new Map(Integer.MIN_VALUE, List.nil(), null, null) {
     };
 
     private final Map<A,B> left;
@@ -38,7 +33,6 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
     private final int hc;
 
     private Map(int hc, List<T2<A,B>> bucket, Map<A,B> left, Map<A,B> right) {
-        super(hidden);
         this.hc = hc;
         this.bucket = bucket;
         this.right = right;
@@ -48,6 +42,10 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
     @SuppressWarnings("unchecked")
     public static <A,B> Map<A,B> narrow(_<__.µ<Map.µ,A>, B> value) {
         return (Map) value;
+    }
+
+    public Maybe<B> apply(A key) {
+        return $(key);
     }
 
     public Maybe<B> $(A key) {
@@ -80,22 +78,17 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
 
     public Map<A,B> plus(final A a, final B b) {
         if (isEmpty()) {
-            return new Map<A,B>(a.hashCode(), List.<T2<A,B>>of(Tuple.of(a, b)), Map.<A,B>empty(), Map.<A,B>empty());
+            return new Map<>(a.hashCode(), List.<T2<A,B>>of(Tuple.of(a, b)), Map.<A,B>empty(), Map.<A,B>empty());
         }
         int ahc = a.hashCode();
         if (hc == ahc) {
-            return new Map<A,B>(hc, bucket.filter(new F1<T2<A,B>,Boolean>(){
-                @Override
-                public Boolean $(T2<A,B> ab) {
-                    return ! ab._1().equals(a);
-                }
-            }).cons(Tuple.of(a,b)), left, right);
+            return new Map<>(hc, bucket.filter(ab -> ! ab._1().equals(a)).plus(Tuple.of(a, b)), left, right);
         } else if (ahc < hc) {
             Map<A,B> newLeft = left.plus(a,b);
-            return left == newLeft ? this : new Map<A,B>(hc, bucket, newLeft, right);
+            return left == newLeft ? this : new Map<>(hc, bucket, newLeft, right);
         } else {
             Map<A,B> newRight = right.plus(a,b);
-            return right == newRight ? this : new Map<A,B>(hc, bucket, left, newRight);
+            return right == newRight ? this : new Map<>(hc, bucket, left, newRight);
         }
     }
 
@@ -110,30 +103,25 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
         }
         int ahc = a.hashCode();
         if (hc == ahc) {
-            List<T2<A,B>> newBucket = bucket.filter(new F1<T2<A, B>, Boolean>() {
-                @Override
-                public Boolean $(T2<A, B> ab) {
-                    return ab._1() != a;
-                }
-            });
+            List<T2<A,B>> newBucket = bucket.filter(ab -> ab._1() != a);
             if (bucket == newBucket) {
                 return this;
             } else if (! newBucket.isEmpty()) {
-                return new Map<A,B>(hc, newBucket, left, right);
+                return new Map<>(hc, newBucket, left, right);
             } else if (left.isEmpty()) {
                 return right;
             } else if (right.isEmpty()) {
                 return left;
             } else {
                 T2<Map<A,B>, Map<A,B>> pair = right.removeMin();
-                return new Map<A,B>(pair._1().hc, pair._1().bucket, left, pair._2());
+                return new Map<>(pair._1().hc, pair._1().bucket, left, pair._2());
             }
         } else if (ahc < hc) {
             Map<A,B> newLeft = left.minus(a);
-            return left == newLeft ? this : new Map<A,B>(hc, bucket, newLeft, right);
+            return left == newLeft ? this : new Map<>(hc, bucket, newLeft, right);
         } else {
             Map<A,B> newRight = right.minus(a);
-            return right == newRight ? this : new Map<A,B>(hc, bucket, left, newRight);
+            return right == newRight ? this : new Map<>(hc, bucket, left, newRight);
         }
     }
 
@@ -142,7 +130,7 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
             return Tuple.of(this, right);
         } else {
             T2<Map<A,B>, Map<A,B>> pair = left.removeMin();
-            return Tuple.of(pair._1(), new Map<A,B>(hc, bucket, pair._2(), right));
+            return Tuple.of(pair._1(), new Map<>(hc, bucket, pair._2(), right));
         }
     }
 
@@ -159,7 +147,7 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
         return empty();
     }
 
-    //@SafeVarargs
+    @SafeVarargs
     public static <A,B> Map<A,B> of(T2<A,B> ... abs) {
         return Map.<A,B>empty().plus(abs);
     }
@@ -168,32 +156,35 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
         return Map.<A,B>empty().plus(abs);
     }
 
-    public static <A,B> Map<A,B> ofKeys(F1<A,B> fn, A ... keys) {
+    //@SafeVarargs
+    public static <A,B> Map<A,B> ofKeys(Function<A,B> fn, A[] keys) {
         Map<A,B> result = empty();
         for(A key : keys) {
-            result = result.plus(key, fn.$(key));
+            result = result.plus(key, fn.apply(key));
         }
         return result;
     }
-
-    public static <A,B> Map<A,B> ofValues(F1<B,A> fn, B ... values) {
-        Map<A,B> result = empty();
-        for(B value : values) {
-            result = result.plus(fn.$(value), value);
-        }
-        return result;
-    }
-
-    public static <A,B,C> Map<A,B> of(F1<C,T2<A,B>> fn, C ... cs) {
-        Map<A,B> result = empty();
-        for(C c : cs) {
-            result = result.plus(fn.$(c));
-        }
-        return result;
-    }
-
 
     //@SafeVarargs
+    public static <A,B> Map<A,B> ofValues(Function<B,A> fn, B[] values) {
+        Map<A,B> result = empty();
+        for(B value : values) {
+            result = result.plus(fn.apply(value), value);
+        }
+        return result;
+    }
+
+    //@SafeVarargs
+    public static <A,B,C> Map<A,B> of(Function<C,T2<A,B>> fn, C[] cs) {
+        Map<A,B> result = empty();
+        for(C c : cs) {
+            result = result.plus(fn.apply(c));
+        }
+        return result;
+    }
+
+
+    @SafeVarargs
     public final Map<A,B> plus(T2<A,B> ... abs) {
         Map<A,B> result = this;
         for(T2<A,B> ab : abs) {
@@ -202,8 +193,8 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
         return result;
     }
 
-    //@SafeVarargs
-    public final Map<A,B> minus(A ... as) {
+    @SafeVarargs
+    public final Map<A,B> minus(A... as) {
         Map<A,B> result = this;
         for(A a : as) {
             result = result.minus(a);
@@ -231,14 +222,8 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
         return isEmpty() ? 0 : 1 + left.size() + right.size();
     }
 
-    public F1<A, Maybe<B>> F1(){
-        return new F1<A, Maybe<B>>() {
-
-            @Override
-            public Maybe<B> $(A a) {
-                return Map.this.$(a);
-            }
-        };
+    public Function<A, Maybe<B>> apply(){
+        return Map.this::$;
     }
 
     public Iterator<T2<A,B>> iterator() {
@@ -268,72 +253,38 @@ public class Map<A,B> extends __<Map.µ, A, B> implements Iterable<T2<A,B>> {
         return valueSet;
     }
 
-    public <C> Map<A,C> map(F1<B,C> fn) {
+    public <C> Map<A,C> map(Function<? super B, ? extends C> fn) {
         if (isEmpty()) {
             return Map.empty();
         } else {
             List<T2<A,C>> newBucket = List.of();
             for(T2<A,B> t2 : bucket) {
-                newBucket = newBucket.cons(t2.map_2(fn));
+                newBucket = newBucket.plus(t2.map_2(fn));
             }
-            return new Map<A,C>(hc, newBucket, left.map(fn), right.map(fn));
+            return new Map<>(hc, newBucket, left.map(fn), right.map(fn));
         }
     }
 
-    private static <S> Functor<__.µ<µ, S>> functor() {
-        return new Functor<__.µ<µ, S>>() {
+    private static <S> Apply<__.µ<µ, S>> Apply() {
+        return new Apply<__.µ<µ, S>>() {
             @Override
-            public <A, B> _<__.µ<µ, S>, B> map(F1<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
+            public <A, B> _<__.µ<µ, S>, B> map(Function<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
                 return narrow(nestedA).map(fn);
+            }
+
+            @Override
+            public <A, B> _<__.µ<µ, S>, B> ap(_<__.µ<µ, S>, Function<A, B>> fn, _<__.µ<µ, S>, A> nestedA) {
+                Map<S,A> mapA = narrow(nestedA);
+                Map<S,B> result = of();
+                for(T2<S,Function<A,B>> tuple : narrow(fn)) {
+                    for(A a :mapA.apply(tuple._1())) {
+                        result = result.plus(tuple._1(), tuple._2().apply(a));
+                    }
+                }
+                return result;
             }
         };
     }
 
-    /*public static MonadPlus<µ> monadPlus = new MapMonadPlus();
 
-    private static class MapMonadPlus implements MonadPlus<µ> {
-        @Override
-        public <A> _<µ, A> pure(A a) {
-            return of(a);
-        }
-
-        @Override
-        public <A, B> _<µ, B> ap(_<µ, F1<A, B>> fn, _<µ, A> nestedA) {
-            Map<B> result = empty();
-            for(F1<A,B> f : narrow(fn)) {
-                for(A a : narrow(nestedA)) {
-                    result.plus(f.$(a));
-                }
-            }
-            return result;
-        }
-
-        @Override
-        public <A, B> _<µ, B> map(F1<A, B> fn, _<µ, A> nestedA) {
-            Map<B> result = empty();
-            for(A a : narrow(nestedA)) {
-                result.plus(fn.$(a));
-            }
-            return result;
-        }
-
-        @Override
-        public <A> _<µ, A> mzero() {
-            return empty();
-        }
-
-        @Override
-        public <A> _<µ, A> mplus(_<µ, A> one, _<µ, A> two) {
-            return narrow(one).plus(narrow(two));
-        }
-
-        @Override
-        public <A> _<µ, A> join(_<µ, _<µ, A>> nestedNestedA) {
-            Map<A> result = empty();
-            for(_<µ, A> innerMap : narrow(nestedNestedA)) {
-                result.plus(narrow(innerMap));
-            }
-            return result;
-        }
-    } */
 }
