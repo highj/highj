@@ -2,7 +2,7 @@
 
 = 2013-02-09 =
 
-Hay, I'm back from vacation, and finally found some workarounds for some nasty compiler bugs in the Java 8 ea. After so many changes, I had to fight with SVN, too, so don't be surprised by the change list. The Java 8 version has its own branch, the trunk is unchanged so far. 
+Hey, I'm back from vacation, and finally found some workarounds for some nasty compiler bugs in the Java 8 ea. After so many changes, I had to fight with SVN, too, so don't be surprised by the change list. The Java 8 version has its own branch, the trunk is unchanged so far. 
 
 So how were things going? First of all, the default methods (a.k.a. "defender" or "extension methods") are a great help. Lambdas are good, too, although I had to fight with some bugs and limitations.
 
