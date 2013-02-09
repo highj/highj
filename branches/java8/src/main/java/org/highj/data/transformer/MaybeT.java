@@ -2,29 +2,18 @@ package org.highj.data.transformer;
 
 import org.highj._;
 import org.highj.data.collection.Maybe;
-import org.highj.function.F1;
-import org.highj.typeclass.monad.Applicative;
-import org.highj.typeclass.monad.Functor;
+import org.highj.typeclass1.monad.Applicative;
+import org.highj.typeclass1.monad.Functor;
 
-public class MaybeT <M, A> extends _<_<MaybeT.µ, M>, A> {
+import java.util.function.Function;
 
-    private static final µ hidden = new µ();
+public class MaybeT <M, A> implements _<_<MaybeT.µ, M>, A> {
 
-    public static class µ {
-        private µ() {
-        }
-    }
-
-    public static class µµ<M> extends _<µ, M> {
-        private µµ() {
-            super(hidden);
-        }
-    }
+    public static class µ {}
 
     private final _<M, _<Maybe.µ,A>> value;
 
     public MaybeT(_<M, _<Maybe.µ,A>> value) {
-        super(new µµ<M>());
         this.value = value;
     }
 
@@ -40,10 +29,10 @@ public class MaybeT <M, A> extends _<_<MaybeT.µ, M>, A> {
     public static <M> Functor<_<µ, M>> functor(final Functor<M> functorM) {
         return new Functor<_<µ, M>>() {
             @Override
-            public <A, B> _<_<µ, M>, B> map(F1<A, B> fn, _<_<µ, M>, A> nestedA) {
+            public <A, B> _<_<µ, M>, B> map(Function<A, B> fn, _<_<µ, M>, A> nestedA) {
                 MaybeT<M, A> aId = narrow(nestedA);
-                F1<_<Maybe.µ,A>, _<Maybe.µ,B>> liftedFn = Maybe.monad.lift(fn);
-                return new MaybeT<M, B>(functorM.map(liftedFn, aId.get()));
+                Function<_<Maybe.µ,A>, _<Maybe.µ,B>> liftedFn = Maybe.monad.lift(fn);
+                return new MaybeT<>(functorM.map(liftedFn, aId.get()));
             }
         };
     }
@@ -51,40 +40,37 @@ public class MaybeT <M, A> extends _<_<MaybeT.µ, M>, A> {
     public static <M> Applicative<_<µ, M>> applicative(final Applicative<M> applicativeM) {
         return new Applicative<_<µ, M>>() {
             @Override
-            public <A, B> _<_<µ, M>, B> map(F1<A, B> fn, _<_<µ, M>, A> nestedA) {
+            public <A, B> _<_<µ, M>, B> map(Function<A, B> fn, _<_<µ, M>, A> nestedA) {
                 MaybeT<M, A> aMaybeT = narrow(nestedA);
-                F1<_<Maybe.µ,A>, _<Maybe.µ,B>> liftedFn = Maybe.monad.lift(fn);
-                return new MaybeT<M, B>(applicativeM.map(liftedFn, aMaybeT.get()));
+                Function<_<Maybe.µ,A>, _<Maybe.µ,B>> liftedFn = Maybe.monad.lift(fn);
+                return new MaybeT<>(applicativeM.map(liftedFn, aMaybeT.get()));
             }
 
             @Override
             public <A> _<_<µ, M>, A> pure(A a) {
-                return new MaybeT<M, A>(applicativeM.pure(Maybe.monad.pure(a)));
+                return new MaybeT<>(applicativeM.pure(Maybe.monad.pure(a)));
             }
 
             //this looks too complicated...
             @Override
-            public <A, B> _<_<µ, M>, B> ap(_<_<µ, M>, F1<A, B>> fn, _<_<µ, M>, A> nestedA) {
+            public <A, B> _<_<µ, M>, B> ap(_<_<µ, M>, Function<A, B>> fn, _<_<µ, M>, A> nestedA) {
                 final MaybeT<M, A> aId = narrow(nestedA);
-                MaybeT<M, F1<A, B>> fnMaybeT = narrow(fn);
-                _<M, _<Maybe.µ, F1<A, B>>> fnMaybe = fnMaybeT.get();
-                _<M, F1<_<Maybe.µ,A>,_<Maybe.µ,B>>> fnConv = applicativeM.map(new F1<_<Maybe.µ, F1<A, B>>, F1<_<Maybe.µ, A>, _<Maybe.µ, B>>>() {
+                MaybeT<M, Function<A, B>> fnMaybeT = narrow(fn);
+                _<M, _<Maybe.µ, Function<A, B>>> fnMaybe = fnMaybeT.get();
+                _<M, Function<_<Maybe.µ,A>,_<Maybe.µ,B>>> fnConv = applicativeM.map(new Function<_<Maybe.µ, Function<A, B>>, Function<_<Maybe.µ, A>, _<Maybe.µ, B>>>() {
                     @Override
-                    public F1<_<Maybe.µ, A>, _<Maybe.µ, B>> $(_<Maybe.µ, F1<A, B>> maybeFnNested) {
-                        final Maybe<F1<A,B>> maybeFn = Maybe.narrow(maybeFnNested);
-                        return new F1<_<Maybe.µ, A>, _<Maybe.µ, B>>(){
-                            @Override
-                            public _<Maybe.µ, B> $(_<Maybe.µ, A> maybeANested) {
-                                Maybe<A> maybeA = Maybe.narrow(maybeANested);
-                                return maybeFn.isJust() && maybeA.isJust()
-                                    ? Maybe.Just(maybeFn.get().$(maybeA.get()))
-                                    : Maybe.<B>Nothing();
-                            }
+                    public Function<_<Maybe.µ, A>, _<Maybe.µ, B>> apply(_<Maybe.µ, Function<A, B>> maybeFnNested) {
+                        final Maybe<Function<A,B>> maybeFn = Maybe.narrow(maybeFnNested);
+                        return maybeANested -> {
+                            Maybe<A> maybeA = Maybe.narrow(maybeANested);
+                            return maybeFn.isJust() && maybeA.isJust()
+                                ? Maybe.Just(maybeFn.get().apply(maybeA.get()))
+                                : Maybe.<B>Nothing();
                         };
                     }
                 }, fnMaybe);
                 _<M, _<Maybe.µ, B>> apResult = applicativeM.ap(fnConv, aId.get());
-                return new MaybeT<M, B>(apResult);
+                return new MaybeT<>(apResult);
             }
         };
     }
@@ -142,25 +128,25 @@ instance MonadTrans MaybeT where
 instance (MonadIO m) => MonadIO (MaybeT m) where
     liftIO = lift . liftIO
 
--- | Lift a @callCC@ operation to the new monad.
+-- | Lift a @callCC@ operation to the new monadTrans.
 liftCallCC :: (((Maybe a -> m (Maybe b)) -> m (Maybe a)) ->
     m (Maybe a)) -> ((a -> MaybeT m b) -> MaybeT m a) -> MaybeT m a
 liftCallCC callCC f =
     MaybeT $ callCC $ \ c -> runMaybeT (f (MaybeT . c . Just))
 
--- | Lift a @catchError@ operation to the new monad.
+-- | Lift a @catchError@ operation to the new monadTrans.
 liftCatch :: (m (Maybe a) -> (e -> m (Maybe a)) -> m (Maybe a)) ->
     MaybeT m a -> (e -> MaybeT m a) -> MaybeT m a
 liftCatch f m h = MaybeT $ f (runMaybeT m) (runMaybeT . h)
 
--- | Lift a @listen@ operation to the new monad.
+-- | Lift a @listen@ operation to the new monadTrans.
 liftListen :: Monad m =>
     (m (Maybe a) -> m (Maybe a,w)) -> MaybeT m a -> MaybeT m (a,w)
 liftListen listen = mapMaybeT $ \ m -> do
     (a, w) <- listen m
     return $! fmap (\ r -> (r, w)) a
 
--- | Lift a @pass@ operation to the new monad.
+-- | Lift a @pass@ operation to the new monadTrans.
 liftPass :: Monad m => (m (Maybe a,w -> w) -> m (Maybe a)) ->
     MaybeT m (a,w -> w) -> MaybeT m a
 liftPass pass = mapMaybeT $ \ m -> pass $ do
