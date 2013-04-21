@@ -18,9 +18,9 @@ public interface Arrow<µ> extends Category<µ> {
     public <A, B, C> __<µ, T2<A, C>, T2<B, C>> first(__<µ, A, B> arrow);
 
     public default <A, B, C> __<µ, T2<C, A>, T2<C, B>> second(__<µ, A, B> arrow) {
-        __<µ, T2<C, A>, T2<A, C>> swapForth = arr((T2<C, A> t2) -> t2.swap());
+        __<µ, T2<C, A>, T2<A, C>> swapForth = arr(T2<C, A>::swap);
         __<µ, T2<A, C>, T2<B, C>> arrowFirst = first(arrow);
-        __<µ, T2<B, C>, T2<C, B>> swapBack = arr((T2<B, C> t2) -> t2.swap());
+        __<µ, T2<B, C>, T2<C, B>> swapBack = arr(T2<B, C>::swap);
         return then(swapForth, arrowFirst, swapBack);
     }
 

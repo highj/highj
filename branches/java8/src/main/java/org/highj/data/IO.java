@@ -46,7 +46,7 @@ public class IO<A> implements _<IO.µ, A> {
         @Override
         public <A, B> _<µ, B> map(Function<A, B> fn, _<µ, A> nestedA) {
             Supplier<A> thunk = narrow(nestedA).thunk;
-            return new IO<B>(() -> fn.apply(thunk.get()));
+            return new IO<>(() -> fn.apply(thunk.get()));
         }
     };
 }

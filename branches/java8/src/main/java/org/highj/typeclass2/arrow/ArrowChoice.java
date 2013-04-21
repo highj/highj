@@ -8,9 +8,9 @@ public interface ArrowChoice<µ> extends Arrow<µ> {
 
     //The default definition should be overridden with a more efficient version if possible
     public default <B, C, D> __<µ, Either<D, B>, Either<D, C>> right(__<µ, B, C> arrow) {
-        __<µ, Either<D, B>, Either<B, D>> swapDB = arr((Either<D, B> e) -> e.swap());
+        __<µ, Either<D, B>, Either<B, D>> swapDB = arr(Either<D, B>::swap);
         __<µ, Either<B, D>, Either<C, D>> leftArrow = left(arrow);
-        __<µ, Either<C, D>, Either<D, C>> swapCD = arr((Either<C, D> e) -> e.swap());
+        __<µ, Either<C, D>, Either<D, C>> swapCD = arr(Either<C, D>::swap);
         return then(swapDB, leftArrow, swapCD);
     }
 
@@ -26,7 +26,7 @@ public interface ArrowChoice<µ> extends Arrow<µ> {
     public default <B, C, D> __<µ, Either<B, C>, D> fanin(__<µ, B, D> f, __<µ, C, D> g) {
         // f ||| g = f +++ g >>> arr untag
         __<µ, Either<B, C>, Either<D, D>> fg = merge(f, g);
-        __<µ, Either<D, D>, D> untag = arr((Either<D,D> x) -> Either.unify(x));
+        __<µ, Either<D, D>, D> untag = arr(Either::unify);
         return then(fg, untag);
     }
 }
