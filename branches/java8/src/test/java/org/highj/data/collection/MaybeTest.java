@@ -5,7 +5,6 @@ import org.highj.function.Functions;
 import org.highj.function.repo.Integers;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.data.compare.Eq;
-import org.highj.data.fs.F1;
 import org.highj.typeclass1.monad.MonadPlus;
 import org.junit.Test;
 
@@ -31,10 +30,10 @@ public class MaybeTest {
     public void testCataThunk() {
         Supplier<String> thunk = () -> "foo";
         Maybe<String> nothing = Nothing();
-        assertEquals("foo", nothing.lazyCata(thunk, Functions.<String, String>constant("bar")));
+        assertEquals("foo", nothing.cataLazy(thunk, Functions.<String, String>constant("bar")));
         Maybe<String> baz = Just("baz");
-        assertEquals("bar", baz.lazyCata(thunk, Functions.<String, String>constant("bar")));
-        assertEquals("baz", baz.lazyCata(thunk, Functions.<String>id()));
+        assertEquals("bar", baz.cataLazy(thunk, Functions.<String, String>constant("bar")));
+        assertEquals("baz", baz.cataLazy(thunk, Functions.<String>id()));
     }
 
     @Test
@@ -59,7 +58,7 @@ public class MaybeTest {
     @Test
     public void testJustThunk() {
         Supplier<String> thunk = () -> "bar";
-        Maybe<String> bar = Just(thunk);
+        Maybe<String> bar = JustLazy(thunk);
         assertEquals("Just(bar)", bar.toString());
     }
 
@@ -269,7 +268,7 @@ public class MaybeTest {
                  Maybe.<String>Nothing(),
                  Just("foo"),
                  Maybe.<String>Nothing(),
-                 Maybe.<String>Just(() -> "bar"),
+                 Maybe.<String>JustLazy(() -> "bar"),
                  Maybe.<String>Nothing());
          List<String> strings = justs(maybes);
          assertEquals("List(foo,bar)", strings.toString());
@@ -280,7 +279,7 @@ public class MaybeTest {
         Maybe<String> foo = Just("foo");
         assertEquals("List(foo)", foo.asList().toString());
         Supplier<String> thunk = () -> "bar";
-        Maybe<String> bar = Just(thunk);
+        Maybe<String> bar = JustLazy(thunk);
         assertEquals("List(bar)", bar.asList().toString());
         Maybe<String> nothing = Nothing();
         assertEquals("List()", nothing.asList().toString());

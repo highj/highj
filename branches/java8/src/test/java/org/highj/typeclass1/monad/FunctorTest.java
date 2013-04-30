@@ -16,8 +16,8 @@ public class FunctorTest {
 
     @Test
     public void testLeft$() {
-        //3 <$ Just "x"
-        //-- Just 3
+        //3 <$ JustLazy "x"
+        //-- JustLazy 3
         Maybe<String> justX = Just("x");
         Maybe<Integer> three = narrow(functor.left$(3, justX));
         assertEquals("Just(3)", three.toString());
@@ -31,8 +31,8 @@ public class FunctorTest {
 
     @Test
     public void testVoidF() {
-        //void $ Just "x"
-        //-- Just ()
+        //void $ JustLazy "x"
+        //-- JustLazy ()
         Maybe<String> justX = Just("x");
         Maybe<T0> justUnit = narrow(functor.voidF(justX));
         assertEquals("Just(())", justUnit.toString());
@@ -46,8 +46,8 @@ public class FunctorTest {
 
     @Test
     public void testFlip() {
-        //flip (Just length) "foo"
-        //-- Just 3
+        //flip (JustLazy length) "foo"
+        //-- JustLazy 3
         Maybe<Function<String, Integer>> justStringLength = Just(String::length);
         Maybe<Integer> justThree = narrow(functor.flip(justStringLength, "foo"));
         assertEquals("Just(3)", justThree.toString());
@@ -63,8 +63,8 @@ public class FunctorTest {
     public void testLift() {
         Function<_<µ,String>,_<µ,Integer>> liftedFn = functor.lift(String::length);
 
-        //liftM length $ Just "foo"
-        //-- Just 3
+        //liftM length $ JustLazy "foo"
+        //-- JustLazy 3
         Maybe<String> justString = Just("foo");
         Maybe<Integer> justThree = narrow(liftedFn.apply(justString));
         assertEquals("Just(3)", justThree.toString());

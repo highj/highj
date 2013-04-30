@@ -34,7 +34,8 @@ public interface Traversable<µ> extends Foldable<µ>, Functor<µ> {
     public default <A, B> B foldMap(Monoid<B> mb, final Function<A, B> fn, _<µ, A> nestedA) {
         //foldMapDefault f = getConst . traverse (Const . f)
         Applicative<__.µ<Const.µ, B>> applicative = Const.applicative(mb);
-        return Const.narrow(traverse(applicative, a -> new Const<>(fn.apply(a)), nestedA)).get();
+        _<__.µ<Const.µ,B>, _<µ, A>> co = traverse(applicative, a -> new Const<>(fn.apply(a)), nestedA);
+        return Const.narrow(co).get();
     }
 
 }

@@ -3,6 +3,8 @@ package org.highj.data.collection;
 import org.highj._;
 import org.highj.__;
 import org.highj.data.compare.Eq;
+import org.highj.data.tuple.T2;
+import org.highj.data.tuple.Tuple;
 import org.highj.function.Functions;
 import org.highj.function.repo.Strings;
 import org.highj.typeclass1.alternative.Alt;
@@ -14,8 +16,8 @@ import java.util.function.Supplier;
 
 public abstract class Either<A, B> implements __<Either.µ, A, B> {
 
-    private static final String SHOW_LEFT = "Left(%s)";
-    private static final String SHOW_RIGHT = "Right(%s)";
+    private static final String SHOW_LEFT = "LeftLazy(%s)";
+    private static final String SHOW_RIGHT = "RightLazy(%s)";
 
     /**
      * The witness class of Either
@@ -38,8 +40,8 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
     /**
      * The catamorphism of Either
      *
-     * @param leftFn  function to be applied if it is a Left value
-     * @param rightFn function to be applied if it is a Right value
+     * @param leftFn  function to be applied if it is a LeftLazy value
+     * @param rightFn function to be applied if it is a RightLazy value
      * @param <C>     the result type
      * @return the result of the function application
      */
@@ -48,8 +50,8 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
     /**
      * The catamorphism for constant functions
      *
-     * @param left  result if it is a Left value
-     * @param right result if it is a Right value
+     * @param left  result if it is a LeftLazy value
+     * @param right result if it is a RightLazy value
      * @param <C>   the result type
      * @return the result of the function application
      */
@@ -60,10 +62,10 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
     /**
      * Converts the Either
      *
-     * @param leftFn  the mapping function for a Left
-     * @param rightFn the mapping function for a Right
-     * @param <C>     the new Left type
-     * @param <D>     the new Right type
+     * @param leftFn  the mapping function for a LeftLazy
+     * @param rightFn the mapping function for a RightLazy
+     * @param <C>     the new LeftLazy type
+     * @param <D>     the new RightLazy type
      * @return the converted Either
      */
     public <C, D> Either<C, D> bimap(Function<? super A, ? extends C> leftFn, Function<? super B, ? extends D> rightFn) {
@@ -98,14 +100,14 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
     }
 
     /**
-     * Construction of a lazy Left value
+     * Construction of a lazy LeftLazy value
      *
      * @param thunk the Left thunk
      * @param <A>   the type of the Left value
      * @param <B>   the type of the Right value
      * @return the Left Either
      */
-    public static <A, B> Either<A, B> Left(final Supplier<A> thunk) {
+    public static <A, B> Either<A, B> LeftLazy(final Supplier<A> thunk) {
         return new Either<A, B>() {
 
             @Override
@@ -141,7 +143,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @param <B>   the type of the Right value
      * @return the Right Either
      */
-    public static <A, B> Either<A, B> Right(final Supplier<B> thunk) {
+    public static <A, B> Either<A, B> RightLazy(final Supplier<B> thunk) {
         return new Either<A, B>() {
 
             @Override
@@ -157,7 +159,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return the swapped Either
      */
     public Either<B, A> swap() {
-        return either(a -> Either.<B, A>Right(a), b -> Either.<B, A>Left(b));
+        return either(Either::<B, A>Right, Either::<B, A>Left);
     }
 
     /**
@@ -207,7 +209,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
     }
 
     /**
-     * Extracts the Right value, mplus the default value if ir doesn't exist
+     * Extracts the Right value, or the default value if ir doesn't exist
      *
      * @param defaultValue default value
      * @return the Right value if it exists, else the default value
@@ -219,21 +221,21 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
     /**
      * Extracts the Left value
      *
-     * @return the Left value, mplus throws an exception if none exists
+     * @return the Left value, or throws an exception if none exists
      */
     public A getLeft() throws NoSuchElementException {
         return either(Functions.<A>id(), Functions.<B, A>constant(
-                Functions.<A>error(NoSuchElementException.class, "getLeft called on a Right")));
+                Functions.<A>error(NoSuchElementException.class, "getLeft called on a RightLazy")));
     }
 
     /**
      * Extracts the Right value
      *
-     * @return the Right value, mplus throws an exception if none exists
+     * @return the Right value, or throws an exception if none exists
      */
     public B getRight() throws NoSuchElementException {
         return either(Functions.<A, B>constant(
-                Functions.<B>error(NoSuchElementException.class, "getRight called on a Left")), Functions.<B>id());
+                Functions.<B>error(NoSuchElementException.class, "getRight called on a LeftLazy")), Functions.<B>id());
     }
 
     /**
@@ -246,10 +248,25 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
         List<A> result = List.nil();
         for (Either<A, ?> either : list) {
             if (either.isLeft()) {
-                result = List.cons(either.getLeft(), result);
+                result = result.plus(either.getLeft());
             }
         }
         return result.reverse();
+    }
+
+    /**
+     * Extracts the Left values from a List in a lazy fashion
+     *
+     * @param list a List of Eithers
+     * @return a List of all Left values
+     */
+    public static <A> List<A> leftsLazy(List<Either<A, ?>> list) throws StackOverflowError {
+        if (list.isEmpty()) {
+            return List.nil();
+        } else {
+            Either<A, ?> head = list.head();
+            return head.either(a -> List.consLazy(a, () -> leftsLazy(list.tail())), b -> leftsLazy(list.tail()));
+        }
     }
 
     /**
@@ -262,10 +279,44 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
         List<B> result = List.nil();
         for (Either<?, B> either : list) {
             if (either.isRight()) {
-                result = List.cons(either.getRight(), result);
+                result = result.plus(either.getRight());
             }
         }
         return result.reverse();
+    }
+
+
+    /**
+     * Extracts the Right values from a List in a lazy fashion
+     *
+     * @param list a List of Eithers
+     * @return a List of all Right values
+     */
+    public static <B> List<B> rightsLazy(List<Either<?, B>> list) throws StackOverflowError {
+        if (list.isEmpty()) {
+            return List.nil();
+        } else {
+            Either<?, B> head = list.head();
+            return head.either(a -> rightsLazy(list.tail()), b -> List.consLazy(b, () -> rightsLazy(list.tail())));
+        }
+    }
+
+    /**
+     * Extracts the values from a List
+     *
+     * @param list a List of Eithers
+     * @return a Pair of a List of all Left and a list of all Right values
+     */   public static <A,B> T2<List<A>,List<B>> split(List<Either<A,B>> list) {
+        List<A> lefts = List.nil();
+        List<B> rights = List.nil();
+        for (Either<A, B> either : list) {
+           if (either.isLeft()) {
+               lefts = lefts.plus(either.getLeft());
+           } else {
+               rights = rights.plus(either.getRight());
+           }
+        }
+        return Tuple.of(lefts.reverse(), rights.reverse());
     }
 
     /**
@@ -311,10 +362,10 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
     /**
      * Generates an Eq instance
      *
-     * @param eqA Eq instance for Left type
-     * @param eqB Eq instance for Right type
-     * @param <A> Left type
-     * @param <B> Right type
+     * @param eqA Eq instance for LeftLazy type
+     * @param eqB Eq instance for RightLazy type
+     * @param <A> LeftLazy type
+     * @param <B> RightLazy type
      * @return Eq instance for Either
      */
     public static <A, B> Eq<Either<A, B>> eq(final Eq<A> eqA, final Eq<B> eqB) {
@@ -329,7 +380,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
     /**
      * The monadTrans of Either
      *
-     * @param <S> the Left type of Either
+     * @param <S> the LeftLazy type of Either
      * @return the Either functor
      */
     private static <S> Monad<__.µ<µ, S>> monad() {
@@ -356,8 +407,8 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
 
             @Override
             public <A, B> _<__.µ<µ, S>, B> bind(_<__.µ<µ, S>, A> a, Function<A, _<__.µ<µ, S>, B>> fn) {
-                //Right m >>= k = k m
-                //Left e  >>= _ = Left e
+                //RightLazy m >>= k = k m
+                //LeftLazy e  >>= _ = LeftLazy e
                 return narrow(a).<_<__.µ<µ, S>, B>>either(Either::Left, fn::apply);
             }
         };

@@ -1,6 +1,7 @@
 package org.highj.data.collection;
 
 import org.highj._;
+import org.highj.data.compare.Ordering;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
 import org.highj.function.repo.Strings;
@@ -20,9 +21,10 @@ import java.util.function.Function;
  *
  * @param <A> The element type.
  */
-public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A,Boolean> {
+public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
 
-    public static class µ {}
+    public static class µ {
+    }
 
     @SuppressWarnings("unchecked")
     private final static Set<Object> EMPTY = new Set<Object>(Integer.MIN_VALUE, List.nil(), null, null);
@@ -55,17 +57,15 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A,Boolean> {
         }
 
         int vhc = value.hashCode();
-        if (vhc < hc) {
-            return left.$(value);
-        } else if (vhc > hc) {
-            return right.$(value);
-        } else {
-            for (A a : bucket) {
-                if (a.equals(value)) {
-                    return true;
-                }
-            }
-            return false;
+        switch (Ordering.compare(vhc, hc)) {
+            case LT:
+                return left.$(value);
+            case GT:
+                return right.$(value);
+            case EQ:
+                return bucket.contains(value);
+            default:
+                throw new AssertionError();
         }
     }
 
@@ -74,14 +74,17 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A,Boolean> {
             return new Set<>(a.hashCode(), List.<A>of(a), Set.<A>empty(), Set.<A>empty());
         }
         int ahc = a.hashCode();
-        if (hc == ahc) {
-            return bucket.contains(a) ? this : new Set<>(hc, bucket.plus(a), left, right);
-        } else if (ahc < hc) {
-            Set<A> newLeft = left.plus(a);
-            return left == newLeft ? this : new Set<>(hc, bucket, newLeft, right);
-        } else {
-            Set<A> newRight = right.plus(a);
-            return right == newRight ? this : new Set<>(hc, bucket, left, newRight);
+        switch (Ordering.compare(ahc, hc)) {
+            case EQ:
+                return bucket.contains(a) ? this : new Set<>(hc, bucket.plus(a), left, right);
+            case LT:
+                Set<A> newLeft = left.plus(a);
+                return left == newLeft ? this : new Set<>(hc, bucket, newLeft, right);
+            case GT:
+                Set<A> newRight = right.plus(a);
+                return right == newRight ? this : new Set<>(hc, bucket, left, newRight);
+            default:
+                throw new AssertionError();
         }
     }
 
@@ -90,26 +93,29 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A,Boolean> {
             return this;
         }
         int ahc = a.hashCode();
-        if (hc == ahc) {
-            List<A> newBucket = bucket.minus(a);
-            if (bucket == newBucket) {
-                return this;
-            } else if (!newBucket.isEmpty()) {
-                return new Set<>(hc, newBucket, left, right);
-            } else if (left.isEmpty()) {
-                return right;
-            } else if (right.isEmpty()) {
-                return left;
-            } else {
-                T2<Set<A>, Set<A>> pair = right.removeMin();
-                return new Set<>(pair._1().hc, pair._1().bucket, left, pair._2());
-            }
-        } else if (ahc < hc) {
-            Set<A> newLeft = left.minus(a);
-            return left == newLeft ? this : new Set<>(hc, bucket, newLeft, right);
-        } else {
-            Set<A> newRight = right.minus(a);
-            return right == newRight ? this : new Set<>(hc, bucket, left, newRight);
+        switch (Ordering.compare(ahc, hc)) {
+            case EQ:
+                List<A> newBucket = bucket.minus(a);
+                if (bucket == newBucket) {
+                    return this;
+                } else if (!newBucket.isEmpty()) {
+                    return new Set<>(hc, newBucket, left, right);
+                } else if (left.isEmpty()) {
+                    return right;
+                } else if (right.isEmpty()) {
+                    return left;
+                } else {
+                    T2<Set<A>, Set<A>> pair = right.removeMin();
+                    return new Set<>(pair._1().hc, pair._1().bucket, left, pair._2());
+                }
+            case LT:
+                Set<A> newLeft = left.minus(a);
+                return left == newLeft ? this : new Set<>(hc, bucket, newLeft, right);
+            case GT:
+                Set<A> newRight = right.minus(a);
+                return right == newRight ? this : new Set<>(hc, bucket, left, newRight);
+            default:
+                throw new AssertionError();
         }
     }
 
@@ -176,8 +182,8 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A,Boolean> {
         return Set.<A>empty().plus(as);
     }
 
-    //@SafeVarargs
-    public final Set<A> plus(A[] as) {
+    @SafeVarargs
+    public final Set<A> plus(A... as) {
         Set<A> result = this;
         for (A a : as) {
             result = result.plus(a);
@@ -185,8 +191,8 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A,Boolean> {
         return result;
     }
 
-    //@SafeVarargs
-    public final Set<A> minus(A[] as) {
+    @SafeVarargs
+    public final Set<A> minus(A... as) {
         Set<A> result = this;
         for (A a : as) {
             result = result.minus(a);

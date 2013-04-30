@@ -31,8 +31,8 @@ public class MapTest {
 
     @Test
     public void test$() throws Exception {
-        assertEquals("Just(5)", aMap.$("y").toString());
-        assertEquals("Nothing", aMap.$("a").toString());
+        assertEquals("Just(5)", aMap.apply("y").toString());
+        assertEquals("Nothing", aMap.apply("a").toString());
     }
 
     @Test

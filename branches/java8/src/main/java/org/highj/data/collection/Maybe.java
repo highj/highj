@@ -91,7 +91,7 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     private final static Maybe<Object> NOTHING = new Maybe<Object>() {
 
         @Override
-        public <B> B lazyCata(Supplier<B> defaultThunk, Function<Object,B> fn) {
+        public <B> B cataLazy(Supplier<B> defaultThunk, Function<Object, B> fn) {
             return defaultThunk.get();
         }
 
@@ -101,7 +101,7 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
         }
     };
 
-    public abstract <B> B lazyCata(Supplier<B> defaultThunk, Function<A, B> fn);
+    public abstract <B> B cataLazy(Supplier<B> defaultThunk, Function<A, B> fn);
 
     // the catamorphism of Maybe
     public abstract <B> B cata(B defaultValue, Function<A, B> fn);
@@ -123,7 +123,7 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     public static <A> Maybe<A> Just(final A value) {
         assert (value != null);
         return new Maybe<A>() {
-            public <B> B lazyCata(Supplier<B> defaultThunk, Function<A, B> fn) {
+            public <B> B cataLazy(Supplier<B> defaultThunk, Function<A, B> fn) {
                 return fn.apply(value);
             }
 
@@ -134,10 +134,10 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
         };
     }
 
-    public static <A> Maybe<A> Just(final Supplier<A> thunk) {
+    public static <A> Maybe<A> JustLazy(final Supplier<A> thunk) {
         return new Maybe<A>() {
 
-            public <B> B lazyCata(Supplier<B> defaultThunk, Function<A, B> fn) {
+            public <B> B cataLazy(Supplier<B> defaultThunk, Function<A, B> fn) {
                 return fn.apply(thunk.get());
             }
 
@@ -161,7 +161,7 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     }
 
     public A getOrElse(Supplier<A> defaultThunk) {
-        return this.<A>lazyCata(defaultThunk, x -> x);
+        return cataLazy(defaultThunk, x -> x);
     }
 
     public A getOrError(Class<? extends RuntimeException> exClass) {

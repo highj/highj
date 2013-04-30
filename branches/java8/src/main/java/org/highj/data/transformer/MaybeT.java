@@ -108,7 +108,7 @@ instance (Monad m) => Monad (MaybeT m) where
         v <- runMaybeT x
         case v of
             Nothing -> return Nothing
-            Just y  -> runMaybeT (f y)
+            JustLazy y  -> runMaybeT (f y)
 
 instance (Monad m) => MonadPlus (MaybeT m) where
     mzero = MaybeT (return Nothing)
@@ -116,14 +116,14 @@ instance (Monad m) => MonadPlus (MaybeT m) where
         v <- runMaybeT x
         case v of
             Nothing -> runMaybeT y
-            Just _  -> return v
+            JustLazy _  -> return v
 
 instance (MonadFix m) => MonadFix (MaybeT m) where
     mfix f = MaybeT (mfix (runMaybeT . f . unJust))
       where unJust = fromMaybe (error "mfix MaybeT: Nothing")
 
 instance MonadTrans MaybeT where
-    lift = MaybeT . liftM Just
+    lift = MaybeT . liftM JustLazy
 
 instance (MonadIO m) => MonadIO (MaybeT m) where
     liftIO = lift . liftIO
@@ -132,7 +132,7 @@ instance (MonadIO m) => MonadIO (MaybeT m) where
 liftCallCC :: (((Maybe a -> m (Maybe b)) -> m (Maybe a)) ->
     m (Maybe a)) -> ((a -> MaybeT m b) -> MaybeT m a) -> MaybeT m a
 liftCallCC callCC f =
-    MaybeT $ callCC $ \ c -> runMaybeT (f (MaybeT . c . Just))
+    MaybeT $ callCC $ \ c -> runMaybeT (f (MaybeT . c . JustLazy))
 
 -- | Lift a @catchError@ operation to the new monadTrans.
 liftCatch :: (m (Maybe a) -> (e -> m (Maybe a)) -> m (Maybe a)) ->
@@ -153,5 +153,5 @@ liftPass pass = mapMaybeT $ \ m -> pass $ do
     a <- m
     return $! case a of
         Nothing     -> (Nothing, id)
-        Just (v, f) -> (Just v, f)
+        JustLazy (v, f) -> (JustLazy v, f)
 */

@@ -108,7 +108,7 @@ public abstract class Stream<A> implements _<Stream.µ, A> , Iterable<A>, Functi
         return Cons(iterator.next(), () -> fromIterator(iterator));
     }
 
-    //returns iterator values wrapped in Just, and Nothing when the iterator gets empty
+    //returns iterator values wrapped in JustLazy, and Nothing when the iterator gets empty
     public static <A> Stream<Maybe<A>> maybeFromIterator(final Iterator<A> iterator) {
         return Cons(iterator.hasNext()
                 ? Maybe.Just(iterator.next())
@@ -126,11 +126,11 @@ public abstract class Stream<A> implements _<Stream.µ, A> , Iterable<A>, Functi
     }
 
     public List<A> take(final int n) {
-        return n <= 0 ? List.<A>nil() : List.cons(head(), () -> tail().take(n - 1));
+        return n <= 0 ? List.<A>nil() : List.consLazy(head(), () -> tail().take(n - 1));
     }
 
     public List<A> takeWhile(final Function<A, Boolean> predicate) {
-        return !predicate.apply(head()) ? List.<A>nil() : List.cons(head(), () -> tail().takeWhile(predicate));
+        return !predicate.apply(head()) ? List.<A>nil() : List.consLazy(head(), () -> tail().takeWhile(predicate));
     }
 
     public Stream<A> drop(int n) {
