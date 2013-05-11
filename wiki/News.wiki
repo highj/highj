@@ -1,5 +1,9 @@
 #summary News
 
+= 201-05-12 =
+
+I refactored the Java 8 branch a little bit, but there is so much left to do. It's time to go to Java 8, it works well and is stable, so I see no point in keeping the Java 6 compatible stuff.
+
 = 2013-02-09 =
 
 Hey, I'm back from vacation, and finally found some workarounds for some nasty compiler bugs in the Java 8 ea. After so many changes, I had to fight with SVN, too, so don't be surprised by the change list. The Java 8 version has its own branch, the trunk is unchanged so far. 
