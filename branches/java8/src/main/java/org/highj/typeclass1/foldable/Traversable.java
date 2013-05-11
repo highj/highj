@@ -21,6 +21,7 @@ import java.util.function.Function;
  */
 public interface Traversable<µ> extends Foldable<µ>, Functor<µ> {
 
+    @Override
     public <A, B> _<µ, B> map(Function<A, B> fn, _<µ, A> as);
 
     public default <A, B, X> _<X, _<µ, B>> traverse(Applicative<X> applicative, Function<A, _<X, B>> fn, _<µ, A> traversable) {
@@ -31,6 +32,7 @@ public interface Traversable<µ> extends Foldable<µ>, Functor<µ> {
         return traverse(applicative, Functions.<_<X, A>>id(), traversable);
     }
 
+    @Override
     public default <A, B> B foldMap(Monoid<B> mb, final Function<A, B> fn, _<µ, A> nestedA) {
         //foldMapDefault f = getConst . traverse (Const . f)
         Applicative<__.µ<Const.µ, B>> applicative = Const.applicative(mb);

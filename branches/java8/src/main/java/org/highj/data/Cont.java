@@ -17,6 +17,11 @@ public class Cont<R,A> implements __<Cont.µ, R, A> {
         this.fn = fn;
     }
 
+    @SuppressWarnings("unchecked")
+    public static <R,A>  Cont<R,A> narrow(_<__.µ<µ, R>, A> cont) {
+        return (Cont) cont;
+    }
+
     public Function<Function<A,R>,R> runCont() {
        return fn;
     }
@@ -31,19 +36,26 @@ public class Cont<R,A> implements __<Cont.µ, R, A> {
 
     private static <S> Monad<__.µ<µ, S>> monad()  {
         return new Monad<__.µ<µ, S>>() {
+
             @Override
             public <A> _<__.µ<µ, S>, A> pure(A a) {
                 return new Cont<S,A>(Functions.<A,S>flipApply().apply(a));
             }
 
             @Override
-            public <A, B> _<__.µ<µ, S>, B> ap(_<__.µ<µ, S>, Function<A, B>> fn, _<__.µ<µ, S>, A> nestedA) {
-                throw new UnsupportedOperationException("need to write this...");
+            public <A, B> _<__.µ<µ, S>, B> bind(_<__.µ<µ, S>, A> nestedA, Function<A, _<__.µ<µ, S>, B>> fn) {
+                //m >>= k  = Cont $ \c -> runCont m $ \a -> runCont (k a) c
+                Function<Function<A,S>,S> fa = narrow(nestedA).fn;
+                Function<Function<B,S>,S> fb = c -> fa.apply(b -> narrow(fn.apply(b)).fn.apply(c));
+                return new Cont<S,B>(fb);
             }
 
             @Override
-            public <A> _<__.µ<µ, S>, A> join( _<__.µ<µ, S>, _<__.µ<µ, S>,A>> nested) {
-               throw new UnsupportedOperationException("need to write this...");
+            public <A, B> _<__.µ<µ, S>, B> map(Function<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
+                // fmap f m = Cont $ \c -> runCont m (c . f)
+                Function<Function<A,S>,S> fa = narrow(nestedA).fn;
+                Function<Function<B,S>,S> fb = c -> fa.apply(x -> c.apply(fn.apply(x)));
+                return new Cont<S,B>(fb);
             }
         };
     }

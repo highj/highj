@@ -72,4 +72,10 @@ public interface Monad<µ> extends Applicative<µ>, Bind<µ> {
         return pure(T0.unit);
     }
 
+    @Override
+    public default <A, B> _<µ, B> ap(_<µ, Function<A, B>> fn, _<µ, A> nestedA) {
+        //ap mf m = do f <- mf; x <- m; return (f x)
+        return bind(fn, f -> this.<A,B>bind(nestedA, x -> this.<B>pure(f.apply(x))));
+    }
+
 }

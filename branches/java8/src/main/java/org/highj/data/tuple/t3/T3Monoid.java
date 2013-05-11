@@ -1,4 +1,4 @@
-package org.highj.data.tuple.group;
+package org.highj.data.tuple.t3;
 
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.Tuple;

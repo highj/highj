@@ -9,7 +9,11 @@ import org.highj.typeclass0.group.Semigroup;
 
 import java.util.function.Function;
 
-//one of foldr(), mplus(), foldMap() MUST be overwritten
+/**
+ * The combined Foldable / Foldable1 type class.
+ *
+ * Minimal complete definition: 'foldr' OR 'foldMap'.
+ */
 public interface Foldable<µ> {
 
     public default <A> A fold(Monoid<A> ma, _<µ, A> nestedA) {

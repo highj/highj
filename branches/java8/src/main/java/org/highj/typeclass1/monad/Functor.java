@@ -10,9 +10,7 @@ import java.util.function.Function;
 public interface Functor<µ> {
 
     // fmap (Data.Functor)
-    public default <A, B> _<µ, B> map(Function<A, B> fn, _<µ, A> nestedA) {
-        return lift(fn).apply(nestedA);
-    }
+    public <A, B> _<µ, B> map(Function<A, B> fn, _<µ, A> nestedA);
 
     // <$  (Data.Functor)
     public default <A, B> _<µ, A> left$(A a, _<µ, B> nestedB) {

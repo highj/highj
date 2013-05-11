@@ -1,4 +1,4 @@
-package org.highj.data.tuple.monad;
+package org.highj.data.tuple.t2;
 
 import org.highj._;
 import org.highj.__;

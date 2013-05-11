@@ -47,7 +47,7 @@ public class T1Test {
 
     @Test
     public void functorTest() {
-        Functor<T1.µ> functor = Tuple.monad;
+        Functor<T1.µ> functor = Tuple.monad1;
         T1<String> hello = Tuple.of("hello");
         T1<Integer> five = Tuple.narrow(functor.map(s->s.length(), hello));
         assertEquals(Integer.valueOf(5), five._1());
@@ -63,7 +63,7 @@ public class T1Test {
 
     @Test
     public void applyTest() {
-        Apply<T1.µ> apply = Tuple.monad;
+        Apply<T1.µ> apply = Tuple.monad1;
         T1<Function<String,Integer>> lengthFn = Tuple.of(String::length);
         T1<String> hello = Tuple.of("hello");
         T1<Integer> five = Tuple.narrow(apply.ap(lengthFn, hello));
@@ -72,7 +72,7 @@ public class T1Test {
 
     @Test
     public void monadTest() {
-        Monad<T1.µ> monad = Tuple.monad;
+        Monad<T1.µ> monad = Tuple.monad1;
         Function<String,_<T1.µ, Integer>> lengthFn = Functions.<String,Integer,_<T1.µ,Integer>>compose(Tuple::of, String::length);
         T1<String> hello = Tuple.of("hello");
         T1<Integer> five = Tuple.narrow(monad.bind(hello, lengthFn));

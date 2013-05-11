@@ -4,6 +4,8 @@ import org.highj._;
 import org.highj.data.transformer.IdentityT;
 import org.highj.typeclass1.monad.MonadPlus;
 
+import java.util.function.Function;
+
 public interface IdentityTMonadPlus<M> extends IdentityTMonadZero<M>, MonadPlus<_<IdentityT.µ,M>> {
 
     public MonadPlus<M> get();
@@ -21,4 +23,8 @@ public interface IdentityTMonadPlus<M> extends IdentityTMonadZero<M>, MonadPlus<
         return new IdentityT<M,A>(get().<A>mzero());
     }
 
+    @Override
+    public default <A, B> _<_<IdentityT.µ, M>, B> ap(_<_<IdentityT.µ, M>, Function<A, B>> fn, _<_<IdentityT.µ, M>, A> nestedA) {
+       return  IdentityTMonadZero.super.ap(fn, nestedA);
+    }
 }

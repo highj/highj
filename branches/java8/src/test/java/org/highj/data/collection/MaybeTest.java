@@ -200,7 +200,7 @@ public class MaybeTest {
     
     @Test
     public void testMonad() throws Exception {
-        Monad<Maybe.µ> monad = Maybe.monad;
+        Monad<Maybe.µ> monad = Maybe.monadPlus;
         //pure
         assertEquals("Just(foo)", monad.pure("foo").toString());
         //map
@@ -228,7 +228,7 @@ public class MaybeTest {
 
     @Test
     public void testMonadPlus() throws Exception {
-        MonadPlus<µ> monad = Maybe.monad;
+        MonadPlus<µ> monad = Maybe.monadPlus;
         Maybe<String> foo = Just("foo");
         Maybe<String> bar = Just("bar");
         Maybe<String> baz = Just("baz");

@@ -5,9 +5,18 @@ import org.highj.__;
 import org.highj.___;
 import org.highj.____;
 import org.highj.data.compare.Eq;
+import org.highj.data.tuple.t1.T1Comonad;
+import org.highj.data.tuple.t1.T1Monad;
+import org.highj.data.tuple.t2.T2Apply;
+import org.highj.data.tuple.t2.T2Comonad;
+import org.highj.data.tuple.t2.T2Functor;
+import org.highj.data.tuple.t2.T2Monad;
 import org.highj.function.repo.Objects;
 import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass1.comonad.Comonad;
+import org.highj.typeclass1.monad.Apply;
+import org.highj.typeclass1.monad.Functor;
 import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
@@ -246,92 +255,24 @@ public enum Tuple {
     }
 
 
-    public static final Monad<T1.µ> monad = new Monad<T1.µ>() {
-        @Override
-        public <A, B> _<T1.µ, B> map(Function<A, B> fn, _<T1.µ, A> nestedA) {
-            return narrow(nestedA).map(fn);
-        }
+    public static final Monad<T1.µ> monad1 = new T1Monad();
 
-        @Override
-        public <A> _<T1.µ, A> pure(A a) {
-            return of(a);
-        }
-
-        @Override
-        public <A, B> _<T1.µ, B> ap(_<T1.µ, Function<A, B>> nestedFn, _<T1.µ, A> nestedA) {
-            return Tuple.of(narrow(nestedFn).get().apply(narrow(nestedA).get()));
-        }
-
-        @Override
-        public <A, B> _<T1.µ, B> bind(_<T1.µ, A> nestedA, Function<A, _<T1.µ, B>> fn) {
-            return fn.apply(narrow(nestedA)._1());
-        }
-    };
-
-    public static <S> Monad<__.µ<T2.µ, S>> monad2(final Monoid<S> monoid) {
-        return new Monad<__.µ<T2.µ, S>>() {
-            @Override
-            public <A, B> _<__.µ<T2.µ, S>, B> map(Function<A, B> fn, _<__.µ<T2.µ, S>, A> nestedA) {
-                return narrow2(nestedA).map_2(fn);
-            }
-
-            @Override
-            public <A> _<__.µ<T2.µ, S>, A> pure(A a) {
-                return Tuple.of(monoid.identity(), a);
-            }
-
-            @Override
-            public <A, B> _<__.µ<T2.µ, S>, B> ap(_<__.µ<T2.µ, S>, Function<A, B>> fn, _<__.µ<T2.µ, S>, A> nestedA) {
-                T2<S, Function<A, B>> fnPair = narrow2(fn);
-                T2<S, A> aPair = narrow2(nestedA);
-                return Tuple.of(monoid.dot(fnPair._1(), aPair._1()), fnPair._2().apply(aPair._2()));
-            }
-
-            @Override
-            public <A, B> _<__.µ<T2.µ, S>, B> bind(_<__.µ<T2.µ, S>, A> nestedA, Function<A, _<__.µ<T2.µ, S>, B>> fn) {
-                T2<S, A> ta = narrow2(nestedA);
-                T2<S, B> tb = narrow2(fn.apply(ta._2()));
-                return Tuple.of(monoid.dot(ta._1(), tb._1()), tb._2());
-            }
-        };
+    public static <S>Functor<__.µ<T2.µ,S>> functor2() {
+        return new T2Functor<S>(){};
     }
 
-    public static final Comonad<T1.µ> comonad = new Comonad<T1.µ>() {
-        @Override
-        public <A> _<T1.µ, _<T1.µ, A>> duplicate(_<T1.µ, A> nestedA) {
-            return Tuple.of(nestedA);
-        }
+    public static <S> Apply<__.µ<T2.µ, S>> apply2(final Semigroup<S> semigroup) {
+        return (T2Apply<S>) () -> semigroup;
+    }
 
-        @Override
-        public <A> A extract(_<T1.µ, A> nestedA) {
-            return narrow(nestedA)._1();
-        }
+    public static <S> Monad<__.µ<T2.µ, S>> monad2(final Monoid<S> monoid) {
+        return (T2Monad<S>) () -> monoid;
+    }
 
-        @Override
-        public <A, B> _<T1.µ, B> map(Function<A, B> fn, _<T1.µ, A> nestedA) {
-            return narrow(nestedA).map(fn);
-        }
-    };
+    public static final Comonad<T1.µ> comonad1 = new T1Comonad();
 
     public static <S> Comonad<__.µ<T2.µ, S>> comonad2() {
-        return new Comonad<__.µ<T2.µ, S>>() {
-            @Override
-            public <A> _<__.µ<T2.µ, S>, _<__.µ<T2.µ, S>, A>> duplicate(_<__.µ<T2.µ, S>, A> nestedA) {
-                T2<S, A> pair = narrow2(nestedA);
-                return Tuple.of(pair._1(), nestedA);
-            }
-
-            @Override
-            public <A> A extract(_<__.µ<T2.µ, S>, A> nestedA) {
-                T2<S, A> pair = narrow2(nestedA);
-                return pair._2();
-            }
-
-            @Override
-            public <A, B> _<__.µ<T2.µ, S>, B> map(Function<A, B> fn, _<__.µ<T2.µ, S>, A> nestedA) {
-                return narrow2(nestedA).map_2(fn);
-            }
-        };
+        return new T2Comonad<>();
     }
 
     public static <A, B> Eq<T2<A, B>> eq(final Eq<? super A> eqA, final Eq<? super B> eqB) {
