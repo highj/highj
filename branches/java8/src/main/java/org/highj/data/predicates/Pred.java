@@ -10,6 +10,8 @@ import org.highj.typeclass1.contravariant.Contravariant;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+//Don't replace the anonymous classes with lambdas or method refs,
+//currently this gives a compiler NPE
 public interface Pred<A> extends _<Pred.µ, A>, Predicate<A> {
 
     public static class µ {

@@ -1,49 +1,53 @@
 package org.highj.data.collection;
 
 import org.highj._;
+import org.highj.data.collection.stream.StreamMonad;
+import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.data.tuple.Tuple;
-import org.highj.data.functions.Strings;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.util.ReadOnlyIterator;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /*
  * An infinite list.
  */
-public abstract class Stream<A> implements _<Stream.µ, A> , Iterable<A>, Function<Integer,A> {
+public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Function<Integer, A> {
 
-    public static final class µ {}
+    public static final class µ {
+    }
 
     @SuppressWarnings("unchecked")
     public static <A> Stream<A> narrow(_<µ, A> value) {
         return (Stream) value;
     }
 
-    private Stream() {}
+    private Stream() {
+    }
 
     public abstract A head();
 
     public abstract Stream<A> tail();
 
     public A apply(Integer index) {
-        if(index < 0) {
+        if (index < 0) {
             throw new IndexOutOfBoundsException("Negative index " + index);
         }
         Stream<A> current = this;
-        while(index-- > 0) {
+        while (index-- > 0) {
             current = current.tail();
         }
         return current.head();
     }
 
-    public static <A> Stream<A> of(final A a) {
+    public static <A> Stream<A> repeat(final A a) {
         return new Stream<A>() {
 
             @Override
@@ -121,8 +125,13 @@ public abstract class Stream<A> implements _<Stream.µ, A> , Iterable<A>, Functi
         return Cons(result.head(), () -> result.tail().filter(predicate));
     }
 
+    public String toString(int n) {
+        return Strings.mkString("Stream(", ",", "...)", this.take(n));
+    }
+
+    @Override
     public String toString() {
-        return Strings.mkString("Stream(", ",", "...)", this.take(10));
+        return toString(10);
     }
 
     public List<A> take(final int n) {
@@ -131,6 +140,10 @@ public abstract class Stream<A> implements _<Stream.µ, A> , Iterable<A>, Functi
 
     public List<A> takeWhile(final Function<A, Boolean> predicate) {
         return !predicate.apply(head()) ? List.<A>nil() : List.consLazy(head(), () -> tail().takeWhile(predicate));
+    }
+
+    public List<A> takeWhile(final Predicate<A> predicate) {
+        return !predicate.test(head()) ? List.<A>nil() : List.consLazy(head(), () -> tail().takeWhile(predicate));
     }
 
     public Stream<A> drop(int n) {
@@ -149,6 +162,33 @@ public abstract class Stream<A> implements _<Stream.µ, A> , Iterable<A>, Functi
         return result;
     }
 
+    public Stream<A> dropWhile(Predicate<A> predicate) {
+        Stream<A> result = this;
+        while (predicate.test(result.head())) {
+            result = result.tail();
+        }
+        return result;
+    }
+
+    public Stream<List<A>> inits() {
+        //inits xs = Cons [] (fmap (head xs :) (inits (tail xs)))
+        return Cons(List.empty(), () -> tail().inits().map(xs -> List.cons(head(),xs)));
+    }
+
+    public Stream<Stream<A>> tails() {
+        //tails xs = Cons xs (tails (tail xs))
+        return Cons(this, () -> tail().tails());
+    }
+
+    public Stream<A> intersperse(A a) {
+        //intersperse y ~(Cons x xs) = Cons x (Cons y (intersperse y xs))
+        return Cons(head(), Cons(a, () -> tail().intersperse(a)));
+    }
+
+    public <B> Stream<B> map(final Function<? super A, ? extends B> fn) {
+        return Cons(fn.apply(head()), () -> tail().map(fn));
+    }
+
     public static Stream<Integer> range(final int from, final int step) {
         return unfold(x -> x + step, from);
     }
@@ -158,12 +198,16 @@ public abstract class Stream<A> implements _<Stream.µ, A> , Iterable<A>, Functi
     }
 
     @SafeVarargs
-    public static <A> Stream<A> of(A... as) {
-        Stream<A> result = Cons(as[as.length - 1], () -> of(as));
-        for (int i = as.length - 1; i > 0; i--) {
-            result = Cons(as[i - 1], result);
+    public static <A> Stream<A> cycle(A... as) {
+        if (as.length == 1) {
+            return repeat(as[0]);
+        } else {
+            Stream<A> result = Cons(as[as.length - 1], () -> cycle(as));
+            for (int i = as.length - 1; i > 0; i--) {
+                result = Cons(as[i - 1], result);
+            }
+            return result;
         }
-        return result;
     }
 
     public static <A> Stream<A> append(_<List.µ, A> list, _<µ, A> stream) {
@@ -172,20 +216,22 @@ public abstract class Stream<A> implements _<Stream.µ, A> , Iterable<A>, Functi
         return listOne.isEmpty() ? streamTwo : Cons(listOne.head(), () -> append(listOne.tail(), streamTwo));
     }
 
-    public <B> Stream<B> map(final Function<? super A, ? extends B> fn) {
-        return Cons(fn.apply(head()), () -> tail().map(fn));
+    public static <A> Stream<A> interleave(_<µ, A> one, _<µ, A> two) {
+       //interleave ~(Cons x xs) ys = Cons x (interleave ys xs)
+        return Cons(narrow(one).head(), () -> interleave(two, narrow(one).tail()));
     }
 
+
     public static <A, B> Stream<T2<A, B>> zip(_<µ, A> streamA, _<µ, B> streamB) {
-        return zipWith((A a) -> (B b) -> Tuple.<A,B>of(a,b), streamA, streamB);
+        return zipWith((A a) -> (B b) -> Tuple.<A, B>of(a, b), streamA, streamB);
     }
 
     public static <A, B, C> Stream<T3<A, B, C>> zip(_<µ, A> streamA, _<µ, B> streamB, _<µ, C> streamC) {
-        return zipWith((A a) -> (B b) -> (C c) -> Tuple.<A,B,C>of(a,b,c), streamA, streamB, streamC);
+        return zipWith((A a) -> (B b) -> (C c) -> Tuple.<A, B, C>of(a, b, c), streamA, streamB, streamC);
     }
 
     public static <A, B, C, D> Stream<T4<A, B, C, D>> zip(_<µ, A> streamA, _<µ, B> streamB, _<µ, C> streamC, _<µ, D> streamD) {
-        return zipWith((A a) -> (B b) -> (C c) -> (D d) -> Tuple.<A,B,C,D>of(a,b,c,d), streamA, streamB, streamC, streamD);
+        return zipWith((A a) -> (B b) -> (C c) -> (D d) -> Tuple.<A, B, C, D>of(a, b, c, d), streamA, streamB, streamC, streamD);
     }
 
     public static <A, B, C> Stream<C> zipWith(final Function<A, Function<B, C>> fn, _<µ, A> streamA, _<µ, B> streamB) {
@@ -223,33 +269,7 @@ public abstract class Stream<A> implements _<Stream.µ, A> , Iterable<A>, Functi
         return Tuple.of(streamABCD.map(t -> t._1()), streamABCD.map(t -> t._2()), streamABCD.map(t -> t._3()), streamABCD.map(t -> t._4()));
     }
 
-    public static final Monad<µ> monad = new Monad<µ>() {
-        @Override
-        public <A> _<µ, A> pure(A a) {
-            return of(a);
-        }
-
-        @Override
-        public <A, B> _<µ, B> ap(_<µ, Function<A, B>> fn, _<µ, A> nestedA) {
-            return zipWith(f1 -> f1::apply, fn, nestedA);
-        }
-
-        @Override
-        public <A, B> _<µ, B> map(Function<A, B> fn, _<µ, A> nestedA) {
-            return narrow(nestedA).map(fn);
-        }
-
-        @Override
-        public <A> _<µ, A> join(_<µ, _<µ, A>> nestedNestedA) {
-            Stream<_<µ, A>> nestedStream = narrow(nestedNestedA);
-            Stream<A> xs = narrow(nestedStream.head());
-            final Stream<_<µ, A>> xss = nestedStream.tail();
-            return Cons(xs.head(), () -> {
-                Stream<_<µ, A>> tails = xss.<_<µ, A>>map(as -> Stream.narrow(as).tail());
-                return Stream.narrow(join(tails));
-            });
-        }
-    };
+    public static final Monad<µ> monad = new StreamMonad();
 
     @Override
     public Iterator<A> iterator() {
