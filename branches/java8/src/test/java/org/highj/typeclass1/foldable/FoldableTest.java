@@ -2,7 +2,7 @@ package org.highj.typeclass1.foldable;
 
 import org.highj.data.collection.List;
 import org.highj.data.collection.Maybe;
-import org.highj.function.repo.Integers;
+import org.highj.data.functions.Integers;
 import org.junit.Test;
 
 import java.util.function.Function;

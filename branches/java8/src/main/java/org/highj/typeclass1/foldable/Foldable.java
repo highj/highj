@@ -3,7 +3,7 @@ package org.highj.typeclass1.foldable;
 import org.highj._;
 import org.highj.data.collection.List;
 import org.highj.data.collection.Maybe;
-import org.highj.function.Functions;
+import org.highj.data.functions.Functions;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 

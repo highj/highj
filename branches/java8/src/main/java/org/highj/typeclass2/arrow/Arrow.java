@@ -4,7 +4,7 @@ import org.highj._;
 import org.highj.__;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
-import org.highj.function.Functions;
+import org.highj.data.functions.Functions;
 import org.highj.typeclass1.monad.Applicative;
 
 import java.util.function.Function;

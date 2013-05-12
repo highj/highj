@@ -1,8 +1,24 @@
 package org.highj.data.compare;
 
-import java.util.Comparator;
+import org.highj._;
 
-public interface Ord<T> extends Comparator<T>, Eq<T> {
+import java.util.Comparator;
+import java.util.function.Function;
+
+@FunctionalInterface
+public interface Ord<T> extends Comparator<T>, Eq<T>, Function<T,Function<T,Ordering>>, _<Ord.µ,T> {
+
+    public static class µ {}
+
+    @Override
+    public default Function<T, Ordering> apply(T x) {
+        return y -> cmp(x,y);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <A> Ord<A> narrow(_<µ,A> nestedA) {
+        return (Ord) nestedA;
+    }
 
     public abstract Ordering cmp(T one, T two);
 

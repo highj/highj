@@ -1,7 +1,7 @@
 package org.highj.typeclass1.monad;
 
 import org.highj._;
-import org.highj.function.Functions;
+import org.highj.data.functions.Functions;
 
 import java.util.function.Function;
 

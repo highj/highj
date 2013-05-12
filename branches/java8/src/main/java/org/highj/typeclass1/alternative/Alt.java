@@ -2,7 +2,7 @@ package org.highj.typeclass1.alternative;
 
 import org.highj._;
 import org.highj.typeclass0.group.Semigroup;
-import org.highj.typeclass1.monad.Functor;
+import org.highj.typeclass1.functor.Functor;
 
 public interface Alt<µ> extends Functor<µ> {
 

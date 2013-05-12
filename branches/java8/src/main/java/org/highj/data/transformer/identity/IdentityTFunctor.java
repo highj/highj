@@ -2,7 +2,7 @@ package org.highj.data.transformer.identity;
 
 import org.highj._;
 import org.highj.data.transformer.IdentityT;
-import org.highj.typeclass1.monad.Functor;
+import org.highj.typeclass1.functor.Functor;
 
 import java.util.function.Function;
 

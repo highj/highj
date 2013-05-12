@@ -1,8 +1,8 @@
 package org.highj.data.collection;
 
 import org.highj._;
-import org.highj.function.Functions;
-import org.highj.function.repo.Integers;
+import org.highj.data.functions.Functions;
+import org.highj.data.functions.Integers;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.data.compare.Eq;
 import org.highj.typeclass1.monad.MonadPlus;

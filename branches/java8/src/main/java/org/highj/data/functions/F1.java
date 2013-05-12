@@ -1,4 +1,4 @@
-package org.highj.data.fs;
+package org.highj.data.functions;
 
 import org.highj._;
 import org.highj.__;
@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 /**
  * A class representing an unary function.
  */
+@FunctionalInterface
 public interface F1<A, B> extends  __<F1.µ, A, B>, Function<A,B> {
 
     @SuppressWarnings("rawtype")

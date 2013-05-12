@@ -1,8 +1,9 @@
-package org.highj.data;
+package org.highj.data.continuations;
 
 import org.highj._;
 import org.highj.__;
-import org.highj.function.Functions;
+import org.highj.data.continuations.cont.ContMonad;
+import org.highj.data.functions.Functions;
 import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
@@ -13,7 +14,7 @@ public class Cont<R,A> implements __<Cont.µ, R, A> {
 
     public static class µ {}
 
-    private Cont(Function<Function<A,R>,R> fn) {
+    public Cont(Function<Function<A,R>,R> fn) {
         this.fn = fn;
     }
 
@@ -35,29 +36,7 @@ public class Cont<R,A> implements __<Cont.µ, R, A> {
     }
 
     private static <S> Monad<__.µ<µ, S>> monad()  {
-        return new Monad<__.µ<µ, S>>() {
-
-            @Override
-            public <A> _<__.µ<µ, S>, A> pure(A a) {
-                return new Cont<S,A>(Functions.<A,S>flipApply().apply(a));
-            }
-
-            @Override
-            public <A, B> _<__.µ<µ, S>, B> bind(_<__.µ<µ, S>, A> nestedA, Function<A, _<__.µ<µ, S>, B>> fn) {
-                //m >>= k  = Cont $ \c -> runCont m $ \a -> runCont (k a) c
-                Function<Function<A,S>,S> fa = narrow(nestedA).fn;
-                Function<Function<B,S>,S> fb = c -> fa.apply(b -> narrow(fn.apply(b)).fn.apply(c));
-                return new Cont<S,B>(fb);
-            }
-
-            @Override
-            public <A, B> _<__.µ<µ, S>, B> map(Function<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
-                // fmap f m = Cont $ \c -> runCont m (c . f)
-                Function<Function<A,S>,S> fa = narrow(nestedA).fn;
-                Function<Function<B,S>,S> fb = c -> fa.apply(x -> c.apply(fn.apply(x)));
-                return new Cont<S,B>(fb);
-            }
-        };
+        return new ContMonad<>();
     }
 
 }

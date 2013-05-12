@@ -1,9 +1,9 @@
 package org.highj.data.tuple;
 
 import org.highj._;
-import org.highj.function.Functions;
+import org.highj.data.functions.Functions;
 import org.highj.typeclass1.monad.Apply;
-import org.highj.typeclass1.monad.Functor;
+import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.data.compare.Eq;
 import org.junit.Test;

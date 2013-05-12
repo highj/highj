@@ -1,4 +1,4 @@
-package org.highj.typeclass1.monad;
+package org.highj.typeclass1.functor;
 
 import org.highj._;
 

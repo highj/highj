@@ -1,4 +1,4 @@
-package org.highj.function;
+package org.highj.data.functions;
 
 import org.highj.data.tuple.*;
 import org.highj.typeclass0.group.Monoid;

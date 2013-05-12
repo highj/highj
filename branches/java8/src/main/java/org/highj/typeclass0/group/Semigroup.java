@@ -5,6 +5,7 @@ import org.highj.data.collection.List;
 /**
  * A structure supporting an associative operation "dot": dot(x,dot(y,z)) == dot(dot(x,y),z)
  */
+@FunctionalInterface
 public interface Semigroup<A> {
 
     public A dot(A x, A y);

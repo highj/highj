@@ -1,7 +1,7 @@
 package org.highj.typeclass2.bifunctor;
 
 import org.highj.__;
-import org.highj.function.Functions;
+import org.highj.data.functions.Functions;
 import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass1.monad.Apply;
 

@@ -1,7 +1,7 @@
-package org.highj.data;
+package org.highj.data.stateful;
 
 import org.highj._;
-import org.highj.function.Functions;
+import org.highj.data.functions.Functions;
 import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;

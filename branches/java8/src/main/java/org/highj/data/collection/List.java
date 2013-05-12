@@ -1,11 +1,14 @@
 package org.highj.data.collection;
 
 import org.highj._;
+import org.highj.data.collection.list.ListFoldable;
+import org.highj.data.collection.list.ListMonadPlus;
+import org.highj.data.collection.list.ZipApplicative;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.data.tuple.Tuple;
-import org.highj.function.repo.Strings;
+import org.highj.data.functions.Strings;
 import org.highj.typeclass1.foldable.Foldable;
 import org.highj.typeclass1.monad.Applicative;
 import org.highj.typeclass1.monad.MonadPlus;
@@ -17,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<Integer,Maybe<A>> {
@@ -258,10 +262,29 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
         return false;
     }
 
+    public boolean contains(Predicate<? super A> predicate) {
+        for (A a : this) {
+            if (predicate.test(a)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public int count(Function<A, Boolean> predicate) {
         int result = 0;
         for (A a : this) {
             if (predicate.apply(a)) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    public int count(Predicate<? super A> predicate) {
+        int result = 0;
+        for (A a : this) {
+            if (predicate.test(a)) {
                 result++;
             }
         }
@@ -286,6 +309,10 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
         return isEmpty() || !predicate.apply(head()) ? List.<A>nil() : consLazy(head(), () -> tail().takeWhile(predicate));
     }
 
+    public List<A> takeWhile(final Predicate<? super A> predicate) {
+        return isEmpty() || !predicate.test(head()) ? List.<A>nil() : consLazy(head(), () -> tail().takeWhile(predicate));
+    }
+
     public List<A> drop(int n) {
         List<A> result = this;
         while (n-- > 0 && !result.isEmpty()) {
@@ -297,6 +324,14 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
     public List<A> dropWhile(Function<A, Boolean> predicate) {
         List<A> result = this;
         while (!result.isEmpty() && predicate.apply(result.head())) {
+            result = result.tail();
+        }
+        return result;
+    }
+
+    public List<A> dropWhile(Predicate<? super A> predicate) {
+        List<A> result = this;
+        while (!result.isEmpty() && predicate.test(result.head())) {
             result = result.tail();
         }
         return result;
@@ -431,7 +466,17 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
         }
     }
 
-    static <A> List<A> buildFromStack(Stack<A> stack) {
+    public List<A> filter(final Predicate<? super A> predicate) {
+        if (isEmpty()) {
+            return this;
+        } else if (predicate.test(head())) {
+            return consLazy(head(), () -> tail().filter(predicate));
+        } else {
+            return tail().filter(predicate);
+        }
+    }
+
+    public static <A> List<A> buildFromStack(Stack<A> stack) {
         List<A> result = nil();
         while (!stack.isEmpty()) {
             result = result.plus(stack.pop());
@@ -458,18 +503,6 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
         }
         return result;
     }
-
-    public static final Foldable<µ> foldable = new Foldable<µ>() {
-        @Override
-        public <A, B> B foldr(Function<A, Function<B, B>> fn, B b, _<µ, A> nestedA) {
-            return narrow(nestedA).foldr(fn, b);
-        }
-
-        @Override
-        public <A, B> A foldl(Function<A, Function<B, A>> fn, A a, _<µ, B> bs) {
-            return narrow(bs).foldl(a, fn);
-        }
-    };
 
     public static <A, B> List<T2<A, B>> zip(List<A> listA, List<B> listB) {
         return zipWith(listA, listB, (Function<A, Function<B, T2<A, B>>>) a -> b -> Tuple.of(a,b));
@@ -511,7 +544,7 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
     }
 
     public static <A> List<A> join(List<List<A>> list) {
-        Stack<A> stack = new Stack<A>();
+        Stack<A> stack = new Stack<>();
         for (List<A> innerList : list) {
             for (A a : innerList) {
                 stack.push(a);
@@ -524,72 +557,10 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
         return isEmpty() || tail().isEmpty() ? this : consLazy(this.head(), () -> cons(a, tail().intersperse(a)));
     }
 
-    public static final Applicative<µ> zipApplicative = new Applicative<µ>() {
-        @Override
-        public <A> _<µ, A> pure(A a) {
-            return repeat(a);
-        }
+    public static final Foldable<µ> foldable = new ListFoldable();
 
-        @Override
-        public <A, B> _<µ, B> ap(_<µ, Function<A, B>> fn, _<µ, A> nestedA) {
-            return zipWith(narrow(fn), narrow(nestedA), f -> f::apply);
-        }
+    public static final Applicative<µ> zipApplicative = new ZipApplicative();
 
-        @Override
-        public <A, B> _<µ, B> map(Function<A, B> fn, _<µ, A> nestedA) {
-            return narrow(nestedA).map(fn);
-        }
-    };
+    public static final MonadPlus<µ> monadPlus = new ListMonadPlus();
 
-    public static MonadPlus<µ> monad = new ListMonad();
-
-    private static class ListMonad implements MonadPlus<µ> {
-
-        @Override
-        public <A, B> _<µ, B> map(final Function<A, B> fn, _<µ, A> nestedA) {
-            return narrow(nestedA).map(fn);
-        }
-
-        @Override
-        public <A> _<µ, A> pure(A a) {
-            return List.<A>empty().plus(a);
-        }
-
-        @Override
-        public <A, B> _<µ, B> ap(_<µ, Function<A, B>> fn, _<µ, A> nestedA) {
-            List<Function<A, B>> listFn = narrow(fn);
-            List<A> listA = narrow(nestedA);
-            Stack<B> stack = new Stack<>();
-            for (Function<A, B> f : listFn) {
-                for (A a : listA) {
-                    stack.push(f.apply(a));
-                }
-            }
-            return buildFromStack(stack);
-        }
-
-        @Override
-        public <A> _<µ, A> join(_<µ, _<µ, A>> nestedNestedA) {
-            List<_<µ, A>> nestedList = narrow(nestedNestedA);
-            Stack<A> stack = new Stack<>();
-            for (_<µ, A> list : nestedList) {
-                for (A a : narrow(list)) {
-                    stack.push(a);
-                }
-            }
-            return buildFromStack(stack);
-        }
-
-        @Override
-        public <A> _<µ, A> mzero() {
-            return nil();
-        }
-
-        @Override
-        public <A> _<µ, A> mplus(_<µ, A> one, _<µ, A> two) {
-            List<A> listOne = narrow(one);
-            List<A> listTwo = narrow(two);
-            return append(listOne, listTwo);
-        }
-    }
 }

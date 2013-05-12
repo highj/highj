@@ -11,15 +11,14 @@ import org.highj.data.tuple.t2.T2Apply;
 import org.highj.data.tuple.t2.T2Comonad;
 import org.highj.data.tuple.t2.T2Functor;
 import org.highj.data.tuple.t2.T2Monad;
-import org.highj.function.repo.Objects;
+import org.highj.data.functions.Objects;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass1.comonad.Comonad;
 import org.highj.typeclass1.monad.Apply;
-import org.highj.typeclass1.monad.Functor;
+import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Monad;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public enum Tuple {

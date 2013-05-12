@@ -1,8 +1,8 @@
-package org.highj.typeclass1.monad;
+package org.highj.typeclass1.functor;
 
 import org.highj._;
 import org.highj.data.tuple.T0;
-import org.highj.function.Functions;
+import org.highj.data.functions.Functions;
 
 import java.util.function.Function;
 

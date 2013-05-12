@@ -3,7 +3,7 @@ package org.highj.typeclass2.bifunctor;
 import org.highj.HigherKinded;
 import org.highj._;
 import org.highj.__;
-import org.highj.typeclass1.monad.Functor;
+import org.highj.typeclass1.functor.Functor;
 
 import java.util.function.Function;
 

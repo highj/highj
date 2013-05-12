@@ -1,4 +1,4 @@
-package org.highj.function.repo;
+package org.highj.data.functions;
 
 import org.highj.data.compare.Eq;
 import org.highj.typeclass0.group.*;

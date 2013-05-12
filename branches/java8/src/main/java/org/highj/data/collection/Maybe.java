@@ -3,7 +3,7 @@ package org.highj.data.collection;
 import org.highj._;
 import org.highj.data.collection.maybe.*;
 import org.highj.data.compare.Eq;
-import org.highj.function.Functions;
+import org.highj.data.functions.Functions;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass1.foldable.Traversable;
@@ -119,6 +119,7 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
         return this.isJust() ? this : that;
     }
 
+    @Override
     public void forEach(Consumer<? super A> consumer) {
         if (isJust()) consumer.accept(get());
     }
@@ -193,7 +194,7 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     }
 
     public static <A> Monoid<Maybe<A>> monoid(final Semigroup<A> semigroup) {
-        return new MaybeMonoidFromSemigroup<A>(semigroup);
+        return new MaybeMonoidFromSemigroup<>(semigroup);
     }
 
 

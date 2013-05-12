@@ -3,10 +3,10 @@ package org.highj.data.tuple;
 import org.highj._;
 import org.highj.__;
 import org.highj.data.compare.Eq;
-import org.highj.data.fs.F1;
-import org.highj.data.fs.Fs;
-import org.highj.function.repo.Integers;
-import org.highj.function.repo.Strings;
+import org.highj.data.functions.F1;
+import org.highj.data.functions.Fs;
+import org.highj.data.functions.Integers;
+import org.highj.data.functions.Strings;
 import org.highj.typeclass1.monad.Monad;
 import org.junit.Test;
 

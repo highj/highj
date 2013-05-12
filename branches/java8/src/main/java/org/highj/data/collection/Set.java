@@ -4,7 +4,7 @@ import org.highj._;
 import org.highj.data.compare.Ordering;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
-import org.highj.function.repo.Strings;
+import org.highj.data.functions.Strings;
 import org.highj.typeclass1.monad.MonadPlus;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Iterators;

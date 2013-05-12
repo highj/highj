@@ -2,8 +2,8 @@ package org.highj.data.collection;
 
 import org.highj._;
 import org.highj.data.tuple.T2;
-import org.highj.function.repo.Integers;
-import org.highj.function.repo.Strings;
+import org.highj.data.functions.Integers;
+import org.highj.data.functions.Strings;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.util.ReadOnlyIterator;
 import org.junit.Test;

@@ -5,7 +5,7 @@ import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.data.tuple.Tuple;
-import org.highj.function.repo.Strings;
+import org.highj.data.functions.Strings;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.util.ReadOnlyIterator;
 

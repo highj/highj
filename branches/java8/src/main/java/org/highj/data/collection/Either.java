@@ -5,8 +5,8 @@ import org.highj.__;
 import org.highj.data.compare.Eq;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
-import org.highj.function.Functions;
-import org.highj.function.repo.Strings;
+import org.highj.data.functions.Functions;
+import org.highj.data.functions.Strings;
 import org.highj.typeclass1.alternative.Alt;
 import org.highj.typeclass1.monad.Monad;
 

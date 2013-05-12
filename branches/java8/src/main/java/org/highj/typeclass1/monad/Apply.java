@@ -1,6 +1,7 @@
 package org.highj.typeclass1.monad;
 
 import org.highj._;
+import org.highj.typeclass1.functor.Functor;
 
 import java.util.function.Function;
 

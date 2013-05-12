@@ -1,5 +1,6 @@
 package org.highj.data.compare;
 
+import org.highj.data.compare.ordering.OrderingGroup;
 import org.highj.typeclass0.group.Group;
 
 public enum Ordering {
@@ -9,32 +10,7 @@ public enum Ordering {
         return ordinal() - 1;
     }
 
-    public static Group<Ordering> group = new Group<Ordering>() {
-
-        @Override
-        public Ordering identity() {
-            return EQ;
-        }
-
-        @Override
-        public Ordering dot(Ordering x, Ordering y) {
-            return x == EQ ? y : x;
-        }
-
-        @Override
-        public Ordering inverse(Ordering ordering) {
-            switch (ordering) {
-                case EQ:
-                    return EQ;
-                case LT:
-                    return GT;
-                case GT:
-                    return LT;
-                default:
-                    throw new AssertionError();
-            }
-        }
-    };
+    public static Group<Ordering> group = new OrderingGroup();
 
     public static Ordering compare(boolean x, boolean y) {
         return x == y ? EQ : !x ? LT : GT;

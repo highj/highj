@@ -4,7 +4,7 @@ import org.highj._;
 import org.highj.data.collection.List;
 import org.highj.data.collection.Stream;
 import org.highj.data.tuple.T2;
-import org.highj.function.Functions;
+import org.highj.data.functions.Functions;
 
 import java.util.function.Function;
 

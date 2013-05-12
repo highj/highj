@@ -2,6 +2,7 @@ package org.highj.data.kleisli;
 
 import org.highj._;
 import org.highj.__;
+import org.highj.data.kleisli.kleisli.KleisliArrow;
 import org.highj.typeclass2.arrow.Arrow;
 import org.highj.typeclass1.monad.Monad;
 
@@ -10,7 +11,7 @@ import java.util.function.Supplier;
 
 public class Kleisli<M, A, B> implements __<_<Kleisli.µ, M>, A, B>, Function<A, _<M, B>>, Supplier<Function<A, _<M, B>>> {
 
-    static class µ {
+    public static class µ {
     }
 
     private final Function<A, _<M, B>> fun;

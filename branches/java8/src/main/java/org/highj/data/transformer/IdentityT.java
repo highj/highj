@@ -5,6 +5,7 @@ import org.highj.data.transformer.identity.*;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.foldable.Foldable;
 import org.highj.typeclass1.foldable.Traversable;
+import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.*;
 
 import java.util.function.Function;

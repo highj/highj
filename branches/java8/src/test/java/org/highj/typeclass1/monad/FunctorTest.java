@@ -3,6 +3,7 @@ package org.highj.typeclass1.monad;
 import org.highj.data.tuple.T0;
 import org.highj._;
 import org.highj.data.collection.Maybe;
+import org.highj.typeclass1.functor.Functor;
 import org.junit.Test;
 
 import java.util.function.Function;

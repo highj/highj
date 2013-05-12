@@ -3,8 +3,8 @@ package org.highj.data.collection;
 import org.highj._;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
-import org.highj.function.repo.Integers;
-import org.highj.function.repo.Strings;
+import org.highj.data.functions.Integers;
+import org.highj.data.functions.Strings;
 import org.junit.Test;
 
 import java.util.NoSuchElementException;
@@ -325,7 +325,7 @@ public class ListTest {
         List<List<Integer>> list = List.of(List.of(1, 2), List.<Integer>of(), List.of(30, 40, 50), List.of(600));
         assertEquals("List(1,2,30,40,50,600)", List.join(list).toString());
         _<List.µ, _<List.µ, Integer>> list_ = List.<_<List.µ, Integer>>of(List.of(1, 2), List.<Integer>of(), List.of(30, 40, 50), List.of(600));
-        assertEquals("List(1,2,30,40,50,600)", List.monad.join(list_).toString());
+        assertEquals("List(1,2,30,40,50,600)", List.monadPlus.join(list_).toString());
     }
 
     @Test
