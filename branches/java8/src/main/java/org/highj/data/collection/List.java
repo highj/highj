@@ -1,20 +1,21 @@
 package org.highj.data.collection;
 
 import org.highj._;
-import org.highj.data.collection.list.ListFoldable;
+import org.highj.data.collection.list.ListTraversable;
 import org.highj.data.collection.list.ListMonadPlus;
+import org.highj.data.collection.list.ListMonoid;
 import org.highj.data.collection.list.ZipApplicative;
+import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.data.tuple.Tuple;
-import org.highj.data.functions.Strings;
+import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.foldable.Foldable;
 import org.highj.typeclass1.monad.Applicative;
 import org.highj.typeclass1.monad.MonadPlus;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Lazy;
-import org.highj.util.ReadOnlyIterator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,10 +24,11 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<Integer,Maybe<A>> {
+public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<Integer, Maybe<A>> {
 
 
-    public static final class µ {}
+    public static final class µ {
+    }
 
     private final static List<Object> NIL = new List<Object>() {
 
@@ -51,8 +53,8 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
             index--;
         }
         return (index < 0 || current.isEmpty())
-            ? Maybe.<A>Nothing()
-            : Maybe.Just(current.head());
+                ? Maybe.<A>Nothing()
+                : Maybe.Just(current.head());
     }
 
     @SuppressWarnings("unchecked")
@@ -178,7 +180,7 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
     @SafeVarargs
     public final List<A> plus(A... as) {
         List<A> result = this;
-        for(A a : ArrayUtils.reverseIterable(as)) {
+        for (A a : ArrayUtils.reverseIterable(as)) {
             result = result.plus(a);
         }
         return result;
@@ -188,15 +190,15 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
     public List<A> minus(A a) {
         List<A> heads = nil();
         List<A> current = this;
-        while(!current.isEmpty() && ! current.head().equals(a)) {
+        while (!current.isEmpty() && !current.head().equals(a)) {
             heads = heads.plus(current.head());
             current = current.tail();
         }
         if (current.isEmpty()) {
             return this;
-        }  else {
+        } else {
             current = current.tail();
-            while (! heads.isEmpty()) {
+            while (!heads.isEmpty()) {
                 current = current.plus(heads.head());
                 heads = heads.tail();
             }
@@ -347,7 +349,7 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
     }
 
     public Iterator<A> iterator() {
-        return new ReadOnlyIterator<A>() {
+        return new Iterator<A>() {
 
             private List<A> list = List.this;
 
@@ -411,11 +413,11 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
     public static <A> List<A> append(_<µ, A> one, _<µ, A> two) {
         List<A> listOne = narrow(one);
         List<A> listTwo = narrow(two);
-        if(listTwo.isEmpty()) {
+        if (listTwo.isEmpty()) {
             return listOne;
         } else {
             listOne = listOne.reverse();
-            while(! listOne.isEmpty()) {
+            while (!listOne.isEmpty()) {
                 listTwo = listTwo.plus(listOne.head());
                 listOne = listOne.tail();
             }
@@ -452,8 +454,8 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
 
     public <B> List<B> map(final Function<? super A, ? extends B> fn) {
         return isEmpty()
-            ? List.<B>nil()
-            : consLazy(fn.apply(head()), () -> tail().map(fn));
+                ? List.<B>nil()
+                : consLazy(fn.apply(head()), () -> tail().map(fn));
     }
 
     public List<A> filter(final Function<A, Boolean> predicate) {
@@ -505,15 +507,15 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
     }
 
     public static <A, B> List<T2<A, B>> zip(List<A> listA, List<B> listB) {
-        return zipWith(listA, listB, (Function<A, Function<B, T2<A, B>>>) a -> b -> Tuple.of(a,b));
+        return zipWith(listA, listB, (Function<A, Function<B, T2<A, B>>>) a -> b -> Tuple.of(a, b));
     }
 
     public static <A, B, C> List<T3<A, B, C>> zip(List<A> listA, List<B> listB, List<C> listC) {
-        return zipWith(listA, listB, listC, (Function<A, Function<B, Function<C, T3<A, B,C>>>>) a -> b -> c -> Tuple.of(a,b,c));
+        return zipWith(listA, listB, listC, (Function<A, Function<B, Function<C, T3<A, B, C>>>>) a -> b -> c -> Tuple.of(a, b, c));
     }
 
     public static <A, B, C, D> List<T4<A, B, C, D>> zip(List<A> listA, List<B> listB, List<C> listC, List<D> listD) {
-        return zipWith(listA, listB, listC, listD, (Function<A, Function<B, Function<C, Function<D, T4<A, B,C,D>>>>>) a -> b -> c -> d -> Tuple.of(a,b,c,d));
+        return zipWith(listA, listB, listC, listD, (Function<A, Function<B, Function<C, Function<D, T4<A, B, C, D>>>>>) a -> b -> c -> d -> Tuple.of(a, b, c, d));
     }
 
     public static <A, B, C> List<C> zipWith(final List<A> listA, final List<B> listB, final Function<A, Function<B, C>> fn) {
@@ -532,7 +534,7 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
     }
 
     public static <A, B> T2<List<A>, List<B>> unzip(List<T2<A, B>> listAB) {
-        return Tuple.of(listAB.map(t -> t._1()), listAB.map(t-> t._2()));
+        return Tuple.of(listAB.map(t -> t._1()), listAB.map(t -> t._2()));
     }
 
     public static <A, B, C> T3<List<A>, List<B>, List<C>> unzip3(List<T3<A, B, C>> listABC) {
@@ -557,10 +559,14 @@ public abstract class List<A> implements _<List.µ, A> , Iterable<A>, Function<I
         return isEmpty() || tail().isEmpty() ? this : consLazy(this.head(), () -> cons(a, tail().intersperse(a)));
     }
 
-    public static final Foldable<µ> foldable = new ListFoldable();
+    public static final Foldable<µ> foldable = new ListTraversable();
 
     public static final Applicative<µ> zipApplicative = new ZipApplicative();
 
     public static final MonadPlus<µ> monadPlus = new ListMonadPlus();
+
+    public static <A> Monoid<List<A>> monoid() {
+        return new ListMonoid<>();
+    }
 
 }

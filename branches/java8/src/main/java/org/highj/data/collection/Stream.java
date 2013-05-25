@@ -8,7 +8,6 @@ import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.data.tuple.Tuple;
 import org.highj.typeclass1.monad.Monad;
-import org.highj.util.ReadOnlyIterator;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -273,7 +272,7 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
 
     @Override
     public Iterator<A> iterator() {
-        return new ReadOnlyIterator<A>() {
+        return new Iterator<A>() {
 
             private Stream<A> stream = Stream.this;
 

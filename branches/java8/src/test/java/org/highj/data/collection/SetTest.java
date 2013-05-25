@@ -129,4 +129,18 @@ public class SetTest {
         assertEquals("[1, 2, 3, 4, 5, 6]", new TreeSet<>(set).toString());
     }
 
+    @Test
+    public void testEquals() {
+        Set s1 = Set.of(1,2,3,4,5,6,7);
+        Set s2 = Set.of(6,2,1,3,4,7,5);
+        Set s3 = Set.of(6,2,1,3,4,7,5,8);
+        assertTrue(s1.equals(s1));
+        assertTrue(s1.equals(s2));
+        assertTrue(s2.equals(s1));
+        assertFalse(s1.equals(s3));
+        assertFalse(s2.equals(s3));
+        assertFalse(s3.equals(s1));
+        assertFalse(s3.equals(s1));
+    }
+
 }

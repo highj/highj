@@ -9,7 +9,7 @@ public enum Iterators {
     ;
 
     @SuppressWarnings("rawtypes")
-    private final static Iterator EMPTY_ITERATOR = new ReadOnlyIterator() {
+    private final static Iterator EMPTY_ITERATOR = new Iterator() {
         @Override
         public boolean hasNext() {
             return false;
@@ -37,7 +37,7 @@ public enum Iterators {
             return emptyIterator();
         } else {
             final List<A> list = Arrays.asList(as);
-            return new ReadOnlyIterator<A>() {
+            return new Iterator<A>() {
 
                 private Iterator<A> it = list.iterator();
 
@@ -62,7 +62,7 @@ public enum Iterators {
         if (its.length == 0) {
             return emptyIterator();
         } else {
-            return new ReadOnlyIterator<A>() {
+            return new Iterator<A>() {
 
                 private int index = 1;
                 private Iterator<A> it = its[0];

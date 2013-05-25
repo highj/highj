@@ -2,9 +2,9 @@ package org.highj.data.functions;
 
 import org.highj.data.compare.Eq;
 import org.highj.typeclass0.group.Group;
-import org.highj.util.ReadOnlyIterator;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
@@ -74,7 +74,7 @@ public enum Strings {
     }
 
     public static Iterable<Character> iterable(final String string) {
-        return () -> new ReadOnlyIterator<Character>() {
+        return () -> new Iterator<Character>() {
             private int index = 0;
 
             @Override

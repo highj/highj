@@ -353,7 +353,7 @@ public enum ArrayUtils {
     }
 
     public static <A> Iterable<A> reverseIterable(A ... as) {
-        return () -> new ReadOnlyIterator<A>() {
+        return () -> new Iterator<A>() {
 
             private int i = as.length - 1;
 

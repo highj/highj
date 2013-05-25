@@ -11,6 +11,7 @@ import java.util.function.Function;
 import static org.highj.data.collection.Maybe.narrow;
 import static org.highj.data.collection.Maybe.µ;
 
+//Todo extends to Traversable1
 public class MaybeTraversable extends MaybeFunctor implements Traversable<µ> {
 
     @Override

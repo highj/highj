@@ -7,12 +7,7 @@ import org.highj.typeclass1.monad.MonadPlus;
 import java.util.Stack;
 import java.util.function.Function;
 
-public class ListMonadPlus implements MonadPlus<List.µ> {
-
-    @Override
-    public <A, B> List<B> map(final Function<A, B> fn, _<List.µ, A> nestedA) {
-        return List.narrow(nestedA).map(fn);
-    }
+public class ListMonadPlus extends ListFunctor implements MonadPlus<List.µ> {
 
     @Override
     public <A> List<A> pure(A a) {

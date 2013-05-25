@@ -5,7 +5,6 @@ import org.highj.data.functions.Integers;
 import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass1.monad.Monad;
-import org.highj.util.ReadOnlyIterator;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -86,7 +85,7 @@ public class StreamTest {
 
     @Test
     public void testStreamIterator() throws Exception {
-        Iterator<Integer> myIterator = new ReadOnlyIterator<Integer>() {
+        Iterator<Integer> myIterator = new Iterator<Integer>() {
 
             private int i = 0;
 

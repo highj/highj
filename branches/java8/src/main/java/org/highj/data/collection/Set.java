@@ -1,16 +1,20 @@
 package org.highj.data.collection;
 
 import org.highj._;
+import org.highj.data.collection.set.SetMonadPlus;
+import org.highj.data.collection.set.SetMonoid;
 import org.highj.data.compare.Ordering;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
 import org.highj.data.functions.Strings;
+import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.monad.MonadPlus;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Iterators;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 /**
@@ -220,9 +224,47 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
         return isEmpty() ? 0 : left.size() + bucket.size() + right.size();
     }
 
-    //Todo: avoid expensive concatenation
+    //we need to output the hashCodes in order, else different insertion orders would lead to different iteration orders
     public Iterator<A> iterator() {
-        return isEmpty() ? Iterators.<A>emptyIterator() : Iterators.concat(left.iterator(), bucket.iterator(), right.iterator());
+        return (isEmpty()) ? Iterators.emptyIterator() :
+        new Iterator<A>() {
+
+            private List<A> list = List.empty();
+            private List<Either<Set<A>,List<A>>> todo = List.of(Either.<Set<A>, List<A>>Left(Set.this));
+
+            @Override
+            public boolean hasNext() {
+                return ! list.isEmpty() || ! todo.isEmpty();
+            }
+
+            @Override
+            public A next() {
+                if (! hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                while(list.isEmpty()) {
+                   Either<Set<A>,List<A>> current = todo.head();
+                   todo = todo.tail();
+                    if (current.isRight()) {
+                        list = current.getRight();
+                    } else {
+                        Set<A> set = current.getLeft();
+                        addIfNotEmpty(set.right);
+                        todo = todo.plus(Either.Right(set.bucket));
+                        addIfNotEmpty(set.left);
+                    }
+                }
+                A result = list.head();
+                list = list.tail();
+                return result;
+            }
+
+            private void addIfNotEmpty(Set<A> set) {
+                if (!set.isEmpty()) {
+                    todo = todo.plus(Either.Left(set));
+                }
+            }
+        };
     }
 
     @Override
@@ -246,53 +288,51 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
         return result;
     }
 
+    //avoids using the expensive iterator
     public java.util.Set<A> toJSet() {
         java.util.Set<A> result = new HashSet<>();
-        for (A a : this) {
-            result.add(a);
+        toJSetHelper(result);
+        return result;
+    }
+
+    private void toJSetHelper(java.util.Set<A> jSet) {
+        if (! isEmpty()) {
+            left.toJSetHelper(jSet);
+            for(A a : bucket) {
+               jSet.add(a);
+            }
+            right.toJSetHelper(jSet);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (o instanceof Set) {
+            Set<?> that = (Set) o;
+            Iterator<?> it = that.iterator();
+            for(A a : this) {
+                if (! it.hasNext() || ! it.next().equals(a)) {
+                    return false;
+                }
+            }
+            return ! it.hasNext();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 19;
+        for(A a : this) {
+            result = 5 * result + 37 * a.hashCode();
         }
         return result;
     }
 
-    public static MonadPlus<µ> monadPlus = new MonadPlus<µ>() {
-        @Override
-        public <A> _<µ, A> pure(A a) {
-            return of(a);
-        }
+    public static MonadPlus<µ> monadPlus = new SetMonadPlus();
 
-        @Override
-        public <A, B> _<µ, B> ap(_<µ, Function<A, B>> fn, _<µ, A> nestedA) {
-            Set<B> result = empty();
-            for (Function<A, B> f : narrow(fn)) {
-                for (A a : narrow(nestedA)) {
-                    result = result.plus(f.apply(a));
-                }
-            }
-            return result;
-        }
-
-        @Override
-        public <A, B> _<µ, B> map(Function<A, B> fn, _<µ, A> nestedA) {
-            return narrow(nestedA).map(fn);
-        }
-
-        @Override
-        public <A> _<µ, A> mzero() {
-            return empty();
-        }
-
-        @Override
-        public <A> _<µ, A> mplus(_<µ, A> one, _<µ, A> two) {
-            return narrow(one).plus(narrow(two));
-        }
-
-        @Override
-        public <A> _<µ, A> join(_<µ, _<µ, A>> nestedNestedA) {
-            Set<A> result = empty();
-            for (_<µ, A> innerSet : narrow(nestedNestedA)) {
-                result = result.plus(narrow(innerSet));
-            }
-            return result;
-        }
-    };
+    public static <A> Monoid<Set<A>> monoid() {
+        return new SetMonoid<>();
+    }
 }
