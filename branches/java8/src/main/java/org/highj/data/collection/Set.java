@@ -310,13 +310,7 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
         if (o == this) return true;
         if (o instanceof Set) {
             Set<?> that = (Set) o;
-            Iterator<?> it = that.iterator();
-            for(A a : this) {
-                if (! it.hasNext() || ! it.next().equals(a)) {
-                    return false;
-                }
-            }
-            return ! it.hasNext();
+            return this.toJSet().equals(that.toJSet());
         }
         return false;
     }
@@ -325,7 +319,7 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
     public int hashCode() {
         int result = 19;
         for(A a : this) {
-            result = 5 * result + 37 * a.hashCode();
+            result += a.hashCode();
         }
         return result;
     }
