@@ -6,7 +6,9 @@ import org.highj.data.compare.Eq;
 import org.highj.data.functions.Functions;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
+import org.highj.typeclass1.comonad.Extend;
 import org.highj.typeclass1.foldable.Traversable;
+import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadPlus;
 
 import java.util.Iterator;
@@ -83,6 +85,10 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
 
     public abstract <B> B cataLazy(Supplier<B> defaultThunk, Function<A, B> fn);
 
+    @SuppressWarnings("unchecked")
+    public static <Super_A, A extends Super_A> Maybe<Super_A> contravariant(Maybe<A> maybe) {
+        return (Maybe) maybe;
+    }
     public boolean isNothing() {
         return this == NOTHING;
     }
@@ -181,9 +187,13 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
         return List.buildFromStack(result);
     }
 
-    public static final MonadPlus<µ> monadPlus = new MaybeMonadPlus();
+    public static final Monad<µ> monad = new MaybeMonad();
+    public static final MonadPlus<µ> firstBiasedMonadPlus = new MaybeMonadPlus(MaybeMonadPlus.Bias.FIRST_JUST);
+    public static final MonadPlus<µ> lastBiasedMonadPlus = new MaybeMonadPlus(MaybeMonadPlus.Bias.LAST_JUST);
 
-    public static Traversable<µ> traversable = new MaybeTraversable();
+    public static final Traversable<µ> traversable = new MaybeTraversable();
+
+    public static final Extend<µ> extend = new MaybeExtend();
 
     public static <A> Monoid<Maybe<A>> firstMonoid() {
         return new MaybeFirstMonoid<>();

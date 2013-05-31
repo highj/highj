@@ -1,6 +1,12 @@
 package org.highj.data.tuple;
 
 import org.highj._;
+import org.highj.data.tuple.t1.*;
+import org.highj.typeclass0.group.Group;
+import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass0.group.Semigroup;
+import org.highj.typeclass1.comonad.Comonad;
+import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -45,6 +51,21 @@ public abstract class T1<A> implements  _<T1.µ, A>, Supplier<A> {
             return this._1().equals(that._1());
         }
         return false;
+    }
+
+    public static final Monad<µ> monad = new T1Monad();
+    public static final Comonad<µ> comonad = new T1Comonad();
+
+    public static <A> Semigroup<T1<A>> semigroup(Semigroup<A> semigroupA) {
+        return T1Semigroup.from(semigroupA);
+    }
+
+    public static <A> Monoid<T1<A>> monoid(Monoid<A> monoidA) {
+        return T1Monoid.from(monoidA);
+    }
+
+    public static <A> Group<T1<A>> group(Group<A> groupA) {
+        return T1Group.from(groupA);
     }
 
 }

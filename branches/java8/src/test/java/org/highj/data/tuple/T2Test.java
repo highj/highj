@@ -40,7 +40,7 @@ public class T2Test {
 
     @Test
     public void monadTest() throws Exception {
-        Monad<__.µ<T2.µ,String>> monad = Tuple.monad2(Strings.group);
+        Monad<__.µ<T2.µ,String>> monad = T2.monad(Strings.group);
         T2<String, Integer> answer = Tuple.narrow2(monad.pure(42));
         assertEquals("(,42)", answer.toString());
         T2<String, Integer> foo = Tuple.of("foo", 14);

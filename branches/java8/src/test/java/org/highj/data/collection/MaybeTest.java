@@ -200,7 +200,7 @@ public class MaybeTest {
     
     @Test
     public void testMonad() throws Exception {
-        Monad<Maybe.µ> monad = Maybe.monadPlus;
+        Monad<Maybe.µ> monad = Maybe.monad;
         //pure
         assertEquals("Just(foo)", monad.pure("foo").toString());
         //map
@@ -226,41 +226,79 @@ public class MaybeTest {
         assertEquals("Just(4)", monad.bind(fool, lenIfEven).toString());
     }
 
-    @Test
-    public void testMonadPlus() throws Exception {
-        MonadPlus<µ> monad = Maybe.monadPlus;
+    public void testMonadPlus(MonadPlus<µ> monadPlus) throws Exception {
         Maybe<String> foo = Just("foo");
         Maybe<String> bar = Just("bar");
         Maybe<String> baz = Just("baz");
         Maybe<String> nothing = Nothing();
         //mzero
-        assertEquals("Nothing", monad.mzero().toString());
+        assertEquals("Nothing", monadPlus.mzero().toString());
         //mplus
-        assertEquals("Just(foo)", monad.mplus(foo, bar).toString());
-        assertEquals("Just(foo)", monad.mplus(foo, nothing).toString());
-        assertEquals("Just(bar)", monad.mplus(nothing, bar).toString());
-        assertEquals("Nothing", monad.mplus(nothing, nothing).toString());
+        //result of  monadPlus.mplus(foo, bar) depends on bias
+        assertEquals("Just(foo)", monadPlus.mplus(foo, nothing).toString());
+        assertEquals("Just(bar)", monadPlus.mplus(nothing, bar).toString());
+        assertEquals("Nothing", monadPlus.mplus(nothing, nothing).toString());
         //guard
-        assertEquals("Nothing", monad.guard(false).toString());
-        assertEquals("Just(())", monad.guard(true).toString());
+        assertEquals("Nothing", monadPlus.guard(false).toString());
+        assertEquals("Just(())", monadPlus.guard(true).toString());
         //mfilter
         Maybe<Integer> one = Just(1);
-        assertEquals("Just(1)", monad.mfilter(Integers.odd, one).toString());
-        assertEquals("Nothing", monad.mfilter(Integers.even, one).toString());
-        //mplus
-        List<_<Maybe.µ,String>> fooBarBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, bar, baz));
-        assertEquals("Just(foo)", monad.msum(fooBarBaz).toString());
-        List<_<Maybe.µ,String>> fooBarNothing = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, bar, nothing));
-        assertEquals("Just(foo)", monad.msum(fooBarNothing).toString());
-        List<_<Maybe.µ,String>> fooNothingBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, nothing, baz));
-        assertEquals("Just(foo)", monad.msum(fooNothingBaz).toString());
-        List<_<Maybe.µ,String>> nothingNothingBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(nothing, nothing, baz));
-        assertEquals("Just(baz)", monad.msum(nothingNothingBaz).toString());
+        assertEquals("Just(1)", monadPlus.mfilter(Integers.odd, one).toString());
+        assertEquals("Nothing", monadPlus.mfilter(Integers.even, one).toString());
+        //msum
+        List<_<Maybe.µ,String>> fooNothingNothing = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, nothing, nothing));
+        assertEquals("Just(foo)", monadPlus.msum(fooNothingNothing).toString());
         List<_<Maybe.µ,String>> nothingBarNothing = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(nothing, bar, nothing));
-        assertEquals("Just(bar)", monad.msum(nothingBarNothing).toString());
+        assertEquals("Just(bar)", monadPlus.msum(nothingBarNothing).toString());
+        List<_<Maybe.µ,String>> nothingNothingBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(nothing, nothing, baz));
+        assertEquals("Just(baz)", monadPlus.msum(nothingNothingBaz).toString());
         List<_<Maybe.µ,String>> nothingNothingNothing = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(nothing, nothing, nothing));
-        assertEquals("Nothing", monad.msum(nothingNothingNothing).toString());
+        assertEquals("Nothing", monadPlus.msum(nothingNothingNothing).toString());
     }
+
+
+    @Test
+    public void testFirstBiasedMonadPlus() throws Exception {
+        MonadPlus<µ> monadPlus = Maybe.firstBiasedMonadPlus;
+        testMonadPlus(monadPlus);
+
+        Maybe<String> foo = Just("foo");
+        Maybe<String> bar = Just("bar");
+        Maybe<String> baz = Just("baz");
+        Maybe<String> nothing = Nothing();
+
+        //mplus
+        assertEquals("Just(foo)", monadPlus.mplus(foo, bar).toString());
+        //msum
+        List<_<Maybe.µ,String>> fooBarBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, bar, baz));
+        assertEquals("Just(foo)", monadPlus.msum(fooBarBaz).toString());
+        List<_<Maybe.µ,String>> fooBarNothing = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, bar, nothing));
+        assertEquals("Just(foo)", monadPlus.msum(fooBarNothing).toString());
+        List<_<Maybe.µ,String>> fooNothingBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, nothing, baz));
+        assertEquals("Just(foo)", monadPlus.msum(fooNothingBaz).toString());
+    }
+
+    @Test
+    public void testLastBiasedMonadPlus() throws Exception {
+        MonadPlus<µ> monadPlus = Maybe.lastBiasedMonadPlus;
+        testMonadPlus(monadPlus);
+
+        Maybe<String> foo = Just("foo");
+        Maybe<String> bar = Just("bar");
+        Maybe<String> baz = Just("baz");
+        Maybe<String> nothing = Nothing();
+
+        //mplus
+        assertEquals("Just(bar)", monadPlus.mplus(foo, bar).toString());
+        //msum
+        List<_<Maybe.µ,String>> fooBarBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, bar, baz));
+        assertEquals("Just(baz)", monadPlus.msum(fooBarBaz).toString());
+        List<_<Maybe.µ,String>> fooBarNothing = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, bar, nothing));
+        assertEquals("Just(bar)", monadPlus.msum(fooBarNothing).toString());
+        List<_<Maybe.µ,String>> fooNothingBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, nothing, baz));
+        assertEquals("Just(baz)", monadPlus.msum(fooNothingBaz).toString());
+    }
+
 
     @Test
     public void testJusts() throws Exception {

@@ -19,6 +19,7 @@ import org.highj.util.Lazy;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Stack;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -337,6 +338,41 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
             result = result.tail();
         }
         return result;
+    }
+
+    public A last() throws NoSuchElementException {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        List<A> current = this;
+        List<A> next;
+        while(! (next = current.tail()).isEmpty()) {
+            current = next;
+        }
+        return current.head();
+    }
+
+    public List<A> init() throws NoSuchElementException {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        return tail().isEmpty() ? tail() : cons(head(), tail().init());
+    }
+
+    public List<A> initLazy() throws NoSuchElementException {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        return tail().isEmpty() ? tail() : consLazy(head(), () -> tail().init());
+    }
+
+
+    public List<List<A>> tails() {
+        return cons(this, isEmpty() ? empty() : tail().tails());
+    }
+
+    public List<List<A>> tailsLazy() {
+        return consLazy(this, (Supplier<List<List<A>>>) () -> isEmpty() ? empty() : tail().tails());
     }
 
     //won't terminate for infinite Lists

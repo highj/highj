@@ -253,27 +253,6 @@ public enum Tuple {
         return (T2) value;
     }
 
-
-    public static final Monad<T1.µ> monad1 = new T1Monad();
-
-    public static <S>Functor<__.µ<T2.µ,S>> functor2() {
-        return new T2Functor<S>(){};
-    }
-
-    public static <S> Apply<__.µ<T2.µ, S>> apply2(final Semigroup<S> semigroup) {
-        return (T2Apply<S>) () -> semigroup;
-    }
-
-    public static <S> Monad<__.µ<T2.µ, S>> monad2(final Monoid<S> monoid) {
-        return (T2Monad<S>) () -> monoid;
-    }
-
-    public static final Comonad<T1.µ> comonad1 = new T1Comonad();
-
-    public static <S> Comonad<__.µ<T2.µ, S>> comonad2() {
-        return new T2Comonad<>();
-    }
-
     public static <A, B> Eq<T2<A, B>> eq(final Eq<? super A> eqA, final Eq<? super B> eqB) {
         return (one, two) -> eqA.eq(one._1(), two._1()) && eqB.eq(one._2(), two._2());
     }

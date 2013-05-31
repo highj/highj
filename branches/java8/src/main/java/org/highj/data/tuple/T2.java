@@ -1,6 +1,15 @@
 package org.highj.data.tuple;
 
 import org.highj.__;
+import org.highj.data.tuple.t1.T1Comonad;
+import org.highj.data.tuple.t2.*;
+import org.highj.typeclass0.group.Group;
+import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass0.group.Semigroup;
+import org.highj.typeclass1.comonad.Comonad;
+import org.highj.typeclass1.functor.Functor;
+import org.highj.typeclass1.monad.Bind;
+import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
 
@@ -44,6 +53,35 @@ public abstract class T2<A, B> implements __<T2.µ, A, B> {
             return this._1().equals(that._1()) && this._2().equals(that._2());
         }
         return false;
+    }
+
+    public static <S> Functor<__.µ<T2.µ, S>>  functor() {
+        return new T2Functor<S>() {
+        };
+    }
+
+    public static <S> Bind<__.µ<µ, S>> bind(Semigroup<S> semigroupS) {
+        return (T2Bind<S>) () -> semigroupS;
+    }
+
+    public static <S> Monad<__.µ<T2.µ, S>> monad(Monoid<S> monoidS) {
+         return (T2Monad<S>) () -> monoidS;
+    }
+
+    public static <S> Comonad<__.µ<T2.µ, S>> comonad() {
+       return new T2Comonad<>();
+    }
+
+    public static <A,B> Semigroup<T2<A,B>> semigroup(Semigroup<A> semigroupA,Semigroup<B> semigroupB) {
+        return T2Semigroup.from(semigroupA, semigroupB);
+    }
+
+    public static <A,B> Monoid<T2<A,B>> monoid(Monoid<A> monoidA, Monoid<B> monoidB) {
+        return T2Monoid.from(monoidA, monoidB);
+    }
+
+    public static <A,B> Group<T2<A,B>> group(Group<A> groupA, Group<B> groupB) {
+        return T2Group.from(groupA, groupB);
     }
 
 }

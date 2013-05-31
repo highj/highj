@@ -1,6 +1,15 @@
 package org.highj.data.tuple;
 
+import org.highj.__;
 import org.highj.___;
+import org.highj.data.tuple.t3.*;
+import org.highj.typeclass0.group.Group;
+import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass0.group.Semigroup;
+import org.highj.typeclass1.comonad.Comonad;
+import org.highj.typeclass1.functor.Functor;
+import org.highj.typeclass1.monad.Bind;
+import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
 
@@ -46,5 +55,54 @@ public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
     @Override
     public String toString() {
         return String.format("(%s,%s,%s)", _1(), _2(), _3());
+    }
+
+    public static <S, T> Functor<__.µ<___.µ<T3.µ, S>, T>> functor() {
+        return new T3Functor<S, T>() {
+        };
+    }
+
+    public static <S, T> Bind<__.µ<___.µ<T3.µ, S>, T>> bind(Semigroup<S> semigroupS, Semigroup<T> semigroupT) {
+        return new T3Bind<S, T>() {
+            @Override
+            public Semigroup<S> getS() {
+                return semigroupS;
+            }
+
+            @Override
+            public Semigroup<T> getT() {
+                return semigroupT;
+            }
+        };
+    }
+
+    public static <S, T> Monad<__.µ<___.µ<T3.µ, S>, T>> monad(Monoid<S> monoidS, Monoid<T> monoidT) {
+        return new T3Monad<S, T>() {
+            @Override
+            public Monoid<S> getS() {
+                return monoidS;
+            }
+
+            @Override
+            public Monoid<T> getT() {
+                return monoidT;
+            }
+        };
+    }
+
+    public static <S, T> Comonad<__.µ<___.µ<T3.µ, S>, T>> comonad() {
+        return new T3Comonad<>();
+    }
+
+    public static <A, B, C> Semigroup<T3<A, B, C>> semigroup(Semigroup<A> semigroupA, Semigroup<B> semigroupB, Semigroup<C> semigroupC) {
+        return T3Semigroup.from(semigroupA, semigroupB, semigroupC);
+    }
+
+    public static <A, B, C> Monoid<T3<A, B, C>> monoid(Monoid<A> monoidA, Monoid<B> monoidB, Monoid<C> monoidC) {
+        return T3Monoid.from(monoidA, monoidB, monoidC);
+    }
+
+    public static <A, B, C> Group<T3<A, B, C>> group(Group<A> groupA, Group<B> groupB, Group<C> groupC) {
+        return T3Group.from(groupA, groupB, groupC);
     }
 }

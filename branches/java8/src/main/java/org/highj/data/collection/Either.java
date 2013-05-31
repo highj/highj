@@ -2,13 +2,17 @@ package org.highj.data.collection;
 
 import org.highj._;
 import org.highj.__;
+import org.highj.data.collection.either.EitherMonad;
+import org.highj.data.collection.either.EitherMonadPlus;
 import org.highj.data.compare.Eq;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
 import org.highj.data.functions.Functions;
 import org.highj.data.functions.Strings;
+import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.alternative.Alt;
 import org.highj.typeclass1.monad.Monad;
+import org.highj.typeclass1.monad.MonadPlus;
 
 import java.util.NoSuchElementException;
 import java.util.function.Function;
@@ -380,52 +384,18 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
     /**
      * The monadTrans of Either
      *
-     * @param <S> the LeftLazy type of Either
-     * @return the Either functor
+     * @param <S> the Left type of Either
+     * @return the Either monad
      */
     private static <S> Monad<__.µ<µ, S>> monad() {
-        return new Monad<__.µ<µ, S>>() {
-
-            @Override
-            public <A, B> _<__.µ<µ, S>, B> map(Function<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
-                return narrow(nestedA).rightMap(fn);
-            }
-
-            @Override
-            public <A> _<__.µ<µ, S>, A> pure(A a) {
-                return Right(a);
-            }
-
-            @Override
-            public <A, B> _<__.µ<µ, S>, B> ap(_<__.µ<µ, S>, Function<A, B>> fn, _<__.µ<µ, S>, A> nestedA) {
-                //a <*> b = do x <- a; y <- b; return (x y)
-                return narrow(fn).<Either<S, B>>either(Either::Left,
-                        fnRight -> narrow(nestedA).<Either<S, B>>either(
-                                Either::Left,
-                                right -> Right(fnRight.apply(right))));
-            }
-
-            @Override
-            public <A, B> _<__.µ<µ, S>, B> bind(_<__.µ<µ, S>, A> a, Function<A, _<__.µ<µ, S>, B>> fn) {
-                //RightLazy m >>= k = k m
-                //LeftLazy e  >>= _ = LeftLazy e
-                return narrow(a).<_<__.µ<µ, S>, B>>either(Either::Left, fn::apply);
-            }
-        };
+        return new EitherMonad<>();
     }
 
-    public static <S> Alt<__.µ<µ, S>> alt() {
-        return new Alt<__.µ<µ, S>>() {
+    public static <S> MonadPlus<__.µ<µ, S>> firstBiasedMonadPlus(Monoid<S> monoid) {
+        return new EitherMonadPlus<>(monoid, EitherMonadPlus.Bias.FIRST_RIGHT);
+    }
 
-            @Override
-            public <A> _<__.µ<µ, S>, A> mplus(_<__.µ<µ, S>, A> first, _<__.µ<µ, S>, A> second) {
-                return narrow(first).isLeft() ? second : first;
-            }
-
-            @Override
-            public <A, B> _<__.µ<µ, S>, B> map(Function<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
-                return narrow(nestedA).rightMap(fn);
-            }
-        };
+    public static <S> MonadPlus<__.µ<µ, S>> lastBiasedMonadPlus(Monoid<S> monoid) {
+        return new EitherMonadPlus<>(monoid, EitherMonadPlus.Bias.LAST_RIGHT);
     }
 }

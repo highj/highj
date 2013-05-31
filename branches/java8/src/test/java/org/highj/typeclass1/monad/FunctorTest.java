@@ -13,7 +13,7 @@ import static org.highj.data.collection.Maybe.*;
 
 public class FunctorTest {
 
-    private final Functor<µ> functor = monadPlus;
+    private final Functor<µ> functor = monad;
 
     @Test
     public void testLeft$() {
