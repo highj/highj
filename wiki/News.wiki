@@ -1,6 +1,10 @@
 #summary News
 
-= 201-05-12 =
+= 2013-06-01 =
+
+Okay, this will get funny: I'll finally go to Java 8 and throw away the Java 6 stuff. This means also going through the wiki and update all the descriptions. But first I need to get the branch merged to trunk, and I hope I don't mess this up.
+
+= 2013-05-12 =
 
 I refactored the Java 8 branch a little bit, but there is so much left to do. It's time to go to Java 8, it works well and is stable, so I see no point in keeping the Java 6 compatible stuff.
 
