@@ -3,10 +3,12 @@ package org.highj.util;
 
 import org.highj.data.collection.Maybe;
 
+import java.util.function.Supplier;
+
 /**
  * A wrapper that allows lazy initialization. After setting a value, it is immutable
  */
-public class Lazy<A> {
+public class Lazy<A> implements Supplier<A> {
 
     private Maybe<A> value = Maybe.Nothing();
 

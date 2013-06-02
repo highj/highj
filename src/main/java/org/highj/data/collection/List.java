@@ -1,69 +1,66 @@
 package org.highj.data.collection;
 
 import org.highj._;
+import org.highj.data.collection.list.ListTraversable;
+import org.highj.data.collection.list.ListMonadPlus;
+import org.highj.data.collection.list.ListMonoid;
+import org.highj.data.collection.list.ZipApplicative;
+import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.data.tuple.Tuple;
-import org.highj.function.F0;
-import org.highj.function.F1;
-import org.highj.function.F2;
-import org.highj.function.repo.Strings;
-import org.highj.typeclass.alternative.Alt;
-import org.highj.typeclass.alternative.AltAbstract;
-import org.highj.typeclass.foldable.Foldable;
-import org.highj.typeclass.foldable.FoldableAbstract;
-import org.highj.typeclass.monad.Applicative;
-import org.highj.typeclass.monad.ApplicativeAbstract;
-import org.highj.typeclass.monad.MonadAbstract;
-import org.highj.typeclass.monad.MonadPlus;
+import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass1.foldable.Foldable;
+import org.highj.typeclass1.monad.Applicative;
+import org.highj.typeclass1.monad.MonadPlus;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Lazy;
-import org.highj.util.ReadOnlyIterator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Stack;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
-public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
+public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<Integer, Maybe<A>> {
 
-    private static final µ hidden = new µ();
 
     public static final class µ {
-        private µ() {
-        }
     }
 
-    private final static List NIL = new List() {
+    private final static List<Object> NIL = new List<Object>() {
 
         @Override
-        public Maybe maybeHead() {
+        public Maybe<Object> maybeHead() {
             return Maybe.Nothing();
         }
 
         @Override
-        public Maybe maybeTail() {
+        public Maybe<List<Object>> maybeTail() {
             return Maybe.Nothing();
         }
     };
 
     private List() {
-        super(hidden);
+    }
+
+    public Maybe<A> apply(Integer index) {
+        List<A> current = this;
+        while (!current.isEmpty() && index > 0) {
+            current = current.tail();
+            index--;
+        }
+        return (index < 0 || current.isEmpty())
+                ? Maybe.<A>Nothing()
+                : Maybe.Just(current.head());
     }
 
     @SuppressWarnings("unchecked")
     public static <A> List<A> narrow(_<µ, A> value) {
         return (List) value;
-    }
-
-    public static <A> F1<_<µ, A>, List<A>> narrow() {
-        return new F1<_<List.µ, A>, List<A>>() {
-            @Override
-            public List<A> $(_<List.µ, A> list) {
-                return List.narrow(list);
-            }
-        };
     }
 
     @SuppressWarnings("unchecked")
@@ -72,16 +69,16 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     }
 
     public static <A> List<A> empty() {
-        return Nil();
+        return nil();
     }
 
     public static <A> List<A> of() {
-        return Nil();
+        return nil();
     }
 
-    //@SafeVarargs
+    @SafeVarargs
     public static <A> List<A> of(A... as) {
-        return of(Arrays.asList(as));
+        return List.<A>nil().plus(as);
     }
 
     public static List<Boolean> of(boolean[] as) {
@@ -117,22 +114,22 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     }
 
     public static <A> List<A> of(Iterable<A> as) {
-        List<A> result = Nil();
+        List<A> result = nil();
         for (A a : as) {
-            result = result.cons(a);
+            result = result.plus(a);
         }
         return result.reverse();
     }
 
     public static <A> List<A> of(java.util.List<A> as) {
-        List<A> result = Nil();
+        List<A> result = nil();
         for (int i = as.size(); i > 0; i--) {
-            result = result.cons(as.get(i - 1));
+            result = result.plus(as.get(i - 1));
         }
         return result;
     }
 
-    public static <A> List<A> Cons(final A head, final List<A> tail) {
+    public static <A> List<A> cons(final A head, final List<A> tail) {
         return new List<A>() {
 
             @Override
@@ -147,7 +144,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         };
     }
 
-    public static <A> List<A> Cons(final A head, final F0<List<A>> thunkTail) {
+    public static <A> List<A> consLazy(final A head, final Supplier<List<A>> thunkTail) {
         return new List<A>() {
 
             @Override
@@ -157,7 +154,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
 
             @Override
             public Maybe<List<A>> maybeTail() {
-                return Maybe.Just(thunkTail);
+                return Maybe.JustLazy(thunkTail);
             }
         };
     }
@@ -177,52 +174,57 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         };
     }
 
-    public static <A> F2<A, List<A>, List<A>> cons() {
-        return new F2<A, List<A>, List<A>>() {
-            @Override
-            public List<A> $(A a, List<A> as) {
-                return Cons(a, as);
-            }
-        };
+    public List<A> plus(A a) {
+        return cons(a, this);
     }
 
-    public List<A> cons(A a) {
-        return Cons(a, this);
+    @SafeVarargs
+    public final List<A> plus(A... as) {
+        List<A> result = this;
+        for (A a : ArrayUtils.reverseIterable(as)) {
+            result = result.plus(a);
+        }
+        return result;
     }
+
 
     public List<A> minus(A a) {
-        if (isEmpty()) {
-            return this;
+        List<A> heads = nil();
+        List<A> current = this;
+        while (!current.isEmpty() && !current.head().equals(a)) {
+            heads = heads.plus(current.head());
+            current = current.tail();
         }
-        A head = head();
-        List<A> tail = tail();
-        if (head.equals(a)) {
-            return tail;
+        if (current.isEmpty()) {
+            return this;
         } else {
-            List<A> newTail = tail.minus(a);
-            return tail == newTail ? this : Cons(head, newTail);
+            current = current.tail();
+            while (!heads.isEmpty()) {
+                current = current.plus(heads.head());
+                heads = heads.tail();
+            }
+            return current;
         }
     }
 
-    //@SafeVarargs
+    @SafeVarargs
     public final List<A> minusAll(A... as) {
         if (isEmpty()) {
             return this;
         }
         A head = head();
-        List<A> tail = tail();
+        final List<A> tail = tail();
         for (A a : as) {
             if (head.equals(a)) {
                 return tail.minusAll(as);
             }
         }
-        List<A> newTail = tail.minusAll(as);
-        return tail == newTail ? this : Cons(head, newTail);
+        return consLazy(head, () -> tail.minusAll(as));
     }
 
     @SuppressWarnings("unchecked")
-    public static <A> List<A> Nil() {
-        return NIL;
+    public static <A> List<A> nil() {
+        return (List) NIL;
     }
 
     public abstract Maybe<A> maybeHead();
@@ -237,30 +239,12 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         return maybeTail().get();
     }
 
-    public F0<List<A>> lazyTail() {
-        return new F0<List<A>>() {
-            @Override
-            public List<A> $() {
-                return tail();
-            }
-        };
-    }
-
     public boolean isEmpty() {
         return this == NIL;
     }
 
-    public A $(int index) throws IndexOutOfBoundsException {
-        int i = index;
-        List<A> current = this;
-        while (!current.isEmpty() && i > 0) {
-            current = current.tail();
-            i--;
-        }
-        if (i < 0 || current.isEmpty()) {
-            throw new IndexOutOfBoundsException("Index: " + index);
-        }
-        return current.head();
+    public A get(int index) throws IndexOutOfBoundsException {
+        return apply(index).getOrError(IndexOutOfBoundsException.class, "Index: " + index);
     }
 
     public boolean contains(A value) {
@@ -272,19 +256,38 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         return false;
     }
 
-    public boolean contains(F1<A, Boolean> predicate) {
+    public boolean contains(Function<A, Boolean> predicate) {
         for (A a : this) {
-            if (predicate.$(a)) {
+            if (predicate.apply(a)) {
                 return true;
             }
         }
         return false;
     }
 
-    public int count(F1<A, Boolean> predicate) {
+    public boolean contains(Predicate<? super A> predicate) {
+        for (A a : this) {
+            if (predicate.test(a)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int count(Function<A, Boolean> predicate) {
         int result = 0;
         for (A a : this) {
-            if (predicate.$(a)) {
+            if (predicate.apply(a)) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    public int count(Predicate<? super A> predicate) {
+        int result = 0;
+        for (A a : this) {
+            if (predicate.test(a)) {
                 result++;
             }
         }
@@ -294,7 +297,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     public int count(A value) {
         int result = 0;
         for (A a : this) {
-            if (a == value) {
+            if (a.equals(value)) {
                 result++;
             }
         }
@@ -302,21 +305,15 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     }
 
     public List<A> take(final int n) {
-        return n <= 0 || isEmpty() ? List.<A>Nil() : Cons(head(), new F0<List<A>>() {
-            @Override
-            public List<A> $() {
-                return tail().take(n - 1);
-            }
-        });
+        return n <= 0 || isEmpty() ? List.<A>nil() : consLazy(head(), () -> tail().take(n - 1));
     }
 
-    public List<A> takeWhile(final F1<A, Boolean> predicate) {
-        return isEmpty() || !predicate.$(head()) ? List.<A>Nil() : Cons(head(), new F0<List<A>>() {
-            @Override
-            public List<A> $() {
-                return tail().takeWhile(predicate);
-            }
-        });
+    public List<A> takeWhile(final Function<A, Boolean> predicate) {
+        return isEmpty() || !predicate.apply(head()) ? List.<A>nil() : consLazy(head(), () -> tail().takeWhile(predicate));
+    }
+
+    public List<A> takeWhile(final Predicate<? super A> predicate) {
+        return isEmpty() || !predicate.test(head()) ? List.<A>nil() : consLazy(head(), () -> tail().takeWhile(predicate));
     }
 
     public List<A> drop(int n) {
@@ -327,12 +324,55 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         return result;
     }
 
-    public List<A> dropWhile(F1<A, Boolean> predicate) {
+    public List<A> dropWhile(Function<A, Boolean> predicate) {
         List<A> result = this;
-        while (!result.isEmpty() && predicate.$(result.head())) {
+        while (!result.isEmpty() && predicate.apply(result.head())) {
             result = result.tail();
         }
         return result;
+    }
+
+    public List<A> dropWhile(Predicate<? super A> predicate) {
+        List<A> result = this;
+        while (!result.isEmpty() && predicate.test(result.head())) {
+            result = result.tail();
+        }
+        return result;
+    }
+
+    public A last() throws NoSuchElementException {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        List<A> current = this;
+        List<A> next;
+        while(! (next = current.tail()).isEmpty()) {
+            current = next;
+        }
+        return current.head();
+    }
+
+    public List<A> init() throws NoSuchElementException {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        return tail().isEmpty() ? tail() : cons(head(), tail().init());
+    }
+
+    public List<A> initLazy() throws NoSuchElementException {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        return tail().isEmpty() ? tail() : consLazy(head(), () -> tail().init());
+    }
+
+
+    public List<List<A>> tails() {
+        return cons(this, isEmpty() ? empty() : tail().tails());
+    }
+
+    public List<List<A>> tailsLazy() {
+        return consLazy(this, (Supplier<List<List<A>>>) () -> isEmpty() ? empty() : tail().tails());
     }
 
     //won't terminate for infinite Lists
@@ -345,7 +385,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     }
 
     public Iterator<A> iterator() {
-        return new ReadOnlyIterator<A>() {
+        return new Iterator<A>() {
 
             private List<A> list = List.this;
 
@@ -364,7 +404,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     }
 
     public java.util.List<A> toJList() {
-        java.util.List<A> result = new ArrayList<A>();
+        java.util.List<A> result = new ArrayList<>();
         for (A a : this) {
             result.add(a);
         }
@@ -372,41 +412,25 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     }
 
     public static List<Integer> range(final int from, final int step, final int to) {
-        return (step > 0 && from <= to || step < 0 && from >= to) ? Cons(from, new F0<List<Integer>>() {
-
-            @Override
-            public List<Integer> $() {
-                return range(from + step, step, to);
-            }
-        }) : List.<Integer>Nil();
+        return (step > 0 && from <= to || step < 0 && from >= to)
+                ? consLazy(from, () -> range(from + step, step, to))
+                : List.<Integer>nil();
     }
 
 
     public static List<Integer> range(final int from, final int step) {
-        return Cons(from, new F0<List<Integer>>() {
-
-            @Override
-            public List<Integer> $() {
-                return range(from + step, step);
-            }
-        });
+        return consLazy(from, () -> range(from + step, step));
     }
 
     public static List<Integer> range(final int from) {
         return range(from, 1);
     }
 
-    //@SafeVarargs
+    @SafeVarargs
     public static <A> List<A> cycle(final A... as) {
-        List<A> result = Cons(as[as.length - 1], new F0<List<A>>() {
-
-            @Override
-            public List<A> $() {
-                return cycle(as);
-            }
-        });
+        List<A> result = consLazy(as[as.length - 1], () -> cycle(as));
         for (int i = as.length - 1; i > 0; i--) {
-            result = Cons(as[i - 1], result);
+            result = cons(as[i - 1], result);
         }
         return result;
     }
@@ -414,12 +438,7 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     //for performance reasons
     public static <A> List<A> repeat(final A a) {
         final Lazy<List<A>> ls = Lazy.Lazy();
-        ls.set(Cons(a, new F0<List<A>>() {
-            @Override
-            public List<A> $() {
-                return ls.get();
-            }
-        }));
+        ls.set(consLazy(a, ls::get));
         return ls.get();
     }
 
@@ -428,14 +447,18 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     }
 
     public static <A> List<A> append(_<µ, A> one, _<µ, A> two) {
-        final List<A> listOne = narrow(one);
-        final List<A> listTwo = narrow(two);
-        return listOne.isEmpty() ? listTwo : Cons(listOne.head(), new F0<List<A>>() {
-            @Override
-            public List<A> $() {
-                return append(listOne.tail(), listTwo);
+        List<A> listOne = narrow(one);
+        List<A> listTwo = narrow(two);
+        if (listTwo.isEmpty()) {
+            return listOne;
+        } else {
+            listOne = listOne.reverse();
+            while (!listOne.isEmpty()) {
+                listTwo = listTwo.plus(listOne.head());
+                listOne = listOne.tail();
             }
-        });
+        }
+        return listTwo;
     }
 
     //won't terminate for infinite Lists
@@ -465,131 +488,101 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
         return hc;
     }
 
-    public <B> List<B> map(final F1<? super A, ? extends B> fn) {
-        if (isEmpty())
-            return Nil();
-        else
-            return Cons(fn.$(head()),
-                    new F0<List<B>>() {
-                        @Override
-                        public List<B> $() {
-                            return tail().map(fn);
-                        }
-                    }
-            );
+    public <B> List<B> map(final Function<? super A, ? extends B> fn) {
+        return isEmpty()
+                ? List.<B>nil()
+                : consLazy(fn.apply(head()), () -> tail().map(fn));
     }
 
-    public List<A> filter(final F1<A, Boolean> predicate) {
+    public List<A> filter(final Function<A, Boolean> predicate) {
         if (isEmpty()) {
             return this;
-        } else if (predicate.$(head())) {
-            return Cons(head(), new F0<List<A>>() {
-                @Override
-                public List<A> $() {
-                    return tail().filter(predicate);
-                }
-            });
+        } else if (predicate.apply(head())) {
+            return consLazy(head(), () -> tail().filter(predicate));
         } else {
             return tail().filter(predicate);
         }
     }
 
-    private static <A> List<A> buildFromStack(Stack<A> stack) {
-        List<A> result = Nil();
+    public List<A> filter(final Predicate<? super A> predicate) {
+        if (isEmpty()) {
+            return this;
+        } else if (predicate.test(head())) {
+            return consLazy(head(), () -> tail().filter(predicate));
+        } else {
+            return tail().filter(predicate);
+        }
+    }
+
+    public static <A> List<A> buildFromStack(Stack<A> stack) {
+        List<A> result = nil();
         while (!stack.isEmpty()) {
-            result = result.cons(stack.pop());
+            result = result.plus(stack.pop());
         }
         return result;
     }
 
     public List<A> reverse() {
-        List<A> result = Nil();
+        List<A> result = nil();
         for (A a : this) {
-            result = Cons(a, result);
+            result = result.plus(a);
         }
         return result;
     }
 
-    public <B> B foldr(final F1<A, F1<B, B>> fn, final B b) {
-        return isEmpty() ? b : fn.$(head()).$(tail().foldr(fn, b));
+    public <B> B foldr(final Function<A, Function<B, B>> fn, final B b) {
+        return isEmpty() ? b : fn.apply(head()).apply(tail().foldr(fn, b));
     }
 
-    public <B> B foldl(final B b, final F1<B, F1<A, B>> fn) {
+    public <B> B foldl(final B b, final Function<B, Function<A, B>> fn) {
         B result = b;
         for (A a : this) {
-            result = fn.$(result).$(a);
+            result = fn.apply(result).apply(a);
         }
         return result;
     }
 
-    public static final Foldable<µ> foldable = new FoldableAbstract<µ>() {
-        @Override
-        public <A, B> B foldr(F1<A, F1<B, B>> fn, B b, _<µ, A> nestedA) {
-            return narrow(nestedA).foldr(fn, b);
-        }
-
-        @Override
-        public <A, B> A foldl(F1<A, F1<B, A>> fn, A a, _<µ, B> nestedB) {
-            return narrow(nestedB).foldl(a, fn);
-        }
-    };
-
     public static <A, B> List<T2<A, B>> zip(List<A> listA, List<B> listB) {
-        return zipWith(listA, listB, Tuple.<A, B>pair());
+        return zipWith(listA, listB, (Function<A, Function<B, T2<A, B>>>) a -> b -> Tuple.of(a, b));
     }
 
     public static <A, B, C> List<T3<A, B, C>> zip(List<A> listA, List<B> listB, List<C> listC) {
-        return zipWith(listA, listB, listC, Tuple.<A, B, C>triple());
+        return zipWith(listA, listB, listC, (Function<A, Function<B, Function<C, T3<A, B, C>>>>) a -> b -> c -> Tuple.of(a, b, c));
     }
 
     public static <A, B, C, D> List<T4<A, B, C, D>> zip(List<A> listA, List<B> listB, List<C> listC, List<D> listD) {
-        return zipWith(listA, listB, listC, listD, Tuple.<A, B, C, D>quadruple());
+        return zipWith(listA, listB, listC, listD, (Function<A, Function<B, Function<C, Function<D, T4<A, B, C, D>>>>>) a -> b -> c -> d -> Tuple.of(a, b, c, d));
     }
 
-    public static <A, B, C> List<C> zipWith(final List<A> listA, final List<B> listB, final F1<A, F1<B, C>> fn) {
-        return listA.isEmpty() || listB.isEmpty() ? List.<C>Nil() :
-                Cons(fn.$(listA.head()).$(listB.head()), new F0<List<C>>() {
-                    @Override
-                    public List<C> $() {
-                        return zipWith(listA.tail(), listB.tail(), fn);
-                    }
-                });
+    public static <A, B, C> List<C> zipWith(final List<A> listA, final List<B> listB, final Function<A, Function<B, C>> fn) {
+        return listA.isEmpty() || listB.isEmpty() ? List.<C>nil() :
+                consLazy(fn.apply(listA.head()).apply(listB.head()), () -> zipWith(listA.tail(), listB.tail(), fn));
     }
 
-    public static <A, B, C, D> List<D> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final F1<A, F1<B, F1<C, D>>> fn) {
-        return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() ? List.<D>Nil() :
-                Cons(fn.$(listA.head()).$(listB.head()).$(listC.head()), new F0<List<D>>() {
-                    @Override
-                    public List<D> $() {
-                        return zipWith(listA.tail(), listB.tail(), listC.tail(), fn);
-                    }
-                });
+    public static <A, B, C, D> List<D> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final Function<A, Function<B, Function<C, D>>> fn) {
+        return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() ? List.<D>nil() :
+                consLazy(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), fn));
     }
 
-    public static <A, B, C, D, E> List<E> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final List<D> listD, final F1<A, F1<B, F1<C, F1<D, E>>>> fn) {
-        return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() || listD.isEmpty() ? List.<E>Nil() :
-                Cons(fn.$(listA.head()).$(listB.head()).$(listC.head()).$(listD.head()), new F0<List<E>>() {
-                    @Override
-                    public List<E> $() {
-                        return zipWith(listA.tail(), listB.tail(), listC.tail(), listD.tail(), fn);
-                    }
-                });
+    public static <A, B, C, D, E> List<E> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final List<D> listD, final Function<A, Function<B, Function<C, Function<D, E>>>> fn) {
+        return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() || listD.isEmpty() ? List.<E>nil() :
+                consLazy(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()).apply(listD.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), listD.tail(), fn));
     }
 
     public static <A, B> T2<List<A>, List<B>> unzip(List<T2<A, B>> listAB) {
-        return Tuple.of(listAB.map(Tuple.<A>fst()), listAB.map(Tuple.<B>snd()));
+        return Tuple.of(listAB.map(t -> t._1()), listAB.map(t -> t._2()));
     }
 
     public static <A, B, C> T3<List<A>, List<B>, List<C>> unzip3(List<T3<A, B, C>> listABC) {
-        return Tuple.of(listABC.map(Tuple.<A>fst3()), listABC.map(Tuple.<B>snd3()), listABC.map(Tuple.<C>third3()));
+        return Tuple.of(listABC.map(t -> t._1()), listABC.map(t -> t._2()), listABC.map(t -> t._3()));
     }
 
     public static <A, B, C, D> T4<List<A>, List<B>, List<C>, List<D>> unzip4(List<T4<A, B, C, D>> listABCD) {
-        return Tuple.of(listABCD.map(Tuple.<A>fst4()), listABCD.map(Tuple.<B>snd4()), listABCD.map(Tuple.<C>third4()), listABCD.map(Tuple.<D>fourth4()));
+        return Tuple.of(listABCD.map(t -> t._1()), listABCD.map(t -> t._2()), listABCD.map(t -> t._3()), listABCD.map(t -> t._4()));
     }
 
     public static <A> List<A> join(List<List<A>> list) {
-        Stack<A> stack = new Stack<A>();
+        Stack<A> stack = new Stack<>();
         for (List<A> innerList : list) {
             for (A a : innerList) {
                 stack.push(a);
@@ -599,93 +592,17 @@ public abstract class List<A> extends _<List.µ, A> implements Iterable<A> {
     }
 
     public List<A> intersperse(final A a) {
-        return isEmpty() || tail().isEmpty() ? this : Cons(this.head(), new F0<List<A>>() {
-            @Override
-            public List<A> $() {
-                return Cons(a, tail().intersperse(a));
-            }
-        });
+        return isEmpty() || tail().isEmpty() ? this : consLazy(this.head(), () -> cons(a, tail().intersperse(a)));
     }
 
-    public static final Applicative<µ> zipApplicative = new ApplicativeAbstract<µ>() {
-        @Override
-        public <A> _<µ, A> pure(A a) {
-            return repeat(a);
-        }
+    public static final Foldable<µ> foldable = new ListTraversable();
 
-        @Override
-        public <A, B> _<µ, B> ap(_<µ, F1<A, B>> fn, _<µ, A> nestedA) {
-            return zipWith(narrow(fn), narrow(nestedA), F1.<A, B>apply());
-        }
+    public static final Applicative<µ> zipApplicative = new ZipApplicative();
 
-        @Override
-        public <A, B> _<µ, B> map(F1<A, B> fn, _<µ, A> nestedA) {
-            return narrow(nestedA).map(fn);
-        }
-    };
+    public static final MonadPlus<µ> monadPlus = new ListMonadPlus();
 
-    public static MonadPlus<µ> monad = new ListMonad();
-
-    private static class ListMonad extends MonadAbstract<µ> implements MonadPlus<µ> {
-
-        @Override
-        public <A, B> _<µ, B> map(final F1<A, B> fn, _<µ, A> nestedA) {
-            return narrow(nestedA).map(fn);
-        }
-
-        @Override
-        public <A> _<µ, A> pure(A a) {
-            return of(a);
-        }
-
-        @Override
-        public <A, B> _<µ, B> ap(_<µ, F1<A, B>> fn, _<µ, A> nestedA) {
-            List<F1<A, B>> listFn = narrow(fn);
-            List<A> listA = narrow(nestedA);
-            Stack<B> stack = new Stack<B>();
-            for (F1<A, B> f : listFn) {
-                for (A a : listA) {
-                    stack.push(f.$(a));
-                }
-            }
-            return buildFromStack(stack);
-        }
-
-        @Override
-        public <A> _<µ, A> join(_<µ, _<µ, A>> nestedNestedA) {
-            List<_<µ, A>> nestedList = narrow(nestedNestedA);
-            Stack<A> stack = new Stack<A>();
-            for (_<µ, A> list : nestedList) {
-                for (A a : narrow(list)) {
-                    stack.push(a);
-                }
-            }
-            return buildFromStack(stack);
-        }
-
-        @Override
-        public <A> _<µ, A> mzero() {
-            return Nil();
-        }
-
-        @Override
-        public <A> _<µ, A> mplus(_<µ, A> one, _<µ, A> two) {
-            List<A> listOne = narrow(one);
-            List<A> listTwo = narrow(two);
-            return append(listOne, listTwo);
-        }
+    public static <A> Monoid<List<A>> monoid() {
+        return new ListMonoid<>();
     }
-
-    public final static Alt<µ> alt = new AltAbstract<µ>() {
-        @Override
-        public <A> _<µ, A> mplus(_<µ, A> first, _<µ, A> second) {
-            return append(first, second);
-        }
-
-        @Override
-        public <A, B> _<µ, B> map(F1<A, B> fn, _<µ, A> nestedA) {
-            return narrow(nestedA).map(fn);
-        }
-    };
 
 }

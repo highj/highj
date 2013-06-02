@@ -1,182 +1,94 @@
 package org.highj.data.collection;
 
 import org.highj._;
+import org.highj.data.collection.maybe.*;
 import org.highj.data.compare.Eq;
-import org.highj.function.*;
-import org.highj.function.repo.Objects;
-import org.highj.function.repo.Strings;
-import org.highj.typeclass.alternative.Alt;
-import org.highj.typeclass.alternative.AltAbstract;
-import org.highj.typeclass.foldable.Foldable;
-import org.highj.typeclass.foldable.FoldableAbstract;
-import org.highj.typeclass.group.Monoid;
-import org.highj.typeclass.group.MonoidAbstract;
-import org.highj.typeclass.group.Semigroup;
-import org.highj.typeclass.monad.MonadAbstract;
-import org.highj.typeclass.monad.MonadPlus;
+import org.highj.data.functions.Functions;
+import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass0.group.Semigroup;
+import org.highj.typeclass1.comonad.Extend;
+import org.highj.typeclass1.foldable.Traversable;
+import org.highj.typeclass1.monad.Monad;
+import org.highj.typeclass1.monad.MonadPlus;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Stack;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
- * A data type which may mplus may not hold a value. A calculation that may fail. A.k.a. "Option" mplus "Box".
+ * A data type which may or may not hold a value. A calculation that may fail. A.k.a. "Option" or "Box".
  */
-public abstract class Maybe<A> extends _<Maybe.µ, A> implements Iterable<A> {
-    private static final µ hidden = new µ();
-
+public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     private static final String SHOW_NOTHING = "Nothing";
     private static final String SHOW_JUST = "Just(%s)";
 
     public static final class µ {
-        private µ() {
-        }
     }
 
     private Maybe() {
-        super(hidden);
-    }
-
-    public static Foldable<µ> foldable = new FoldableAbstract<µ>() {
-        @Override
-        public <A, B> B foldMap(Monoid<B> mb, F1<A, B> fn, _<µ, A> nestedA) {
-            for (A a : narrow(nestedA)) {
-                return fn.$(a);
-            }
-            return mb.identity();
-        }
-
-        @Override
-        public <A, B> B foldr(F1<A, F1<B, B>> fn, B b, _<µ, A> nestedA) {
-            for (A a : narrow(nestedA)) {
-                return fn.$(a).$(b);
-            }
-            return b;
-        }
-
-        @Override
-        public <A, B> A foldl(F1<A, F1<B, A>> fn, A a, _<µ, B> nestedB) {
-            for (B b : narrow(nestedB)) {
-                return fn.$(a).$(b);
-            }
-            return a;
-        }
-    };
-
-    public static <A> Monoid<Maybe<A>> firstMonoid() {
-        return new MonoidAbstract<Maybe<A>>(new F2<Maybe<A>, Maybe<A>, Maybe<A>>() {
-            @Override
-            public Maybe<A> $(Maybe<A> x, Maybe<A> y) {
-                return x.isJust() ? x : y;
-            }
-        }, Maybe.<A>Nothing());
-    }
-
-    public static <A> Monoid<Maybe<A>> lastMonoid() {
-        return new MonoidAbstract<Maybe<A>>(new F2<Maybe<A>, Maybe<A>, Maybe<A>>() {
-            @Override
-            public Maybe<A> $(Maybe<A> x, Maybe<A> y) {
-                return y.isJust() ? y : x;
-            }
-        }, Maybe.<A>Nothing());
-    }
-
-    public static <A> Monoid<Maybe<A>> monoid(final Semigroup<A> semigroupA) {
-        return new MonoidAbstract<Maybe<A>>(
-                new F2<Maybe<A>, Maybe<A>, Maybe<A>>() {
-
-                    @Override
-                    public Maybe<A> $(Maybe<A> mx, Maybe<A> my) {
-                        for (A x : mx) {
-                            for (A y : my) {
-                                return Maybe.Just(semigroupA.dot(x, y));
-                            }
-                            return mx;
-                        }
-                        return my;
-                    }
-                }, Maybe.<A>Nothing());
     }
 
     @SuppressWarnings("rawtypes")
-    private final static Maybe NOTHING = new Maybe() {
+    private final static Maybe<Object> NOTHING = new Maybe<Object>() {
 
         @Override
-        public Object cata(F0 defaultThunk, F1 fn) {
-            return defaultThunk.$();
+        public <B> B cata(B defaultValue, Function<Object, B> fn) {
+            return defaultValue;
         }
 
         @Override
-        public Object cata(Object defaultValue, F1 fn) {
-            return defaultValue;
+        public <B> B cataLazy(Supplier<B> defaultThunk, Function<Object, B> fn) {
+            return defaultThunk.get();
         }
     };
 
-    // the catamorphism of Maybe: cata(F0<A> default, F1<A,B> fn)
-    public abstract <B> B cata(F0<B> defaultThunk, F1<A, B> fn);
-
-    public abstract <B> B cata(B defaultValue, F1<A, B> fn);
-
-    public <B> Maybe<B> map(F1<A, B> fn) {
-        return cata(Maybe.<B>Nothing(), fn.andThen(Maybe.<B>just()));
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <A> Maybe<A> narrow(_<µ, A> value) {
-        return (Maybe) value;
-    }
-
-    public static <A> F1<_<µ, A>, Maybe<A>> narrow() {
-        return new F1<_<µ, A>,Maybe<A>>(){
-
-            @Override
-            public Maybe<A> $(_<Maybe.µ, A> ma) {
-                return Maybe.<A>narrow(ma);
-            }
-        };
-    }
-
     @SuppressWarnings("unchecked")
     public static <A> Maybe<A> Nothing() {
-        return NOTHING;
+        return (Maybe) NOTHING;
     }
 
     public static <A> Maybe<A> Just(final A value) {
-        assert (value != null);
+        if (value == null) {
+            throw new IllegalArgumentException("Just() can't take null argument");
+        }
         return new Maybe<A>() {
-            public <B> B cata(F0<B> defaultThunk, F1<A, B> fn) {
-                return fn.$(value);
+            public <B> B cataLazy(Supplier<B> defaultThunk, Function<A, B> fn) {
+                return fn.apply(value);
             }
 
             @Override
-            public <B> B cata(B defaultValue, F1<A, B> fn) {
-                return fn.$(value);
+            public <B> B cata(B defaultValue, Function<A, B> fn) {
+                return fn.apply(value);
             }
         };
     }
 
-    public static <A> Maybe<A> Just(final F0<A> thunk) {
+    public static <A> Maybe<A> JustLazy(final Supplier<A> thunk) {
         return new Maybe<A>() {
 
-            public <B> B cata(F0<B> defaultThunk, F1<A, B> fn) {
-                return fn.$(thunk.$());
+            public <B> B cataLazy(Supplier<B> defaultThunk, Function<A, B> fn) {
+                return fn.apply(thunk.get());
             }
 
             @Override
-            public <B> B cata(B defaultValue, F1<A, B> fn) {
-                return fn.$(thunk.$());
+            public <B> B cata(B defaultValue, Function<A, B> fn) {
+                return fn.apply(thunk.get());
             }
         };
     }
 
-    public static <A> F1<A, Maybe<A>> just() {
-        return new F1<A, Maybe<A>>() {
-            @Override
-            public Maybe<A> $(A a) {
-                return Just(a);
-            }
-        };
-    }
+    public abstract <B> B cata(B defaultValue, Function<A, B> fn);
 
+    public abstract <B> B cataLazy(Supplier<B> defaultThunk, Function<A, B> fn);
+
+    @SuppressWarnings("unchecked")
+    public static <Super_A, A extends Super_A> Maybe<Super_A> contravariant(Maybe<A> maybe) {
+        return (Maybe) maybe;
+    }
     public boolean isNothing() {
         return this == NOTHING;
     }
@@ -186,23 +98,23 @@ public abstract class Maybe<A> extends _<Maybe.µ, A> implements Iterable<A> {
     }
 
     public A getOrElse(A defaultValue) {
-        return cata(defaultValue, F1.<A>id());
+        return cata(defaultValue, x -> x);
     }
 
-    public A getOrElse(F0<A> defaultThunk) {
-        return cata(defaultThunk, F1.<A>id());
+    public A getOrElse(Supplier<A> defaultThunk) {
+        return cataLazy(defaultThunk, x -> x);
     }
 
     public A getOrError(Class<? extends RuntimeException> exClass) {
-        return getOrElse(F0.<A>error(exClass));
+        return getOrElse(Functions.<A>error(exClass));
     }
 
     public A getOrError(Class<? extends RuntimeException> exClass, String message) {
-        return getOrElse(F0.<A>error(exClass, message));
+        return getOrElse(Functions.<A>error(exClass, message));
     }
 
     public A getOrError(String message) {
-        return getOrElse(F0.<A>error(message));
+        return getOrElse(Functions.<A>error(message));
     }
 
     public A get() throws NoSuchElementException {
@@ -214,32 +126,38 @@ public abstract class Maybe<A> extends _<Maybe.µ, A> implements Iterable<A> {
     }
 
     @Override
-    public String toString() {
-        return cata(F0.constant(SHOW_NOTHING), Strings.<A>format(SHOW_JUST));
+    public void forEach(Consumer<? super A> consumer) {
+        if (isJust()) consumer.accept(get());
+    }
+
+    public Maybe<A> filter(Predicate<? super A> predicate) {
+        return isJust() && predicate.test(get()) ? this : Nothing();
     }
 
     public List<A> asList() {
-        return isNothing() ? List.<A>Nil() : List.of(get());
+        return cata(List.<A>nil(), x -> List.<A>empty().plus(x));
+    }
+
+    public <B> Maybe<B> bind(Function<A, Maybe<B>> fn) {
+        return cata(Maybe.<B>Nothing(), fn);
+    }
+
+    public <B> Maybe<B> map(Function<? super A, ? extends B> fn) {
+        return bind(a -> Maybe.<B>Just(fn.apply(a)));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <A> Maybe<A> narrow(_<µ, A> value) {
+        return (Maybe) value;
     }
 
     public Iterator<A> iterator() {
         return asList().iterator();
     }
 
-    public static <A> Eq<Maybe<A>> eq(final Eq<? super A> eqA) {
-        return new Eq<Maybe<A>>() {
-
-            @Override
-            public boolean eq(Maybe<A> one, Maybe<A> two) {
-                for (A a1 : one) {
-                    for (A a2 : two) {
-                        return eqA.eq(a1, a2);
-                    }
-                    return false;
-                }
-                return two.isNothing();
-            }
-        };
+    @Override
+    public String toString() {
+        return cata(SHOW_NOTHING, a -> String.format(SHOW_JUST, a));
     }
 
     @Override
@@ -247,77 +165,47 @@ public abstract class Maybe<A> extends _<Maybe.µ, A> implements Iterable<A> {
         if (this == obj) return true;
         if (obj instanceof Maybe) {
             Maybe<?> that = (Maybe) obj;
-            if (this.isNothing()) return that.isNothing();
-            else return that.isJust() && this.get().equals(that.get());
+            return cata(that.isNothing(), x -> that.<Boolean>cata(false, x::equals));
         } else return false;
+    }
+
+    public static <A> Eq<Maybe<A>> eq(final Eq<? super A> eqA) {
+        return (one, two) -> one.cata(two.isNothing(),
+                x -> two.<Boolean>cata(false, y -> eqA.eq(x, y)));
     }
 
     @Override
     public int hashCode() {
-        return cata(0, Objects.<A>hashCodeFn());
+        return cata(0, Object::hashCode);
     }
 
     public static <A> List<A> justs(List<Maybe<A>> list) {
-        List<A> result = List.Nil();
-        for (Maybe<A> maybe : list)
-            for (A a : maybe)
-                result = List.Cons(a, result);
-        return result.reverse();
+        Stack<A> result = new Stack<>();
+        for (Maybe<A> maybe : list) {
+            maybe.forEach(result::push);
+        }
+        return List.buildFromStack(result);
     }
 
-    public static final MonadPlus<µ> monad = new MaybeMonadPlus();
+    public static final Monad<µ> monad = new MaybeMonad();
+    public static final MonadPlus<µ> firstBiasedMonadPlus = new MaybeMonadPlus(MaybeMonadPlus.Bias.FIRST_JUST);
+    public static final MonadPlus<µ> lastBiasedMonadPlus = new MaybeMonadPlus(MaybeMonadPlus.Bias.LAST_JUST);
 
-    private static class MaybeMonadPlus extends MonadAbstract<µ> implements MonadPlus<µ> {
-        @Override
-        public <A> _<µ, A> pure(A a) {
-            return Just(a);
-        }
+    public static final Traversable<µ> traversable = new MaybeTraversable();
 
-        @Override
-        public <A, B> _<µ, B> ap(_<µ, F1<A, B>> fn, _<µ, A> nestedA) {
-            for (F1<A, B> f1 : narrow(fn)) {
-                for (A a : narrow(nestedA)) {
-                    return Just(f1.$(a));
-                }
-            }
-            return Nothing();
-        }
+    public static final Extend<µ> extend = new MaybeExtend();
 
-        public <A, B> _<µ, B> map(final F1<A, B> fn, _<µ, A> nestedA) {
-            return Maybe.narrow(nestedA).map(fn);
-        }
-
-        @Override
-        public <A, B> _<µ, B> bind(_<µ, A> nestedA, F1<A, _<µ, B>> fn) {
-            for (A a : narrow(nestedA)) {
-                return fn.$(a);
-            }
-            return Nothing();
-        }
-
-        @Override
-        public <A> _<µ, A> mzero() {
-            return Nothing();
-        }
-
-        @Override
-        public <A> _<µ, A> mplus(_<µ, A> one, _<µ, A> two) {
-            Maybe<A> maybeOne = narrow(one);
-            Maybe<A> maybeTwo = narrow(two);
-            return maybeOne.orElse(maybeTwo);
-        }
+    public static <A> Monoid<Maybe<A>> firstMonoid() {
+        return new MaybeFirstMonoid<>();
     }
 
-    public final static Alt<µ> alt = new AltAbstract<µ>() {
-        @Override
-        public <A> _<µ, A> mplus(_<µ, A> first, _<µ, A> second) {
-            return narrow(first).isNothing() ? second : first;
-        }
+    public static <A> Monoid<Maybe<A>> lastMonoid() {
+        return new MaybeLastMonoid<>();
+    }
 
-        @Override
-        public <A, B> _<µ, B> map(F1<A, B> fn, _<µ, A> nestedA) {
-            return narrow(nestedA).map(fn);
-        }
-    };
+    public static <A> Monoid<Maybe<A>> monoid(final Semigroup<A> semigroup) {
+        return new MaybeMonoidFromSemigroup<>(semigroup);
+    }
+
 
 }

@@ -1,22 +1,22 @@
 package org.highj.data.tuple;
 
-import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.____;
-import org.highj.function.F1;
+import org.highj.data.tuple.t3.*;
+import org.highj.data.tuple.t4.*;
+import org.highj.typeclass0.group.Group;
+import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass0.group.Semigroup;
+import org.highj.typeclass1.comonad.Comonad;
+import org.highj.typeclass1.functor.Functor;
+import org.highj.typeclass1.monad.Bind;
+import org.highj.typeclass1.monad.Monad;
 
-public abstract class T4<A, B, C, D> extends ____<T4.µ, A, B, C, D> {
-    private static final µ hidden = new µ();
+import java.util.function.Function;
 
-    public static class µ {
-        private µ() {
-        }
-    }
-
-    T4() {
-        super(hidden);
-    }
+public abstract class T4<A, B, C, D> implements  ____<T4.µ, A, B, C, D> {
+    public static class µ {}
 
     public abstract A _1();
 
@@ -26,25 +26,20 @@ public abstract class T4<A, B, C, D> extends ____<T4.µ, A, B, C, D> {
 
     public abstract D _4();
 
-    @SuppressWarnings("unchecked")
-    public static <A, B, C, D> T4<A, B, C, D> narrow(_<__.µ<___.µ<____.µ<µ, A>, B>, C>, D> value) {
-        return (T4) value;
+    public <AA> T4<AA,B,C,D> map_1(Function<? super A,? extends AA> fn) {
+        return Tuple.of(fn.apply(_1()), _2(),_3(),_4());
     }
 
-    public <AA> T4<AA,B,C,D> map_1(F1<A,AA> fn) {
-        return Tuple.of(fn.$(_1()), _2(),_3(),_4());
+    public <BB> T4<A,BB,C,D> map_2(Function<? super B,? extends BB> fn) {
+        return Tuple.of(_1(), fn.apply(_2()),_3(),_4());
     }
 
-    public <BB> T4<A,BB,C,D> map_2(F1<B,BB> fn) {
-        return Tuple.of(_1(), fn.$(_2()),_3(),_4());
+    public <CC> T4<A,B,CC,D> map_3(Function<? super C,? extends CC> fn) {
+        return Tuple.of(_1(), _2(), fn.apply(_3()),_4());
     }
 
-    public <CC> T4<A,B,CC,D> map_3(F1<C,CC> fn) {
-        return Tuple.of(_1(), _2(), fn.$(_3()),_4());
-    }
-
-    public <DD> T4<A,B,C,DD> map_4(F1<D,DD> fn) {
-        return Tuple.of(_1(), _2(), _3(), fn.$(_4()));
+    public <DD> T4<A,B,C,DD> map_4(Function<? super D,? extends DD> fn) {
+        return Tuple.of(_1(), _2(), _3(), fn.apply(_4()));
     }
 
     @Override
@@ -65,5 +60,68 @@ public abstract class T4<A, B, C, D> extends ____<T4.µ, A, B, C, D> {
     @Override
     public String toString() {
         return String.format("(%s,%s,%s,%s)", _1(), _2(), _3(), _4());
+    }
+
+    public static <S, T, U> Functor<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>> functor() {
+        return new T4Functor<S, T, U>() {
+        };
+    }
+
+    public static <S, T, U> Bind<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>> bind(Semigroup<S> semigroupS, Semigroup<T> semigroupT, Semigroup<U> semigroupU) {
+        return new T4Bind<S, T, U>() {
+            @Override
+            public Semigroup<S> getS() {
+                return semigroupS;
+            }
+
+            @Override
+            public Semigroup<T> getT() {
+                return semigroupT;
+            }
+
+            @Override
+            public Semigroup<U> getU() {
+                return semigroupU;
+            }
+        };
+    }
+
+    public static <S, T, U> Monad<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>> monad(Monoid<S> monoidS, Monoid<T> monoidT, Monoid<U> monoidU) {
+        return new T4Monad<S, T, U>() {
+            @Override
+            public Monoid<S> getS() {
+                return monoidS;
+            }
+
+            @Override
+            public Monoid<T> getT() {
+                return monoidT;
+            }
+
+            @Override
+            public Monoid<U> getU() {
+                return monoidU;
+            }
+        };
+    }
+
+
+    public static <S, T, U> Comonad<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>> comonad() {
+        return new T4Comonad<>();
+    }
+
+    public static <A, B, C, D> Semigroup<T4<A, B, C, D>> semigroup(Semigroup<A> semigroupA, Semigroup<B> semigroupB,
+                                                                   Semigroup<C> semigroupC, Semigroup<D> semigroupD) {
+        return T4Semigroup.from(semigroupA, semigroupB, semigroupC, semigroupD);
+    }
+
+    public static <A, B, C, D> Monoid<T4<A, B, C, D>> monoid(Monoid<A> monoidA, Monoid<B> monoidB, Monoid<C> monoidC,
+                                                             Monoid<D> monoidD) {
+        return T4Monoid.from(monoidA, monoidB, monoidC, monoidD);
+    }
+
+    public static <A, B, C, D> Group<T4<A, B, C, D>> group(Group<A> groupA, Group<B> groupB, Group<C> groupC,
+                                                           Group<D> groupD) {
+        return T4Group.from(groupA, groupB, groupC, groupD);
     }
 }

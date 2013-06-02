@@ -1,12 +1,13 @@
 package org.highj.data.collection;
 
 import org.highj._;
-import org.highj.function.F1;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.TreeSet;
+import java.util.function.Function;
 
 import static org.junit.Assert.*;
 
@@ -101,9 +102,9 @@ public class SetTest {
 
     @Test
     public void testMap() {
-        F1<Integer, String> fn = new F1<Integer, String>() {
+        Function<Integer, String> fn = new Function<Integer, String>() {
             @Override
-            public String $(Integer integer) {
+            public String apply(Integer integer) {
                 return "" + integer + integer;
             }
         };
@@ -116,16 +117,30 @@ public class SetTest {
 
     @Test
     public void testJoin() {
-        Set<Set<Integer>> set = Set.of(Set.of(1,3,5), Set.<Integer>of(), Set.of(6,4,2), Set.of(1,4,5));
+        Set<Set<Integer>> set = Set.of(Set.of(1, 3, 5), Set.<Integer>of(), Set.of(6, 4, 2), Set.of(1, 4, 5));
         assertEquals("Set(1,2,3,4,5,6)", Set.join(set).toString());
-        Set<_<Set.µ,Integer>> set_ = Set.<_<Set.µ,Integer>>of(Set.of(1,3,5), Set.<Integer>of(), Set.of(6,4,2), Set.of(1,4,5));
+        Set<_<Set.µ,Integer>> set_ = Set.<_<Set.µ,Integer>>of(Set.of(1, 3, 5), Set.<Integer>of(), Set.of(6, 4, 2), Set.of(1, 4, 5));
         assertEquals("Set(1,2,3,4,5,6)", Set.monadPlus.join(set_).toString());
     }
 
     @Test
     public void testToJSet() {
-        java.util.Set set = Set.of(3, 5, 1, 2, 4, 6).toJSet();
-        assertEquals("[1, 2, 3, 4, 5, 6]", set.toString());
+        java.util.Set<Integer> set = Set.of(3, 5, 1, 2, 4, 6).toJSet();
+        assertEquals("[1, 2, 3, 4, 5, 6]", new TreeSet<>(set).toString());
+    }
+
+    @Test
+    public void testEquals() {
+        Set s1 = Set.of(1,2,3,4,5,6,7);
+        Set s2 = Set.of(6,2,1,3,4,7,5);
+        Set s3 = Set.of(6,2,1,3,4,7,5,8);
+        assertTrue(s1.equals(s1));
+        assertTrue(s1.equals(s2));
+        assertTrue(s2.equals(s1));
+        assertFalse(s1.equals(s3));
+        assertFalse(s2.equals(s3));
+        assertFalse(s3.equals(s1));
+        assertFalse(s3.equals(s1));
     }
 
 }
