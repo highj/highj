@@ -2,34 +2,34 @@ package org.highj.data.collection;
 
 import org.highj._;
 import org.highj.__;
+import org.highj.data.collection.either.EitherMonad;
+import org.highj.data.collection.either.EitherMonadPlus;
 import org.highj.data.compare.Eq;
-import org.highj.function.*;
-import org.highj.function.repo.Integers;
-import org.highj.function.repo.Objects;
-import org.highj.function.repo.Strings;
-import org.highj.typeclass.alternative.Alt;
-import org.highj.typeclass.alternative.AltAbstract;
-import org.highj.typeclass.monad.Monad;
-import org.highj.typeclass.monad.MonadAbstract;
+import org.highj.data.tuple.T2;
+import org.highj.data.tuple.Tuple;
+import org.highj.data.functions.Functions;
+import org.highj.data.functions.Strings;
+import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass1.alternative.Alt;
+import org.highj.typeclass1.monad.Monad;
+import org.highj.typeclass1.monad.MonadPlus;
 
 import java.util.NoSuchElementException;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
-public abstract class Either<A, B> extends __<Either.µ, A, B> {
-    private static final µ hidden = new µ();
+public abstract class Either<A, B> implements __<Either.µ, A, B> {
 
-    private static final String SHOW_LEFT = "Left(%s)";
-    private static final String SHOW_RIGHT = "Right(%s)";
+    private static final String SHOW_LEFT = "LeftLazy(%s)";
+    private static final String SHOW_RIGHT = "RightLazy(%s)";
 
     /**
      * The witness class of Either
      */
     public static class µ {
-        private µ() {
-        }
     }
 
     private Either() {
-        super(hidden);
     }
 
     @SuppressWarnings("unchecked")
@@ -44,44 +44,45 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
     /**
      * The catamorphism of Either
      *
-     * @param leftFn  function to be applied if it is a Left value
-     * @param rightFn function to be applied if it is a Right value
+     * @param leftFn  function to be applied if it is a LeftLazy value
+     * @param rightFn function to be applied if it is a RightLazy value
      * @param <C>     the result type
      * @return the result of the function application
      */
-    protected abstract <C> C cata(F1<A, C> leftFn, F1<B, C> rightFn);
+    public abstract <C> C either(Function<A, C> leftFn, Function<B, C> rightFn);
 
     /**
      * The catamorphism for constant functions
      *
-     * @param left  result if it is a Left value
-     * @param right result if it is a Right value
+     * @param left  result if it is a LeftLazy value
+     * @param right result if it is a RightLazy value
      * @param <C>   the result type
      * @return the result of the function application
      */
     public <C> C constant(C left, C right) {
-        return cata(F1.<A, C>constant(left), F1.<B, C>constant(right));
+        return either(Functions.<A, C>constant(left), Functions.<B, C>constant(right));
     }
 
     /**
      * Converts the Either
      *
-     * @param leftFn  the mapping function for a Left
-     * @param rightFn the mapping function for a Right
-     * @param <C>     the new Left type
-     * @param <D>     the new Right type
+     * @param leftFn  the mapping function for a LeftLazy
+     * @param rightFn the mapping function for a RightLazy
+     * @param <C>     the new LeftLazy type
+     * @param <D>     the new RightLazy type
      * @return the converted Either
      */
-    public <C, D> Either<C, D> bimap(F1<A, C> leftFn, F1<B, D> rightFn) {
-        return cata(leftFn.andThen(Either.<C, D>left()), rightFn.andThen(Either.<C, D>right()));
+    public <C, D> Either<C, D> bimap(Function<? super A, ? extends C> leftFn, Function<? super B, ? extends D> rightFn) {
+        return either(a -> Either.<C, D>Left(leftFn.apply(a)),
+                b -> Either.<C, D>Right(rightFn.apply(b)));
     }
 
-    public <C> Either<C, B> leftMap(F1<A, C> leftFn) {
-        return bimap(leftFn, F1.<B>id());
+    public <C> Either<C, B> leftMap(Function<? super A, ? extends C> leftFn) {
+        return bimap(leftFn, Functions.<B>id());
     }
 
-    public <C> Either<A, C> rightMap(F1<B, C> rightFn) {
-        return bimap(F1.<A>id(), rightFn);
+    public <C> Either<A, C> rightMap(Function<? super B, ? extends C> rightFn) {
+        return bimap(Functions.<A>id(), rightFn);
     }
 
     /**
@@ -96,43 +97,26 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
         return new Either<A, B>() {
 
             @Override
-            public <C> C cata(F1<A, C> leftFn, F1<B, C> rightFn) {
-                return leftFn.$(a);
+            public <C> C either(Function<A, C> leftFn, Function<B, C> rightFn) {
+                return leftFn.apply(a);
             }
         };
     }
 
     /**
-     * Construction of a lazy Left value
+     * Construction of a lazy LeftLazy value
      *
      * @param thunk the Left thunk
      * @param <A>   the type of the Left value
      * @param <B>   the type of the Right value
      * @return the Left Either
      */
-    public static <A, B> Either<A, B> Left(final F0<A> thunk) {
+    public static <A, B> Either<A, B> LeftLazy(final Supplier<A> thunk) {
         return new Either<A, B>() {
 
             @Override
-            public <C> C cata(F1<A, C> leftFn, F1<B, C> rightFn) {
-                return leftFn.$(thunk.$());
-            }
-        };
-    }
-
-    /**
-     * Function for constructing a Left value
-     *
-     * @param <A> the type of the Left value
-     * @param <B> the type of the Right value
-     * @return a function which returns a Left Either if applied to an A
-     */
-    public static <A, B> F1<A, Either<A, B>> left() {
-        return new F1<A, Either<A, B>>() {
-
-            @Override
-            public Either<A, B> $(A a) {
-                return Left(a);
+            public <C> C either(Function<A, C> leftFn, Function<B, C> rightFn) {
+                return leftFn.apply(thunk.get());
             }
         };
     }
@@ -149,8 +133,8 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
         return new Either<A, B>() {
 
             @Override
-            public <C> C cata(F1<A, C> leftFn, F1<B, C> rightFn) {
-                return rightFn.$(b);
+            public <C> C either(Function<A, C> leftFn, Function<B, C> rightFn) {
+                return rightFn.apply(b);
             }
         };
     }
@@ -163,29 +147,12 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
      * @param <B>   the type of the Right value
      * @return the Right Either
      */
-    public static <A, B> Either<A, B> Right(final F0<B> thunk) {
+    public static <A, B> Either<A, B> RightLazy(final Supplier<B> thunk) {
         return new Either<A, B>() {
 
             @Override
-            public <C> C cata(F1<A, C> leftFn, F1<B, C> rightFn) {
-                return rightFn.$(thunk.$());
-            }
-        };
-    }
-
-    /**
-     * Function for constructing a Right value
-     *
-     * @param <A> the type of the Left value
-     * @param <B> the type of the Right value
-     * @return a function which returns a Right Either if applied to a B
-     */
-    public static <A, B> F1<B, Either<A, B>> right() {
-        return new F1<B, Either<A, B>>() {
-
-            @Override
-            public Either<A, B> $(B b) {
-                return Right(b);
+            public <C> C either(Function<A, C> leftFn, Function<B, C> rightFn) {
+                return rightFn.apply(thunk.get());
             }
         };
     }
@@ -196,7 +163,7 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
      * @return the swapped Either
      */
     public Either<B, A> swap() {
-        return cata(Either.<B, A>right(), Either.<B, A>left());
+        return either(Either::<B, A>Right, Either::<B, A>Left);
     }
 
     /**
@@ -223,7 +190,7 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
      * @return a Maybe containing the Left value, if it exists
      */
     public Maybe<A> maybeLeft() {
-        return cata(Maybe.<A>just(), F1.<B, Maybe<A>>constant(Maybe.<A>Nothing()));
+        return either(Maybe::<A>Just, Functions.<B, Maybe<A>>constant(Maybe.<A>Nothing()));
     }
 
     /**
@@ -232,47 +199,47 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
      * @return a Maybe containing Right value, if it exists
      */
     public Maybe<B> maybeRight() {
-        return cata(F1.<A, Maybe<B>>constant(Maybe.<B>Nothing()), Maybe.<B>just());
+        return either(Functions.<A, Maybe<B>>constant(Maybe.<B>Nothing()), Maybe::<B>Just);
     }
 
     /**
-     * Extracts the Left value, mplus the default value if ir doesn't exist
+     * Extracts the Left value, or uses the default value if it doesn't exist
      *
      * @param defaultValue default value
      * @return the Left value if it exists, else the default value
      */
     public A leftOrElse(A defaultValue) {
-        return cata(F1.<A>id(), F1.<B, A>constant(defaultValue));
+        return either(Functions.<A>id(), Functions.<B, A>constant(defaultValue));
     }
 
     /**
-     * Extracts the Right value, mplus the default value if ir doesn't exist
+     * Extracts the Right value, or the default value if ir doesn't exist
      *
      * @param defaultValue default value
      * @return the Right value if it exists, else the default value
      */
     public B rightOrElse(B defaultValue) {
-        return cata(F1.<A, B>constant(defaultValue), F1.<B>id());
+        return either(Functions.<A, B>constant(defaultValue), Functions.<B>id());
     }
 
     /**
      * Extracts the Left value
      *
-     * @return the Left value, mplus throws an exception if none exists
+     * @return the Left value, or throws an exception if none exists
      */
     public A getLeft() throws NoSuchElementException {
-        return cata(F1.<A>id(), F1.<B, A>constant(
-                F0.<A>error(NoSuchElementException.class, "getLeft called on a Right")));
+        return either(Functions.<A>id(), Functions.<B, A>constant(
+                Functions.<A>error(NoSuchElementException.class, "getLeft called on a RightLazy")));
     }
 
     /**
      * Extracts the Right value
      *
-     * @return the Right value, mplus throws an exception if none exists
+     * @return the Right value, or throws an exception if none exists
      */
     public B getRight() throws NoSuchElementException {
-        return cata(F1.<A, B>constant(
-                F0.<B>error(NoSuchElementException.class, "getRight called on a Left")), F2.<B>id());
+        return either(Functions.<A, B>constant(
+                Functions.<B>error(NoSuchElementException.class, "getRight called on a LeftLazy")), Functions.<B>id());
     }
 
     /**
@@ -282,13 +249,28 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
      * @return a List of all Left values
      */
     public static <A> List<A> lefts(List<Either<A, ?>> list) {
-        List<A> result = List.Nil();
+        List<A> result = List.nil();
         for (Either<A, ?> either : list) {
             if (either.isLeft()) {
-                result = List.Cons(either.getLeft(), result);
+                result = result.plus(either.getLeft());
             }
         }
         return result.reverse();
+    }
+
+    /**
+     * Extracts the Left values from a List in a lazy fashion
+     *
+     * @param list a List of Eithers
+     * @return a List of all Left values
+     */
+    public static <A> List<A> leftsLazy(List<Either<A, ?>> list) throws StackOverflowError {
+        if (list.isEmpty()) {
+            return List.nil();
+        } else {
+            Either<A, ?> head = list.head();
+            return head.either(a -> List.consLazy(a, () -> leftsLazy(list.tail())), b -> leftsLazy(list.tail()));
+        }
     }
 
     /**
@@ -298,13 +280,47 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
      * @return a List of all Right values
      */
     public static <B> List<B> rights(List<Either<?, B>> list) {
-        List<B> result = List.Nil();
+        List<B> result = List.nil();
         for (Either<?, B> either : list) {
             if (either.isRight()) {
-                result = List.Cons(either.getRight(), result);
+                result = result.plus(either.getRight());
             }
         }
         return result.reverse();
+    }
+
+
+    /**
+     * Extracts the Right values from a List in a lazy fashion
+     *
+     * @param list a List of Eithers
+     * @return a List of all Right values
+     */
+    public static <B> List<B> rightsLazy(List<Either<?, B>> list) throws StackOverflowError {
+        if (list.isEmpty()) {
+            return List.nil();
+        } else {
+            Either<?, B> head = list.head();
+            return head.either(a -> rightsLazy(list.tail()), b -> List.consLazy(b, () -> rightsLazy(list.tail())));
+        }
+    }
+
+    /**
+     * Extracts the values from a List
+     *
+     * @param list a List of Eithers
+     * @return a Pair of a List of all Left and a list of all Right values
+     */   public static <A,B> T2<List<A>,List<B>> split(List<Either<A,B>> list) {
+        List<A> lefts = List.nil();
+        List<B> rights = List.nil();
+        for (Either<A, B> either : list) {
+           if (either.isLeft()) {
+               lefts = lefts.plus(either.getLeft());
+           } else {
+               rights = rights.plus(either.getRight());
+           }
+        }
+        return Tuple.of(lefts.reverse(), rights.reverse());
     }
 
     /**
@@ -314,7 +330,7 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
      */
     @Override
     public String toString() {
-        return cata(Strings.<A>format(SHOW_LEFT), Strings.<B>format(SHOW_RIGHT));
+        return either(Strings.<A>format(SHOW_LEFT), Strings.<B>format(SHOW_RIGHT));
     }
 
     /**
@@ -324,8 +340,7 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
      */
     @Override
     public int hashCode() {
-        return cata(Objects.<A>hashCodeFn().andThen(Integers.multiply.$(31)),
-                Objects.<B>hashCodeFn().andThen(Integers.multiply.$(47)));
+        return either(x -> x.hashCode() * 31, y -> y.hashCode() * 47);
     }
 
     /**
@@ -344,85 +359,43 @@ public abstract class Either<A, B> extends __<Either.µ, A, B> {
         return false;
     }
 
+    public static <A> A unify(Either<A,A> either) {
+        return either.either(Functions.<A>id(), Functions.<A>id());
+    }
+
     /**
      * Generates an Eq instance
      *
-     * @param eqA Eq instance for Left type
-     * @param eqB Eq instance for Right type
-     * @param <A> Left type
-     * @param <B> Right type
+     * @param eqA Eq instance for LeftLazy type
+     * @param eqB Eq instance for RightLazy type
+     * @param <A> LeftLazy type
+     * @param <B> RightLazy type
      * @return Eq instance for Either
      */
     public static <A, B> Eq<Either<A, B>> eq(final Eq<A> eqA, final Eq<B> eqB) {
-        return new Eq<Either<A, B>>() {
-
-            @Override
-            public boolean eq(Either<A, B> one, Either<A, B> two) {
-                if (one.isLeft() && two.isLeft()) {
-                    return eqA.eq(one.getLeft(), two.getLeft());
-                }
-                if (one.isRight() && two.isRight()) {
-                    return eqB.eq(one.getRight(), two.getRight());
-                }
-                return false;
+        return (one, two) -> {
+            if (one.isLeft() && two.isLeft()) {
+                return eqA.eq(one.getLeft(), two.getLeft());
             }
+            return one.isRight() && two.isRight() && eqB.eq(one.getRight(), two.getRight());
         };
     }
 
     /**
-     * The monad of Either
+     * The monadTrans of Either
      *
      * @param <S> the Left type of Either
-     * @return the Either functor
+     * @return the Either monad
      */
     private static <S> Monad<__.µ<µ, S>> monad() {
-        return new MonadAbstract<__.µ<µ, S>>() {
-
-            @Override
-            public <A, B> _<__.µ<µ, S>, B> map(F1<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
-                return narrow(nestedA).rightMap(fn);
-            }
-
-            @Override
-            public <A> _<__.µ<µ, S>, A> pure(A a) {
-                return Right(a);
-            }
-
-            @Override
-            public <A, B> _<__.µ<µ, S>, B> ap(_<__.µ<µ, S>, F1<A, B>> fn, _<__.µ<µ, S>, A> nestedA) {
-                //a <*> b = do x <- a; y <- b; return (x y)
-                Either<S,F1<A, B>> eitherFn = narrow(fn);
-                if (eitherFn.isLeft()) return Left(eitherFn.getLeft());
-                Either<S,A> eitherA = narrow(nestedA);
-                return eitherA.isRight()
-                        ? pure(eitherFn.getRight().$(eitherA.getRight()))
-                        : Either.<S,B>Left(eitherA.getLeft());
-            }
-
-            @Override
-            public <A, B> _<__.µ<µ, S>, B> bind(_<__.µ<µ, S>, A> a, F1<A, _<__.µ<µ, S>, B>> fn) {
-                //Right m >>= k = k m
-                //Left e  >>= _ = Left e
-                Either<S,A> either = narrow(a);
-                return either.isRight()
-                        ? fn.$(either.getRight())
-                        : Either.<S,B>Left(either.getLeft());
-            }
-        };
+        return new EitherMonad<>();
     }
 
-    public static <S> Alt<__.µ<µ, S>> alt() {
-        return new AltAbstract<__.µ<µ, S>>() {
+    public static <S> MonadPlus<__.µ<µ, S>> firstBiasedMonadPlus(Monoid<S> monoid) {
+        return new EitherMonadPlus<>(monoid, EitherMonadPlus.Bias.FIRST_RIGHT);
+    }
 
-            @Override
-            public <A> _<__.µ<µ, S>, A> mplus(_<__.µ<µ, S>, A> first, _<__.µ<µ, S>, A> second) {
-                return narrow(first).isLeft() ? second : first;
-            }
-
-            @Override
-            public <A, B> _<__.µ<µ, S>, B> map(F1<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
-                return narrow(nestedA).rightMap(fn);
-            }
-        };
+    public static <S> MonadPlus<__.µ<µ, S>> lastBiasedMonadPlus(Monoid<S> monoid) {
+        return new EitherMonadPlus<>(monoid, EitherMonadPlus.Bias.LAST_RIGHT);
     }
 }

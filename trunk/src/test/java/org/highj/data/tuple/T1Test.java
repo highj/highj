@@ -1,14 +1,14 @@
 package org.highj.data.tuple;
 
 import org.highj._;
-import org.highj.typeclass.monad.Apply;
-import org.highj.typeclass.monad.Functor;
-import org.highj.typeclass.monad.Monad;
+import org.highj.data.functions.Functions;
+import org.highj.typeclass1.monad.Apply;
+import org.highj.typeclass1.functor.Functor;
+import org.highj.typeclass1.monad.Monad;
 import org.highj.data.compare.Eq;
-import org.highj.function.F0;
-import org.highj.function.F1;
-import org.highj.function.repo.Strings;
 import org.junit.Test;
+
+import java.util.function.Function;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -27,21 +27,21 @@ public class T1Test {
     @Test
     public void narrowTest() {
         _<T1.µ, Integer> fortyTwo = Tuple.of(42);
-        assertEquals(Integer.valueOf(42), T1.narrow(fortyTwo)._1());
+        assertEquals(Integer.valueOf(42), Tuple.narrow(fortyTwo)._1());
         //lazy version
         _<T1.µ, String> hello = stringThunk("hello");
-        assertEquals("hello", T1.narrow(hello)._1());
+        assertEquals("hello", Tuple.narrow(hello)._1());
     }
 
     @Test
     public void mapTest() {
         T1<String> hello = Tuple.of("hello");
-        T1<Integer> five = hello.map(Strings.length);
+        T1<Integer> five = hello.map(String::length);
         assertEquals(Integer.valueOf(5), five._1());
         
         //lazy version
         T1<String> helloLazy = stringThunk("hello");
-        T1<Integer> fiveLazy = helloLazy.map(Strings.length);
+        T1<Integer> fiveLazy = helloLazy.map(String::length);
         assertEquals(Integer.valueOf(5), fiveLazy._1());
     }
 
@@ -49,13 +49,13 @@ public class T1Test {
     public void functorTest() {
         Functor<T1.µ> functor = T1.monad;
         T1<String> hello = Tuple.of("hello");
-        T1<Integer> five = T1.narrow(functor.map(Strings.length, hello));
+        T1<Integer> five = Tuple.narrow(functor.map(s->s.length(), hello));
         assertEquals(Integer.valueOf(5), five._1());
     }
 
     @Test
     public void apTest() {
-        T1<F1<String,Integer>> lengthFn = Tuple.of(Strings.length);
+        T1<Function<String,Integer>> lengthFn = Tuple.of(String::length);
         T1<String> hello = Tuple.of("hello");
         T1<Integer> five = hello.ap(lengthFn);
         assertEquals(Integer.valueOf(5), five._1());
@@ -64,24 +64,24 @@ public class T1Test {
     @Test
     public void applyTest() {
         Apply<T1.µ> apply = T1.monad;
-        T1<F1<String,Integer>> lengthFn = Tuple.of(Strings.length);
+        T1<Function<String,Integer>> lengthFn = Tuple.of(String::length);
         T1<String> hello = Tuple.of("hello");
-        T1<Integer> five = T1.narrow(apply.ap(lengthFn, hello));
+        T1<Integer> five = Tuple.narrow(apply.ap(lengthFn, hello));
         assertEquals(Integer.valueOf(5), five._1());
     }
 
     @Test
     public void monadTest() {
         Monad<T1.µ> monad = T1.monad;
-        F1<String,_<T1.µ, Integer>> lengthFn = F1.<String,Integer,_<T1.µ,Integer>>compose(Tuple.<Integer>cell(), Strings.length);
+        Function<String,_<T1.µ, Integer>> lengthFn = Functions.<String,Integer,_<T1.µ,Integer>>compose(Tuple::of, String::length);
         T1<String> hello = Tuple.of("hello");
-        T1<Integer> five = T1.narrow(monad.bind(hello, lengthFn));
+        T1<Integer> five = Tuple.narrow(monad.bind(hello, lengthFn));
         assertEquals(Integer.valueOf(5), five._1());
     }    
 
     @Test
     public void eqTest() {
-        Eq<T1<String>> eq = T1.eq(new Eq.JavaEq<String>());
+        Eq<T1<String>> eq = Tuple.eq(new Eq.JavaEq<String>());
         T1<String> one = Tuple.of("hello");
         T1<String> two = stringThunk("hello");
         T1<String> three = Tuple.of("world");
@@ -90,10 +90,10 @@ public class T1Test {
         assertTrue(!eq.eq(two, three));
     }
 
-    private F0<String> stringThunk(final String s) {
-        return new F0<String>() {
+    private T1<String> stringThunk(final String s) {
+        return new T1<String>(){
             @Override
-            public String $() {
+            public String _1() {
                 return s;
             }
         };

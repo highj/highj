@@ -3,9 +3,8 @@ package org.highj.data.collection;
 import org.highj._;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
-import org.highj.function.F0;
-import org.highj.function.repo.Integers;
-import org.highj.function.repo.Strings;
+import org.highj.data.functions.Integers;
+import org.highj.data.functions.Strings;
 import org.junit.Test;
 
 import java.util.NoSuchElementException;
@@ -20,8 +19,6 @@ public class ListTest {
         _<List.µ, Integer> list_ = List.of(1, 2, 3);
         List<Integer> list = List.narrow(list_);
         assertEquals("List(1,2,3)", list.toString());
-        List<Integer> listByF1 = List.<Integer>narrow().$(list_);
-        assertEquals("List(1,2,3)", listByF1.toString());
     }
 
     @Test
@@ -48,8 +45,8 @@ public class ListTest {
 
     @Test
     public void testCons() throws Exception {
-        assertEquals("List(1)", List.<Integer>of().cons(1).toString());
-        assertEquals("List(4,1,2,3)", List.of(1, 2, 3).cons(4).toString());
+        assertEquals("List(1)", List.<Integer>of().plus(1).toString());
+        assertEquals("List(4,1,2,3)", List.of(1, 2, 3).plus(4).toString());
     }
 
     @Test
@@ -65,6 +62,8 @@ public class ListTest {
         assertEquals("List(1,2,3)", List.of(4, 1, 2, 3).minus(4).toString());
         assertEquals("List(1,2,3)", List.of(1, 2, 4, 3).minus(4).toString());
         assertEquals("List(1,2,3)", List.of(1, 2, 3, 4).minus(4).toString());
+        assertEquals("List(1,2,3,4)", List.of(1, 4, 2, 3, 4).minus(4).toString());
+        assertEquals("List(1,2,3,5)", List.range(1).minus(4).take(4).toString());
     }
 
     @Test
@@ -76,11 +75,13 @@ public class ListTest {
         assertEquals("List(1,2,3)", List.of(1, 2, 4, 3).minusAll(4).toString());
         assertEquals("List(1,2,3)", List.of(1, 2, 3, 4).minusAll(4).toString());
         assertEquals("List(1,2,3)", List.of(4, 1, 4, 2, 4, 4, 4, 3, 4).minusAll(4).toString());
+        assertEquals("List(2,3)", List.of(4, 1, 4, 2, 4, 4, 4, 3, 4).minusAll(4,1).toString());
+        assertEquals("List(1,2,4,6)", List.range(1).minusAll(3,5).take(4).toString());
     }
 
     @Test
     public void testNil() throws Exception {
-        List<Integer> empty = List.Nil();
+        List<Integer> empty = List.nil();
         assertEquals("List()", empty.toString());
     }
 
@@ -123,22 +124,6 @@ public class ListTest {
     }
 
     @Test
-    public void testLazyTail() throws Exception {
-        List<Integer> list = List.Cons(42, F0.<List<Integer>>error("Test"));
-        F0<List<Integer>> lazyTail = list.lazyTail();
-        try {
-            lazyTail.$();
-            fail();
-        } catch (RuntimeException ex) {
-            /*expected*/
-        }
-
-        List.of().lazyTail();
-
-        assertEquals("List(2,3)", List.of(1, 2, 3).lazyTail().$().toString());
-    }
-
-    @Test
     public void testIsEmpty() throws Exception {
         assertTrue(List.of().isEmpty());
         assertTrue(!List.of(1, 2, 4).isEmpty());
@@ -147,16 +132,16 @@ public class ListTest {
     @Test
     public void test$() throws Exception {
         List<Integer> list = List.of(10, 20, 30, 40);
-        assertEquals(10, list.$(0).intValue());
-        assertEquals(40, list.$(3).intValue());
+        assertEquals(10, list.get(0).intValue());
+        assertEquals(40, list.get(3).intValue());
         try {
-            list.$(-1);
+            list.get(-1);
             fail();
         } catch (IndexOutOfBoundsException ex) {
             /* expected*/
         }
         try {
-            list.$(4);
+            list.get(4);
             fail();
         } catch (IndexOutOfBoundsException ex) {
             /* expected*/
@@ -203,12 +188,12 @@ public class ListTest {
 
     @Test
     public void testDrop() throws Exception {
-        assertEquals("List()", List.of(1,2, 3, 4).drop(10).toString());
-        assertEquals("List()", List.of(1,2, 3, 4).drop(4).toString());
-        assertEquals("List(4)", List.of(1,2, 3, 4).drop(3).toString());
-        assertEquals("List(2,3,4)", List.of(1,2, 3, 4).drop(1).toString());
-        assertEquals("List(1,2,3,4)", List.of(1,2, 3, 4).drop(0).toString());
-        assertEquals("List(1,2,3,4)", List.of(1,2, 3, 4).drop(-10).toString());
+        assertEquals("List()", List.of(1, 2, 3, 4).drop(10).toString());
+        assertEquals("List()", List.of(1, 2, 3, 4).drop(4).toString());
+        assertEquals("List(4)", List.of(1, 2, 3, 4).drop(3).toString());
+        assertEquals("List(2,3,4)", List.of(1, 2, 3, 4).drop(1).toString());
+        assertEquals("List(1,2,3,4)", List.of(1, 2, 3, 4).drop(0).toString());
+        assertEquals("List(1,2,3,4)", List.of(1, 2, 3, 4).drop(-10).toString());
     }
 
     @Test
@@ -216,7 +201,7 @@ public class ListTest {
         assertEquals("List()", List.of(2, 4, 6).dropWhile(Integers.even).toString());
         assertEquals("List(7,8,10)", List.of(2, 4, 6, 7, 8, 10).dropWhile(Integers.even).toString());
         assertEquals("List(7,8,10)", List.of(7, 8, 10).dropWhile(Integers.even).toString());
-   }
+    }
 
     @Test
     public void testSize() throws Exception {
@@ -302,14 +287,14 @@ public class ListTest {
 
     @Test
     public void testFoldr() throws Exception {
-        assertEquals("xyxyxyxyxyxy",List.of(1,2,3).foldr(Strings.repeat.flip(), "xy"));
-        assertEquals(Integer.valueOf(0), List.of(1,2,3,4,5).foldr(Integers.subtract.flip(), 15));
+        assertEquals("xyxyxyxyxyxy", List.of(1, 2, 3).foldr(a -> b -> Strings.repeat.apply(b).apply(a), "xy"));
+        assertEquals(Integer.valueOf(0), List.of(1, 2, 3, 4, 5).foldr(x -> y -> y - x, 15));
     }
 
     @Test
     public void testFoldl() throws Exception {
-        assertEquals("xyxyxyxyxyxy",List.of(1,2,3).foldl("xy", Strings.repeat));
-        assertEquals(Integer.valueOf(0),List.of(1,2,3,4).foldl(10, Integers.subtract));
+        assertEquals("xyxyxyxyxyxy", List.of(1, 2, 3).foldl("xy", Strings.repeat));
+        assertEquals(Integer.valueOf(0), List.of(1, 2, 3, 4).foldl(10, x -> y -> x - y));
     }
 
     @Test
@@ -340,7 +325,7 @@ public class ListTest {
         List<List<Integer>> list = List.of(List.of(1, 2), List.<Integer>of(), List.of(30, 40, 50), List.of(600));
         assertEquals("List(1,2,30,40,50,600)", List.join(list).toString());
         _<List.µ, _<List.µ, Integer>> list_ = List.<_<List.µ, Integer>>of(List.of(1, 2), List.<Integer>of(), List.of(30, 40, 50), List.of(600));
-        assertEquals("List(1,2,30,40,50,600)", List.monad.join(list_).toString());
+        assertEquals("List(1,2,30,40,50,600)", List.monadPlus.join(list_).toString());
     }
 
     @Test

@@ -4,12 +4,12 @@ import org.highj._;
 import org.highj.__;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
-import org.highj.function.F1;
-import org.highj.function.repo.Integers;
+import org.highj.data.functions.Integers;
 import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -31,8 +31,8 @@ public class MapTest {
 
     @Test
     public void test$() throws Exception {
-        assertEquals("Just(5)", aMap.$("y").toString());
-        assertEquals("Nothing", aMap.$("a").toString());
+        assertEquals("Just(5)", aMap.apply("y").toString());
+        assertEquals("Nothing", aMap.apply("a").toString());
     }
 
     @Test
@@ -140,9 +140,9 @@ public class MapTest {
 
     @Test
     public void testF1() throws Exception {
-        F1<String, Maybe<Integer>> f1 = aMap.F1();
-        assertEquals("Just(5)", f1.$("y").toString());
-        assertEquals("Nothing", f1.$("a").toString());
+        Function<String, Maybe<Integer>> f1 = aMap.apply();
+        assertEquals("Just(5)", f1.apply("y").toString());
+        assertEquals("Nothing", f1.apply("a").toString());
     }
 
 

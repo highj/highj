@@ -1,8 +1,7 @@
 package org.highj.data.compare;
 
-import org.highj.function.F2;
-import org.highj.typeclass.group.Monoid;
-import org.highj.typeclass.group.MonoidAbstract;
+import org.highj.data.compare.ordering.OrderingGroup;
+import org.highj.typeclass0.group.Group;
 
 public enum Ordering {
     LT, EQ, GT;
@@ -11,11 +10,43 @@ public enum Ordering {
         return ordinal() - 1;
     }
 
-    public static Monoid<Ordering> monoid = new MonoidAbstract<Ordering>(
-            new F2<Ordering,Ordering,Ordering>() {
-        @Override
-        public Ordering $(Ordering x, Ordering y) {
-            return x == EQ ? y : x;
-        }
-    }, EQ);
+    public static Group<Ordering> group = new OrderingGroup();
+
+    public static Ordering compare(boolean x, boolean y) {
+        return x == y ? EQ : !x ? LT : GT;
+    }
+
+    public static Ordering compare(char x, char y) {
+        return x < y ? LT : x > y ? GT : EQ;
+    }
+
+    public static Ordering compare(byte x, byte y) {
+        return x < y ? LT : x > y ? GT : EQ;
+    }
+
+    public static Ordering compare(short x, short y) {
+        return x < y ? LT : x > y ? GT : EQ;
+    }
+
+    public static Ordering compare(int x, int y) {
+        return x < y ? LT : x > y ? GT : EQ;
+    }
+
+    public static Ordering compare(long x, long y) {
+        return x < y ? LT : x > y ? GT : EQ;
+    }
+
+    public static Ordering compare(float x, float y) {
+        return x < y ? LT : x > y ? GT : EQ;
+    }
+
+    public static Ordering compare(double x, double y) {
+        return x < y ? LT : x > y ? GT : EQ;
+    }
+
+    public static <T extends Comparable<? super T>> Ordering compare(T x, T y) {
+        int result = x.compareTo(y);
+        return result < 0 ? LT : result > 0 ? GT : EQ;
+    }
+
 }

@@ -1,72 +1,27 @@
 package org.highj.data.tuple;
 
 import org.highj._;
-import org.highj.data.compare.Eq;
-import org.highj.function.F1;
-import org.highj.function.F2;
-import org.highj.typeclass.comonad.Comonad;
-import org.highj.typeclass.comonad.ComonadAbstract;
-import org.highj.typeclass.group.*;
-import org.highj.typeclass.monad.Monad;
-import org.highj.typeclass.monad.MonadAbstract;
+import org.highj.data.tuple.t1.*;
+import org.highj.typeclass0.group.Group;
+import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass0.group.Semigroup;
+import org.highj.typeclass1.comonad.Comonad;
+import org.highj.typeclass1.monad.Monad;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static org.highj.data.tuple.Tuple.of;
 
 /**
- * A tuple of arity 1, a.k.a. "cell" mplus "Id".
- * Note that <code>F0</code> is a subclass of <code>T1</code>, which allows lazy behavior.
+ * A tuple of arity 1, a.k.a. "cell" or "Id".
  */
-public abstract class T1<A> extends _<T1.µ, A> {
-    private static final µ hidden = new µ();
+public abstract class T1<A> implements  _<T1.µ, A>, Supplier<A> {
+    public static class µ {}
 
-    public static class µ {
-        private µ() {
-        }
-    }
-
-    protected T1() {
-        super(hidden);
-    }
-
-    public static final Monad<µ> monad = new MonadAbstract<µ>() {
-        @Override
-        public <A, B> _<µ, B> map(F1<A, B> fn, _<µ, A> nestedA) {
-            return narrow(nestedA).map(fn);
-        }
-
-        @Override
-        public <A> _<µ, A> pure(A a) {
-            return of(a);
-        }
-
-        @Override
-        public <A, B> _<µ, B> ap(_<µ, F1<A, B>> nestedFn, _<µ, A> nestedA) {
-            return narrow(nestedA).ap(narrow(nestedFn));
-        }
-
-        @Override
-        public <A, B> _<µ, B> bind(_<µ, A> nestedA, F1<A, _<µ, B>> fn) {
-            return fn.$(narrow(nestedA)._1());
-        }
-    };
-
-    public static Comonad<µ> comonad() {
-        return new ComonadAbstract<µ>() {
-            @Override
-            public <A> _<µ, _<µ, A>> duplicate(_<µ, A> nestedA) {
-                return Tuple.of(nestedA);
-            }
-
-            @Override
-            public <A> A extract(_<µ, A> nestedA) {
-                return narrow(nestedA)._1();
-            }
-
-            @Override
-            public <A, B> _<µ, B> map(F1<A, B> fn, _<µ, A> nestedA) {
-                return narrow(nestedA).map(fn);
-            }
-        };
+    @Override
+    public A get() {
+        return _1();
     }
 
     public abstract A _1();
@@ -76,27 +31,12 @@ public abstract class T1<A> extends _<T1.µ, A> {
         return String.format("(%s)", _1());
     }
 
-    @SuppressWarnings("unchecked")
-    public static <A> T1<A> narrow(_<µ, A> value) {
-        return (T1) value;
+    public <B> T1<B> map(Function<? super A, ? extends B> fn) {
+        return of(fn.apply(_1()));
     }
 
-    public <B> T1<B> map(F1<A, B> fn) {
-        return of(fn.$(_1()));
-    }
-
-    public <B> T1<B> ap(T1<F1<A, B>> nestedFn) {
-        return map(narrow(nestedFn)._1());
-    }
-
-    public static <A> F1<A, T1<A>> t1() {
-        return new F1<A, T1<A>>() {
-
-            @Override
-            public T1<A> $(A a) {
-                return Tuple.of(a);
-            }
-        };
+    public <B> T1<B> ap(T1<Function<A, B>> nestedFn) {
+        return map(Tuple.narrow(nestedFn)._1());
     }
 
     @Override
@@ -113,45 +53,19 @@ public abstract class T1<A> extends _<T1.µ, A> {
         return false;
     }
 
-    public static <A> Eq<T1<A>> eq(final Eq<? super A> eqA) {
-        return new Eq<T1<A>>() {
+    public static final Monad<µ> monad = new T1Monad();
+    public static final Comonad<µ> comonad = new T1Comonad();
 
-            @Override
-            public boolean eq(T1<A> one, T1<A> two) {
-                return eqA.eq(one._1(), two._1());
-            }
-        };
+    public static <A> Semigroup<T1<A>> semigroup(Semigroup<A> semigroupA) {
+        return T1Semigroup.from(semigroupA);
     }
 
-    private static <T> F2<T1<T>, T1<T>, T1<T>> dotFn(final Semigroup<T> semigroup) {
-        return new F2<T1<T>, T1<T>, T1<T>>() {
-
-            @Override
-            public T1<T> $(T1<T> x, T1<T> y) {
-                return Tuple.of(semigroup.dot(x._1(), y._1()));
-            }
-        };
+    public static <A> Monoid<T1<A>> monoid(Monoid<A> monoidA) {
+        return T1Monoid.from(monoidA);
     }
 
-    private static <T> F1<T1<T>, T1<T>> inverseFn(final Group<T> group) {
-        return new F1<T1<T>, T1<T>>() {
-
-            @Override
-            public T1<T> $(T1<T> x) {
-                return Tuple.of(group.inverse(x._1()));
-            }
-        };
+    public static <A> Group<T1<A>> group(Group<A> groupA) {
+        return T1Group.from(groupA);
     }
 
-    public static <T> Semigroup<T1<T>> semigroup(Semigroup<T> semigroup) {
-        return new SemigroupAbstract<T1<T>>(dotFn(semigroup));
-    }
-
-    public static <T> Monoid<T1<T>> monoid(Monoid<T> monoid) {
-        return new MonoidAbstract<T1<T>>(semigroup(monoid), Tuple.of(monoid.identity()));
-    }
-
-    public static <T> Group<T1<T>> group(Group<T> group) {
-        return new GroupAbstract<T1<T>>(monoid(group), inverseFn(group));
-    }
 }
