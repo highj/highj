@@ -5,7 +5,7 @@
 == Monads Package ==
 
   * What to do with the infamous Monad.fail method?
-  * Which monad extension would be useful (e.g. MonadFix)?
+  * Which monad extension would be useful (e.g. `MonadFix`)?
 
 == Type Classes ==
 
