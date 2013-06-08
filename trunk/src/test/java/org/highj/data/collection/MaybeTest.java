@@ -5,6 +5,7 @@ import org.highj.data.functions.Functions;
 import org.highj.data.functions.Integers;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.data.compare.Eq;
+import org.highj.typeclass1.monad.MonadFix;
 import org.highj.typeclass1.monad.MonadPlus;
 import org.junit.Test;
 
@@ -321,5 +322,12 @@ public class MaybeTest {
         assertEquals("List(bar)", bar.asList().toString());
         Maybe<String> nothing = Nothing();
         assertEquals("List()", nothing.asList().toString());
+    }
+
+    @Test
+    public void testMonadFix() throws Exception {
+        MonadFix<µ> monadFix = Maybe.monadFix;
+        Maybe<String> foo = narrow(monadFix.mfix((Supplier<String> x) -> Just("foo")));
+        assertEquals("Just(foo)", foo.toString());
     }
 }

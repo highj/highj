@@ -5,6 +5,7 @@ import org.highj.data.transformer.identity.*;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.foldable.Foldable;
 import org.highj.typeclass1.foldable.Traversable;
+import org.highj.typeclass1.foldable.Traversable1;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.*;
 
@@ -73,32 +74,16 @@ public class IdentityT<M, A> implements _<_<IdentityT.µ, M>, A> {
     }
 
     public static <M> Foldable<_<µ, M>> foldable(final Foldable<M> foldableM) {
-        return new Foldable<_<µ, M>>() {
-            @Override
-            public <A, B> B foldMap(Monoid<B> mb, Function<A, B> fn, _<_<µ, M>, A> nestedA) {
-                IdentityT<M, A> aId = narrow(nestedA);
-                return foldableM.foldMap(mb, fn, aId.get());
-            }
-        };
+        return (IdentityTFoldable<M>) () -> foldableM;
     }
 
     public static <M> Traversable<_<µ, M>> traversable(final Traversable<M> traversableM) {
-        return new Traversable<_<µ, M>>() {
-            @Override
-            public <A, B> _<_<µ, M>, B> map(Function<A, B> fn, _<_<µ, M>, A> nestedA) {
-                IdentityT<M, A> aId = narrow(nestedA);
-                return new IdentityT<>(traversableM.map(fn, aId.get()));
-            }
-
-            @Override
-            public <A, X> _<X, _<_<µ, M>, A>> sequenceA(Applicative<X> applicative, _<_<µ, M>, _<X, A>> traversable) {
-                IdentityT<M, _<X, A>> traversableId = narrow(traversable);
-                _<X, _<M, A>> result = traversableM.sequenceA(applicative, traversableId.get());
-                return applicative.map(IdentityT::<M, A>new, result);
-            }
-        };
+        return (IdentityTTraversable<M>) () -> traversableM;
     }
 
+    public static <M> Traversable1<_<µ, M>> traversable1(final Traversable1<M> traversable1M) {
+        return (IdentityTTraversable1<M>) () -> traversable1M;
+    }
 
 }
 

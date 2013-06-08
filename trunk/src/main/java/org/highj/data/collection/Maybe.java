@@ -9,6 +9,7 @@ import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass1.comonad.Extend;
 import org.highj.typeclass1.foldable.Traversable;
 import org.highj.typeclass1.monad.Monad;
+import org.highj.typeclass1.monad.MonadFix;
 import org.highj.typeclass1.monad.MonadPlus;
 
 import java.util.Iterator;
@@ -190,6 +191,7 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     public static final Monad<µ> monad = new MaybeMonad();
     public static final MonadPlus<µ> firstBiasedMonadPlus = new MaybeMonadPlus(MaybeMonadPlus.Bias.FIRST_JUST);
     public static final MonadPlus<µ> lastBiasedMonadPlus = new MaybeMonadPlus(MaybeMonadPlus.Bias.LAST_JUST);
+    public static final MonadFix<µ> monadFix = new MaybeMonadFix();
 
     public static final Traversable<µ> traversable = new MaybeTraversable();
 
