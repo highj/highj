@@ -4,7 +4,6 @@ import org.highj._;
 import org.highj.__;
 import org.highj.data.compare.Eq;
 import org.highj.data.functions.F1;
-import org.highj.data.functions.Fs;
 import org.highj.data.functions.Integers;
 import org.highj.data.functions.Strings;
 import org.highj.typeclass1.monad.Monad;
@@ -45,7 +44,7 @@ public class T2Test {
         assertEquals("(,42)", answer.toString());
         T2<String, Integer> foo = Tuple.of("foo", 14);
         F1<Integer, T2<String, Integer>> doubleBar = value -> Tuple.of("bar", 2 * value);
-        F1<Integer, _<__.µ<T2.µ,String>,Integer>> castedDoubleBar = Fs.<Integer,_<__.µ<T2.µ,String>,Integer>,T2<String, Integer>>contravariant(doubleBar);
+        F1<Integer, _<__.µ<T2.µ,String>,Integer>> castedDoubleBar = F1.<Integer,_<__.µ<T2.µ,String>,Integer>,T2<String, Integer>>contravariant(doubleBar);
         T2<String, Integer> fooBar = Tuple.narrow2(monad.bind(foo, castedDoubleBar));
         assertEquals("(foobar,28)", fooBar.toString());
     }

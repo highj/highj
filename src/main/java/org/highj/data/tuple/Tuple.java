@@ -5,19 +5,6 @@ import org.highj.__;
 import org.highj.___;
 import org.highj.____;
 import org.highj.data.compare.Eq;
-import org.highj.data.tuple.t1.T1Comonad;
-import org.highj.data.tuple.t1.T1Monad;
-import org.highj.data.tuple.t2.T2Apply;
-import org.highj.data.tuple.t2.T2Comonad;
-import org.highj.data.tuple.t2.T2Functor;
-import org.highj.data.tuple.t2.T2Monad;
-import org.highj.data.functions.Objects;
-import org.highj.typeclass0.group.Monoid;
-import org.highj.typeclass0.group.Semigroup;
-import org.highj.typeclass1.comonad.Comonad;
-import org.highj.typeclass1.monad.Apply;
-import org.highj.typeclass1.functor.Functor;
-import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Supplier;
 
@@ -59,7 +46,7 @@ public enum Tuple {
      * @return the binary tuple
      */
     public static <A, B> T2<A, B> of(A a, B b) {
-        assert Objects.notNull(a, b);
+        assert a != null && b != null;
         return new T2<A, B>() {
 
             @Override
@@ -110,7 +97,7 @@ public enum Tuple {
      * @return the ternary tuple
      */
     public static <A, B, C> T3<A, B, C> of(A a, B b, C c) {
-        assert Objects.notNull(a, b, c);
+        assert a != null && b != null && c != null;
         return new T3<A, B, C>() {
 
             @Override
@@ -175,7 +162,7 @@ public enum Tuple {
      * @return the quaternary tuple
      */
     public static <A, B, C, D> T4<A, B, C, D> of(A a, B b, C c, D d) {
-        assert Objects.notNull(a, b, c, d);
+        assert a != null && b != null && c != null && d != null;
         return new T4<A, B, C, D>() {
 
             @Override

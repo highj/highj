@@ -8,6 +8,7 @@ import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
 import org.highj.data.functions.Functions;
 import org.highj.typeclass2.arrow.Arrow;
+import org.highj.typeclass2.arrow.ArrowApply;
 import org.highj.typeclass2.arrow.ArrowChoice;
 import org.highj.typeclass1.monad.Monad;
 
@@ -15,8 +16,7 @@ import java.util.function.Function;
 
 import static org.highj.data.kleisli.Kleisli.narrow;
 
-//static import for Kleisli.µ leads to AssertionError in compiler
-public class KleisliArrow<M> implements Arrow<_<Kleisli.µ, M>>, ArrowChoice<_<Kleisli.µ, M>> {
+public class KleisliArrow<M> implements ArrowChoice<_<Kleisli.µ, M>>, ArrowApply<_<Kleisli.µ, M>> {
 
     private final Monad<M> monad;
 
@@ -84,5 +84,11 @@ public class KleisliArrow<M> implements Arrow<_<Kleisli.µ, M>>, ArrowChoice<_<K
         Function<B, _<M, D>> f = narrow(kleisliF).get();
         Function<C, _<M, D>> g = narrow(kleisliG).get();
         return new Kleisli<M, Either<B, C>, D>(e -> e.either(f, g));
+    }
+
+    @Override
+    public <A, B> __<_<Kleisli.µ, M>, T2<__<_<Kleisli.µ, M>, A, B>, A>, B> app() {
+        // app = Kleisli (\(Kleisli f, x) -> f x)
+        return new Kleisli<M, T2<__<_<Kleisli.µ, M>, A, B>, A>, B>(pair -> Kleisli.narrow(pair._1()).apply(pair._2()));
     }
 }
