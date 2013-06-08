@@ -2,27 +2,14 @@
 
 = Open Questions =
 
-== Does inheritance for type constructors make sense? ==
+== Monads Package ==
 
-E.g. How should something like an `IterableOf` work?
-
-== Should we use composition over inheritance for type classes? ==
-
-E.g. Apply would not longer inherit from Functor, but have a getFunctor method. Applicative would have a getApply (and for convenience a getFunctor) method etc. 
-
-  * *Pro:* Implementation easier and more reuseable. 
-  * *Con:* Usage gets probably more complicated.
-
-== Category Package ==
-
-  * How to support instances that implement multiple extensions of Monad (`MonadPlus`, `MonadFix`...) or Arrow (`ArrowChoice`, `ArrowLoop`...) with predefined methods (until defender methods arrive in Java)? 
   * What to do with the infamous Monad.fail method?
-  * Can we implement monad transformers?
+  * Which monad extension would be useful (e.g. MonadFix)?
 
 == Type Classes ==
 
-  * Which other data type classes would be useful? Set, Map..?
-  * Which monads would be useful?
+  * Which other data type classes would be useful? 
 
 == Examples ==
 
