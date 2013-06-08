@@ -6,11 +6,11 @@ I call classes like `List` or `Pair` type constructors. The term "type construct
 
 Now in highJ the "real" types look like `_<List.µ, String>` because we need to simulate higher order polymorphism, and the `µ` is used to identify these types. That's why I call these inner `µ` classes "witnesses" of the type constructor. Because these inner classes are a small (but important) detail of the mechanism, and shouldn't distract from the "real" type, I utilized the Greek letter used to abbreviate "micro" - something really small. I called the actual type parameters where such a `µ` is expected, `µ` (or `mu` in case of name clashes) as well.
 
-In cases where static function act like constructors, I break with Java naming conventions and use upper case identifiers, e.g. `static <A> Maybe<A> Maybe.Just(A value)`. Sometimes there is a lowercase version giving a function back instead, e.g. `static <A> F1<A,Maybe<A>> Maybe.<A>just()`.
+In cases where static function act like constructors, I break with Java naming conventions and use upper case identifiers, e.g. `static <A> Maybe<A> Maybe.Just(A value)`.
 
 = Higher Kinded Types =
 
-The higher kinded objects of type `_` or `__` shouldn't be pronounced. They are necessary part of the mechanism, but have little own behavior. I chose that strange identifiers intentionally in order to keep them short and almost "invisible", so the attention is drawn to the more interesting type constructor name. 
+The higher kinded objects of type `_`, `__` etc shouldn't be pronounced. They are necessary part of the mechanism, but have little own behavior. I chose that strange identifiers intentionally in order to keep them short and almost "invisible", so the attention is drawn to the more interesting type constructor name. 
 
 = Type Classes =
 
@@ -18,10 +18,7 @@ Type class and method names follow the Haskell naming conventions, if possible. 
 
 Sometimes I unified some functions that are separated for  "historical" reasons in Haskell (e.g. `lift2` instead of `liftA2` and `liftM2`). I tried to introduce functions in the type class hierarchy as early as possible (e.g. `lift` in `Functor`, not in `Applicative` or `Monad`). In case of a name-clash with a Java keyword, I appended the first letter of the type class, e.g. `Functor.voidF`.
 
-Methods which take a function as first argument and one or more other arguments are usually not implemented as `m(fn,a,b)` but as `m(fn)`, returning another `Function` object you can call with the arguments `a` and `b`. This form is more flexible, e.g. you can store the returned function and reuse it. To apply all arguments, simply write `m(fn).$(a,b)`. An example for this approach are the `lift...` functions in `Functor` and `Applicative`.
-
-Sometimes type classes may return other type classes, e.g, `Arrow` returns an `Applicative` instance, and `Bifunctor` returns `Functor` instances. Due to currying it would be difficult and confusing to implement these relationships using inheritance.
-
+Sometimes type classes may return other type classes, e.g, `Arrow` returns an `Applicative` instance. Due to currying it would be difficult and confusing to implement these relationships using inheritance.
 
 = Curried Types =
 
