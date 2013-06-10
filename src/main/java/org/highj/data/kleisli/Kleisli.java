@@ -37,7 +37,7 @@ public class Kleisli<M, A, B> implements __<_<Kleisli.µ, M>, A, B>, Function<A,
 
     //instance Monad m => Category (Kleisli m)
     public static <M> KleisliArrow<M> arrow(Monad<M> monad) {
-        return new KleisliArrow<>(monad);
+        return null; //new KleisliArrow<>(monad); TODO
     }
 
 }

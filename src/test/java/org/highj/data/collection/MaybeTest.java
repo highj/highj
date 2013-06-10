@@ -4,7 +4,7 @@ import org.highj._;
 import org.highj.data.functions.Functions;
 import org.highj.data.functions.Integers;
 import org.highj.typeclass1.monad.Monad;
-import org.highj.data.compare.Eq;
+import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass1.monad.MonadFix;
 import org.highj.typeclass1.monad.MonadPlus;
 import org.junit.Test;

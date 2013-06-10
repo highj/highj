@@ -13,7 +13,7 @@ public interface ConstApplicative<S> extends Applicative<__.µ<µ,S>>, ConstAppl
     public Monoid<S> getS();
 
     @Override
-    public default <A> _<__.µ<µ, S>, A> pure(A a) {
+    public default <A> Const<S, A> pure(A a) {
         return new Const<>(getS().identity());
     }
 }

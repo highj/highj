@@ -2,7 +2,8 @@ package org.highj.data.tuple;
 
 import org.highj._;
 import org.highj.__;
-import org.highj.data.compare.Eq;
+import org.highj.data.tuple.t2.T2Monad;
+import org.highj.typeclass0.compare.Eq;
 import org.highj.data.functions.F1;
 import org.highj.data.functions.Integers;
 import org.highj.data.functions.Strings;
@@ -39,19 +40,19 @@ public class T2Test {
 
     @Test
     public void monadTest() throws Exception {
-        Monad<__.µ<T2.µ,String>> monad = T2.monad(Strings.group);
+        T2Monad<String> monad = T2.monad(Strings.group);
         T2<String, Integer> answer = Tuple.narrow2(monad.pure(42));
         assertEquals("(,42)", answer.toString());
         T2<String, Integer> foo = Tuple.of("foo", 14);
         F1<Integer, T2<String, Integer>> doubleBar = value -> Tuple.of("bar", 2 * value);
         F1<Integer, _<__.µ<T2.µ,String>,Integer>> castedDoubleBar = F1.<Integer,_<__.µ<T2.µ,String>,Integer>,T2<String, Integer>>contravariant(doubleBar);
-        T2<String, Integer> fooBar = Tuple.narrow2(monad.bind(foo, castedDoubleBar));
+        T2<String, Integer> fooBar = monad.bind(foo, castedDoubleBar);
         assertEquals("(foobar,28)", fooBar.toString());
     }
 
     @Test
     public void eqTest() throws Exception {
-        Eq<T2<String,Integer>> eq = Tuple.eq(Strings.eq, Integers.eq);
+        Eq<T2<String,Integer>> eq = T2.eq(Strings.eq, Integers.eq);
         T2<String,Integer> a1 = Tuple.of("a", 1);
         T2<String,Integer> a2 = Tuple.of("a", 2);
         T2<String,Integer> b1 = Tuple.of("b", 1);

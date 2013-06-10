@@ -4,7 +4,7 @@ import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.____;
-import org.highj.data.compare.Eq;
+import org.highj.typeclass0.compare.Eq;
 
 import java.util.function.Supplier;
 
@@ -231,17 +231,9 @@ public enum Tuple {
     }
 
 
-    public static <A> Eq<T1<A>> eq(final Eq<? super A> eqA) {
-        return (one, two) -> eqA.eq(one._1(), two._1());
-    }
-
     @SuppressWarnings("unchecked")
     public static <A, B> T2<A, B> narrow2(_<__.µ<T2.µ, A>, B> value) {
         return (T2) value;
-    }
-
-    public static <A, B> Eq<T2<A, B>> eq(final Eq<? super A> eqA, final Eq<? super B> eqB) {
-        return (one, two) -> eqA.eq(one._1(), two._1()) && eqB.eq(one._2(), two._2());
     }
 
     @SuppressWarnings("unchecked")

@@ -16,7 +16,7 @@ public interface ConstApply<S> extends Apply<__.µ<µ,S>>, ConstFunctor<S> {
     public Semigroup<S> getS();
 
     @Override
-    public default <A, B> _<__.µ<µ, S>, B> ap(_<__.µ<µ, S>, Function<A, B>> fn, _<__.µ<µ, S>, A> nestedA) {
+    public default <A, B> Const<S, B> ap(_<__.µ<µ, S>, Function<A, B>> fn, _<__.µ<µ, S>, A> nestedA) {
         S s1 = narrow(fn).get();
         S s2 = narrow(nestedA).get();
         return new Const<>(getS().dot(s1, s2));

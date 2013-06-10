@@ -12,7 +12,7 @@ import static org.highj.data.structural.Const.narrow;
 
 public interface ConstFunctor<S> extends Functor<__.µ<µ, S>> {
     @Override
-    public default <A, B> _<__.µ<µ, S>, B> map(Function<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
+    public default <A, B> Const<S, B> map(Function<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
         return new Const<>(narrow(nestedA).get());
     }
 }

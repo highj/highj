@@ -32,20 +32,20 @@ public class Const<A, B> implements __<Const.µ, A, B> {
         return value;
     }
 
-    public static <S> Functor<__.µ<µ, S>> functor() {
+    public static <S> ConstFunctor<S> functor() {
         return new ConstFunctor<S>() {
         };
     }
 
-    public static <S> Apply<__.µ<µ, S>> apply(final Semigroup<S> semigroup) {
-        return (ConstApply<S>) () -> semigroup;
+    public static <S> ConstApply<S> apply(final Semigroup<S> semigroup) {
+        return () -> semigroup;
     }
 
-    public static <S> Applicative<__.µ<µ, S>> applicative(final Monoid<S> monoid) {
-        return (ConstApplicative<S>) () -> monoid;
+    public static <S> ConstApplicative<S> applicative(final Monoid<S> monoid) {
+        return () -> monoid;
     }
 
-    public static <S> Contravariant<__.µ<µ, S>> contravariant() {
+    public static <S> ConstContravariant<S> contravariant() {
         return new ConstContravariant<S>() {
         };
     }

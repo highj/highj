@@ -10,6 +10,10 @@ public enum Ordering {
         return ordinal() - 1;
     }
 
+    public Ordering andThen(Ordering that) {
+        return this == EQ ? that : this;
+    }
+
     public static Group<Ordering> group = new OrderingGroup();
 
     public static Ordering compare(boolean x, boolean y) {

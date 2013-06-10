@@ -13,7 +13,7 @@ public interface T2Monad<S> extends T2Bind<S>, T2Applicative<S>, Monad<__.µ<T2.
     @Override
     public Monoid<S> getS();
 
-    public default <A, B> _<__.µ<T2.µ, S>, B> ap(_<__.µ<T2.µ, S>, Function<A, B>> fn, _<__.µ<T2.µ, S>, A> nestedA) {
+    public default <A, B> T2<S, B> ap(_<__.µ<T2.µ, S>, Function<A, B>> fn, _<__.µ<T2.µ, S>, A> nestedA) {
         return T2Applicative.super.ap(fn, nestedA);
     }
 }

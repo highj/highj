@@ -488,10 +488,19 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         return hc;
     }
 
-    public <B> List<B> map(final Function<? super A, ? extends B> fn) {
+    public <B> List<B> map(Function<? super A, ? extends B> fn) {
         return isEmpty()
                 ? List.<B>nil()
                 : consLazy(fn.apply(head()), () -> tail().map(fn));
+    }
+
+    public <B> List<B> concatMap(Function<? super A, List<? extends B>> fn) {
+        if(isEmpty()) {
+            return nil();
+        } else {
+            List<B> headList = List.contravariant(fn.apply(head()));
+            return List.append(headList, tail().concatMap(fn));
+        }
     }
 
     public List<A> filter(final Function<A, Boolean> predicate) {
@@ -597,9 +606,9 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
 
     public static final Foldable<µ> foldable = new ListTraversable();
 
-    public static final Applicative<µ> zipApplicative = new ZipApplicative();
+    public static final ZipApplicative zipApplicative = new ZipApplicative();
 
-    public static final MonadPlus<µ> monadPlus = new ListMonadPlus();
+    public static final ListMonadPlus monadPlus = new ListMonadPlus();
 
     public static <A> Monoid<List<A>> monoid() {
         return new ListMonoid<>();

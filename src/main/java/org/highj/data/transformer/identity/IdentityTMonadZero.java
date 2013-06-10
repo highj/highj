@@ -12,12 +12,12 @@ public interface IdentityTMonadZero<M> extends IdentityTMonadTrans<M>, MonadZero
     public MonadZero<M> get();
 
     @Override
-    public default <A> _<_<IdentityT.µ, M>, A> mzero() {
+    public default <A> IdentityT<M, A> mzero() {
         return new IdentityT<M,A>(get().<A>mzero());
     }
 
     @Override
-    public default <A, B> _<_<IdentityT.µ, M>, B> ap(_<_<IdentityT.µ, M>, Function<A, B>> fn, _<_<IdentityT.µ, M>, A> nestedA) {
+    public default <A, B> IdentityT<M, B> ap(_<_<IdentityT.µ, M>, Function<A, B>> fn, _<_<IdentityT.µ, M>, A> nestedA) {
         return  IdentityTMonadTrans.super.ap(fn, nestedA);
     }
 

@@ -13,7 +13,7 @@ import static org.highj.data.structural.Const.µ;
 public interface ConstContravariant<S> extends Contravariant<__.µ<µ,S>> {
 
     @Override
-    public default <A, B>_<__.µ<µ, S>, A> contramap(Function<A, B> fn,_<__.µ<µ, S>, B> nestedB) {
+    public default <A, B> Const<S, A> contramap(Function<A, B> fn,_<__.µ<µ, S>, B> nestedB) {
         //contramap _ (Const a) = Const a
         Const<S,B> constB = narrow(nestedB);
         return new Const<>(constB.get());

@@ -4,22 +4,22 @@ import org.highj.data.tuple.T4;
 import org.highj.data.tuple.Tuple;
 import org.highj.typeclass0.group.Group;
 
-public abstract class T4Group<A, B, C, D> extends T4Monoid<A, B, C, D> implements Group<T4<A, B, C, D>> {
+public interface T4Group<A, B, C, D> extends T4Monoid<A, B, C, D>, Group<T4<A, B, C, D>> {
 
     @Override
-    protected abstract Group<A> getA();
+    public Group<A> getA();
 
     @Override
-    protected abstract Group<B> getB();
+    public Group<B> getB();
 
     @Override
-    protected abstract Group<C> getC();
+    public Group<C> getC();
 
     @Override
-    protected abstract Group<D> getD();
+    public Group<D> getD();
 
     @Override
-    public T4<A, B, C, D> inverse(T4<A, B, C, D> x) {
+    public default T4<A, B, C, D> inverse(T4<A, B, C, D> x) {
         return Tuple.of(getA().inverse(x._1()),
                 getB().inverse(x._2()),
                 getC().inverse(x._3()),
@@ -30,22 +30,22 @@ public abstract class T4Group<A, B, C, D> extends T4Monoid<A, B, C, D> implement
                                                           Group<C> groupC, Group<D> groupD) {
         return new T4Group<A, B, C, D>() {
             @Override
-            protected Group<A> getA() {
+            public Group<A> getA() {
                 return groupA;
             }
 
             @Override
-            protected Group<B> getB() {
+            public Group<B> getB() {
                 return groupB;
             }
 
             @Override
-            protected Group<C> getC() {
+            public Group<C> getC() {
                 return groupC;
             }
 
             @Override
-            protected Group<D> getD() {
+            public Group<D> getD() {
                 return groupD;
             }
         };

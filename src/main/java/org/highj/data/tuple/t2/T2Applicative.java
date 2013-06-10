@@ -13,7 +13,7 @@ public interface T2Applicative<S> extends T2Apply<S>, Applicative<__.µ<T2.µ, S
     public Monoid<S> getS();
 
     @Override
-    public default <A> _<__.µ<T2.µ, S>, A> pure(A a) {
+    public default <A> T2<S, A> pure(A a) {
         return Tuple.of(getS().identity(), a);
     }
 }

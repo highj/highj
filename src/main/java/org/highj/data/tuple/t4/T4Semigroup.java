@@ -4,19 +4,19 @@ import org.highj.data.tuple.T4;
 import org.highj.data.tuple.Tuple;
 import org.highj.typeclass0.group.Semigroup;
 
-public abstract class T4Semigroup<A, B, C, D> implements Semigroup<T4<A, B, C, D>> {
+public interface T4Semigroup<A, B, C, D> extends Semigroup<T4<A, B, C, D>> {
 
-    protected abstract Semigroup<A> getA();
+    public Semigroup<A> getA();
 
-    protected abstract Semigroup<B> getB();
+    public Semigroup<B> getB();
 
-    protected abstract Semigroup<C> getC();
+    public Semigroup<C> getC();
 
-    protected abstract Semigroup<D> getD();
+    public Semigroup<D> getD();
 
 
     @Override
-    public T4<A, B, C, D> dot(T4<A, B, C, D> x, T4<A, B, C, D> y) {
+    public default T4<A, B, C, D> dot(T4<A, B, C, D> x, T4<A, B, C, D> y) {
         return Tuple.of(getA().dot(x._1(), y._1()),
                 getB().dot(x._2(), y._2()),
                 getC().dot(x._3(), y._3()),
@@ -27,22 +27,22 @@ public abstract class T4Semigroup<A, B, C, D> implements Semigroup<T4<A, B, C, D
                                                               Semigroup<C> semigroupC, Semigroup<D> semigroupD) {
         return new T4Semigroup<A, B, C, D>() {
             @Override
-            protected Semigroup<A> getA() {
+            public Semigroup<A> getA() {
                 return semigroupA;
             }
 
             @Override
-            protected Semigroup<B> getB() {
+            public Semigroup<B> getB() {
                 return semigroupB;
             }
 
             @Override
-            protected Semigroup<C> getC() {
+            public Semigroup<C> getC() {
                 return semigroupC;
             }
 
             @Override
-            protected Semigroup<D> getD() {
+            public Semigroup<D> getD() {
                 return semigroupD;
             }
         };

@@ -1,6 +1,6 @@
 package org.highj.data.functions;
 
-import org.highj.data.compare.Eq;
+import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.group.*;
 import org.highj.util.Contracts;
 

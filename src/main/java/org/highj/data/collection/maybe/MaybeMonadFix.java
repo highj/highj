@@ -15,7 +15,7 @@ public class MaybeMonadFix extends MaybeMonad implements MonadFix<Maybe.µ> {
     //         unJust Nothing  = error "mfix Maybe: Nothing"
 
     @Override
-    public <A> _<Maybe.µ, A> mfix(Function<Supplier<A>, _<Maybe.µ, A>> fn) {
+    public <A> Maybe<A> mfix(Function<Supplier<A>, _<Maybe.µ, A>> fn) {
         Lazy<A> lazy = new Lazy<>();
         lazy.set(Maybe.narrow(fn.apply(lazy)).get());
         return Maybe.Just(lazy.get());

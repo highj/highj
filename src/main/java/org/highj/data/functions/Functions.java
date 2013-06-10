@@ -1,5 +1,6 @@
 package org.highj.data.functions;
 
+import org.highj.data.collection.List;
 import org.highj.data.tuple.*;
 import org.highj.typeclass0.group.Monoid;
 
@@ -152,6 +153,10 @@ public enum Functions {
 
     public static <A, B, C, D, E> Supplier<E> lazy(final Function<A, Function<B, Function<C, Function<D, E>>>> fn, final A a, final B b, final C c, final D d) {
         return () -> fn.apply(a).apply(b).apply(c).apply(d);
+    }
+
+    public static <A> List<A> iterate(Function<A,A> fn, A start) {
+        return List.consLazy(start, () -> iterate(fn, fn.apply(start)));
     }
 
 }

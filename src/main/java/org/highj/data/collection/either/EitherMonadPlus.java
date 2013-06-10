@@ -19,7 +19,7 @@ public class EitherMonadPlus<S> extends EitherMonad<S> implements MonadPlus<__.�
     }
 
     @Override
-    public <A> _<__.µ<Either.µ, S>, A> mplus(_<__.µ<Either.µ, S>, A> one, _<__.µ<Either.µ, S>, A> two) {
+    public <A> Either<S, A> mplus(_<__.µ<Either.µ, S>, A> one, _<__.µ<Either.µ, S>, A> two) {
         Either<S,A> first = Either.narrow(one);
         Either<S,A> second = Either.narrow(two);
         if (first.isLeft()) {
@@ -30,7 +30,7 @@ public class EitherMonadPlus<S> extends EitherMonad<S> implements MonadPlus<__.�
     }
 
     @Override
-    public <A> _<__.µ<Either.µ, S>, A> mzero() {
+    public <A> Either<S, A> mzero() {
         return Either.Left(monoid.identity());
     }
 }

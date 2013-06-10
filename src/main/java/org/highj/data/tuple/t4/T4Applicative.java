@@ -21,7 +21,7 @@ public interface T4Applicative<S,T,U> extends T4Apply<S,T,U>, Applicative<__.µ<
     public Monoid<U> getU();
 
     @Override
-    public default <A> _<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>, A> pure(A a) {
+    public default <A> T4<S, T, U, A> pure(A a) {
         return Tuple.of(getS().identity(), getT().identity(), getU().identity(), a);
     }
 

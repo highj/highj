@@ -12,7 +12,7 @@ public interface IdentityTTraversable<M> extends Traversable<_<IdentityT.µ,M>>{
     public Traversable<M> getM();
 
     @Override
-    public default <A, B> _<_<IdentityT.µ, M>, B> map(Function<A, B> fn, _<_<IdentityT.µ, M>, A> nestedA) {
+    public default <A, B> IdentityT<M, B> map(Function<A, B> fn, _<_<IdentityT.µ, M>, A> nestedA) {
         IdentityT<M, A> aId = IdentityT.narrow(nestedA);
         return new IdentityT<>(getM().map(fn, aId.get()));
     }

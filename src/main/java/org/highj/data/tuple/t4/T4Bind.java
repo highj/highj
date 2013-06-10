@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 public interface T4Bind<S,T,U> extends T4Apply<S,T,U>, Bind<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>> {
     @Override
-    public default <A, B> _<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>, B> bind(_<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>, A> nestedA,
+    public default <A, B> T4<S, T, U, B> bind(_<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>, A> nestedA,
                                                              Function<A, _<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>, B>> fn) {
         T4<S, T, U, A> ta = Tuple.narrow4(nestedA);
         T4<S, T, U, B> tb = Tuple.narrow4(fn.apply(ta._4()));

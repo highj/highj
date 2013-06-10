@@ -15,7 +15,7 @@ public interface T3Apply<S,T> extends T3Functor<S,T>, Apply<__.µ<___.µ<T3.µ, 
     public Semigroup<T> getT();
 
     @Override
-    public default <A, B> _<__.µ<___.µ<T3.µ, S>,T>, B> ap(_<__.µ<___.µ<T3.µ, S>,T>, Function<A, B>> fn,
+    public default <A, B> T3<S, T, B> ap(_<__.µ<___.µ<T3.µ, S>,T>, Function<A, B>> fn,
                                                           _<__.µ<___.µ<T3.µ, S>,T>, A> nestedA) {
         T3<S, T, Function<A, B>> fnTriple = Tuple.narrow3(fn);
         T3<S, T, A> aTriple = Tuple.narrow3(nestedA);

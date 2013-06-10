@@ -1,4 +1,4 @@
-package org.highj.data.compare;
+package org.highj.typeclass0.compare;
 
 public interface Eq<T> {
     public boolean eq(T one, T two);

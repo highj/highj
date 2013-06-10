@@ -5,7 +5,7 @@ import org.highj.data.functions.Functions;
 import org.highj.typeclass1.monad.Apply;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Monad;
-import org.highj.data.compare.Eq;
+import org.highj.typeclass0.compare.Eq;
 import org.junit.Test;
 
 import java.util.function.Function;
@@ -81,7 +81,7 @@ public class T1Test {
 
     @Test
     public void eqTest() {
-        Eq<T1<String>> eq = Tuple.eq(new Eq.JavaEq<String>());
+        Eq<T1<String>> eq = T1.eq(new Eq.JavaEq<String>());
         T1<String> one = Tuple.of("hello");
         T1<String> two = stringThunk("hello");
         T1<String> three = Tuple.of("world");

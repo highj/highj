@@ -2,7 +2,7 @@ package org.highj.data.collection;
 
 import org.highj._;
 import org.highj.data.collection.maybe.*;
-import org.highj.data.compare.Eq;
+import org.highj.typeclass0.compare.Eq;
 import org.highj.data.functions.Functions;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
@@ -188,10 +188,10 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
         return List.buildFromStack(result);
     }
 
-    public static final Monad<µ> monad = new MaybeMonad();
-    public static final MonadPlus<µ> firstBiasedMonadPlus = new MaybeMonadPlus(MaybeMonadPlus.Bias.FIRST_JUST);
-    public static final MonadPlus<µ> lastBiasedMonadPlus = new MaybeMonadPlus(MaybeMonadPlus.Bias.LAST_JUST);
-    public static final MonadFix<µ> monadFix = new MaybeMonadFix();
+    public static final MaybeMonad monad = new MaybeMonad();
+    public static final MaybeMonadPlus firstBiasedMonadPlus = new MaybeMonadPlus(MaybeMonadPlus.Bias.FIRST_JUST);
+    public static final MaybeMonadPlus lastBiasedMonadPlus = new MaybeMonadPlus(MaybeMonadPlus.Bias.LAST_JUST);
+    public static final MaybeMonadFix monadFix = new MaybeMonadFix();
 
     public static final Traversable<µ> traversable = new MaybeTraversable();
 

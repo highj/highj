@@ -24,8 +24,8 @@ public class Dual<M, A, B> implements __<_<Dual.µ, M>, A, B> {
         return value;
     }
 
-    public static <M> Category<_<µ, M>> category(final Category<M> category) {
-        return (DualCategory<M>) () -> category;
+    public static <M> DualCategory<M> category(final Category<M> category) {
+        return () -> category;
     }
 
 }

@@ -2,6 +2,8 @@ package org.highj.data.tuple;
 
 import org.highj._;
 import org.highj.data.tuple.t1.*;
+import org.highj.typeclass0.compare.Eq;
+import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
@@ -16,8 +18,9 @@ import static org.highj.data.tuple.Tuple.of;
 /**
  * A tuple of arity 1, a.k.a. "cell" or "Id".
  */
-public abstract class T1<A> implements  _<T1.µ, A>, Supplier<A> {
-    public static class µ {}
+public abstract class T1<A> implements _<T1.µ, A>, Supplier<A> {
+    public static class µ {
+    }
 
     @Override
     public A get() {
@@ -53,8 +56,16 @@ public abstract class T1<A> implements  _<T1.µ, A>, Supplier<A> {
         return false;
     }
 
-    public static final Monad<µ> monad = new T1Monad();
-    public static final Comonad<µ> comonad = new T1Comonad();
+    public static <A> Eq<T1<A>> eq(Eq<? super A> eqA) {
+        return (one, two) -> eqA.eq(one._1(), two._1());
+    }
+
+    public static <A> Ord<T1<A>> ord(Ord<? super A> ordA) {
+        return (one, two) -> ordA.cmp(one._1(), two._1());
+    }
+
+    public static final T1Monad monad = new T1Monad();
+    public static final T1Comonad comonad = new T1Comonad();
 
     public static <A> Semigroup<T1<A>> semigroup(Semigroup<A> semigroupA) {
         return T1Semigroup.from(semigroupA);

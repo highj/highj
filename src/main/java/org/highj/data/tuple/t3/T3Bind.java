@@ -12,7 +12,7 @@ import java.util.function.Function;
 public interface T3Bind<S,T> extends T3Apply<S,T>, Bind<__.µ<___.µ<T3.µ, S>, T>> {
 
     @Override
-    public default <A, B> _<__.µ<___.µ<T3.µ, S>, T>, B> bind(_<__.µ<___.µ<T3.µ, S>, T>, A> nestedA,
+    public default <A, B> T3<S, T, B> bind(_<__.µ<___.µ<T3.µ, S>, T>, A> nestedA,
                                                              Function<A, _<__.µ<___.µ<T3.µ, S>, T>, B>> fn) {
         T3<S, T, A> ta = Tuple.narrow3(nestedA);
         T3<S, T, B> tb = Tuple.narrow3(fn.apply(ta._3()));

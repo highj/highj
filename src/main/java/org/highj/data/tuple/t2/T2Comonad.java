@@ -8,15 +8,15 @@ import org.highj.typeclass1.comonad.Comonad;
 
 import java.util.function.Function;
 
-public class T2Comonad<S> implements Comonad<__.µ<T2.µ, S>>, T2Functor<S> {
+public interface T2Comonad<S> extends Comonad<__.µ<T2.µ, S>>, T2Functor<S> {
     @Override
-    public <A> _<__.µ<T2.µ, S>, _<__.µ<T2.µ, S>, A>> duplicate(_<__.µ<T2.µ, S>, A> nestedA) {
+    public default <A> T2<S, _<__.µ<T2.µ, S>, A>> duplicate(_<__.µ<T2.µ, S>, A> nestedA) {
         T2<S, A> pair = Tuple.narrow2(nestedA);
         return Tuple.of(pair._1(), nestedA);
     }
 
     @Override
-    public <A> A extract(_<__.µ<T2.µ, S>, A> nestedA) {
+    public default <A> A extract(_<__.µ<T2.µ, S>, A> nestedA) {
         T2<S, A> pair = Tuple.narrow2(nestedA);
         return pair._2();
     }

@@ -3,6 +3,8 @@ package org.highj.data.tuple;
 import org.highj.__;
 import org.highj.___;
 import org.highj.data.tuple.t3.*;
+import org.highj.typeclass0.compare.Eq;
+import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
@@ -52,17 +54,28 @@ public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
         return false;
     }
 
+    public static <A, B, C> Eq<T3<A, B, C>> eq(Eq<? super A> eqA, Eq<? super B> eqB, Eq<? super C> eqC) {
+        return (one, two) -> eqA.eq(one._1(), two._1()) && eqB.eq(one._2(), two._2()) && eqC.eq(one._3(), two._3());
+    }
+
+    public static <A, B, C> Ord<T3<A,B,C>> ord(Ord<? super A> ordA, Ord<? super B> ordB, Ord<? super C> ordC) {
+        return (one, two) -> ordA.cmp(one._1(), two._1())
+                .andThen(ordB.cmp(one._2(), two._2()))
+                .andThen(ordC.cmp(one._3(), two._3()));
+    }
+
+
     @Override
     public String toString() {
         return String.format("(%s,%s,%s)", _1(), _2(), _3());
     }
 
-    public static <S, T> Functor<__.µ<___.µ<T3.µ, S>, T>> functor() {
+    public static <S, T> T3Functor<S, T> functor() {
         return new T3Functor<S, T>() {
         };
     }
 
-    public static <S, T> Bind<__.µ<___.µ<T3.µ, S>, T>> bind(Semigroup<S> semigroupS, Semigroup<T> semigroupT) {
+    public static <S, T> T3Bind<S, T> bind(Semigroup<S> semigroupS, Semigroup<T> semigroupT) {
         return new T3Bind<S, T>() {
             @Override
             public Semigroup<S> getS() {
@@ -76,7 +89,7 @@ public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
         };
     }
 
-    public static <S, T> Monad<__.µ<___.µ<T3.µ, S>, T>> monad(Monoid<S> monoidS, Monoid<T> monoidT) {
+    public static <S, T> T3Monad<S, T> monad(Monoid<S> monoidS, Monoid<T> monoidT) {
         return new T3Monad<S, T>() {
             @Override
             public Monoid<S> getS() {
@@ -90,8 +103,8 @@ public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
         };
     }
 
-    public static <S, T> Comonad<__.µ<___.µ<T3.µ, S>, T>> comonad() {
-        return new T3Comonad<>();
+    public static <S, T> T3Comonad<S, T> comonad() {
+        return new T3Comonad<S,T>(){};
     }
 
     public static <A, B, C> Semigroup<T3<A, B, C>> semigroup(Semigroup<A> semigroupA, Semigroup<B> semigroupB, Semigroup<C> semigroupC) {

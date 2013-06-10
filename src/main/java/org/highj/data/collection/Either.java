@@ -4,13 +4,14 @@ import org.highj._;
 import org.highj.__;
 import org.highj.data.collection.either.EitherMonad;
 import org.highj.data.collection.either.EitherMonadPlus;
-import org.highj.data.compare.Eq;
+import org.highj.data.compare.Ordering;
+import org.highj.typeclass0.compare.Eq;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
 import org.highj.data.functions.Functions;
 import org.highj.data.functions.Strings;
+import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Monoid;
-import org.highj.typeclass1.alternative.Alt;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadPlus;
 
@@ -163,7 +164,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return the swapped Either
      */
     public Either<B, A> swap() {
-        return either(Either::<B, A>Right, Either::<B, A>Left);
+        return either(left -> Either.<B, A>Right(left), right -> Either.<B, A>Left(right));
     }
 
     /**
@@ -372,12 +373,22 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @param <B> RightLazy type
      * @return Eq instance for Either
      */
-    public static <A, B> Eq<Either<A, B>> eq(final Eq<A> eqA, final Eq<B> eqB) {
+    public static <A, B> Eq<Either<A, B>> eq(Eq<A> eqA, Eq<B> eqB) {
         return (one, two) -> {
             if (one.isLeft() && two.isLeft()) {
                 return eqA.eq(one.getLeft(), two.getLeft());
             }
             return one.isRight() && two.isRight() && eqB.eq(one.getRight(), two.getRight());
+        };
+    }
+
+    public static <A,B> Ord<Either<A,B>> ord(Ord<A> ordA, Ord<B> ordB) {
+        return (one,two) -> {
+            if (one.isLeft()) {
+               return two.isRight() ? Ordering.LT : ordA.cmp(one.getLeft(), two.getLeft());
+            }  else {
+                return two.isLeft() ? Ordering.GT : ordB.cmp(one.getRight(), two.getRight());
+            }
         };
     }
 
@@ -387,15 +398,15 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @param <S> the Left type of Either
      * @return the Either monad
      */
-    private static <S> Monad<__.µ<µ, S>> monad() {
+    private static <S> EitherMonad<S> monad() {
         return new EitherMonad<>();
     }
 
-    public static <S> MonadPlus<__.µ<µ, S>> firstBiasedMonadPlus(Monoid<S> monoid) {
+    public static <S> EitherMonadPlus<S> firstBiasedMonadPlus(Monoid<S> monoid) {
         return new EitherMonadPlus<>(monoid, EitherMonadPlus.Bias.FIRST_RIGHT);
     }
 
-    public static <S> MonadPlus<__.µ<µ, S>> lastBiasedMonadPlus(Monoid<S> monoid) {
+    public static <S> EitherMonadPlus<S> lastBiasedMonadPlus(Monoid<S> monoid) {
         return new EitherMonadPlus<>(monoid, EitherMonadPlus.Bias.LAST_RIGHT);
     }
 }
