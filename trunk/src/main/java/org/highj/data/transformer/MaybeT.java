@@ -49,7 +49,8 @@ public class MaybeT<M, A> implements _<_<MaybeT.µ, M>, A> {
 
             @Override
             public <A> _<_<µ, M>, A> pure(A a) {
-                return new MaybeT<>(applicativeM.pure(Maybe.monad.pure(a)));
+                _<Maybe.µ, A> justA = Maybe.monad.pure(a);
+                return new MaybeT<>(applicativeM.pure(justA));
             }
 
             //this looks too complicated...

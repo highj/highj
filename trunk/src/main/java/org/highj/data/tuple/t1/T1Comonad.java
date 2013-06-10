@@ -7,7 +7,7 @@ import org.highj.typeclass1.comonad.Comonad;
 
 public class T1Comonad implements Comonad<T1.µ>, T1Functor {
     @Override
-    public <A> _<T1.µ, _<T1.µ, A>> duplicate(_<T1.µ, A> nestedA) {
+    public <A> T1<_<T1.µ, A>> duplicate(_<T1.µ, A> nestedA) {
         return Tuple.of(nestedA);
     }
 

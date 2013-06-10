@@ -10,8 +10,7 @@ import org.highj.typeclass1.contravariant.Contravariant;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-//Don't replace the anonymous classes with lambdas or method refs,
-//currently this gives a compiler NPE
+@FunctionalInterface
 public interface Pred<A> extends _<Pred.µ, A>, Predicate<A> {
 
     public static class µ {
@@ -23,39 +22,19 @@ public interface Pred<A> extends _<Pred.µ, A>, Predicate<A> {
     }
 
     public static <A> Pred<A> fromPredicate(Predicate<A> predicate) {
-        return new Pred<A>() {
-            @Override
-            public boolean test(A a) {
-                return predicate.test(a);
-            }
-        };
+        return predicate::test;
     }
 
     public static <A> Pred<A> fromFunction(Function<A, Boolean> fn) {
-        return new Pred<A>() {
-            @Override
-            public boolean test(A a) {
-                return fn.apply(a);
-            }
-        };
+        return fn::apply;
     }
 
     public static <A> Pred<A> True() {
-        return new Pred<A>() {
-            @Override
-            public boolean test(A a) {
-                return true;
-            }
-        };
+        return a -> true;
     }
 
     public static <A> Pred<A> False() {
-        return new Pred<A>() {
-            @Override
-            public boolean test(A a) {
-                return false;
-            }
-        };
+        return a -> false;
     }
 
     public default Pred<A> not() {
@@ -86,6 +65,6 @@ public interface Pred<A> extends _<Pred.µ, A>, Predicate<A> {
         return new OrGroup<>();
     }
 
-    public static final Contravariant<µ> contravariant = new PredContravariant();
+    public static final PredContravariant contravariant = new PredContravariant();
 
 }

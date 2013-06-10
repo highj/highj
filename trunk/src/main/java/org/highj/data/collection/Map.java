@@ -2,6 +2,7 @@ package org.highj.data.collection;
 
 import org.highj._;
 import org.highj.__;
+import org.highj.data.collection.map.MapApply;
 import org.highj.data.compare.Ordering;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
@@ -274,25 +275,8 @@ public class Map<A, B> implements __<Map.µ, A, B>, Iterable<T2<A, B>>, Function
         }
     }
 
-    private static <S> Apply<__.µ<µ, S>> Apply() {
-        return new Apply<__.µ<µ, S>>() {
-            @Override
-            public <A, B> _<__.µ<µ, S>, B> map(Function<A, B> fn, _<__.µ<µ, S>, A> nestedA) {
-                return narrow(nestedA).map(fn);
-            }
-
-            @Override
-            public <A, B> _<__.µ<µ, S>, B> ap(_<__.µ<µ, S>, Function<A, B>> fn, _<__.µ<µ, S>, A> nestedA) {
-                Map<S, A> mapA = narrow(nestedA);
-                Map<S, B> result = of();
-                for (T2<S, Function<A, B>> tuple : narrow(fn)) {
-                    for (A a : mapA.apply(tuple._1())) {
-                        result = result.plus(tuple._1(), tuple._2().apply(a));
-                    }
-                }
-                return result;
-            }
-        };
+    private static <S> MapApply<S> mapAppy() {
+        return new MapApply<>();
     }
 
 

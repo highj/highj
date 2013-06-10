@@ -46,7 +46,7 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
         return current.head();
     }
 
-    public static <A> Stream<A> repeat(final A a) {
+    public static <A> Stream<A> repeat(A a) {
         return new Stream<A>() {
 
             @Override
@@ -61,7 +61,7 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
         };
     }
 
-    public static <A> Stream<A> unfold(final Function<A, A> fn, final A a) {
+    public static <A> Stream<A> unfold(Function<A, A> fn, A a) {
         return new Stream<A>() {
 
             @Override
@@ -76,7 +76,7 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
         };
     }
 
-    public static <A> Stream<A> Cons(final A a, final Stream<A> stream) {
+    public static <A> Stream<A> Cons(A a, Stream<A> stream) {
         return new Stream<A>() {
 
             @Override
@@ -91,7 +91,7 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
         };
     }
 
-    public static <A> Stream<A> Cons(final A a, final Supplier<Stream<A>> thunk) {
+    public static <A> Stream<A> Cons(A a, Supplier<Stream<A>> thunk) {
         return new Stream<A>() {
 
             @Override
@@ -107,19 +107,19 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
     }
 
     //assuming that the iterator doesn't stop
-    public static <A> Stream<A> fromIterator(final Iterator<A> iterator) throws NoSuchElementException {
+    public static <A> Stream<A> fromIterator(Iterator<A> iterator) throws NoSuchElementException {
         return Cons(iterator.next(), () -> fromIterator(iterator));
     }
 
     //returns iterator values wrapped in JustLazy, and Nothing when the iterator gets empty
-    public static <A> Stream<Maybe<A>> maybeFromIterator(final Iterator<A> iterator) {
+    public static <A> Stream<Maybe<A>> maybeFromIterator(Iterator<A> iterator) {
         return Cons(iterator.hasNext()
                 ? Maybe.Just(iterator.next())
                 : Maybe.<A>Nothing(),
                 () -> maybeFromIterator(iterator));
     }
 
-    public Stream<A> filter(final Function<A, Boolean> predicate) {
+    public Stream<A> filter(Function<A, Boolean> predicate) {
         final Stream<A> result = dropWhile(a -> !predicate.apply(a));
         return Cons(result.head(), () -> result.tail().filter(predicate));
     }
@@ -133,15 +133,15 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
         return toString(10);
     }
 
-    public List<A> take(final int n) {
+    public List<A> take(int n) {
         return n <= 0 ? List.<A>nil() : List.consLazy(head(), () -> tail().take(n - 1));
     }
 
-    public List<A> takeWhile(final Function<A, Boolean> predicate) {
+    public List<A> takeWhile(Function<A, Boolean> predicate) {
         return !predicate.apply(head()) ? List.<A>nil() : List.consLazy(head(), () -> tail().takeWhile(predicate));
     }
 
-    public List<A> takeWhile(final Predicate<A> predicate) {
+    public List<A> takeWhile(Predicate<A> predicate) {
         return !predicate.test(head()) ? List.<A>nil() : List.consLazy(head(), () -> tail().takeWhile(predicate));
     }
 
@@ -184,15 +184,15 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
         return Cons(head(), Cons(a, () -> tail().intersperse(a)));
     }
 
-    public <B> Stream<B> map(final Function<? super A, ? extends B> fn) {
+    public <B> Stream<B> map(Function<? super A, ? extends B> fn) {
         return Cons(fn.apply(head()), () -> tail().map(fn));
     }
 
-    public static Stream<Integer> range(final int from, final int step) {
+    public static Stream<Integer> range(int from, int step) {
         return unfold(x -> x + step, from);
     }
 
-    public static Stream<Integer> range(final int from) {
+    public static Stream<Integer> range(int from) {
         return range(from, 1);
     }
 
@@ -233,20 +233,20 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
         return zipWith((A a) -> (B b) -> (C c) -> (D d) -> Tuple.<A, B, C, D>of(a, b, c, d), streamA, streamB, streamC, streamD);
     }
 
-    public static <A, B, C> Stream<C> zipWith(final Function<A, Function<B, C>> fn, _<µ, A> streamA, _<µ, B> streamB) {
+    public static <A, B, C> Stream<C> zipWith(Function<A, Function<B, C>> fn, _<µ, A> streamA, _<µ, B> streamB) {
         final Stream<A> sA = narrow(streamA);
         final Stream<B> sB = narrow(streamB);
         return Cons(fn.apply(sA.head()).apply(sB.head()), () -> zipWith(fn, sA.tail(), sB.tail()));
     }
 
-    public static <A, B, C, D> Stream<D> zipWith(final Function<A, Function<B, Function<C, D>>> fn, _<µ, A> streamA, _<µ, B> streamB, _<µ, C> streamC) {
+    public static <A, B, C, D> Stream<D> zipWith(Function<A, Function<B, Function<C, D>>> fn, _<µ, A> streamA, _<µ, B> streamB, _<µ, C> streamC) {
         final Stream<A> sA = narrow(streamA);
         final Stream<B> sB = narrow(streamB);
         final Stream<C> sC = narrow(streamC);
         return Cons(fn.apply(sA.head()).apply(sB.head()).apply(sC.head()), () -> zipWith(fn, sA.tail(), sB.tail(), sC.tail()));
     }
 
-    public static <A, B, C, D, E> Stream<E> zipWith(final Function<A, Function<B, Function<C, Function<D, E>>>> fn, _<µ, A> streamA, _<µ, B> streamB, _<µ, C> streamC, _<µ, D> streamD) {
+    public static <A, B, C, D, E> Stream<E> zipWith(Function<A, Function<B, Function<C, Function<D, E>>>> fn, _<µ, A> streamA, _<µ, B> streamB, _<µ, C> streamC, _<µ, D> streamD) {
         final Stream<A> sA = narrow(streamA);
         final Stream<B> sB = narrow(streamB);
         final Stream<C> sC = narrow(streamC);
@@ -268,7 +268,7 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
         return Tuple.of(streamABCD.map(t -> t._1()), streamABCD.map(t -> t._2()), streamABCD.map(t -> t._3()), streamABCD.map(t -> t._4()));
     }
 
-    public static final Monad<µ> monad = new StreamMonad();
+    public static final StreamMonad monad = new StreamMonad();
 
     @Override
     public Iterator<A> iterator() {

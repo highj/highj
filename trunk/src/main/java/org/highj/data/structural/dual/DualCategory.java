@@ -13,12 +13,12 @@ public interface DualCategory<M> extends Category<_<Dual.µ, M>> {
     public Category<M> category();
 
     @Override
-    public default <A> __<_<µ, M>, A, A> identity() {
+    public default <A> Dual<M, A, A> identity() {
         return new Dual<>(category().<A>identity());
     }
 
     @Override
-    public default <A, B, C> __<_<µ, M>, A, C> dot(__<_<µ, M>, B, C> bc, __<_<µ, M>, A, B> ab) {
+    public default <A, B, C> Dual<M, A, C> dot(__<_<µ, M>, B, C> bc, __<_<µ, M>, A, B> ab) {
         Dual<M, B, C> bcDual = narrow(bc);
         Dual<M, A, B> abDual = narrow(ab);
         return new Dual<>(category().dot(abDual.get(), bcDual.get()));

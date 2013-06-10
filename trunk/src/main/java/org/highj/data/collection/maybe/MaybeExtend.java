@@ -6,7 +6,7 @@ import org.highj.typeclass1.comonad.Extend;
 
 public class MaybeExtend extends MaybeFunctor implements Extend<Maybe.µ> {
     @Override
-    public <A> _<Maybe.µ, _<Maybe.µ, A>> duplicate(_<Maybe.µ, A> nestedA) {
+    public <A> Maybe<_<Maybe.µ, A>> duplicate(_<Maybe.µ, A> nestedA) {
         return Maybe.narrow(nestedA).isNothing()
                 ? Maybe.<_<Maybe.µ, A>>Nothing()
                 : Maybe.Just(nestedA);

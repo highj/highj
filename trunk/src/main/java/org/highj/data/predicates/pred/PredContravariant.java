@@ -8,8 +8,8 @@ import java.util.function.Function;
 
 public class PredContravariant implements Contravariant<Pred.µ> {
     @Override
-    public <A, B> _<Pred.µ, A> contramap(Function<A, B> fn, _<Pred.µ, B> nestedB) {
+    public <A, B> Pred<A> contramap(Function<A, B> fn, _<Pred.µ, B> nestedB) {
         // contramap f g = Predicate $ getPredicate g . f
-        return (Pred<A>) a -> Pred.narrow(nestedB).test(fn.apply(a));
+        return a -> Pred.narrow(nestedB).test(fn.apply(a));
     }
 }

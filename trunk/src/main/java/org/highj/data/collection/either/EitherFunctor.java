@@ -10,7 +10,7 @@ import java.util.function.Function;
 public class EitherFunctor<S> implements Functor<__.µ<Either.µ, S>> {
 
     @Override
-    public <A, B> _<__.µ<Either.µ, S>, B> map(Function<A, B> fn, _<__.µ<Either.µ, S>, A> nestedA) {
+    public <A, B> Either<S, B> map(Function<A, B> fn, _<__.µ<Either.µ, S>, A> nestedA) {
         return Either.narrow(nestedA).rightMap(fn);
     }
 }

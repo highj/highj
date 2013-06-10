@@ -8,15 +8,15 @@ import org.highj.data.tuple.T4;
 import org.highj.data.tuple.Tuple;
 import org.highj.typeclass1.comonad.Comonad;
 
-public class T4Comonad<S, T, U> implements T4Functor<S, T, U>, Comonad<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>> {
+public interface T4Comonad<S, T, U> extends T4Functor<S, T, U>, Comonad<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>> {
     @Override
-    public <A> _<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>, _<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>, A>> duplicate(_<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>, A> nestedA) {
+    public default <A> T4<S, T, U, _<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>, A>> duplicate(_<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>, A> nestedA) {
         T4<S, T, U, A> quadruple = Tuple.narrow4(nestedA);
         return Tuple.of(quadruple._1(), quadruple._2(), quadruple._3(), nestedA);
     }
 
     @Override
-    public <A> A extract(_<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>, A> nestedA) {
+    public default <A> A extract(_<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>, A> nestedA) {
         T4<S, T, U, A> quadruple = Tuple.narrow4(nestedA);
         return quadruple._4();
     }

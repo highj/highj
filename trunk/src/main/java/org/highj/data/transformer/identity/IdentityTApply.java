@@ -12,7 +12,7 @@ public interface IdentityTApply<M> extends IdentityTFunctor<M>, Apply<_<Identity
     public Apply<M> get();
 
     @Override
-    public default <A, B> _<_<IdentityT.µ, M>, B> ap(_<_<IdentityT.µ, M>, Function<A, B>> fn, _<_<IdentityT.µ, M>, A> nestedA) {
+    public default <A, B> IdentityT<M, B> ap(_<_<IdentityT.µ, M>, Function<A, B>> fn, _<_<IdentityT.µ, M>, A> nestedA) {
         IdentityT<M, A> aId = IdentityT.narrow(nestedA);
         IdentityT<M, Function<A, B>> fnId = IdentityT.narrow(fn);
         return new IdentityT<>(get().ap(fnId.get(), aId.get()));

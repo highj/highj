@@ -20,7 +20,7 @@ public interface  T4Apply<S,T,U> extends T4Functor<S,T,U>, Apply<__.µ<___.µ<__
     public Semigroup<U> getU();
 
     @Override
-    public default <A, B> _<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>, B> ap(_<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>, Function<A, B>> fn, _<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>, A> nestedA) {
+    public default <A, B> T4<S, T, U, B> ap(_<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>, Function<A, B>> fn, _<__.µ<___.µ<____.µ<T4.µ, S>, T>, U>, A> nestedA) {
         T4<S, T, U, Function<A, B>> fnQuadruple = Tuple.narrow4(fn);
         T4<S, T, U, A> aQuadruple = Tuple.narrow4(nestedA);
         return Tuple.of(getS().dot(fnQuadruple._1(), aQuadruple._1()),

@@ -1,6 +1,7 @@
-package org.highj.data.compare;
+package org.highj.typeclass0.compare;
 
 import org.highj._;
+import org.highj.data.compare.Ordering;
 
 import java.util.Comparator;
 import java.util.function.Function;

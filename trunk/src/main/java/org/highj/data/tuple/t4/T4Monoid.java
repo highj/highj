@@ -4,22 +4,22 @@ import org.highj.data.tuple.T4;
 import org.highj.data.tuple.Tuple;
 import org.highj.typeclass0.group.Monoid;
 
-public abstract class T4Monoid<A, B, C, D> extends T4Semigroup<A, B, C, D> implements Monoid<T4<A, B, C, D>> {
+public interface T4Monoid<A, B, C, D> extends T4Semigroup<A, B, C, D>, Monoid<T4<A, B, C, D>> {
 
     @Override
-    protected abstract Monoid<A> getA();
+    public Monoid<A> getA();
 
     @Override
-    protected abstract Monoid<B> getB();
+    public Monoid<B> getB();
 
     @Override
-    protected abstract Monoid<C> getC();
+    public Monoid<C> getC();
 
     @Override
-    protected abstract Monoid<D> getD();
+    public Monoid<D> getD();
 
     @Override
-    public T4<A, B, C, D> identity() {
+    public default T4<A, B, C, D> identity() {
         return Tuple.of(getA().identity(), getB().identity(), getC().identity(), getD().identity());
     }
 
@@ -27,22 +27,22 @@ public abstract class T4Monoid<A, B, C, D> extends T4Semigroup<A, B, C, D> imple
                                                            Monoid<C> monoidC, Monoid<D> monoidD) {
         return new T4Monoid<A, B, C, D>() {
             @Override
-            protected Monoid<A> getA() {
+            public Monoid<A> getA() {
                 return monoidA;
             }
 
             @Override
-            protected Monoid<B> getB() {
+            public Monoid<B> getB() {
                 return monoidB;
             }
 
             @Override
-            protected Monoid<C> getC() {
+            public Monoid<C> getC() {
                 return monoidC;
             }
 
             @Override
-            protected Monoid<D> getD() {
+            public Monoid<D> getD() {
                 return monoidD;
             }
         };

@@ -324,7 +324,7 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
         return result;
     }
 
-    public static MonadPlus<µ> monadPlus = new SetMonadPlus();
+    public static SetMonadPlus monadPlus = new SetMonadPlus();
 
     public static <A> Monoid<Set<A>> monoid() {
         return new SetMonoid<>();

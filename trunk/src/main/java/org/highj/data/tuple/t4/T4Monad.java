@@ -21,7 +21,7 @@ public interface T4Monad<S,T,U> extends T4Applicative<S,T,U>, T4Bind<S,T,U>, Mon
     public Monoid<U> getU();
 
 
-    public default <A, B> _<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>, B> ap(_<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>, Function<A, B>> fn,
+    public default <A, B> T4<S, T, U, B> ap(_<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>, Function<A, B>> fn,
                                                            _<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>, A> nestedA) {
         return T4Applicative.super.ap(fn, nestedA);
     }

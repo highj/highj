@@ -10,7 +10,7 @@ public interface IdentityTApplicative<M> extends IdentityTApply<M>, Applicative<
     public Applicative<M> get();
 
     @Override
-    public default <A> _<_<IdentityT.µ, M>, A> pure(A a) {
+    public default <A> IdentityT<M, A> pure(A a) {
         return new IdentityT<>(get().pure(a));
     }
 
