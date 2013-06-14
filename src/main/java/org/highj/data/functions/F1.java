@@ -2,7 +2,7 @@ package org.highj.data.functions;
 
 import org.highj._;
 import org.highj.__;
-import org.highj.data.functions.f1.F1Applicative;
+import org.highj.data.functions.f1.F1Monad;
 import org.highj.data.functions.f1.F1Arrow;
 import org.highj.data.functions.f1.F1EndoMonoid;
 import org.highj.data.tuple.*;
@@ -68,8 +68,8 @@ public interface F1<A, B> extends  __<F1.µ, A, B>, Function<A,B> {
         return a -> fn -> fn.apply(a);
     }
 
-    static <R> Applicative<__.µ<µ, R>> applicative() {
-        return new F1Applicative<>();
+    static <R> F1Monad<R> monad() {
+        return new F1Monad<>();
     }
 
     static <A, B, C> F1<A, T2<B, C>> fanout(_<__.µ<µ, A>, B> fab, _<__.µ<µ, A>, C> fac) {
