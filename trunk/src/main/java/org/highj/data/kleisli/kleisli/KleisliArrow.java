@@ -16,13 +16,14 @@ import java.util.function.Function;
 
 import static org.highj.data.kleisli.Kleisli.narrow;
 
-public class KleisliArrow<M> {} /*implements ArrowChoice<_<Kleisli.µ, M>>, ArrowApply<_<Kleisli.µ, M>> {
+public class KleisliArrow<M> implements ArrowChoice<_<Kleisli.µ, M>> , ArrowApply<_<Kleisli.µ, M>> {
 
     private final Monad<M> monad;
 
     public KleisliArrow(Monad<M> monad) {
         this.monad = monad;
     }
+
 
     @Override
     public <A, B> Kleisli<M, A, B> arr(Function<A, B> fn) {
@@ -34,14 +35,16 @@ public class KleisliArrow<M> {} /*implements ArrowChoice<_<Kleisli.µ, M>>, Arro
     public <A, B, C> Kleisli<M, T2<A, C>, T2<B, C>> first(__<_<Kleisli.µ, M>, A, B> kleisli) {
         //first (Kleisli f) = Kleisli (\ ~(b,d) -> f b >>= \c -> return (c,d))
         Function<A, _<M, B>> f = narrow(kleisli).get();
-        return new Kleisli<>(bd -> monad.bind(f.apply(bd._1()), c -> monad.pure(Tuple.of(c, bd._2()))));
+        //don't use diamond syntax here, gives compiler error in b92
+        return new Kleisli<M, T2<A, C>, T2<B, C>>(bd -> monad.bind(f.apply(bd._1()), c -> monad.pure(Tuple.of(c, bd._2()))));
     }
 
     @Override
     public <A, B, C> Kleisli<M, T2<C, A>, T2<C, B>> second(__<_<Kleisli.µ, M>, A, B> kleisli) {
         //second (Kleisli f) = Kleisli (\ ~(d,b) -> f b >>= \c -> return (d,c))
         Function<A, _<M, B>> f = narrow(kleisli).get();
-        return new Kleisli<>(db -> monad.bind(f.apply(db._2()), c -> monad.pure(Tuple.of(db._1(), c))));
+        //don't use diamond syntax here, gives compiler error in b92
+        return new Kleisli<M, T2<C, A>, T2<C, B>>(db -> monad.bind(f.apply(db._2()), c -> monad.pure(Tuple.of(db._1(), c))));
     }
 
     @Override
@@ -72,7 +75,7 @@ public class KleisliArrow<M> {} /*implements ArrowChoice<_<Kleisli.µ, M>>, Arro
 
     @Override
     public <B, C, BB, CC> Kleisli<M, Either<B, BB>, Either<C, CC>> merge(__<_<Kleisli.µ, M>, B, C> f, __<_<Kleisli.µ, M>, BB, CC> g) {
-        // f +++ g = (f >>> arr LeftLazy) ||| (g >>> arr RightLazy)
+        //f +++ g = (f >>> arr LeftLazy) ||| (g >>> arr RightLazy)
         __<_<Kleisli.µ, M>, B, Either<C,CC>> kleisliF = then(f, this.<C,Either<C,CC>>arr(Either::Left));
         __<_<Kleisli.µ, M>, BB, Either<C,CC>> kleisliG = then(g, this.<CC,Either<C,CC>>arr(Either::Right));
         return fanin(kleisliF, kleisliG);
@@ -91,4 +94,4 @@ public class KleisliArrow<M> {} /*implements ArrowChoice<_<Kleisli.µ, M>>, Arro
         // app = Kleisli (\(Kleisli f, x) -> f x)
         return new Kleisli<>(pair -> Kleisli.narrow(pair._1()).apply(pair._2()));
     }
-}         */
+}
