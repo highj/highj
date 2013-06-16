@@ -19,24 +19,24 @@ import java.util.function.Function;
  * Minimal complete definition: 'map' AND ('traverse' OR 'sequenceA').
  *
  */
-public interface Traversable<µ> extends Foldable<µ>, Functor<µ> {
+public interface Traversable<T> extends Foldable<T>, Functor<T> {
 
     @Override
-    public <A, B> _<µ, B> map(Function<A, B> fn, _<µ, A> as);
+    public <A, B> _<T, B> map(Function<A, B> fn, _<T, A> as);
 
-    public default <A, B, X> _<X, _<µ, B>> traverse(Applicative<X> applicative, Function<A, _<X, B>> fn, _<µ, A> traversable) {
+    public default <A, B, X> _<X, _<T, B>> traverse(Applicative<X> applicative, Function<A, _<X, B>> fn, _<T, A> traversable) {
         return sequenceA(applicative, map(fn, traversable));
     }
 
-    public default <A, X> _<X, _<µ, A>> sequenceA(Applicative<X> applicative, _<µ, _<X, A>> traversable) {
+    public default <A, X> _<X, _<T, A>> sequenceA(Applicative<X> applicative, _<T, _<X, A>> traversable) {
         return traverse(applicative, Functions.<_<X, A>>id(), traversable);
     }
 
     @Override
-    public default <A, B> B foldMap(Monoid<B> mb, final Function<A, B> fn, _<µ, A> nestedA) {
+    public default <A, B> B foldMap(Monoid<B> mb, final Function<A, B> fn, _<T, A> nestedA) {
         //foldMapDefault f = getConst . traverse (Const . f)
         Applicative<__.µ<Const.µ, B>> applicative = Const.applicative(mb);
-        _<__.µ<Const.µ,B>, _<µ, A>> co = traverse(applicative, a -> new Const<>(fn.apply(a)), nestedA);
+        _<__.µ<Const.µ,B>, _<T, A>> co = traverse(applicative, a -> new Const<>(fn.apply(a)), nestedA);
         return Const.narrow(co).get();
     }
 

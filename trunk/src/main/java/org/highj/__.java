@@ -5,7 +5,7 @@ package org.highj;
  * "curried" applications (e.g. writing a monad instance for <code>Either</code>).
  */
 
-public interface __<µ, A, B> extends _<__.µ<µ, A>, B> {
-    public static class µ<µ, T> {}
+public interface __<X, A, B> extends _<__.µ<X, A>, B> {
+    public static class µ<Y, T> {}
     
 }

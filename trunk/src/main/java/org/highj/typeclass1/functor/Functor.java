@@ -7,28 +7,28 @@ import org.highj.data.functions.Functions;
 import java.util.function.Function;
 
 //Minimal complete definition: map OR lift
-public interface Functor<µ> {
+public interface Functor<F> {
 
     // fmap (Data.Functor)
-    public <A, B> _<µ, B> map(Function<A, B> fn, _<µ, A> nestedA);
+    public <A, B> _<F, B> map(Function<A, B> fn, _<F, A> nestedA);
 
     // <$  (Data.Functor)
-    public default <A, B> _<µ, A> left$(A a, _<µ, B> nestedB) {
+    public default <A, B> _<F, A> left$(A a, _<F, B> nestedB) {
         return map(Functions.<B,A>constant(a), nestedB);
     }
 
     //void (Control.Monad)
-    public default <A> _<µ, T0> voidF(_<µ, A> nestedA) {
+    public default <A> _<F, T0> voidF(_<F, A> nestedA) {
         return left$(T0.unit, nestedA);
     }
 
     //flip (Data.Functor.Syntax)
-    public default <A, B> _<µ, B> flip(_<µ, Function<A, B>> nestedFn, final A a) {
+    public default <A, B> _<F, B> flip(_<F, Function<A, B>> nestedFn, final A a) {
         return map((Function<A, B> fn) -> fn.apply(a), nestedFn);
     }
 
     //liftA (Control.Applicative), liftM (Control.Monad), curried version of fmap
-    public default <A, B> Function<_<µ, A>, _<µ, B>> lift(final Function<A, B> fn) {
+    public default <A, B> Function<_<F, A>, _<F, B>> lift(final Function<A, B> fn) {
         return a -> map(fn, a);
     }
 }

@@ -6,21 +6,21 @@ import org.highj.typeclass1.functor.Functor;
 
 import java.util.function.Function;
 
-//Minimal implementation: duplicate(_<µ, A>) OR extend(Function<_<µ, A>, B>)
-public interface Extend<µ> extends Functor<µ> {
+//Minimal implementation: duplicate(_<W, A>) OR extend(Function<_<W, A>, B>)
+public interface Extend<W> extends Functor<W> {
 
-    public default <A> _<µ, _<µ, A>> duplicate(_<µ, A> nestedA) {
+    public default <A> _<W, _<W, A>> duplicate(_<W, A> nestedA) {
         // duplicate = extend id
-        return extend(Functions.<_<µ, A>>id()).apply(nestedA);
+        return extend(Functions.<_<W, A>>id()).apply(nestedA);
     }
 
-    public default <A, B> Function<_<µ, A>, _<µ, B>> extend(final Function<_<µ, A>, B> fn) {
+    public default <A, B> Function<_<W, A>, _<W, B>> extend(final Function<_<W, A>, B> fn) {
         //extend f = fmap f . duplicate
         return x -> lift(fn).apply(duplicate(x));
     }
 
     //(=>=)
-    public default <A, B, C> Function<_<µ, A>, C> cokleisli(Function<_<µ, A>, B> f, Function<_<µ, B>, C> g) {
+    public default <A, B, C> Function<_<W, A>, C> cokleisli(Function<_<W, A>, B> f, Function<_<W, B>, C> g) {
         //f =>= g = g . extend f
         return Functions.compose(g, extend(f));
     }

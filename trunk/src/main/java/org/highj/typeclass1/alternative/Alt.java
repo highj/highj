@@ -4,11 +4,11 @@ import org.highj._;
 import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass1.functor.Functor;
 
-public interface Alt<µ> extends Functor<µ> {
+public interface Alt<F> extends Functor<F> {
 
-    public <A> _<µ, A> mplus(_<µ, A> first, _<µ, A> second);
+    public <A> _<F, A> mplus(_<F, A> first, _<F, A> second);
 
-    public default <A> Semigroup<_<µ, A>> asSemigroup() {
+    public default <A> Semigroup<_<F, A>> asSemigroup() {
         return Alt.this::mplus;
     }
 
