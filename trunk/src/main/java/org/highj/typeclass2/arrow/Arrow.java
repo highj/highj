@@ -2,9 +2,9 @@ package org.highj.typeclass2.arrow;
 
 import org.highj._;
 import org.highj.__;
+import org.highj.data.functions.Functions;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
-import org.highj.data.functions.Functions;
 import org.highj.typeclass1.monad.Applicative;
 
 import java.util.function.Function;
@@ -24,12 +24,14 @@ public interface Arrow<µ> extends Category<µ> {
         return then(swapForth, arrowFirst, swapBack);
     }
 
+    //(***)
     public default <A, B, AA, BB> __<µ, T2<A, AA>, T2<B, BB>> split(__<µ, A, B> arr1, __<µ, AA, BB> arr2) {
         __<µ, T2<A, AA>, T2<B, AA>> one = first(arr1);
         __<µ, T2<B, AA>, T2<B, BB>> two = second(arr2);
         return then(one, two);
     }
 
+    //(&&&)
     public default <A, B, C> __<µ, A, T2<B, C>> fanout(__<µ, A, B> arr1, __<µ, A, C> arr2) {
         __<µ, A, T2<A, A>> duplicated = arr((A a) -> Tuple.<A, A>of(a, a));
         __<µ, T2<A, A>, T2<B, C>> splitted = split(arr1, arr2);
