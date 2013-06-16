@@ -49,4 +49,4 @@ Everything else in highJ follows this scheme.
 
 For classes with two type arguments there is a `__` (2 underscores) wrapper interface as "curried" type of `_`, so you can write functor instances for types like `Either<A,B>` as well. If you want, you can go fancy with the classes `___` and `____` (3 and 4 underscores).
 
-I know the short names like `_` and `µ` are confusing at first, but the type signatures are already rather long and I didn't want to make them even longer. After a short time these symbols really help to glance over some code and to "see" what is important and what is just "library noise" which can be usually ignored. 
+I know the short names like `_` and `µ` are confusing at first, but the type signatures are already rather long and I didn't want to make them even longer. After a short time these symbols really help to glance over some code and to "see" what is important and what is just "library noise" which can usually be ignored. 
