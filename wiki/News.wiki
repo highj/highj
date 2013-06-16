@@ -1,5 +1,13 @@
 #summary News
 
+= 2013-06-16 =
+
+Whoa, it took forever to write `CokleisliArrow.split()`. I'm still not sure how it works, but GHCI's `:t` led the way. The magick of Haskell works even in Java... 
+
+Recently I had a discussion about the project containing terms like "academic", "unreadable" and "useless". It had something from a religious debate - my counterpart was convinced that certain code simply shouldn't be written. I must say it was an interesting experience. Maybe I should focus more on communication and documentation, even when this doesn't help with guys like him.
+
+The funny thing is, that I'm getting more and more convinced that highJ may become something more than a crazy experiment, that it starts to get "usable".
+
 = 2013-06-08 =
 
 Starting with the wiki update. Need to put up the first Java 8 based jar as well...
