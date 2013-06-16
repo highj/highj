@@ -1,7 +1,6 @@
 package org.highj.data.tuple.t1;
 
 import org.highj.data.tuple.T1;
-import org.highj.data.tuple.Tuple;
 import org.highj.typeclass0.group.Group;
 
 public interface T1Group<A> extends T1Monoid<A>, Group<T1<A>> {
@@ -11,7 +10,7 @@ public interface T1Group<A> extends T1Monoid<A>, Group<T1<A>> {
 
     @Override
     public default T1<A> inverse(T1<A> x) {
-        return Tuple.of(getA().inverse(x._1()));
+        return T1.of(getA().inverse(x._1()));
     }
 
     public static <A> Group<T1<A>> from(Group<A> groupA) {

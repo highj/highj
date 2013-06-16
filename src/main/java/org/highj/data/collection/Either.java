@@ -7,13 +7,10 @@ import org.highj.data.collection.either.EitherMonadPlus;
 import org.highj.data.compare.Ordering;
 import org.highj.typeclass0.compare.Eq;
 import org.highj.data.tuple.T2;
-import org.highj.data.tuple.Tuple;
 import org.highj.data.functions.Functions;
 import org.highj.data.functions.Strings;
 import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Monoid;
-import org.highj.typeclass1.monad.Monad;
-import org.highj.typeclass1.monad.MonadPlus;
 
 import java.util.NoSuchElementException;
 import java.util.function.Function;
@@ -321,7 +318,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
                rights = rights.plus(either.getRight());
            }
         }
-        return Tuple.of(lefts.reverse(), rights.reverse());
+        return T2.of(lefts.reverse(), rights.reverse());
     }
 
     /**

@@ -7,7 +7,6 @@ import org.highj.data.collection.Either;
 import org.highj.data.functions.Functions;
 import org.highj.data.kleisli.Kleisli;
 import org.highj.data.tuple.T2;
-import org.highj.data.tuple.Tuple;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass2.arrow.ArrowApply;
 import org.highj.typeclass2.arrow.ArrowChoice;
@@ -34,7 +33,7 @@ public class KleisliArrow<M> implements ArrowChoice<___.µ<Kleisli.µ, M>>, Arro
     public <A, B, C> Kleisli<M, T2<A, C>, T2<B, C>> first(__<___.µ<Kleisli.µ, M>, A, B> kleisli) {
         Function<A, _<M, B>> f = Kleisli.narrow(kleisli);
         //don't use diamond syntax here, gives compiler error in b92
-        return new Kleisli<M, T2<A, C>, T2<B, C>>(bd -> monad.bind(f.apply(bd._1()), c -> monad.pure(Tuple.of(c, bd._2()))));
+        return new Kleisli<M, T2<A, C>, T2<B, C>>(bd -> monad.bind(f.apply(bd._1()), c -> monad.pure(T2.of(c, bd._2()))));
     }
 
     @Override
@@ -42,7 +41,7 @@ public class KleisliArrow<M> implements ArrowChoice<___.µ<Kleisli.µ, M>>, Arro
         //second (Kleisli f) = Kleisli (\ ~(d,b) -> f b >>= \c -> return (d,c))
         Function<A, _<M, B>> f = narrow(kleisli);
         //don't use diamond syntax here, gives compiler error in b92
-        return new Kleisli<M, T2<C, A>, T2<C, B>>(db -> monad.bind(f.apply(db._2()), c -> monad.pure(Tuple.of(db._1(), c))));
+        return new Kleisli<M, T2<C, A>, T2<C, B>>(db -> monad.bind(f.apply(db._2()), c -> monad.pure(T2.of(db._1(), c))));
     }
 
     @Override

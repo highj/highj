@@ -1,7 +1,6 @@
 package org.highj.data.tuple.t4;
 
 import org.highj.data.tuple.T4;
-import org.highj.data.tuple.Tuple;
 import org.highj.typeclass0.group.Monoid;
 
 public interface T4Monoid<A, B, C, D> extends T4Semigroup<A, B, C, D>, Monoid<T4<A, B, C, D>> {
@@ -20,7 +19,7 @@ public interface T4Monoid<A, B, C, D> extends T4Semigroup<A, B, C, D>, Monoid<T4
 
     @Override
     public default T4<A, B, C, D> identity() {
-        return Tuple.of(getA().identity(), getB().identity(), getC().identity(), getD().identity());
+        return T4.of(getA().identity(), getB().identity(), getC().identity(), getD().identity());
     }
 
     public static <A, B, C, D> Monoid<T4<A, B, C, D>> from(Monoid<A> monoidA, Monoid<B> monoidB,

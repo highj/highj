@@ -1,5 +1,6 @@
 package org.highj.data.tuple;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.____;
@@ -9,15 +10,13 @@ import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
-import org.highj.typeclass1.comonad.Comonad;
-import org.highj.typeclass1.functor.Functor;
-import org.highj.typeclass1.monad.Bind;
-import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public abstract class T4<A, B, C, D> implements ____<T4.µ, A, B, C, D> {
     public static class µ {
+
     }
 
     public abstract A _1();
@@ -28,20 +27,76 @@ public abstract class T4<A, B, C, D> implements ____<T4.µ, A, B, C, D> {
 
     public abstract D _4();
 
+    public static <A, B, C, D> T4<A, B, C, D> of(A a, B b, C c, D d) {
+        assert a != null && b != null && c != null && d != null;
+        return new T4<A, B, C, D>() {
+
+            @Override
+            public A _1() {
+                return a;
+            }
+
+            @Override
+            public B _2() {
+                return b;
+            }
+
+            @Override
+            public C _3() {
+                return c;
+            }
+
+            @Override
+            public D _4() {
+                return d;
+            }
+        };
+    }
+
+    public static <A, B, C, D> T4<A, B, C, D> ofLazy(Supplier<A> thunkA, Supplier<B> thunkB, Supplier<C> thunkC, Supplier<D> thunkD) {
+        return new T4<A, B, C, D>() {
+
+            @Override
+            public A _1() {
+                return thunkA.get();
+            }
+
+            @Override
+            public B _2() {
+                return thunkB.get();
+            }
+
+            @Override
+            public C _3() {
+                return thunkC.get();
+            }
+
+            @Override
+            public D _4() {
+                return thunkD.get();
+            }
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <A, B, C, D> T4<A, B, C, D> narrow(_<__.µ<___.µ<____.µ<µ, A>, B>, C>, D> value) {
+        return (T4) value;
+    }
+
     public <AA> T4<AA, B, C, D> map_1(Function<? super A, ? extends AA> fn) {
-        return Tuple.of(fn.apply(_1()), _2(), _3(), _4());
+        return of(fn.apply(_1()), _2(), _3(), _4());
     }
 
     public <BB> T4<A, BB, C, D> map_2(Function<? super B, ? extends BB> fn) {
-        return Tuple.of(_1(), fn.apply(_2()), _3(), _4());
+        return of(_1(), fn.apply(_2()), _3(), _4());
     }
 
     public <CC> T4<A, B, CC, D> map_3(Function<? super C, ? extends CC> fn) {
-        return Tuple.of(_1(), _2(), fn.apply(_3()), _4());
+        return of(_1(), _2(), fn.apply(_3()), _4());
     }
 
     public <DD> T4<A, B, C, DD> map_4(Function<? super D, ? extends DD> fn) {
-        return Tuple.of(_1(), _2(), _3(), fn.apply(_4()));
+        return of(_1(), _2(), _3(), fn.apply(_4()));
     }
 
     @Override
@@ -59,6 +114,32 @@ public abstract class T4<A, B, C, D> implements ____<T4.µ, A, B, C, D> {
                     && this._4().equals(that._4());
         }
         return false;
+    }
+
+    public static <A, AA, AAA, AAAA, B, BB, BBB, BBBB, C, CC, CCC, CCCC> T4<C, CC, CCC, CCCC> merge(T4<A, AA, AAA, AAAA> a, T4<B, BB, BBB, BBBB> b,
+                                                                                                    Function<A, Function<B, C>> fn1, Function<AA, Function<BB, CC>> fn2,
+                                                                                                    Function<AAA, Function<BBB, CCC>> fn3, Function<AAAA, Function<BBBB, CCCC>> fn4) {
+        return new T4<C, CC, CCC, CCCC>() {
+            @Override
+            public C _1() {
+                return fn1.apply(a._1()).apply(b._1());
+            }
+
+            @Override
+            public CC _2() {
+                return fn2.apply(a._2()).apply(b._2());
+            }
+
+            @Override
+            public CCC _3() {
+                return fn3.apply(a._3()).apply(b._3());
+            }
+
+            @Override
+            public CCCC _4() {
+                return fn4.apply(a._4()).apply(b._4());
+            }
+        };
     }
 
     public static <A, B, C, D> Eq<T4<A, B, C, D>> eq(Eq<? super A> eqA, Eq<? super B> eqB,
@@ -127,8 +208,9 @@ public abstract class T4<A, B, C, D> implements ____<T4.µ, A, B, C, D> {
     }
 
 
-    public static <S, T, U> T4Comonad<S,T,U> comonad() {
-        return new T4Comonad<S,T,U>(){};
+    public static <S, T, U> T4Comonad<S, T, U> comonad() {
+        return new T4Comonad<S, T, U>() {
+        };
     }
 
     public static <A, B, C, D> Semigroup<T4<A, B, C, D>> semigroup(Semigroup<A> semigroupA, Semigroup<B> semigroupB,

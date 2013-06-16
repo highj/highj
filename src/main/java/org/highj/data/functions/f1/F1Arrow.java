@@ -4,7 +4,6 @@ import org.highj.__;
 import org.highj.data.collection.Either;
 import org.highj.data.functions.F1;
 import org.highj.data.tuple.T2;
-import org.highj.data.tuple.Tuple;
 import org.highj.typeclass2.arrow.ArrowApply;
 import org.highj.typeclass2.arrow.ArrowChoice;
 
@@ -19,13 +18,13 @@ public class F1Arrow implements ArrowChoice<F1.µ>, ArrowApply<F1.µ> {
     @Override
     public <A, B, C> F1<T2<A, C>, T2<B, C>> first(__<F1.µ, A, B> arrow) {
         final F1<A, B> fn = F1.narrow(arrow);
-        return pair -> Tuple.of(fn.apply(pair._1()), pair._2());
+        return pair -> T2.of(fn.apply(pair._1()), pair._2());
     }
 
     @Override
     public <A, B, C> F1<T2<C, A>, T2<C, B>> second(__<F1.µ, A, B> arrow) {
         final F1<A, B> fn = F1.narrow(arrow);
-        return pair -> Tuple.of(pair._1(), fn.apply(pair._2()));
+        return pair -> T2.of(pair._1(), fn.apply(pair._2()));
     }
 
     @Override

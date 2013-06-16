@@ -1,7 +1,6 @@
 package org.highj.data.tuple.t1;
 
 import org.highj.data.tuple.T1;
-import org.highj.data.tuple.Tuple;
 import org.highj.typeclass0.group.Semigroup;
 
 public interface T1Semigroup<A> extends Semigroup<T1<A>> {
@@ -10,7 +9,7 @@ public interface T1Semigroup<A> extends Semigroup<T1<A>> {
 
     @Override
     public default T1<A> dot(T1<A> x, T1<A> y) {
-        return Tuple.of(getA().dot(x._1(), y._1()));
+        return T1.of(getA().dot(x._1(), y._1()));
     }
 
     public static <A> Semigroup<T1<A>> from(Semigroup<A> semigroupA) {

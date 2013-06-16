@@ -5,8 +5,6 @@ import org.highj.__;
 import org.highj.data.collection.map.MapApply;
 import org.highj.data.compare.Ordering;
 import org.highj.data.tuple.T2;
-import org.highj.data.tuple.Tuple;
-import org.highj.typeclass1.monad.Apply;
 import org.highj.util.Iterators;
 
 import java.util.Iterator;
@@ -80,12 +78,12 @@ public class Map<A, B> implements __<Map.µ, A, B>, Iterable<T2<A, B>>, Function
 
     public Map<A, B> plus(final A a, final B b) {
         if (isEmpty()) {
-            return new Map<>(a.hashCode(), List.<T2<A, B>>of(Tuple.of(a, b)), Map.<A, B>empty(), Map.<A, B>empty());
+            return new Map<>(a.hashCode(), List.<T2<A, B>>of(T2.of(a, b)), Map.<A, B>empty(), Map.<A, B>empty());
         }
         int ahc = a.hashCode();
         switch (Ordering.compare(ahc, hc)) {
             case EQ:
-                return new Map<>(hc, bucket.filter(ab -> !ab._1().equals(a)).plus(Tuple.of(a, b)), left, right);
+                return new Map<>(hc, bucket.filter(ab -> !ab._1().equals(a)).plus(T2.of(a, b)), left, right);
             case LT:
                 Map<A, B> newLeft = left.plus(a, b);
                 return left == newLeft ? this : new Map<>(hc, bucket, newLeft, right);
@@ -135,10 +133,10 @@ public class Map<A, B> implements __<Map.µ, A, B>, Iterable<T2<A, B>>, Function
 
     private T2<Map<A, B>, Map<A, B>> removeMin() {
         if (left.isEmpty()) {
-            return Tuple.of(this, right);
+            return T2.of(this, right);
         } else {
             T2<Map<A, B>, Map<A, B>> pair = left.removeMin();
-            return Tuple.of(pair._1(), new Map<>(hc, bucket, pair._2(), right));
+            return T2.of(pair._1(), new Map<>(hc, bucket, pair._2(), right));
         }
     }
 

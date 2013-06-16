@@ -3,7 +3,6 @@ package org.highj.data.collection;
 import org.highj._;
 import org.highj.__;
 import org.highj.data.tuple.T2;
-import org.highj.data.tuple.Tuple;
 import org.highj.data.functions.Integers;
 import org.junit.Test;
 
@@ -61,7 +60,7 @@ public class MapTest {
 
     @Test
     public void testPlusT2() throws Exception {
-        T2<String, Integer> t2 = Tuple.of("a",20);
+        T2<String, Integer> t2 = T2.of("a", 20);
         assertEquals("Map(a->20)", Map.<String,Integer>empty().plus(t2).toString());
         assertEquals("Map(a->20,x->3,y->5,z->10)", aMap.plus(t2).toString());
     }
@@ -94,12 +93,12 @@ public class MapTest {
     @Test
     public void testOfT2() throws Exception {
         assertEquals("Map(x->3,y->5,z->10)",
-                Map.of(Tuple.of("y",5), Tuple.of("z",10), Tuple.of("x",3)).toString());
+                Map.of(T2.of("y", 5), T2.of("z", 10), T2.of("x", 3)).toString());
     }
 
     @Test
     public void testOfIterable() throws Exception {
-        List<T2<String,Integer>> list = List.of(Tuple.of("y", 5), Tuple.of("z", 10), Tuple.of("x", 3));
+        List<T2<String,Integer>> list = List.of(T2.of("y", 5), T2.of("z", 10), T2.of("x", 3));
         assertEquals("Map(x->3,y->5,z->10)",
                 Map.of(list).toString());
     }
@@ -107,7 +106,7 @@ public class MapTest {
     @Test
     public void testPlusT2s() throws Exception {
         assertEquals("Map(a->1,x->13,y->5,z->10)",
-                aMap.plus(Tuple.of("a", 1), Tuple.of("x", 13)).toString());
+                aMap.plus(T2.of("a", 1), T2.of("x", 13)).toString());
     }
 
     @Test
@@ -117,7 +116,7 @@ public class MapTest {
 
     @Test
     public void testPlusIterable() throws Exception {
-        List<T2<String,Integer>> list = List.of(Tuple.of("a",1), Tuple.of("x",13));
+        List<T2<String,Integer>> list = List.of(T2.of("a", 1), T2.of("x", 13));
         assertEquals("Map(a->1,x->13,y->5,z->10)",
                 aMap.plus(list).toString());
 

@@ -2,7 +2,6 @@ package org.highj.data.collection;
 
 import org.highj._;
 import org.highj.data.tuple.T2;
-import org.highj.data.tuple.Tuple;
 import org.highj.data.functions.Integers;
 import org.highj.data.functions.Strings;
 import org.junit.Test;
@@ -316,7 +315,7 @@ public class ListTest {
 
     @Test
     public void testUnzip() throws Exception {
-        List<T2<Integer, String>> list = List.of(Tuple.of(1, "one"), Tuple.of(5, "five"), Tuple.of(7, "seven"), Tuple.of(3, "three"));
+        List<T2<Integer, String>> list = List.of(T2.of(1, "one"), T2.of(5, "five"), T2.of(7, "seven"), T2.of(3, "three"));
         assertEquals("(List(1,5,7,3),List(one,five,seven,three))", List.unzip(list).toString());
     }
 
