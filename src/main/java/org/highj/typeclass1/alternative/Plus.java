@@ -3,20 +3,20 @@ package org.highj.typeclass1.alternative;
 import org.highj._;
 import org.highj.typeclass0.group.Monoid;
 
-public interface Plus<µ> extends Alt<µ> {
+public interface Plus<F> extends Alt<F> {
 
     //mzero (Control.Applicative)
-    public <A> _<µ, A> mzero();
+    public <A> _<F, A> mzero();
 
-    public default <A> Monoid<_<µ, A>> asMonoid() {
-        return new Monoid<_<µ, A>>() {
+    public default <A> Monoid<_<F, A>> asMonoid() {
+        return new Monoid<_<F, A>>() {
             @Override
-            public _<µ, A> identity() {
+            public _<F, A> identity() {
                 return mzero();
             }
 
             @Override
-            public _<µ, A> dot(_<µ, A> x, _<µ, A> y) {
+            public _<F, A> dot(_<F, A> x, _<F, A> y) {
                 return mplus(x, y);
             }
         };

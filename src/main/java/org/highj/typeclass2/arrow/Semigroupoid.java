@@ -2,23 +2,23 @@ package org.highj.typeclass2.arrow;
 
 import org.highj.__;
 
-public interface Semigroupoid<µ> {
+public interface Semigroupoid<A> {
 
     // dot (Data.Semigroupoid), (.) (Control.Category)
-    <A, B, C> __<µ, A, C> dot(__<µ, B, C> bc, __<µ, A, B> ab);
+    <B, C, D> __<A, B, D> dot(__<A, C, D> cd, __<A, B, C> bc);
 
     // (>>>) (Control.Category, Control.Arrow)
-    public default <A, B, C> __<µ, A, C> then(__<µ, A, B> ab, __<µ, B, C> bc) {
-        return dot(bc, ab);
+    public default <B, C, D> __<A, B, D> then(__<A, B, C> bc, __<A, C, D> cd) {
+        return dot(cd, bc);
     }
 
     // 2x (>>>)
-    public default <A, B, C, D> __<µ, A, D> then(__<µ, A, B> ab, __<µ, B, C> bc, __<µ, C, D> cd){
-        return then(ab, then(bc, cd));
+    public default <B, C, D, E> __<A, B, E> then(__<A, B, C> bc, __<A, C, D> cd, __<A, D, E> de){
+        return then(bc, then(cd, de));
     }
 
     // 3x (>>>)
-    public default <A, B, C, D, E> __<µ, A, E> then(__<µ, A, B> ab, __<µ, B, C> bc, __<µ, C, D> cd, __<µ, D, E> de) {
-        return then(ab, bc, then(cd, de));
+    public default <B, C, D, E, F> __<A, B, F> then(__<A, B, C> bc, __<A, C, D> cd, __<A, D, E> de, __<A, E, F> ef) {
+        return then(bc, cd, then(de, ef));
     }
 }

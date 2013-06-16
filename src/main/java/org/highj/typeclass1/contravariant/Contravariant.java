@@ -10,8 +10,8 @@ import java.util.function.Function;
  *
  * Mirrors Data.Functor.Contravariant.
  */
-public interface Contravariant<µ> {
+public interface Contravariant<F> {
 
     // contramap (Data.Functor.Contravariant)
-    public <A, B> _<µ, A> contramap(Function<A, B> fn, _<µ, B> nestedB);
+    public <A, B> _<F, A> contramap(Function<A, B> fn, _<F, B> nestedB);
 }

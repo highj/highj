@@ -1,5 +1,5 @@
 package org.highj;
 
-public interface ____<µ, A, B, C, D> extends ___<____.µ<µ, A>, B, C, D> {
-    public static class µ<µ, T> {}
+public interface ____<X, A, B, C, D> extends ___<____.µ<X, A>, B, C, D> {
+    public static class µ<Y, T> {}
 }

@@ -11,17 +11,17 @@ import java.util.function.Function;
  * Minimal complete definition: ('traverse1' OR 'sequence1') AND minimal definitions for Foldable and Traversable.
  */
 
-public interface Traversable1<µ> extends Traversable<µ>, Foldable<µ> {
+public interface Traversable1<T> extends Traversable<T>, Foldable<T> {
 
     //traverse1 :: Apply f => (a -> f b) -> t a -> f (t b)
     //traverse1 f = sequence1 . fmap f
-    public default <A,B,F> _<F,_<µ,B>> traverse1(Apply<F> apply, Function<A,_<F,B>> fn, _<µ,A> traversable) {
+    public default <A,B,F> _<F,_<T,B>> traverse1(Apply<F> apply, Function<A,_<F,B>> fn, _<T,A> traversable) {
         return sequence1(apply, map(fn, traversable));
     }
 
     //sequence1 :: Apply f => t (f b) -> f (t b)
     //sequence1 = traverse1 id
-    public default <B,F> _<F,_<µ,B>> sequence1(Apply<F> apply, _<µ,_<F,B>> traversable) {
+    public default <B, F> _<F,_<T,B>> sequence1(Apply<F> apply, _<T,_<F,B>> traversable) {
         return traverse1(apply, x -> x, traversable);
     }
 

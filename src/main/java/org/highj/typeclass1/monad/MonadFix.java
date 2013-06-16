@@ -5,7 +5,7 @@ import org.highj._;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public interface MonadFix<µ> extends Monad<µ> {
+public interface MonadFix<M> extends Monad<M> {
     //mfix :: (a -> m a) -> m a
-    public <A> _<µ,A> mfix(Function<Supplier<A>, _<µ,A>> fn);
+    public <A> _<M,A> mfix(Function<Supplier<A>, _<M,A>> fn);
 }

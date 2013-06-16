@@ -2,9 +2,9 @@ package org.highj.typeclass2.arrow;
 
 import org.highj.__;
 
-public interface Category<µ> extends Semigroupoid<µ>{
+public interface Category<A> extends Semigroupoid<A>{
 
     // id (Control.Category)
-    public <A> __<µ, A, A> identity();
+    public <B> __<A, B, B> identity();
 
 }

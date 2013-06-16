@@ -7,24 +7,24 @@ import org.highj.util.Mutable;
 
 import java.util.function.Function;
 
-public interface Monad<µ> extends Applicative<µ>, Bind<µ> {
+public interface Monad<M> extends Applicative<M>, Bind<M> {
 
     // mapM (Control.Monad)
-    public default <A, B> Function<List<A>, _<µ, List<B>>> mapM(final Function<A, _<µ, B>> fn) {
+    public default <A, B> Function<List<A>, _<M, List<B>>> mapM(final Function<A, _<M, B>> fn) {
         return list -> sequence(list.map(fn));
     }
 
     // mapM_ (Control.Monad)
-    public default <A, B> Function<List<A>, _<µ, T0>> mapM_(final Function<A, _<µ, B>> fn) {
+    public default <A, B> Function<List<A>, _<M, T0>> mapM_(final Function<A, _<M, B>> fn) {
         return list -> sequence_(list.map(fn));
     }
 
     //foldM (Control.Monad)
-    public default <A, B> Function<A, Function<List<B>, _<µ, A>>> foldM(final Function<A, Function<B, _<µ, A>>> fn) {
+    public default <A, B> Function<A, Function<List<B>, _<M, A>>> foldM(final Function<A, Function<B, _<M, A>>> fn) {
         return a -> listB -> {
-            _<µ, A> result = pure(a);
+            _<M, A> result = pure(a);
             final Mutable<B> b = new Mutable<>();
-            Function<A, _<µ, A>> fnBind = x -> fn.apply(x).apply(b.get());
+            Function<A, _<M, A>> fnBind = x -> fn.apply(x).apply(b.get());
             while (!listB.isEmpty()) {
                 b.set(listB.head());
                 listB = listB.tail();
@@ -35,11 +35,11 @@ public interface Monad<µ> extends Applicative<µ>, Bind<µ> {
     }
 
     //foldM_ (Control.Monad)
-    public default <A, B> Function<A, Function<List<B>, _<µ, T0>>> foldM_(final Function<A, Function<B, _<µ, A>>> fn) {
+    public default <A, B> Function<A, Function<List<B>, _<M, T0>>> foldM_(final Function<A, Function<B, _<M, A>>> fn) {
         return a -> listB -> {
-            _<µ, A> result = pure(a);
+            _<M, A> result = pure(a);
             final Mutable<B> b = Mutable.Mutable();
-            Function<A, _<µ, A>> fnBind = x -> fn.apply(x).apply(b.get());
+            Function<A, _<M, A>> fnBind = x -> fn.apply(x).apply(b.get());
             while (!listB.isEmpty()) {
                 b.set(listB.head());
                 listB = listB.tail();
@@ -50,30 +50,30 @@ public interface Monad<µ> extends Applicative<µ>, Bind<µ> {
     }
 
     //replicateM (Control.Monad)
-    public default <A> _<µ, List<A>> replicateM(int n, _<µ, A> nestedA) {
+    public default <A> _<M, List<A>> replicateM(int n, _<M, A> nestedA) {
         return sequence(List.replicate(n, nestedA));
     }
 
     //replicateM_ (Control.Monad)
-    public default <A> _<µ, T0> replicateM_(int n, _<µ, A> nestedA) {
+    public default <A> _<M, T0> replicateM_(int n, _<M, A> nestedA) {
         return sequence_(List.replicate(n, nestedA));
     }
 
     //sequence (Control.Monad)
-    public default <A> _<µ, List<A>> sequence(List<_<µ, A>> list) {
+    public default <A> _<M, List<A>> sequence(List<_<M, A>> list) {
         //  sequence ms = foldr (liftM2 (:)) (return []) ms
-        Function<_<µ, A>, Function<_<µ, List<A>>, _<µ, List<A>>>> f2 = lift2((A a) -> (List<A> as) -> List.<A>cons(a, as));
+        Function<_<M, A>, Function<_<M, List<A>>, _<M, List<A>>>> f2 = lift2((A a) -> (List<A> as) -> List.<A>cons(a, as));
         return list.foldr(x -> y -> f2.apply(x).apply(y), pure(List.<A>nil()));
     }
 
     //sequence_ (Control.Monad)
-    public default <A> _<µ, T0> sequence_(List<_<µ, A>> list) {
+    public default <A> _<M, T0> sequence_(List<_<M, A>> list) {
         sequence(list);
         return pure(T0.unit);
     }
 
     @Override
-    public default <A, B> _<µ, B> ap(_<µ, Function<A, B>> fn, _<µ, A> nestedA) {
+    public default <A, B> _<M, B> ap(_<M, Function<A, B>> fn, _<M, A> nestedA) {
         //ap mf m = do f <- mf; x <- m; return (f x)
         return bind(fn, f -> this.<A,B>bind(nestedA, x -> this.<B>pure(f.apply(x))));
     }

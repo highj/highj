@@ -7,5 +7,5 @@ package org.highj;
  * of the type constructor) identifies the type class and allows to cast values
  * back to their normal version. For this, the type constructor should provide a static method called narrow.
  */
-public interface _<µ, T> {
+public interface _<X, T> {
 }

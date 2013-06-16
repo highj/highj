@@ -3,7 +3,7 @@ package org.highj.typeclass2.arrow;
 import org.highj.__;
 import org.highj.data.tuple.T2;
 
-public interface ArrowApply<µ> extends Arrow<µ> {
+public interface ArrowApply<A> extends Arrow<A> {
     //app :: a (a b c, b) c
-    public <A, B> __<µ, T2<__<µ, A, B>, A>, B> app();
+    public <B, C> __<A, T2<__<A, B, C>, B>, C> app();
 }

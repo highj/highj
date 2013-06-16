@@ -1,76 +1,56 @@
 package org.highj.typeclass2.arrow;
 
-import org.highj._;
 import org.highj.__;
 import org.highj.data.functions.Functions;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.Tuple;
-import org.highj.typeclass1.monad.Applicative;
 
 import java.util.function.Function;
 
-import static org.highj.HigherKinded.uncurry2;
+public interface Arrow<A> extends Category<A> {
 
-public interface Arrow<µ> extends Category<µ> {
+    public <B, C> __<A, B, C> arr(Function<B, C> fn);
 
-    public <A, B> __<µ, A, B> arr(Function<A, B> fn);
+    public <B, C, D> __<A, T2<B, D>, T2<C, D>> first(__<A, B, C> arrow);
 
-    public <A, B, C> __<µ, T2<A, C>, T2<B, C>> first(__<µ, A, B> arrow);
-
-    public default <A, B, C> __<µ, T2<C, A>, T2<C, B>> second(__<µ, A, B> arrow) {
-        __<µ, T2<C, A>, T2<A, C>> swapForth = arr(T2<C, A>::swap);
-        __<µ, T2<A, C>, T2<B, C>> arrowFirst = first(arrow);
-        __<µ, T2<B, C>, T2<C, B>> swapBack = arr(T2<B, C>::swap);
+    public default <B, C, D> __<A, T2<D, B>, T2<D, C>> second(__<A, B, C> arrow) {
+        __<A, T2<D, B>, T2<B, D>> swapForth = arr(T2<D, B>::swap);
+        __<A, T2<B, D>, T2<C, D>> arrowFirst = first(arrow);
+        __<A, T2<C, D>, T2<D, C>> swapBack = arr(T2<C, D>::swap);
         return then(swapForth, arrowFirst, swapBack);
     }
 
     //(***)
-    public default <A, B, AA, BB> __<µ, T2<A, AA>, T2<B, BB>> split(__<µ, A, B> arr1, __<µ, AA, BB> arr2) {
-        __<µ, T2<A, AA>, T2<B, AA>> one = first(arr1);
-        __<µ, T2<B, AA>, T2<B, BB>> two = second(arr2);
+    public default <B, C, BB, CC> __<A, T2<B, BB>, T2<C, CC>> split(__<A, B, C> arr1, __<A, BB, CC> arr2) {
+        __<A, T2<B, BB>, T2<C, BB>> one = first(arr1);
+        __<A, T2<C, BB>, T2<C, CC>> two = second(arr2);
         return then(one, two);
     }
 
     //(&&&)
-    public default <A, B, C> __<µ, A, T2<B, C>> fanout(__<µ, A, B> arr1, __<µ, A, C> arr2) {
-        __<µ, A, T2<A, A>> duplicated = arr((A a) -> Tuple.<A, A>of(a, a));
-        __<µ, T2<A, A>, T2<B, C>> splitted = split(arr1, arr2);
+    public default <B, C, D> __<A, B, T2<C, D>> fanout(__<A, B, C> arr1, __<A, B, D> arr2) {
+        __<A, B, T2<B, B>> duplicated = arr((B a) -> Tuple.<B, B>of(a, a));
+        __<A, T2<B, B>, T2<C, D>> splitted = split(arr1, arr2);
         return then(duplicated, splitted);
     }
 
-    public default <A> __<µ, A, A> returnA() {
-        return arr(Functions.<A>id());
+    public default <B> __<A, B, B> returnA() {
+        return arr(Functions.<B>id());
     }
 
     //(^>>) :: Arrow a => (b -> c) -> a c d -> a b d
-    public default <A, B, C> Function<__<µ, B, C>, __<µ, A, C>> precomposition(Function<A, B> fn) {
+    public default <B, C, D> Function<__<A, C, D>, __<A, B, D>> precomposition(Function<B, C> fn) {
         //f ^>> a = arr f >>> a
         return bc -> then(arr(fn), bc);
     }
 
     //(^<<) :: Arrow a => (c -> d) -> a b c -> a b d
-    public default <A, B, C> Function<__<µ, A, B>, __<µ, A, C>> postcomposition(final Function<B, C> fn) {
+    public default <B, C, D> Function<__<A, B, C>, __<A, B, D>> postcomposition(final Function<C, D> fn) {
         //f ^<< a = arr f <<< a
         return ab -> then(ab, arr(fn));
     }
 
-    public default <X> Applicative<__.µ<µ, X>> getApplicative() {
-        return new Applicative<__.µ<µ, X>>() {
-            @Override
-            public <A, B> _<__.µ<µ, X>, B> ap(_<__.µ<µ, X>, Function<A, B>> fn, _<__.µ<µ, X>, A> nestedA) {
-                return then(fanout(uncurry2(fn), uncurry2(nestedA)), arr(
-                        (T2<Function<A, B>, A> pair) -> pair._1().apply(pair._2())));
-            }
-
-            @Override
-            public <A> _<__.µ<µ, X>, A> pure(A a) {
-                return arr(Functions.<X, A>constant(a));
-            }
-
-            @Override
-            public <A, B> _<__.µ<µ, X>, B> map(Function<A, B> fn, _<__.µ<µ, X>, A> nestedA) {
-                return then(uncurry2(nestedA), arr(fn));
-            }
-        };
-    }
+    public default <X> ApplicativeFromArrow<A,X> getApplicative() {
+        return () -> Arrow.this;
+   }
 }

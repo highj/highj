@@ -7,7 +7,6 @@ import org.highj.data.functions.f1.F1Arrow;
 import org.highj.data.functions.f1.F1EndoMonoid;
 import org.highj.data.tuple.*;
 import org.highj.typeclass0.group.Monoid;
-import org.highj.typeclass1.monad.Applicative;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
