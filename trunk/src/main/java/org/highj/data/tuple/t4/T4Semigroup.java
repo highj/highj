@@ -1,7 +1,6 @@
 package org.highj.data.tuple.t4;
 
 import org.highj.data.tuple.T4;
-import org.highj.data.tuple.Tuple;
 import org.highj.typeclass0.group.Semigroup;
 
 public interface T4Semigroup<A, B, C, D> extends Semigroup<T4<A, B, C, D>> {
@@ -17,7 +16,7 @@ public interface T4Semigroup<A, B, C, D> extends Semigroup<T4<A, B, C, D>> {
 
     @Override
     public default T4<A, B, C, D> dot(T4<A, B, C, D> x, T4<A, B, C, D> y) {
-        return Tuple.of(getA().dot(x._1(), y._1()),
+        return T4.of(getA().dot(x._1(), y._1()),
                 getB().dot(x._2(), y._2()),
                 getC().dot(x._3(), y._3()),
                 getD().dot(x._4(), y._4()));

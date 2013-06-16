@@ -1,11 +1,9 @@
 package org.highj.data.tuple.t4;
 
-import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.____;
 import org.highj.data.tuple.T4;
-import org.highj.data.tuple.Tuple;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.monad.Applicative;
 
@@ -22,7 +20,7 @@ public interface T4Applicative<S,T,U> extends T4Apply<S,T,U>, Applicative<__.µ<
 
     @Override
     public default <A> T4<S, T, U, A> pure(A a) {
-        return Tuple.of(getS().identity(), getT().identity(), getU().identity(), a);
+        return T4.of(getS().identity(), getT().identity(), getU().identity(), a);
     }
 
 }

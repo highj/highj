@@ -74,14 +74,14 @@ public interface F1<A, B> extends  __<F1.µ, A, B>, Function<A,B> {
     static <A, B, C> F1<A, T2<B, C>> fanout(_<__.µ<µ, A>, B> fab, _<__.µ<µ, A>, C> fac) {
         final F1<A, B> fnab = narrow(fab);
         final F1<A, C> fnac = narrow(fac);
-        return a -> Tuple.of(fnab.apply(a), fnac.apply(a));
+        return a -> T2.of(fnab.apply(a), fnac.apply(a));
     }
 
     static <A, B, C, D> F1<A, T3<B, C, D>> fanout(_<__.µ<µ, A>, B> fab, _<__.µ<µ, A>, C> fac, _<__.µ<µ, A>, D> fad) {
         final F1<A, B> fnab = narrow(fab);
         final F1<A, C> fnac = narrow(fac);
         final F1<A, D> fnad = narrow(fad);
-        return a -> Tuple.of(fnab.apply(a), fnac.apply(a), fnad.apply(a));
+        return a -> T3.of(fnab.apply(a), fnac.apply(a), fnad.apply(a));
     }
 
     static <A, B, C, D, E> F1<A, T4<B, C, D, E>> fanout(_<__.µ<µ, A>, B> fab, _<__.µ<µ, A>, C> fac, _<__.µ<µ, A>, D> fad, _<__.µ<µ, A>, E> fae) {
@@ -89,7 +89,7 @@ public interface F1<A, B> extends  __<F1.µ, A, B>, Function<A,B> {
         final F1<A, C> fnac = narrow(fac);
         final F1<A, D> fnad = narrow(fad);
         final F1<A, E> fnae = narrow(fae);
-        return a -> Tuple.of(fnab.apply(a), fnac.apply(a), fnad.apply(a), fnae.apply(a));
+        return a -> T4.of(fnab.apply(a), fnac.apply(a), fnad.apply(a), fnae.apply(a));
     }
 
     static <A> Supplier<A> fromF1(final F1<T0, A> fn) {

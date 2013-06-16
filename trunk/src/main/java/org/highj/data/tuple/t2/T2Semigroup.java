@@ -1,7 +1,6 @@
 package org.highj.data.tuple.t2;
 
 import org.highj.data.tuple.T2;
-import org.highj.data.tuple.Tuple;
 import org.highj.typeclass0.group.Semigroup;
 
 public interface T2Semigroup<A, B> extends Semigroup<T2<A, B>> {
@@ -12,7 +11,7 @@ public interface T2Semigroup<A, B> extends Semigroup<T2<A, B>> {
 
     @Override
     public default T2<A,B> dot(T2<A, B> x, T2<A, B> y) {
-        return Tuple.of(getA().dot(x._1(), y._1()),
+        return T2.of(getA().dot(x._1(), y._1()),
                 getB().dot(x._2(), y._2()));
     }
 

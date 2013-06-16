@@ -13,6 +13,15 @@ import org.highj.typeclass0.group.Group;
 public enum T0 {
     unit;
 
+    /**
+     * The nullary tuple - just for consistency
+     *
+     * @return the nullary tuple, which is the unit value
+     */
+    public static T0 of() {
+        return unit;
+    }
+
     @Override
     public String toString() {
         return "()";

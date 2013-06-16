@@ -6,8 +6,6 @@ import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
-import org.highj.data.tuple.Tuple;
-import org.highj.typeclass1.monad.Monad;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -222,15 +220,15 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
 
 
     public static <A, B> Stream<T2<A, B>> zip(_<µ, A> streamA, _<µ, B> streamB) {
-        return zipWith((A a) -> (B b) -> Tuple.<A, B>of(a, b), streamA, streamB);
+        return zipWith((A a) -> (B b) -> T2.<A, B>of(a, b), streamA, streamB);
     }
 
     public static <A, B, C> Stream<T3<A, B, C>> zip(_<µ, A> streamA, _<µ, B> streamB, _<µ, C> streamC) {
-        return zipWith((A a) -> (B b) -> (C c) -> Tuple.<A, B, C>of(a, b, c), streamA, streamB, streamC);
+        return zipWith((A a) -> (B b) -> (C c) -> T3.<A, B, C>of(a, b, c), streamA, streamB, streamC);
     }
 
     public static <A, B, C, D> Stream<T4<A, B, C, D>> zip(_<µ, A> streamA, _<µ, B> streamB, _<µ, C> streamC, _<µ, D> streamD) {
-        return zipWith((A a) -> (B b) -> (C c) -> (D d) -> Tuple.<A, B, C, D>of(a, b, c, d), streamA, streamB, streamC, streamD);
+        return zipWith((A a) -> (B b) -> (C c) -> (D d) -> T4.<A, B, C, D>of(a, b, c, d), streamA, streamB, streamC, streamD);
     }
 
     public static <A, B, C> Stream<C> zipWith(Function<A, Function<B, C>> fn, _<µ, A> streamA, _<µ, B> streamB) {
@@ -257,15 +255,15 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
     }
 
     public static <A, B> T2<Stream<A>, Stream<B>> unzip(Stream<T2<A, B>> streamAB) {
-        return Tuple.of(streamAB.map(t -> t._1()), streamAB.map(t -> t._2()));
+        return T2.of(streamAB.map(t -> t._1()), streamAB.map(t -> t._2()));
     }
 
     public static <A, B, C> T3<Stream<A>, Stream<B>, Stream<C>> unzip3(Stream<T3<A, B, C>> streamABC) {
-        return Tuple.of(streamABC.map(t -> t._1()), streamABC.map(t -> t._2()), streamABC.map(t -> t._3()));
+        return T3.of(streamABC.map(t -> t._1()), streamABC.map(t -> t._2()), streamABC.map(t -> t._3()));
     }
 
     public static <A, B, C, D> T4<Stream<A>, Stream<B>, Stream<C>, Stream<D>> unzip4(Stream<T4<A, B, C, D>> streamABCD) {
-        return Tuple.of(streamABCD.map(t -> t._1()), streamABCD.map(t -> t._2()), streamABCD.map(t -> t._3()), streamABCD.map(t -> t._4()));
+        return T4.of(streamABCD.map(t -> t._1()), streamABCD.map(t -> t._2()), streamABCD.map(t -> t._3()), streamABCD.map(t -> t._4()));
     }
 
     public static final StreamMonad monad = new StreamMonad();

@@ -1,5 +1,6 @@
 package org.highj.data.tuple;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.data.tuple.t3.*;
@@ -8,36 +9,79 @@ import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
-import org.highj.typeclass1.comonad.Comonad;
-import org.highj.typeclass1.functor.Functor;
-import org.highj.typeclass1.monad.Bind;
-import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * A tuple of arity 3, a.k.a. "triple".
  */
 public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
     public static class µ {
-    }
 
+    }
     public abstract A _1();
 
     public abstract B _2();
 
     public abstract C _3();
 
+    public static <A, B, C> T3<A, B, C> of(A a, B b, C c) {
+        assert a != null && b != null && c != null;
+        return new T3<A, B, C>() {
+
+            @Override
+            public A _1() {
+                return a;
+            }
+
+            @Override
+            public B _2() {
+                return b;
+            }
+
+            @Override
+            public C _3() {
+                return c;
+            }
+        };
+    }
+
+    public static <A, B, C> T3<A, B, C> ofLazy(Supplier<A> thunkA, Supplier<B> thunkB, Supplier<C> thunkC) {
+        return new T3<A, B, C>() {
+
+            @Override
+            public A _1() {
+                return thunkA.get();
+            }
+
+            @Override
+            public B _2() {
+                return thunkB.get();
+            }
+
+            @Override
+            public C _3() {
+                return thunkC.get();
+            }
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <A, B, C> T3<A, B, C> narrow(_<__.µ<___.µ<µ, A>, B>, C> value) {
+        return (T3) value;
+    }
+
     public <AA> T3<AA, B, C> map_1(Function<? super A, ? extends AA> fn) {
-        return Tuple.of(fn.apply(_1()), _2(), _3());
+        return of(fn.apply(_1()), _2(), _3());
     }
 
     public <BB> T3<A, BB, C> map_2(Function<? super B, ? extends BB> fn) {
-        return Tuple.of(_1(), fn.apply(_2()), _3());
+        return of(_1(), fn.apply(_2()), _3());
     }
 
     public <CC> T3<A, B, CC> map_3(Function<? super C, ? extends CC> fn) {
-        return Tuple.of(_1(), _2(), fn.apply(_3()));
+        return of(_1(), _2(), fn.apply(_3()));
     }
 
     @Override
@@ -52,6 +96,26 @@ public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
             return this._1().equals(that._1()) && this._2().equals(that._2()) && this._3().equals(that._3());
         }
         return false;
+    }
+
+    public static <A,AA,AAA,B,BB,BBB,C,CC,CCC> T3<C,CC,CCC> merge(T3<A,AA,AAA> a, T3<B,BB,BBB> b,
+             Function<A,Function<B,C>> fn1, Function<AA,Function<BB,CC>> fn2, Function<AAA,Function<BBB,CCC>> fn3) {
+        return new T3<C,CC,CCC>() {
+            @Override
+            public C _1() {
+                return fn1.apply(a._1()).apply(b._1());
+            }
+
+            @Override
+            public CC _2() {
+                return fn2.apply(a._2()).apply(b._2());
+            }
+
+            @Override
+            public CCC _3() {
+                return fn3.apply(a._3()).apply(b._3());
+            }
+        };
     }
 
     public static <A, B, C> Eq<T3<A, B, C>> eq(Eq<? super A> eqA, Eq<? super B> eqB, Eq<? super C> eqC) {

@@ -5,10 +5,8 @@ import org.highj.data.collection.set.SetMonadPlus;
 import org.highj.data.collection.set.SetMonoid;
 import org.highj.data.compare.Ordering;
 import org.highj.data.tuple.T2;
-import org.highj.data.tuple.Tuple;
 import org.highj.data.functions.Strings;
 import org.highj.typeclass0.group.Monoid;
-import org.highj.typeclass1.monad.MonadPlus;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Iterators;
 
@@ -125,10 +123,10 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
 
     private T2<Set<A>, Set<A>> removeMin() {
         if (left.isEmpty()) {
-            return Tuple.of(this, right);
+            return T2.of(this, right);
         } else {
             T2<Set<A>, Set<A>> pair = left.removeMin();
-            return Tuple.of(pair._1(), new Set<>(hc, bucket, pair._2(), right));
+            return T2.of(pair._1(), new Set<>(hc, bucket, pair._2(), right));
         }
     }
 

@@ -3,7 +3,6 @@ package org.highj.typeclass2.arrow;
 import org.highj.__;
 import org.highj.data.functions.Functions;
 import org.highj.data.tuple.T2;
-import org.highj.data.tuple.Tuple;
 
 import java.util.function.Function;
 
@@ -29,7 +28,7 @@ public interface Arrow<A> extends Category<A> {
 
     //(&&&)
     public default <B, C, D> __<A, B, T2<C, D>> fanout(__<A, B, C> arr1, __<A, B, D> arr2) {
-        __<A, B, T2<B, B>> duplicated = arr((B a) -> Tuple.<B, B>of(a, a));
+        __<A, B, T2<B, B>> duplicated = arr((B a) -> T2.<B, B>of(a, a));
         __<A, T2<B, B>, T2<C, D>> splitted = split(arr1, arr2);
         return then(duplicated, splitted);
     }

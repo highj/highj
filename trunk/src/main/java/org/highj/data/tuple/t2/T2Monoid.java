@@ -1,7 +1,6 @@
 package org.highj.data.tuple.t2;
 
 import org.highj.data.tuple.T2;
-import org.highj.data.tuple.Tuple;
 import org.highj.typeclass0.group.Monoid;
 
 public interface T2Monoid<A, B> extends T2Semigroup<A, B>, Monoid<T2<A, B>> {
@@ -14,7 +13,7 @@ public interface T2Monoid<A, B> extends T2Semigroup<A, B>, Monoid<T2<A, B>> {
 
     @Override
     public default T2<A, B> identity() {
-        return Tuple.of(getA().identity(), getB().identity());
+        return T2.of(getA().identity(), getB().identity());
     }
 
     public static <A, B> Monoid<T2<A, B>> from(Monoid<A> monoidA, Monoid<B> monoidB) {

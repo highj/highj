@@ -1,6 +1,6 @@
 package org.highj.data.collection;
 
-import org.highj.data.tuple.Tuple;
+import org.highj.data.tuple.T2;
 import org.junit.Test;
 
 import static org.highj.data.collection.Tree.*;
@@ -34,7 +34,7 @@ public class TreeTest {
     @Test
     public void testUnfoldTree() throws Exception {
         Tree<Integer> tree = Tree(1,Tree(2,Tree(3)), Tree(4));
-        assertEquals(tree, unfold(t -> Tuple.of(t.rootLabel, t.subForest()), tree));
+        assertEquals(tree, unfold(t -> T2.of(t.rootLabel, t.subForest()), tree));
     }
 
 }

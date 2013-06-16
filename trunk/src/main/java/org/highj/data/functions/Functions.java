@@ -19,7 +19,7 @@ public enum Functions {
     }
 
     public static <A, B, C> Function<A, Function<B, C>> curry2(Function<T2<A, B>, C> fn) {
-        return a -> b -> fn.apply(Tuple.of(a, b));
+        return a -> b -> fn.apply(T2.of(a, b));
     }
 
     public static <A, B, C> Function<T2<A, B>, C> uncurry2(Function<A, Function<B, C>> fn) {
@@ -27,7 +27,7 @@ public enum Functions {
     }
 
     public static <A, B, C, D> Function<A, Function<B, Function<C, D>>> curry3(Function<T3<A, B, C>, D> fn) {
-        return a -> b -> c -> fn.apply(Tuple.of(a, b, c));
+        return a -> b -> c -> fn.apply(T3.of(a, b, c));
     }
 
     public static <A, B, C, D> Function<T3<A, B, C>, D> uncurry3(Function<A, Function<B, Function<C, D>>> fn) {
@@ -36,7 +36,7 @@ public enum Functions {
 
 
     public static <A, B, C, D, E> Function<A, Function<B, Function<C, Function<D, E>>>> curry4(Function<T4<A, B, C, D>, E> fn) {
-        return a -> b -> c -> d -> fn.apply(Tuple.of(a, b, c, d));
+        return a -> b -> c -> d -> fn.apply(T4.of(a, b, c, d));
     }
 
     public static <A, B, C, D, E>  Function<T4<A, B, C, D>, E> uncurry4(Function<A, Function<B, Function<C, Function<D, E>>>> fn) {
@@ -90,15 +90,15 @@ public enum Functions {
     }
 
     public static <A, B, C> Function<A, T2<B, C>> fanout(Function<A, B> fab, Function<A, C> fac) {
-        return a -> Tuple.of(fab.apply(a), fac.apply(a));
+        return a -> T2.of(fab.apply(a), fac.apply(a));
     }
 
     public static <A, B, C, D> Function<A, T3<B, C, D>> fanout(Function<A, B> fab, Function<A, C> fac, Function<A, D> fad) {
-        return a -> Tuple.of(fab.apply(a), fac.apply(a), fad.apply(a));
+        return a -> T3.of(fab.apply(a), fac.apply(a), fad.apply(a));
     }
 
     public static <A, B, C, D, E> Function<A, T4<B, C, D, E>> fanout(Function<A, B> fab, Function<A, C> fac, Function<A, D> fad, Function<A, E> fae) {
-        return a -> Tuple.of(fab.apply(a), fac.apply(a), fad.apply(a), fae.apply(a));
+        return a -> T4.of(fab.apply(a), fac.apply(a), fad.apply(a), fae.apply(a));
     }
 
     public static <A> Supplier<A> fromFunction(final Function<T0, A> fn) {

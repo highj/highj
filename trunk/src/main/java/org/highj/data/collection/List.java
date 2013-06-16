@@ -9,11 +9,8 @@ import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
-import org.highj.data.tuple.Tuple;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.foldable.Foldable;
-import org.highj.typeclass1.monad.Applicative;
-import org.highj.typeclass1.monad.MonadPlus;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Lazy;
 
@@ -552,15 +549,15 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     }
 
     public static <A, B> List<T2<A, B>> zip(List<A> listA, List<B> listB) {
-        return zipWith(listA, listB, (Function<A, Function<B, T2<A, B>>>) a -> b -> Tuple.of(a, b));
+        return zipWith(listA, listB, (Function<A, Function<B, T2<A, B>>>) a -> b -> T2.of(a, b));
     }
 
     public static <A, B, C> List<T3<A, B, C>> zip(List<A> listA, List<B> listB, List<C> listC) {
-        return zipWith(listA, listB, listC, (Function<A, Function<B, Function<C, T3<A, B, C>>>>) a -> b -> c -> Tuple.of(a, b, c));
+        return zipWith(listA, listB, listC, (Function<A, Function<B, Function<C, T3<A, B, C>>>>) a -> b -> c -> T3.of(a, b, c));
     }
 
     public static <A, B, C, D> List<T4<A, B, C, D>> zip(List<A> listA, List<B> listB, List<C> listC, List<D> listD) {
-        return zipWith(listA, listB, listC, listD, (Function<A, Function<B, Function<C, Function<D, T4<A, B, C, D>>>>>) a -> b -> c -> d -> Tuple.of(a, b, c, d));
+        return zipWith(listA, listB, listC, listD, (Function<A, Function<B, Function<C, Function<D, T4<A, B, C, D>>>>>) a -> b -> c -> d -> T4.of(a, b, c, d));
     }
 
     public static <A, B, C> List<C> zipWith(final List<A> listA, final List<B> listB, final Function<A, Function<B, C>> fn) {
@@ -579,15 +576,15 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     }
 
     public static <A, B> T2<List<A>, List<B>> unzip(List<T2<A, B>> listAB) {
-        return Tuple.of(listAB.map(t -> t._1()), listAB.map(t -> t._2()));
+        return T2.of(listAB.map(t -> t._1()), listAB.map(t -> t._2()));
     }
 
     public static <A, B, C> T3<List<A>, List<B>, List<C>> unzip3(List<T3<A, B, C>> listABC) {
-        return Tuple.of(listABC.map(t -> t._1()), listABC.map(t -> t._2()), listABC.map(t -> t._3()));
+        return T3.of(listABC.map(t -> t._1()), listABC.map(t -> t._2()), listABC.map(t -> t._3()));
     }
 
     public static <A, B, C, D> T4<List<A>, List<B>, List<C>, List<D>> unzip4(List<T4<A, B, C, D>> listABCD) {
-        return Tuple.of(listABCD.map(t -> t._1()), listABCD.map(t -> t._2()), listABCD.map(t -> t._3()), listABCD.map(t -> t._4()));
+        return T4.of(listABCD.map(t -> t._1()), listABCD.map(t -> t._2()), listABCD.map(t -> t._3()), listABCD.map(t -> t._4()));
     }
 
     public static <A> List<A> join(List<List<A>> list) {

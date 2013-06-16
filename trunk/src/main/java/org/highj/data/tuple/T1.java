@@ -7,27 +7,46 @@ import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
-import org.highj.typeclass1.comonad.Comonad;
-import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import static org.highj.data.tuple.Tuple.of;
 
 /**
  * A tuple of arity 1, a.k.a. "cell" or "Id".
  */
 public abstract class T1<A> implements _<T1.µ, A>, Supplier<A> {
     public static class µ {
-    }
 
+    }
     @Override
     public A get() {
         return _1();
     }
 
     public abstract A _1();
+
+    public static <A> T1<A> of(A a) {
+        return new T1<A>() {
+            @Override
+            public A _1() {
+                return a;
+            }
+        };
+    }
+
+    public static <A> T1<A> ofLazy(Supplier<A> thunkA) {
+        return new T1<A>() {
+            @Override
+            public A _1() {
+                return thunkA.get();
+            }
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <A> T1<A> narrow(_<µ, A> value) {
+        return (T1) value;
+    }
 
     @Override
     public String toString() {
@@ -39,7 +58,7 @@ public abstract class T1<A> implements _<T1.µ, A>, Supplier<A> {
     }
 
     public <B> T1<B> ap(T1<Function<A, B>> nestedFn) {
-        return map(Tuple.narrow(nestedFn)._1());
+        return map(narrow(nestedFn)._1());
     }
 
     @Override
@@ -54,6 +73,15 @@ public abstract class T1<A> implements _<T1.µ, A>, Supplier<A> {
             return this._1().equals(that._1());
         }
         return false;
+    }
+
+    public static <A,B,C> T1<C> merge(T1<A> a, T1<B> b, Function<A,Function<B,C>> fn) {
+        return new T1<C>() {
+            @Override
+            public C _1() {
+                return fn.apply(a._1()).apply(b._1());
+            }
+        };
     }
 
     public static <A> Eq<T1<A>> eq(Eq<? super A> eqA) {
