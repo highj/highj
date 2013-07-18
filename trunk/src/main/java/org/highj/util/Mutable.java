@@ -10,11 +10,11 @@ public class Mutable<A> implements Supplier<A> {
 
     private A value;
 
-    public static <A> Mutable<A> Mutable() {
+    public static <A> Mutable<A> newMutable() {
         return new Mutable<A>();
     }
 
-    public static <A> Mutable<A> Mutable(A a) {
+    public static <A> Mutable<A> newMutable(A a) {
         Mutable<A> mutable = new Mutable<A>();
         mutable.set(a);
         return mutable;
