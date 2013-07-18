@@ -12,7 +12,7 @@ public class Lazy<A> implements Supplier<A> {
 
     private Maybe<A> value = Maybe.Nothing();
 
-    public static <A> Lazy<A> Lazy() {
+    public static <A> Lazy<A> newLazy() {
         return new Lazy<A>();
     }
 

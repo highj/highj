@@ -12,6 +12,7 @@ import org.highj.data.tuple.T4;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.foldable.Foldable;
 import org.highj.util.ArrayUtils;
+import org.highj.util.Iterables;
 import org.highj.util.Lazy;
 
 import java.util.ArrayList;
@@ -178,7 +179,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     @SafeVarargs
     public final List<A> plus(A... as) {
         List<A> result = this;
-        for (A a : ArrayUtils.reverseIterable(as)) {
+        for (A a : Iterables.reverseIterable(as)) {
             result = result.plus(a);
         }
         return result;
@@ -434,7 +435,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
 
     //for performance reasons
     public static <A> List<A> repeat(final A a) {
-        final Lazy<List<A>> ls = Lazy.Lazy();
+        final Lazy<List<A>> ls = Lazy.newLazy();
         ls.set(consLazy(a, ls::get));
         return ls.get();
     }

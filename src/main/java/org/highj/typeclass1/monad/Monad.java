@@ -38,7 +38,7 @@ public interface Monad<M> extends Applicative<M>, Bind<M> {
     public default <A, B> Function<A, Function<List<B>, _<M, T0>>> foldM_(final Function<A, Function<B, _<M, A>>> fn) {
         return a -> listB -> {
             _<M, A> result = pure(a);
-            final Mutable<B> b = Mutable.Mutable();
+            final Mutable<B> b = Mutable.newMutable();
             Function<A, _<M, A>> fnBind = x -> fn.apply(x).apply(b.get());
             while (!listB.isEmpty()) {
                 b.set(listB.head());
