@@ -4,6 +4,7 @@ import org.highj.data.predicates.predicates.AndGroup;
 import org.highj.data.predicates.predicates.OrGroup;
 import org.highj.typeclass0.group.Group;
 
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -69,6 +70,10 @@ public enum Predicates {
 
     public static <A> Group<Predicate<A>> orGroup() {
         return new OrGroup<>();
+    }
+
+    public static <A> Predicate<A> fromJavaSet(Set<A> set) {
+        return set::contains;
     }
 
 }
