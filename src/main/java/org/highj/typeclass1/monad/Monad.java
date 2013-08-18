@@ -62,7 +62,7 @@ public interface Monad<M> extends Applicative<M>, Bind<M> {
     //sequence (Control.Monad)
     public default <A> _<M, List<A>> sequence(List<_<M, A>> list) {
         //  sequence ms = foldr (liftM2 (:)) (return []) ms
-        Function<_<M, A>, Function<_<M, List<A>>, _<M, List<A>>>> f2 = lift2((A a) -> (List<A> as) -> List.<A>cons(a, as));
+        Function<_<M, A>, Function<_<M, List<A>>, _<M, List<A>>>> f2 = lift2((A a) -> (List<A> as) -> List.<A>newList(a, as));
         return list.foldr(x -> y -> f2.apply(x).apply(y), pure(List.<A>nil()));
     }
 

@@ -28,7 +28,7 @@ public class StreamMonad implements Monad<Stream.µ> {
         Stream<_<Stream.µ, A>> nestedStream = Stream.narrow(nestedNestedA);
         Stream<A> xs = Stream.narrow(nestedStream.head());
         final Stream<_<Stream.µ, A>> xss = nestedStream.tail();
-        return Stream.Cons(xs.head(), () -> {
+        return Stream.newLazyStream(xs.head(), () -> {
             Stream<_<Stream.µ, A>> tails = xss.<_<Stream.µ, A>>map(as -> Stream.narrow(as).tail());
             return join(tails);
         });

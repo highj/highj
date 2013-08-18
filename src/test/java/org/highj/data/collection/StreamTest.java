@@ -24,9 +24,9 @@ public class StreamTest {
     public void testHead() throws Exception {
         Stream<String> stream = cycle("foo");
         assertEquals("foo", stream.head());
-        stream = Cons("foo", cycle("bar", "baz"));
+        stream = newStream("foo", cycle("bar", "baz"));
         assertEquals("foo", stream.head());
-        stream = Cons("foo", () -> cycle("bar", "baz"));
+        stream = newLazyStream("foo", () -> cycle("bar", "baz"));
         assertEquals("foo", stream.head());
         stream = unfold(s -> s + "!", "foo");
         assertEquals("foo", stream.head());
@@ -36,9 +36,9 @@ public class StreamTest {
     public void testTail() throws Exception {
         Stream<String> stream = cycle("foo");
         assertEquals("foo", stream.tail().head());
-        stream = Cons("foo", cycle("bar", "baz"));
+        stream = newStream("foo", cycle("bar", "baz"));
         assertEquals("bar", stream.tail().head());
-        stream = Cons("foo", () -> cycle("bar", "baz"));
+        stream = newLazyStream("foo", () -> cycle("bar", "baz"));
         assertEquals("bar", stream.tail().head());
         stream = unfold(s -> s + "!", "foo");
         assertEquals("foo!", stream.tail().head());
@@ -65,7 +65,7 @@ public class StreamTest {
 
     @Test
     public void testStreamHeadStream() throws Exception {
-        Stream<String> stream = Cons("foo", cycle("bar"));
+        Stream<String> stream = newStream("foo", cycle("bar"));
         assertEquals("foo", stream.head());
         stream = stream.tail();
         assertEquals("bar", stream.head());
@@ -75,7 +75,7 @@ public class StreamTest {
 
     @Test
     public void testStreamHeadThunk() throws Exception {
-        Stream<String> stream = Cons("foo", () -> cycle("bar"));
+        Stream<String> stream = newLazyStream("foo", () -> cycle("bar"));
         assertEquals("foo", stream.head());
         stream = stream.tail();
         assertEquals("bar", stream.head());
@@ -100,7 +100,7 @@ public class StreamTest {
             }
         };
 
-        Stream<Integer> stream = fromIterator(myIterator);
+        Stream<Integer> stream = newLazyStream(myIterator);
         assertEquals("Stream(0,1,2,3,4,5,6,7,8,9...)", stream.toString());
     }
 
@@ -216,7 +216,7 @@ public class StreamTest {
     public void testMonad() throws Exception {
         Monad<Stream.µ> monad = Stream.monad;
 
-        Stream<String> foobars = Cons("foo", repeat("bars"));
+        Stream<String> foobars = newStream("foo", repeat("bars"));
         Stream<Integer> foobarsLength = narrow(monad.<String, Integer>map(String::length, foobars));
         assertEquals("Stream(3,4,4,4,4,4,4,4,4,4...)", foobarsLength.toString());
 

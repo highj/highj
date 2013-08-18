@@ -156,7 +156,7 @@ public enum Functions {
     }
 
     public static <A> List<A> iterate(Function<A,A> fn, A start) {
-        return List.consLazy(start, () -> iterate(fn, fn.apply(start)));
+        return List.newLazyList(start, () -> iterate(fn, fn.apply(start)));
     }
 
 }

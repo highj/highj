@@ -74,7 +74,7 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
         };
     }
 
-    public static <A> Stream<A> Cons(A a, Stream<A> stream) {
+    public static <A> Stream<A> newStream(A a, Stream<A> stream) {
         return new Stream<A>() {
 
             @Override
@@ -89,7 +89,7 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
         };
     }
 
-    public static <A> Stream<A> Cons(A a, Supplier<Stream<A>> thunk) {
+    public static <A> Stream<A> newLazyStream(A a, Supplier<Stream<A>> thunk) {
         return new Stream<A>() {
 
             @Override
@@ -105,13 +105,13 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
     }
 
     //assuming that the iterator doesn't stop
-    public static <A> Stream<A> fromIterator(Iterator<A> iterator) throws NoSuchElementException {
-        return Cons(iterator.next(), () -> fromIterator(iterator));
+    public static <A> Stream<A> newLazyStream(Iterator<A> iterator) throws NoSuchElementException {
+        return newLazyStream(iterator.next(), () -> newLazyStream(iterator));
     }
 
     //returns iterator values wrapped in JustLazy, and Nothing when the iterator gets empty
     public static <A> Stream<Maybe<A>> maybeFromIterator(Iterator<A> iterator) {
-        return Cons(iterator.hasNext()
+        return newLazyStream(iterator.hasNext()
                 ? Maybe.Just(iterator.next())
                 : Maybe.<A>Nothing(),
                 () -> maybeFromIterator(iterator));
@@ -119,7 +119,7 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
 
     public Stream<A> filter(Function<A, Boolean> predicate) {
         final Stream<A> result = dropWhile(a -> !predicate.apply(a));
-        return Cons(result.head(), () -> result.tail().filter(predicate));
+        return newLazyStream(result.head(), () -> result.tail().filter(predicate));
     }
 
     public String toString(int n) {
@@ -132,15 +132,15 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
     }
 
     public List<A> take(int n) {
-        return n <= 0 ? List.<A>nil() : List.consLazy(head(), () -> tail().take(n - 1));
+        return n <= 0 ? List.nil() : List.newLazyList(head(), () -> tail().take(n - 1));
     }
 
     public List<A> takeWhile(Function<A, Boolean> predicate) {
-        return !predicate.apply(head()) ? List.<A>nil() : List.consLazy(head(), () -> tail().takeWhile(predicate));
+        return !predicate.apply(head()) ? List.nil() : List.newLazyList(head(), () -> tail().takeWhile(predicate));
     }
 
     public List<A> takeWhile(Predicate<A> predicate) {
-        return !predicate.test(head()) ? List.<A>nil() : List.consLazy(head(), () -> tail().takeWhile(predicate));
+        return !predicate.test(head()) ? List.nil() : List.newLazyList(head(), () -> tail().takeWhile(predicate));
     }
 
     public Stream<A> drop(int n) {
@@ -169,21 +169,21 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
 
     public Stream<List<A>> inits() {
         //inits xs = Cons [] (fmap (head xs :) (inits (tail xs)))
-        return Cons(List.empty(), () -> tail().inits().map(xs -> List.cons(head(),xs)));
+        return newLazyStream(List.empty(), () -> tail().inits().map(xs -> List.newList(head(), xs)));
     }
 
     public Stream<Stream<A>> tails() {
         //tails xs = Cons xs (tails (tail xs))
-        return Cons(this, () -> tail().tails());
+        return newLazyStream(this, () -> tail().tails());
     }
 
     public Stream<A> intersperse(A a) {
         //intersperse y ~(Cons x xs) = Cons x (Cons y (intersperse y xs))
-        return Cons(head(), Cons(a, () -> tail().intersperse(a)));
+        return newStream(head(), newLazyStream(a, () -> tail().intersperse(a)));
     }
 
     public <B> Stream<B> map(Function<? super A, ? extends B> fn) {
-        return Cons(fn.apply(head()), () -> tail().map(fn));
+        return newLazyStream(fn.apply(head()), () -> tail().map(fn));
     }
 
     public static Stream<Integer> range(int from, int step) {
@@ -199,9 +199,9 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
         if (as.length == 1) {
             return repeat(as[0]);
         } else {
-            Stream<A> result = Cons(as[as.length - 1], () -> cycle(as));
+            Stream<A> result = newLazyStream(as[as.length - 1], () -> cycle(as));
             for (int i = as.length - 1; i > 0; i--) {
-                result = Cons(as[i - 1], result);
+                result = newStream(as[i - 1], result);
             }
             return result;
         }
@@ -210,12 +210,12 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
     public static <A> Stream<A> append(_<List.µ, A> list, _<µ, A> stream) {
         final List<A> listOne = List.narrow(list);
         final Stream<A> streamTwo = narrow(stream);
-        return listOne.isEmpty() ? streamTwo : Cons(listOne.head(), () -> append(listOne.tail(), streamTwo));
+        return listOne.isEmpty() ? streamTwo : newLazyStream(listOne.head(), () -> append(listOne.tail(), streamTwo));
     }
 
     public static <A> Stream<A> interleave(_<µ, A> one, _<µ, A> two) {
        //interleave ~(Cons x xs) ys = Cons x (interleave ys xs)
-        return Cons(narrow(one).head(), () -> interleave(two, narrow(one).tail()));
+        return newLazyStream(narrow(one).head(), () -> interleave(two, narrow(one).tail()));
     }
 
 
@@ -234,14 +234,14 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
     public static <A, B, C> Stream<C> zipWith(Function<A, Function<B, C>> fn, _<µ, A> streamA, _<µ, B> streamB) {
         final Stream<A> sA = narrow(streamA);
         final Stream<B> sB = narrow(streamB);
-        return Cons(fn.apply(sA.head()).apply(sB.head()), () -> zipWith(fn, sA.tail(), sB.tail()));
+        return newLazyStream(fn.apply(sA.head()).apply(sB.head()), () -> zipWith(fn, sA.tail(), sB.tail()));
     }
 
     public static <A, B, C, D> Stream<D> zipWith(Function<A, Function<B, Function<C, D>>> fn, _<µ, A> streamA, _<µ, B> streamB, _<µ, C> streamC) {
         final Stream<A> sA = narrow(streamA);
         final Stream<B> sB = narrow(streamB);
         final Stream<C> sC = narrow(streamC);
-        return Cons(fn.apply(sA.head()).apply(sB.head()).apply(sC.head()), () -> zipWith(fn, sA.tail(), sB.tail(), sC.tail()));
+        return newLazyStream(fn.apply(sA.head()).apply(sB.head()).apply(sC.head()), () -> zipWith(fn, sA.tail(), sB.tail(), sC.tail()));
     }
 
     public static <A, B, C, D, E> Stream<E> zipWith(Function<A, Function<B, Function<C, Function<D, E>>>> fn, _<µ, A> streamA, _<µ, B> streamB, _<µ, C> streamC, _<µ, D> streamD) {
@@ -250,7 +250,7 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
         final Stream<C> sC = narrow(streamC);
         final Stream<D> sD = narrow(streamD);
 
-        return Cons(fn.apply(sA.head()).apply(sB.head()).apply(sC.head()).apply(sD.head()), () ->
+        return newLazyStream(fn.apply(sA.head()).apply(sB.head()).apply(sC.head()).apply(sD.head()), () ->
                 zipWith(fn, sA.tail(), sB.tail(), sC.tail(), sD.tail()));
     }
 

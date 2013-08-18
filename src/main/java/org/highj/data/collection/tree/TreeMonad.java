@@ -16,18 +16,18 @@ public class TreeMonad implements Monad<Tree.µ> {
         A x = treeA.rootLabel;
         List<Tree<A>> ts = treeA.subForest();
         Tree<B> treeB = Tree.narrow(fn.apply(x));
-        return Tree.<B>TreeLazy(treeB.rootLabel, () -> List.append(treeB.subForest(), ts.map(t -> bind(t,fn))));
+        return Tree.newLazyTree(treeB.rootLabel, () -> List.append(treeB.subForest(), ts.map(t -> bind(t, fn))));
     }
 
     @Override
     public <A> Tree<A> pure(A a) {
-        return Tree.Tree(a, List.empty());
+        return Tree.newTree(a, List.empty());
     }
 
     @Override
     public <A, B> Tree<B> map(Function<A, B> fn, _<Tree.µ, A> nestedA) {
         Tree<A> tree = Tree.narrow(nestedA);
-        return Tree.<B>TreeLazy(fn.apply(tree.rootLabel), () -> tree.subForest().map(t -> Tree.narrow(map(fn, t))));
+        return Tree.newLazyTree(fn.apply(tree.rootLabel), () -> tree.subForest().map(t -> Tree.narrow(map(fn, t))));
     }
 
     @Override
@@ -40,8 +40,8 @@ public class TreeMonad implements Monad<Tree.µ> {
         Tree<A> tx = Tree.narrow(nestedA);
         A x = tx.rootLabel;
         List<Tree<A>> txs = tx.subForest();
-        return Tree.<B>TreeLazy(f.apply(x),
-                () -> List.<Tree<B>>append(txs.map(as -> map(a -> f.apply(a), as)),
+        return Tree.newLazyTree(f.apply(x),
+                () -> List.<Tree<B>>append(txs.map(as -> map(f, as)),
                         tfs.map(fun -> ap(fun, tx)))
         );
     }

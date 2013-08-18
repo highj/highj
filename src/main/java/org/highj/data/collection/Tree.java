@@ -26,7 +26,7 @@ public abstract class Tree<A> implements _<Tree.µ, A> {
         return (Tree) nestedA;
     }
 
-    public static <A> Tree<A> Tree(A rootLabel, List<Tree<A>> subForest) {
+    public static <A> Tree<A> newTree(A rootLabel, List<Tree<A>> subForest) {
         return new Tree<A>(rootLabel) {
             @Override
             public List<Tree<A>> subForest() {
@@ -36,7 +36,7 @@ public abstract class Tree<A> implements _<Tree.µ, A> {
     }
 
     @SafeVarargs
-    public static <A> Tree<A> Tree(A rootLabel, Tree<A>... subForest) {
+    public static <A> Tree<A> newTree(A rootLabel, Tree<A>... subForest) {
         return new Tree<A>(rootLabel) {
             @Override
             public List<Tree<A>> subForest() {
@@ -45,7 +45,7 @@ public abstract class Tree<A> implements _<Tree.µ, A> {
         };
     }
 
-    public static <A> Tree<A> TreeLazy(A rootLabel, Supplier<List<Tree<A>>> supplier) {
+    public static <A> Tree<A> newLazyTree(A rootLabel, Supplier<List<Tree<A>>> supplier) {
         return new Tree<A>(rootLabel) {
             @Override
             public List<Tree<A>> subForest() {
@@ -55,7 +55,7 @@ public abstract class Tree<A> implements _<Tree.µ, A> {
     }
 
     public List<A> flatten() {
-        return List.cons(rootLabel, subForest().concatMap(t -> t.flatten()));
+        return List.newList(rootLabel, subForest().concatMap(t -> t.flatten()));
     }
 
     public List<List<A>> levels() {
@@ -72,21 +72,21 @@ public abstract class Tree<A> implements _<Tree.µ, A> {
     }
 
     private List<String> draw() {
-        return List.cons(rootLabel.toString(), drawSubTrees(subForest()));
+        return List.newList(rootLabel.toString(), drawSubTrees(subForest()));
     }
 
     private static <A> List<String> drawSubTrees(List<Tree<A>> forest) {
         if (forest.isEmpty()) {
             return List.empty();
         } else if (forest.tail().isEmpty()) {
-            return List.cons("|", shift("`- ", "   ", forest.head().draw()));
+            return List.newList("|", shift("`- ", "   ", forest.head().draw()));
         } else {
-            return List.append(List.cons("|", shift("+- ", "|  ", forest.head().draw())), drawSubTrees(forest.tail()));
+            return List.append(List.newList("|", shift("+- ", "|  ", forest.head().draw())), drawSubTrees(forest.tail()));
         }
     }
 
     private static List<String> shift(String first, String other, List<String> strings) {
-        return List.zipWith(List.cons(first, List.repeat(other)), strings, x -> y -> x + y);
+        return List.zipWith(List.newList(first, List.repeat(other)), strings, x -> y -> x + y);
     }
 
     public boolean equals(Object o) {
@@ -99,13 +99,13 @@ public abstract class Tree<A> implements _<Tree.µ, A> {
 
     public static <A,B> Tree<A> unfold(Function<B,T2<A,List<B>>> fn, B b) {
         T2<A,List<B>> pair = fn.apply(b);
-        return TreeLazy(pair._1(), () -> unfoldForest(fn, pair._2()));
+        return newLazyTree(pair._1(), () -> unfoldForest(fn, pair._2()));
     }
 
     private static <A,B> List<Tree<A>> unfoldForest(Function<B,T2<A,List<B>>> fn, List<B> bs) {
         return bs.map(b -> unfold(fn,b));
     }
 
-    public static TreeMonad monad = new TreeMonad();
+    public static final TreeMonad monad = new TreeMonad();
 
 }
