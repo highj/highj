@@ -267,7 +267,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
             return List.nil();
         } else {
             Either<A, ?> head = list.head();
-            return head.either(a -> List.consLazy(a, () -> leftsLazy(list.tail())), b -> leftsLazy(list.tail()));
+            return head.either(a -> List.newLazyList(a, () -> leftsLazy(list.tail())), b -> leftsLazy(list.tail()));
         }
     }
 
@@ -299,7 +299,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
             return List.nil();
         } else {
             Either<?, B> head = list.head();
-            return head.either(a -> rightsLazy(list.tail()), b -> List.consLazy(b, () -> rightsLazy(list.tail())));
+            return head.either(a -> rightsLazy(list.tail()), b -> List.newLazyList(b, () -> rightsLazy(list.tail())));
         }
     }
 

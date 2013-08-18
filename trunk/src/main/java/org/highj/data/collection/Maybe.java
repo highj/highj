@@ -34,7 +34,7 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     }
 
     @SuppressWarnings("rawtypes")
-    private final static Maybe<Object> NOTHING = new Maybe<Object>() {
+    private final static Maybe<?> NOTHING = new Maybe<Object>() {
 
         @Override
         public <B> B cata(B defaultValue, Function<Object, B> fn) {

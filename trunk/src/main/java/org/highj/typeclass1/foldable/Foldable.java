@@ -61,6 +61,6 @@ public interface Foldable<F> {
     }
 
     public default <A> List<A> toList(_<F, A> nestedA) {
-        return foldr((A x) -> (List<A> xs) -> List.cons(x, xs), List.<A>nil(), nestedA);
+        return foldr((A x) -> (List<A> xs) -> List.newList(x, xs), List.<A>nil(), nestedA);
     }
 }

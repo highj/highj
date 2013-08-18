@@ -29,7 +29,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     public static final class µ {
     }
 
-    private final static List<Object> NIL = new List<Object>() {
+    private final static List<?> NIL = new List<Object>() {
 
         @Override
         public Maybe<Object> maybeHead() {
@@ -127,7 +127,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         return result;
     }
 
-    public static <A> List<A> cons(final A head, final List<A> tail) {
+    public static <A> List<A> newList(final A head, final List<A> tail) {
         return new List<A>() {
 
             @Override
@@ -142,7 +142,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         };
     }
 
-    public static <A> List<A> consLazy(final A head, final Supplier<List<A>> thunkTail) {
+    public static <A> List<A> newLazyList(final A head, final Supplier<List<A>> thunkTail) {
         return new List<A>() {
 
             @Override
@@ -173,7 +173,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     }
 
     public List<A> plus(A a) {
-        return cons(a, this);
+        return newList(a, this);
     }
 
     @SafeVarargs
@@ -217,7 +217,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
                 return tail.minusAll(as);
             }
         }
-        return consLazy(head, () -> tail.minusAll(as));
+        return newLazyList(head, () -> tail.minusAll(as));
     }
 
     @SuppressWarnings("unchecked")
@@ -303,15 +303,15 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     }
 
     public List<A> take(final int n) {
-        return n <= 0 || isEmpty() ? List.<A>nil() : consLazy(head(), () -> tail().take(n - 1));
+        return n <= 0 || isEmpty() ? nil() : newLazyList(head(), () -> tail().take(n - 1));
     }
 
     public List<A> takeWhile(final Function<A, Boolean> predicate) {
-        return isEmpty() || !predicate.apply(head()) ? List.<A>nil() : consLazy(head(), () -> tail().takeWhile(predicate));
+        return isEmpty() || !predicate.apply(head()) ? nil() : newLazyList(head(), () -> tail().takeWhile(predicate));
     }
 
     public List<A> takeWhile(final Predicate<? super A> predicate) {
-        return isEmpty() || !predicate.test(head()) ? List.<A>nil() : consLazy(head(), () -> tail().takeWhile(predicate));
+        return isEmpty() || !predicate.test(head()) ? nil() : newLazyList(head(), () -> tail().takeWhile(predicate));
     }
 
     public List<A> drop(int n) {
@@ -354,23 +354,23 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
-        return tail().isEmpty() ? tail() : cons(head(), tail().init());
+        return tail().isEmpty() ? tail() : newList(head(), tail().init());
     }
 
     public List<A> initLazy() throws NoSuchElementException {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
-        return tail().isEmpty() ? tail() : consLazy(head(), () -> tail().init());
+        return tail().isEmpty() ? tail() : newLazyList(head(), () -> tail().init());
     }
 
 
     public List<List<A>> tails() {
-        return cons(this, isEmpty() ? empty() : tail().tails());
+        return newList(this, isEmpty() ? empty() : tail().tails());
     }
 
     public List<List<A>> tailsLazy() {
-        return consLazy(this, (Supplier<List<List<A>>>) () -> isEmpty() ? empty() : tail().tails());
+        return newLazyList(this, (Supplier<List<List<A>>>) () -> isEmpty() ? empty() : tail().tails());
     }
 
     //won't terminate for infinite Lists
@@ -411,13 +411,13 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
 
     public static List<Integer> range(final int from, final int step, final int to) {
         return (step > 0 && from <= to || step < 0 && from >= to)
-                ? consLazy(from, () -> range(from + step, step, to))
+                ? newLazyList(from, () -> range(from + step, step, to))
                 : List.<Integer>nil();
     }
 
 
     public static List<Integer> range(final int from, final int step) {
-        return consLazy(from, () -> range(from + step, step));
+        return newLazyList(from, () -> range(from + step, step));
     }
 
     public static List<Integer> range(final int from) {
@@ -426,9 +426,9 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
 
     @SafeVarargs
     public static <A> List<A> cycle(final A... as) {
-        List<A> result = consLazy(as[as.length - 1], () -> cycle(as));
+        List<A> result = newLazyList(as[as.length - 1], () -> cycle(as));
         for (int i = as.length - 1; i > 0; i--) {
-            result = cons(as[i - 1], result);
+            result = newList(as[i - 1], result);
         }
         return result;
     }
@@ -436,7 +436,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     //for performance reasons
     public static <A> List<A> repeat(final A a) {
         final Lazy<List<A>> ls = Lazy.newLazy();
-        ls.set(consLazy(a, ls::get));
+        ls.set(newLazyList(a, ls::get));
         return ls.get();
     }
 
@@ -488,8 +488,8 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
 
     public <B> List<B> map(Function<? super A, ? extends B> fn) {
         return isEmpty()
-                ? List.<B>nil()
-                : consLazy(fn.apply(head()), () -> tail().map(fn));
+                ? nil()
+                : newLazyList(fn.apply(head()), () -> tail().map(fn));
     }
 
     public <B> List<B> concatMap(Function<? super A, List<? extends B>> fn) {
@@ -505,7 +505,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         if (isEmpty()) {
             return this;
         } else if (predicate.apply(head())) {
-            return consLazy(head(), () -> tail().filter(predicate));
+            return newLazyList(head(), () -> tail().filter(predicate));
         } else {
             return tail().filter(predicate);
         }
@@ -515,7 +515,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         if (isEmpty()) {
             return this;
         } else if (predicate.test(head())) {
-            return consLazy(head(), () -> tail().filter(predicate));
+            return newLazyList(head(), () -> tail().filter(predicate));
         } else {
             return tail().filter(predicate);
         }
@@ -562,18 +562,18 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     }
 
     public static <A, B, C> List<C> zipWith(final List<A> listA, final List<B> listB, final Function<A, Function<B, C>> fn) {
-        return listA.isEmpty() || listB.isEmpty() ? List.<C>nil() :
-                consLazy(fn.apply(listA.head()).apply(listB.head()), () -> zipWith(listA.tail(), listB.tail(), fn));
+        return listA.isEmpty() || listB.isEmpty() ? nil() :
+                newLazyList(fn.apply(listA.head()).apply(listB.head()), () -> zipWith(listA.tail(), listB.tail(), fn));
     }
 
     public static <A, B, C, D> List<D> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final Function<A, Function<B, Function<C, D>>> fn) {
-        return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() ? List.<D>nil() :
-                consLazy(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), fn));
+        return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() ? nil() :
+                newLazyList(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), fn));
     }
 
     public static <A, B, C, D, E> List<E> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final List<D> listD, final Function<A, Function<B, Function<C, Function<D, E>>>> fn) {
-        return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() || listD.isEmpty() ? List.<E>nil() :
-                consLazy(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()).apply(listD.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), listD.tail(), fn));
+        return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() || listD.isEmpty() ? nil() :
+                newLazyList(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()).apply(listD.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), listD.tail(), fn));
     }
 
     public static <A, B> T2<List<A>, List<B>> unzip(List<T2<A, B>> listAB) {
@@ -599,7 +599,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     }
 
     public List<A> intersperse(final A a) {
-        return isEmpty() || tail().isEmpty() ? this : consLazy(this.head(), () -> cons(a, tail().intersperse(a)));
+        return isEmpty() || tail().isEmpty() ? this : newLazyList(this.head(), () -> newList(a, tail().intersperse(a)));
     }
 
     public static final Foldable<µ> foldable = new ListTraversable();

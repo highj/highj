@@ -45,7 +45,7 @@ public interface Comonad<W> extends Extend<W> {
     public default <A,B> Function<_<W,A>, Stream<B>> unfoldW(final Function<_<W, A>, T2<B,A>> fn) {
         return nestedA -> {
             T2<B,A> pair = fn.apply(nestedA);
-            return Stream.Cons(pair._1(), () -> unfoldW(fn).apply(inject(nestedA, pair._2())));
+            return Stream.newLazyStream(pair._1(), () -> unfoldW(fn).apply(inject(nestedA, pair._2())));
         };
     }
 
