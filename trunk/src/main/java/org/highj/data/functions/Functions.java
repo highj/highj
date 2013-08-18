@@ -1,9 +1,11 @@
 package org.highj.data.functions;
 
 import org.highj.data.collection.List;
+import org.highj.data.collection.Maybe;
 import org.highj.data.tuple.*;
 import org.highj.typeclass0.group.Monoid;
 
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -157,6 +159,14 @@ public enum Functions {
 
     public static <A> List<A> iterate(Function<A,A> fn, A start) {
         return List.newLazyList(start, () -> iterate(fn, fn.apply(start)));
+    }
+
+    public static <A,B> Function<A,Maybe<B>> fromJavaMap(Map<A,B> map) {
+        return a -> map.containsKey(a) ? Maybe.Just(map.get(a)) : Maybe.<B>Nothing();
+    }
+
+    public static <A,B> Function<A,B> fromJavaMap(Map<A,B> map, B defaultValue) {
+        return a -> map.containsKey(a) ? map.get(a) : defaultValue;
     }
 
 }
