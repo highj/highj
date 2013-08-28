@@ -24,7 +24,7 @@ public interface Functor<F> {
 
     //flip (Data.Functor.Syntax)
     public default <A, B> _<F, B> flip(_<F, Function<A, B>> nestedFn, final A a) {
-        return map((Function<A, B> fn) -> fn.apply(a), nestedFn);
+        return map(fn -> fn.apply(a), nestedFn);
     }
 
     //liftA (Control.Applicative), liftM (Control.Monad), curried version of fmap

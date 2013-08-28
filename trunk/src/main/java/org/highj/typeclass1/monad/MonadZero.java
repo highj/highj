@@ -13,7 +13,7 @@ public interface MonadZero<M> extends Monad<M> {
     //guard (Control.Monad)
     //for MonadZero
     public default _<M, T0> guard(boolean condition) {
-        return condition ? pure(T0.unit) : MonadZero.this.<T0>mzero();
+        return condition ? pure(T0.unit) : MonadZero.this.mzero();
     }
 
     //mfilter (Control.Monad)

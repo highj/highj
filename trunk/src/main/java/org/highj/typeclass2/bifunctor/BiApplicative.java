@@ -8,7 +8,7 @@ public interface BiApplicative<F> extends BiApply<F> {
 
     public <A,B> __<F,A,B> biPure(A a, B b);
 
-    public default <X>Applicative<__.µ<F,X>> getApplicative(Monoid<X> monoid) {
+    public default <X> Applicative<__.µ<F,X>> getApplicative(Monoid<X> monoid) {
         return new CurriedApplicative<>(this, monoid);
     }
 

@@ -31,7 +31,7 @@ public interface Comonad<W> extends Extend<W> {
             List<B> listB = List.nil();
             _<W, List<A>> listA = a;
             while(! extract(listA).isEmpty()) {
-                listB.plus(fn.apply(this.<List<A>, A>map(List::head, listA)));
+                listB = listB.plus(fn.apply(this.<List<A>, A>map(List::head, listA)));
                 listA = map(List::tail, listA);
             }
             return listB.reverse();
@@ -53,7 +53,7 @@ public interface Comonad<W> extends Extend<W> {
         List<B> listB = List.nil();
         List<Function<_<W, A>, B>> fns = fnList;
         while(! fns.isEmpty()){
-            listB.plus(fns.head().apply(nestedA));
+            listB = listB.plus(fns.head().apply(nestedA));
             fns = fns.tail();
         }
         return listB.reverse();

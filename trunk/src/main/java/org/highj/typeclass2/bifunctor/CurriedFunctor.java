@@ -16,7 +16,7 @@ public class CurriedFunctor<F,X> implements Functor<__.µ<F,X>> {
     }
 
     @Override
-    public <A,B> _<__.µ<F, X>, B> map(Function<A,B> fn, _<__.µ<F, X>, A> nestedA) {
+    public <A,B> __<F, X, B> map(Function<A,B> fn, _<__.µ<F, X>, A> nestedA) {
         return bifunctor.rightMap(fn, HigherKinded.uncurry2(nestedA));
     }
 
