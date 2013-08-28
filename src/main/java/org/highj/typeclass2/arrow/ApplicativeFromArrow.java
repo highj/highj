@@ -16,18 +16,18 @@ public interface ApplicativeFromArrow<Arr,X> extends Applicative<__.µ<Arr, X>> 
     public Arrow<Arr> getArrow();
 
     @Override
-    public default <A, B> _<__.µ<Arr, X>, B> ap(_<__.µ<Arr, X>, Function<A, B>> fn, _<__.µ<Arr, X>, A> nestedA) {
+    public default <A, B> __<Arr, X, B> ap(_<__.µ<Arr, X>, Function<A, B>> fn, _<__.µ<Arr, X>, A> nestedA) {
         return getArrow().then(getArrow().fanout(uncurry2(fn), uncurry2(nestedA)), getArrow().arr(
                 (T2<Function<A, B>, A> pair) -> pair._1().apply(pair._2())));
     }
 
     @Override
-    public default <A> _<__.µ<Arr, X>, A> pure(A a) {
+    public default <A> __<Arr, X, A> pure(A a) {
         return getArrow().arr(Functions.<X, A>constant(a));
     }
 
     @Override
-    public default <A, B> _<__.µ<Arr, X>, B> map(Function<A, B> fn, _<__.µ<Arr, X>, A> nestedA) {
+    public default <A, B> __<Arr, X, B> map(Function<A, B> fn, _<__.µ<Arr, X>, A> nestedA) {
         return getArrow().then(uncurry2(nestedA), getArrow().arr(fn));
     }
 }

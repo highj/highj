@@ -17,7 +17,7 @@ public class CurriedApplicative<F,X> extends CurriedApply<F,X> implements Applic
     }
 
     @Override
-    public <A> _<__.µ<F, X>, A> pure(A a) {
+    public <A> __<F, X, A> pure(A a) {
         return biApplicative.biPure(monoid.identity(),a);
     }
 }

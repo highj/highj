@@ -13,8 +13,8 @@ public enum Functors {
         return fx.lift(fy.lift(fn));
     }
 
-    //(.::) , trinary (Data.Functor.Syntax)
-    public static <X, Y, Z, A, B> Function<_<X, _<Y, _<Z, A>>>, _<X, _<Y, _<Z, B>>>> trinary(
+    //(.::) , ternary (Data.Functor.Syntax)
+    public static <X, Y, Z, A, B> Function<_<X, _<Y, _<Z, A>>>, _<X, _<Y, _<Z, B>>>> ternary(
             Functor<X> fx, Functor<Y> fy, Functor<Z> fz, Function<A, B> fn) {
         return fx.lift(fy.lift(fz.lift(fn)));
     }

@@ -273,7 +273,7 @@ public class Map<A, B> implements __<Map.µ, A, B>, Iterable<T2<A, B>>, Function
         }
     }
 
-    private static <S> MapApply<S> mapAppy() {
+    private static <S> MapApply<S> mapApply() {
         return new MapApply<>();
     }
 
