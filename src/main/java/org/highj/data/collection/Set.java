@@ -50,10 +50,6 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
 
     @Override
     public Boolean apply(A value) {
-        return $(value);
-    }
-
-    public boolean $(A value) {
         if (isEmpty()) {
             return false;
         }
@@ -61,9 +57,9 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
         int vhc = value.hashCode();
         switch (Ordering.compare(vhc, hc)) {
             case LT:
-                return left.$(value);
+                return left.apply(value);
             case GT:
-                return right.$(value);
+                return right.apply(value);
             case EQ:
                 return bucket.contains(value);
             default:
@@ -73,7 +69,7 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
 
     public Set<A> plus(A a) {
         if (isEmpty()) {
-            return new Set<>(a.hashCode(), List.<A>of(a), Set.<A>empty(), Set.<A>empty());
+            return new Set<>(a.hashCode(), List.of(a), Set.<A>empty(), Set.<A>empty());
         }
         int ahc = a.hashCode();
         switch (Ordering.compare(ahc, hc)) {

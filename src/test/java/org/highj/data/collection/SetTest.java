@@ -15,14 +15,14 @@ public class SetTest {
     @Test
     public void test$()  {
         Set<Integer> set = Set.of(23, 17, 12, 23, 55, 26, 73, 33, 12);
-        assertFalse(set.$(3));
+        assertFalse(set.apply(3));
         set = set.plus(3);
-        assertTrue(set.$(3));
-        assertFalse(set.$(5));
+        assertTrue(set.apply(3));
+        assertFalse(set.apply(5));
         set = set.minus(4);
-        assertTrue(set.$(3));
+        assertTrue(set.apply(3));
         set = set.minus(3);
-        assertFalse(set.$(3));
+        assertFalse(set.apply(3));
     }
 
     @Test
