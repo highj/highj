@@ -20,6 +20,7 @@ public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
     public static class µ {
 
     }
+
     public abstract A _1();
 
     public abstract B _2();
@@ -98,9 +99,9 @@ public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
         return false;
     }
 
-    public static <A,AA,AAA,B,BB,BBB,C,CC,CCC> T3<C,CC,CCC> merge(T3<A,AA,AAA> a, T3<B,BB,BBB> b,
-             Function<A,Function<B,C>> fn1, Function<AA,Function<BB,CC>> fn2, Function<AAA,Function<BBB,CCC>> fn3) {
-        return new T3<C,CC,CCC>() {
+    public static <A, AA, AAA, B, BB, BBB, C, CC, CCC> T3<C, CC, CCC> merge(T3<A, AA, AAA> a, T3<B, BB, BBB> b,
+                                                                            Function<A, Function<B, C>> fn1, Function<AA, Function<BB, CC>> fn2, Function<AAA, Function<BBB, CCC>> fn3) {
+        return new T3<C, CC, CCC>() {
             @Override
             public C _1() {
                 return fn1.apply(a._1()).apply(b._1());
@@ -122,7 +123,7 @@ public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
         return (one, two) -> eqA.eq(one._1(), two._1()) && eqB.eq(one._2(), two._2()) && eqC.eq(one._3(), two._3());
     }
 
-    public static <A, B, C> Ord<T3<A,B,C>> ord(Ord<? super A> ordA, Ord<? super B> ordB, Ord<? super C> ordC) {
+    public static <A, B, C> Ord<T3<A, B, C>> ord(Ord<? super A> ordA, Ord<? super B> ordB, Ord<? super C> ordC) {
         return (one, two) -> ordA.cmp(one._1(), two._1())
                 .andThen(ordB.cmp(one._2(), two._2()))
                 .andThen(ordC.cmp(one._3(), two._3()));
@@ -168,7 +169,8 @@ public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
     }
 
     public static <S, T> T3Comonad<S, T> comonad() {
-        return new T3Comonad<S,T>(){};
+        return new T3Comonad<S, T>() {
+        };
     }
 
     public static <A, B, C> Semigroup<T3<A, B, C>> semigroup(Semigroup<A> semigroupA, Semigroup<B> semigroupB, Semigroup<C> semigroupC) {
@@ -182,4 +184,18 @@ public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
     public static <A, B, C> Group<T3<A, B, C>> group(Group<A> groupA, Group<B> groupB, Group<C> groupC) {
         return T3Group.from(groupA, groupB, groupC);
     }
+
+    public static <S> T3Bifunctor<S> bifunctor() {
+        return new T3Bifunctor<S>() {
+        };
+    }
+
+    public static <S> T3Biapply<S> biapply(Semigroup<S> semigroupS) {
+        return () -> semigroupS;
+    }
+
+    public static <S> T3Biapplicative<S> biapplicative(Monoid<S> monoidS) {
+        return () -> monoidS;
+    }
+
 }

@@ -9,15 +9,15 @@ import java.util.function.Function;
 
 public class CurriedFunctor<F,X> implements Functor<__.µ<F,X>> {
 
-    private final BiFunctor<F> bifunctor;
+    private final Bifunctor<F> bifunctor;
 
-    public CurriedFunctor(BiFunctor<F> bifunctor) {
+    public CurriedFunctor(Bifunctor<F> bifunctor) {
         this.bifunctor = bifunctor;
     }
 
     @Override
     public <A,B> __<F, X, B> map(Function<A,B> fn, _<__.µ<F, X>, A> nestedA) {
-        return bifunctor.rightMap(fn, HigherKinded.uncurry2(nestedA));
+        return bifunctor.second(fn, HigherKinded.uncurry2(nestedA));
     }
 
 }

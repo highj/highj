@@ -2,13 +2,14 @@ package org.highj.data.collection;
 
 import org.highj._;
 import org.highj.__;
+import org.highj.data.collection.either.EitherBifunctor;
 import org.highj.data.collection.either.EitherMonad;
 import org.highj.data.collection.either.EitherMonadPlus;
 import org.highj.data.compare.Ordering;
-import org.highj.typeclass0.compare.Eq;
-import org.highj.data.tuple.T2;
 import org.highj.data.functions.Functions;
 import org.highj.data.functions.Strings;
+import org.highj.data.tuple.T2;
+import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Monoid;
 
@@ -308,15 +309,16 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      *
      * @param list a List of Eithers
      * @return a Pair of a List of all Left and a list of all Right values
-     */   public static <A,B> T2<List<A>,List<B>> split(List<Either<A,B>> list) {
+     */
+    public static <A, B> T2<List<A>, List<B>> split(List<Either<A, B>> list) {
         List<A> lefts = List.nil();
         List<B> rights = List.nil();
         for (Either<A, B> either : list) {
-           if (either.isLeft()) {
-               lefts = lefts.plus(either.getLeft());
-           } else {
-               rights = rights.plus(either.getRight());
-           }
+            if (either.isLeft()) {
+                lefts = lefts.plus(either.getLeft());
+            } else {
+                rights = rights.plus(either.getRight());
+            }
         }
         return T2.of(lefts.reverse(), rights.reverse());
     }
@@ -357,7 +359,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
         return false;
     }
 
-    public static <A> A unify(Either<A,A> either) {
+    public static <A> A unify(Either<A, A> either) {
         return either.either(Functions.<A>id(), Functions.<A>id());
     }
 
@@ -379,11 +381,11 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
         };
     }
 
-    public static <A,B> Ord<Either<A,B>> ord(Ord<A> ordA, Ord<B> ordB) {
-        return (one,two) -> {
+    public static <A, B> Ord<Either<A, B>> ord(Ord<A> ordA, Ord<B> ordB) {
+        return (one, two) -> {
             if (one.isLeft()) {
-               return two.isRight() ? Ordering.LT : ordA.cmp(one.getLeft(), two.getLeft());
-            }  else {
+                return two.isRight() ? Ordering.LT : ordA.cmp(one.getLeft(), two.getLeft());
+            } else {
                 return two.isLeft() ? Ordering.GT : ordB.cmp(one.getRight(), two.getRight());
             }
         };
@@ -406,4 +408,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
     public static <S> EitherMonadPlus<S> lastBiasedMonadPlus(Monoid<S> monoid) {
         return new EitherMonadPlus<>(monoid, EitherMonadPlus.Bias.LAST_RIGHT);
     }
+
+    public static final EitherBifunctor bifunctor = new EitherBifunctor() {
+    };
 }
