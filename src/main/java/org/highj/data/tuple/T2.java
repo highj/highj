@@ -2,7 +2,6 @@ package org.highj.data.tuple;
 
 import org.highj._;
 import org.highj.__;
-import org.highj.data.collection.Either;
 import org.highj.data.tuple.t2.*;
 import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.compare.Ord;
@@ -20,6 +19,7 @@ public abstract class T2<A, B> implements __<T2.µ, A, B> {
     public static class µ {
 
     }
+
     public abstract A _1();
 
     public abstract B _2();
@@ -93,8 +93,8 @@ public abstract class T2<A, B> implements __<T2.µ, A, B> {
         return false;
     }
 
-    public static <A,AA,B,BB,C,CC> T2<C,CC> merge(T2<A,AA> a, T2<B,BB> b, Function<A,Function<B,C>> fn1, Function<AA,Function<BB,CC>> fn2) {
-        return new T2<C,CC>() {
+    public static <A, AA, B, BB, C, CC> T2<C, CC> merge(T2<A, AA> a, T2<B, BB> b, Function<A, Function<B, C>> fn1, Function<AA, Function<BB, CC>> fn2) {
+        return new T2<C, CC>() {
             @Override
             public C _1() {
                 return fn1.apply(a._1()).apply(b._1());
@@ -131,7 +131,8 @@ public abstract class T2<A, B> implements __<T2.µ, A, B> {
     }
 
     public static <S> T2Comonad<S> comonad() {
-        return new T2Comonad<S>(){};
+        return new T2Comonad<S>() {
+        };
     }
 
     public static <A, B> Semigroup<T2<A, B>> semigroup(Semigroup<A> semigroupA, Semigroup<B> semigroupB) {
@@ -145,5 +146,8 @@ public abstract class T2<A, B> implements __<T2.µ, A, B> {
     public static <A, B> Group<T2<A, B>> group(Group<A> groupA, Group<B> groupB) {
         return T2Group.from(groupA, groupB);
     }
+
+    public static final T2Biapplicative biapplicative = new T2Biapplicative() {
+    };
 
 }

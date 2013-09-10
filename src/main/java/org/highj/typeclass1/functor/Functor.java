@@ -3,14 +3,19 @@ package org.highj.typeclass1.functor;
 import org.highj._;
 import org.highj.data.tuple.T0;
 import org.highj.data.functions.Functions;
+import org.highj.typeclass1.invariant.Invariant;
 
 import java.util.function.Function;
 
 //Minimal complete definition: map OR lift
-public interface Functor<F> {
+public interface Functor<F> extends Invariant<F> {
 
     // fmap (Data.Functor)
     public <A, B> _<F, B> map(Function<A, B> fn, _<F, A> nestedA);
+
+    public default <A, B> _<F, B> invmap(Function<A, B> fn, Function<B,A> nf, _<F, A> nestedA) {
+        return map(fn, nestedA);
+    }
 
     // <$  (Data.Functor)
     public default <A, B> _<F, A> left$(A a, _<F, B> nestedB) {

@@ -227,4 +227,38 @@ public abstract class T4<A, B, C, D> implements ____<T4.µ, A, B, C, D> {
                                                            Group<D> groupD) {
         return T4Group.from(groupA, groupB, groupC, groupD);
     }
+
+    public static <S, T> T4Bifunctor<S, T> bifunctor() {
+        return new T4Bifunctor<S, T>() {
+        };
+    }
+
+    public static <S, T> T4Biapply<S, T> biapply(Semigroup<S> semigroupS, Semigroup<T> semigroupT) {
+        return new T4Biapply<S, T>() {
+            @Override
+            public Semigroup<S> getS() {
+                return semigroupS;
+            }
+
+            @Override
+            public Semigroup<T> getT() {
+                return semigroupT;
+            }
+        };
+    }
+
+    public static <S, T> T4Biapplicative<S, T> biapplicative(Monoid<S> monoidS, Monoid<T> monoidT) {
+        return new T4Biapplicative<S, T>() {
+            @Override
+            public Monoid<S> getS() {
+                return monoidS;
+            }
+
+            @Override
+            public Monoid<T> getT() {
+                return monoidT;
+            }
+        };
+    }
+
 }

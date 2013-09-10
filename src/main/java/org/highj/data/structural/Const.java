@@ -1,10 +1,7 @@
 package org.highj.data.structural;
 
 import org.highj.__;
-import org.highj.data.structural.constant.ConstApplicative;
-import org.highj.data.structural.constant.ConstApply;
-import org.highj.data.structural.constant.ConstContravariant;
-import org.highj.data.structural.constant.ConstFunctor;
+import org.highj.data.structural.constant.*;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass1.contravariant.Contravariant;
@@ -49,4 +46,7 @@ public class Const<A, B> implements __<Const.µ, A, B> {
         return new ConstContravariant<S>() {
         };
     }
+
+    public static final ConstBiapplicative biapplicative = new ConstBiapplicative() {
+    };
 }
