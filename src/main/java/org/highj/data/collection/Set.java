@@ -224,7 +224,7 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
         new Iterator<A>() {
 
             private List<A> list = List.empty();
-            private List<Either<Set<A>,List<A>>> todo = List.of(Either.<Set<A>, List<A>>Left(Set.this));
+            private List<Either<Set<A>,List<A>>> todo = List.of(Either.<Set<A>, List<A>>newLeft(Set.this));
 
             @Override
             public boolean hasNext() {
@@ -244,7 +244,7 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
                     } else {
                         Set<A> set = current.getLeft();
                         addIfNotEmpty(set.right);
-                        todo = todo.plus(Either.Right(set.bucket));
+                        todo = todo.plus(Either.newRight(set.bucket));
                         addIfNotEmpty(set.left);
                     }
                 }
@@ -255,7 +255,7 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
 
             private void addIfNotEmpty(Set<A> set) {
                 if (!set.isEmpty()) {
-                    todo = todo.plus(Either.Left(set));
+                    todo = todo.plus(Either.newLeft(set));
                 }
             }
         };

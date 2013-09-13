@@ -21,6 +21,40 @@ public interface Ord<T> extends Comparator<T>, Eq<T>, Function<T,Function<T,Orde
         return (Ord) nestedA;
     }
 
+    public static <A> Ord<A> fromComparator(Comparator<A> comparator) {
+        return (one, two) -> {
+            int result = comparator.compare(one, two);
+            if (result < 0) {
+                return Ordering.LT;
+            } else if (result == 0) {
+                return Ordering.EQ;
+            } else {
+                return Ordering.GT;
+            }
+        };
+    }
+
+    public static <A extends Comparable<? super A>> Ord<A> fromComparable() {
+        return (one, two) -> {
+            if (one == null && two == null) {
+                return Ordering.EQ;
+            } else if (one == null) {
+                return Ordering.LT;
+            } else if (two == null) {
+                return Ordering.GT;
+            }  else {
+                int result = one.compareTo(two);
+                if (result < 0) {
+                    return Ordering.LT;
+                } else if (result == 0) {
+                    return Ordering.EQ;
+                } else {
+                    return Ordering.GT;
+                }
+            }
+        };
+    }
+
     public abstract Ordering cmp(T one, T two);
 
     @Override

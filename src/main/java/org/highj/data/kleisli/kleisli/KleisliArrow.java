@@ -72,9 +72,9 @@ public class KleisliArrow<M> implements ArrowChoice<___.µ<Kleisli.µ, M>>, Arro
 
     @Override
     public <B, C, BB, CC> Kleisli<M, Either<B, BB>, Either<C, CC>> merge(__<___.µ<Kleisli.µ, M>, B, C> f, __<___.µ<Kleisli.µ, M>, BB, CC> g) {
-        //f +++ g = (f >>> arr LeftLazy) ||| (g >>> arr RightLazy)
-        __<___.µ<Kleisli.µ, M>, B, Either<C, CC>> kleisliF = then(f, this.<C, Either<C, CC>>arr(Either::Left));
-        __<___.µ<Kleisli.µ, M>, BB, Either<C, CC>> kleisliG = then(g, this.<CC, Either<C, CC>>arr(Either::Right));
+        //f +++ g = (f >>> arr lazyLeft) ||| (g >>> arr lazyRight)
+        __<___.µ<Kleisli.µ, M>, B, Either<C, CC>> kleisliF = then(f, this.<C, Either<C, CC>>arr(Either::newLeft));
+        __<___.µ<Kleisli.µ, M>, BB, Either<C, CC>> kleisliG = then(g, this.<CC, Either<C, CC>>arr(Either::newRight));
         return fanin(kleisliF, kleisliG);
     }
 

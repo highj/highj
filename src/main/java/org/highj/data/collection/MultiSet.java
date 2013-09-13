@@ -307,7 +307,7 @@ public class MultiSet<A> implements _<MultiSet.µ, A>, Iterable<T2<A, Integer>>,
                 new Iterator<T2<A, Integer>>() {
 
                     private List<T2<A, Integer>> list = List.empty();
-                    private List<Either<MultiSet<A>, List<T2<A, Integer>>>> todo = List.of(Either.<MultiSet<A>, List<T2<A, Integer>>>Left(MultiSet.this));
+                    private List<Either<MultiSet<A>, List<T2<A, Integer>>>> todo = List.of(Either.<MultiSet<A>, List<T2<A, Integer>>>newLeft(MultiSet.this));
 
                     @Override
                     public boolean hasNext() {
@@ -327,7 +327,7 @@ public class MultiSet<A> implements _<MultiSet.µ, A>, Iterable<T2<A, Integer>>,
                             } else {
                                 MultiSet<A> set = current.getLeft();
                                 addIfNotEmpty(set.right);
-                                todo = todo.plus(Either.Right(set.bucket));
+                                todo = todo.plus(Either.newRight(set.bucket));
                                 addIfNotEmpty(set.left);
                             }
                         }
@@ -338,7 +338,7 @@ public class MultiSet<A> implements _<MultiSet.µ, A>, Iterable<T2<A, Integer>>,
 
                     private void addIfNotEmpty(MultiSet<A> set) {
                         if (!set.isEmpty()) {
-                            todo = todo.plus(Either.Left(set));
+                            todo = todo.plus(Either.newLeft(set));
                         }
                     }
                 };
