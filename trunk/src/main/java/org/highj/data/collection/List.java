@@ -9,16 +9,14 @@ import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
+import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.foldable.Foldable;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Iterables;
 import org.highj.util.Lazy;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Stack;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -173,6 +171,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     }
 
     public List<A> plus(A a) {
+        assert(a != null);
         return newList(a, this);
     }
 
@@ -406,6 +405,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         for (A a : this) {
             result.add(a);
         }
+        Collections.reverse(result);
         return result;
     }
 
@@ -596,6 +596,12 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
             }
         }
         return buildFromStack(stack);
+    }
+
+    public List<A> sort(Comparator<A> comparator) {
+        java.util.List<A> jList = toJList();
+        Collections.sort(jList, comparator);
+        return List.of(jList);
     }
 
     public List<A> intersperse(final A a) {

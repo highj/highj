@@ -22,8 +22,8 @@ class Bifoldable p where
 
 import org.highj.__;
 import org.highj.data.functions.Functions;
-import org.highj.data.structural.Endo;
 import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass0.group.Monoids;
 
 import java.util.function.Function;
 
@@ -51,6 +51,9 @@ public interface Bifoldable<P> {
     public default <A,B,C> C bifoldl(Function<C, Function<A,C>> fn1, Function<C, Function<B,C>> fn2, C start, __<P,A,B> nestedAB) {
         //bifoldl :: (c -> a -> c) -> (c -> b -> c) -> c -> p a b -> c
         //bifoldl f g z t = appEndo (getDual (bifoldMap (Dual . Endo . flip f) (Dual . Endo . flip g) t)) z
-        throw new UnsupportedOperationException(); //WTF!?!
+        return this.<Function<C,C>,A,B>bifoldMap(Monoids.dual(Functions.<C>endoMonoid()),
+                a -> c -> fn1.apply(c).apply(a),
+                b -> c -> fn2.apply(c).apply(b),
+                nestedAB).apply(start);
     }
 }
