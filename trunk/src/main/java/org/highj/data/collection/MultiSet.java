@@ -73,7 +73,7 @@ public class MultiSet<A> implements _<MultiSet.µ, A>, Iterable<T2<A, Integer>>,
     }
 
     private List<T2<A, Integer>> bucketWithout(A a) {
-        return bucket.filter(pair -> !pair._1().equals(a));
+        return bucket.filter((T2<A, Integer> pair) -> !pair._1().equals(a));
     }
 
     public MultiSet<A> set(A a, int value) {

@@ -21,7 +21,7 @@ public interface IdentityTTraversable<M> extends Traversable<_<IdentityT.µ,M>>{
     public default <A, X> _<X, _<_<IdentityT.µ, M>, A>> sequenceA(Applicative<X> applicative, _<_<IdentityT.µ, M>, _<X, A>> traversable) {
         IdentityT<M, _<X, A>> traversableId = IdentityT.narrow(traversable);
         _<X, _<M, A>> result = getM().sequenceA(applicative, traversableId.get());
-        return applicative.map(IdentityT::<M, A>new, result);
+        return applicative.map(v -> new IdentityT(v), result);
     }
 
 }
