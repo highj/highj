@@ -405,7 +405,6 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         for (A a : this) {
             result.add(a);
         }
-        Collections.reverse(result);
         return result;
     }
 

@@ -83,7 +83,7 @@ public class Map<A, B> implements __<Map.µ, A, B>, Iterable<T2<A, B>>, Function
         int ahc = a.hashCode();
         switch (Ordering.compare(ahc, hc)) {
             case EQ:
-                return new Map<>(hc, bucket.filter(ab -> !ab._1().equals(a)).plus(T2.of(a, b)), left, right);
+                return new Map<>(hc, bucket.filter((T2<A,B> ab) -> !ab._1().equals(a)).plus(T2.of(a, b)), left, right);
             case LT:
                 Map<A, B> newLeft = left.plus(a, b);
                 return left == newLeft ? this : new Map<>(hc, bucket, newLeft, right);
@@ -107,7 +107,7 @@ public class Map<A, B> implements __<Map.µ, A, B>, Iterable<T2<A, B>>, Function
         int ahc = a.hashCode();
         switch (Ordering.compare(ahc, hc)) {
             case EQ:
-                List<T2<A, B>> newBucket = bucket.filter(ab -> ab._1() != a);
+                List<T2<A, B>> newBucket = bucket.filter((T2<A,B> ab) -> ab._1() != a);
                 if (bucket == newBucket) {
                     return this;
                 } else if (!newBucket.isEmpty()) {

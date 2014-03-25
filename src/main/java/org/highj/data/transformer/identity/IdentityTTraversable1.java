@@ -16,13 +16,13 @@ public interface IdentityTTraversable1<M> extends
     @Override
     public default <A,B,F> _<F,_<_<IdentityT.µ,M>,B>> traverse1(Apply<F> apply, Function<A,_<F,B>> fn, _<_<IdentityT.µ,M>,A> traversable) {
         IdentityT<M,A> traversableM = IdentityT.narrow(traversable);
-        return apply.map(IdentityT::new, getM().traverse1(apply, fn, traversableM.get()));
+        return apply.<_<M,B>,_<_<IdentityT.µ,M>,B>>map(v -> new IdentityT<>(v), getM().traverse1(apply, fn, traversableM.get()));
     }
 
     @Override
     public default <B,F> _<F,_<_<IdentityT.µ,M>,B>> sequence1(Apply<F> apply, _<_<IdentityT.µ,M>,_<F,B>> traversable) {
         IdentityT<M,_<F,B>> traversableF = IdentityT.narrow(traversable);
-        return apply.map(IdentityT::new, getM().sequence1(apply, traversableF.get()));
+        return apply.<_<M,B>,_<_<IdentityT.µ,M>,B>>map(v -> new IdentityT<>(v), getM().sequence1(apply, traversableF.get()));
     }
 
     @Override

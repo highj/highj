@@ -118,7 +118,7 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
     }
 
     public Stream<A> filter(Function<A, Boolean> predicate) {
-        final Stream<A> result = dropWhile(a -> !predicate.apply(a));
+        final Stream<A> result = dropWhile((A a) -> ! predicate.apply(a));
         return newLazyStream(result.head(), () -> result.tail().filter(predicate));
     }
 
