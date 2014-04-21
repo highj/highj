@@ -34,7 +34,7 @@ public interface Arrow<A> extends Category<A> {
     }
 
     public default <B> __<A, B, B> returnA() {
-        return arr(Functions.<B>id());
+        return arr(Function.<B>identity());
     }
 
     //(^>>) :: Arrow a => (b -> c) -> a c d -> a b d

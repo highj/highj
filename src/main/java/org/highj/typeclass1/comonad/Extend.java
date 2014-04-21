@@ -11,7 +11,7 @@ public interface Extend<W> extends Functor<W> {
 
     public default <A> _<W, _<W, A>> duplicate(_<W, A> nestedA) {
         // duplicate = extend id
-        return extend(Functions.<_<W, A>>id()).apply(nestedA);
+        return extend(Function.<_<W, A>>identity()).apply(nestedA);
     }
 
     public default <A, B> Function<_<W, A>, _<W, B>> extend(final Function<_<W, A>, B> fn) {

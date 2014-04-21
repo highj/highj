@@ -4,9 +4,9 @@ import org.highj._;
 import org.highj.data.collection.List;
 import org.highj.typeclass1.comonad.Extend;
 
-public class ListExtend extends ListFunctor implements Extend<List.µ> {
+public interface  ListExtend extends ListFunctor, Extend<List.µ> {
     @Override
-    public <A> List<_<List.µ, A>> duplicate(_<List.µ, A> nestedA) {
+    public default <A> List<_<List.µ, A>> duplicate(_<List.µ, A> nestedA) {
         //init . tails
         List<A> listA = List.narrow(nestedA);
         List<List<A>> result = listA.tailsLazy().initLazy();

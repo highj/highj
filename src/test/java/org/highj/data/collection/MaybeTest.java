@@ -24,7 +24,7 @@ public class MaybeTest {
         assertEquals("foo", nothing.cata("foo", Functions.<String, String>constant("bar")));
         Maybe<String> baz = Just("baz");
         assertEquals("bar", baz.cata("foo", Functions.<String, String>constant("bar")));
-        assertEquals("baz", baz.cata("foo", Functions.<String>id()));
+        assertEquals("baz", baz.cata("foo", Function.<String>identity()));
     }
 
     @Test
@@ -34,7 +34,7 @@ public class MaybeTest {
         assertEquals("foo", nothing.cataLazy(thunk, Functions.<String, String>constant("bar")));
         Maybe<String> baz = Just("baz");
         assertEquals("bar", baz.cataLazy(thunk, Functions.<String, String>constant("bar")));
-        assertEquals("baz", baz.cataLazy(thunk, Functions.<String>id()));
+        assertEquals("baz", baz.cataLazy(thunk, Function.<String>identity()));
     }
 
     @Test
@@ -211,7 +211,7 @@ public class MaybeTest {
         assertEquals("Just(3)", monad.map(String::length, foo).toString());
         //ap
         Maybe<Function<String,Integer>> noFn = Nothing();
-        Maybe<Function<String,Integer>> lenFn = Just(String::length);
+        Maybe<Function<String,Integer>> lenFn = Just(x -> x.length());
         assertEquals("Nothing", monad.ap(noFn, nothing).toString());
         assertEquals("Nothing", monad.ap(lenFn, nothing).toString());
         assertEquals("Nothing", monad.ap(noFn, foo).toString());

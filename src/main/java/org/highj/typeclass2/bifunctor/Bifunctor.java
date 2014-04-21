@@ -16,12 +16,12 @@ public interface Bifunctor<F> {
 
     // first (Data.Bifunctor)
     public default <A, B, C> __<F, B, C> first(Function<A, B> fn, __<F, A, C> nestedAC) {
-        return bimap(fn, Functions.<C>id(), nestedAC);
+        return bimap(fn, Function.<C>identity(), nestedAC);
     }
 
     // second (Data.Bifunctor)
     public default <A, B, C> __<F, A, C> second(Function<B, C> fn, __<F, A, B> nestedAB) {
-        return bimap(Functions.<A>id(), fn, nestedAB);
+        return bimap(Function.<A>identity(), fn, nestedAB);
     }
 
     //functionality of second as a Functor (with left-curried argumets)

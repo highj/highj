@@ -165,7 +165,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
 
             @Override
             public Maybe<List<A>> maybeTail() {
-                return Maybe.Just(fromStream(stream.tail()));
+                return Maybe.Just(List.<A>fromStream(stream.tail()));
             }
         };
     }
@@ -425,7 +425,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
 
     @SafeVarargs
     public static <A> List<A> cycle(final A... as) {
-        List<A> result = newLazyList(as[as.length - 1], () -> cycle(as));
+        List<A> result = newLazyList(as[as.length - 1], () -> List.<A>cycle(as));
         for (int i = as.length - 1; i > 0; i--) {
             result = newList(as[i - 1], result);
         }
@@ -488,7 +488,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     public <B> List<B> map(Function<? super A, ? extends B> fn) {
         return isEmpty()
                 ? nil()
-                : newLazyList(fn.apply(head()), () -> tail().map(fn));
+                : List.<B>newLazyList(fn.apply(head()), () -> tail().map(fn));
     }
 
     public <B> List<B> concatMap(Function<? super A, List<? extends B>> fn) {
@@ -496,7 +496,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
             return nil();
         } else {
             List<B> headList = List.contravariant(fn.apply(head()));
-            return List.append(headList, tail().concatMap(fn));
+            return List.<B>append(headList, tail().concatMap(fn));
         }
     }
 
@@ -549,30 +549,30 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     }
 
     public static <A, B> List<T2<A, B>> zip(List<A> listA, List<B> listB) {
-        return zipWith(listA, listB, (Function<A, Function<B, T2<A, B>>>) a -> b -> T2.of(a, b));
+        return zipWith(listA, listB, a -> b -> T2.of(a, b));
     }
 
     public static <A, B, C> List<T3<A, B, C>> zip(List<A> listA, List<B> listB, List<C> listC) {
-        return zipWith(listA, listB, listC, (Function<A, Function<B, Function<C, T3<A, B, C>>>>) a -> b -> c -> T3.of(a, b, c));
+        return zipWith(listA, listB, listC, a -> b -> c -> T3.of(a, b, c));
     }
 
     public static <A, B, C, D> List<T4<A, B, C, D>> zip(List<A> listA, List<B> listB, List<C> listC, List<D> listD) {
-        return zipWith(listA, listB, listC, listD, (Function<A, Function<B, Function<C, Function<D, T4<A, B, C, D>>>>>) a -> b -> c -> d -> T4.of(a, b, c, d));
+        return zipWith(listA, listB, listC, listD, a -> b -> c -> d -> T4.of(a, b, c, d));
     }
 
     public static <A, B, C> List<C> zipWith(final List<A> listA, final List<B> listB, final Function<A, Function<B, C>> fn) {
         return listA.isEmpty() || listB.isEmpty() ? nil() :
-                newLazyList(fn.apply(listA.head()).apply(listB.head()), () -> zipWith(listA.tail(), listB.tail(), fn));
+                List.<C>newLazyList(fn.apply(listA.head()).apply(listB.head()), () -> zipWith(listA.tail(), listB.tail(), fn));
     }
 
     public static <A, B, C, D> List<D> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final Function<A, Function<B, Function<C, D>>> fn) {
         return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() ? nil() :
-                newLazyList(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), fn));
+                List.<D>newLazyList(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), fn));
     }
 
     public static <A, B, C, D, E> List<E> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final List<D> listD, final Function<A, Function<B, Function<C, Function<D, E>>>> fn) {
         return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() || listD.isEmpty() ? nil() :
-                newLazyList(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()).apply(listD.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), listD.tail(), fn));
+                List.<E>newLazyList(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()).apply(listD.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), listD.tail(), fn));
     }
 
     public static <A, B> T2<List<A>, List<B>> unzip(List<T2<A, B>> listAB) {
@@ -607,14 +607,14 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         return isEmpty() || tail().isEmpty() ? this : newLazyList(this.head(), () -> newList(a, tail().intersperse(a)));
     }
 
-    public static final Foldable<µ> foldable = new ListTraversable();
+    public static final ListTraversable traversable = new ListTraversable(){};
 
-    public static final ZipApplicative zipApplicative = new ZipApplicative();
+    public static final ZipApplicative zipApplicative = new ZipApplicative(){};
 
-    public static final ListMonadPlus monadPlus = new ListMonadPlus();
+    public static final ListMonadPlus monadPlus = new ListMonadPlus(){};
 
-    public static <A> Monoid<List<A>> monoid() {
-        return new ListMonoid<>();
+    public static <A> ListMonoid<A> monoid() {
+        return new ListMonoid<A>(){};
     }
 
 }

@@ -77,11 +77,11 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
     }
 
     public <C> Either<C, B> leftMap(Function<? super A, ? extends C> leftFn) {
-        return bimap(leftFn, Functions.<B>id());
+        return bimap(leftFn, Function.<B>identity());
     }
 
     public <C> Either<A, C> rightMap(Function<? super B, ? extends C> rightFn) {
-        return bimap(Functions.<A>id(), rightFn);
+        return bimap(Function.<A>identity(), rightFn);
     }
 
     /**
@@ -104,15 +104,15 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
 
     /**
      * Construction of a Left value with inference support.
-     *
+     * <p>
      * In cases where type inference can't infer B, you can write e.g.
      * <code>newLeft("foo", Integer.class)</code>
      * instead of <code>Either.&lt;String, Integer&gt;newLeft("foo")</code>
      *
-     * @param a   the Left value
+     * @param a     the Left value
      * @param clazz the class of the Right value
-     * @param <A> the type of the Left value
-     * @param <B> the type of the Right value
+     * @param <A>   the type of the Left value
+     * @param <B>   the type of the Right value
      * @return the Left Either
      */
     public static <A, B> Either<A, B> newLeft(final A a, Class<B> clazz) {
@@ -157,15 +157,15 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
 
     /**
      * Construction of a Right value with inference support.
-
+     * <p>
      * In cases where type inference can't infer A, you can write e.g.
      * <code>newRight(Integer.class, "foo")</code>
      * instead of <code>Either.&lt;Integer,String&gt;newRight("foo")</code>
      *
      * @param clazz the class of Left values
-     * @param b   the newRight value
-     * @param <A> the type of the Left value
-     * @param <B> the type of the Right value
+     * @param b     the newRight value
+     * @param <A>   the type of the Left value
+     * @param <B>   the type of the Right value
      * @return the Right Either
      */
     public static <A, B> Either<A, B> newRight(Class<A> clazz, final B b) {
@@ -242,7 +242,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return the newLeft value if it exists, else the default value
      */
     public A leftOrElse(A defaultValue) {
-        return either(Functions.<A>id(), Functions.<B, A>constant(defaultValue));
+        return either(Function.<A>identity(), Functions.<B, A>constant(defaultValue));
     }
 
     /**
@@ -252,7 +252,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return the newRight value if it exists, else the default value
      */
     public B rightOrElse(B defaultValue) {
-        return either(Functions.<A, B>constant(defaultValue), Functions.<B>id());
+        return either(Functions.<A, B>constant(defaultValue), Function.<B>identity());
     }
 
     /**
@@ -261,7 +261,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return the Left value, or throws an exception if none exists
      */
     public A getLeft() throws NoSuchElementException {
-        return either(Functions.<A>id(), Functions.<B, A>constant(
+        return either(Function.<A>identity(), Functions.<B, A>constant(
                 Functions.<A>error(NoSuchElementException.class, "getLeft called on a lazyRight")));
     }
 
@@ -272,7 +272,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      */
     public B getRight() throws NoSuchElementException {
         return either(Functions.<A, B>constant(
-                Functions.<B>error(NoSuchElementException.class, "getRight called on a lazyLeft")), Functions.<B>id());
+                Functions.<B>error(NoSuchElementException.class, "getRight called on a lazyLeft")), Function.<B>identity());
     }
 
     /**
@@ -302,7 +302,8 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
             return List.nil();
         } else {
             Either<A, ?> head = list.head();
-            return head.either(a -> List.newLazyList(a, () -> lazyLefts(list.tail())), b -> lazyLefts(list.tail()));
+            return head.<List<A>>either(a -> List.newLazyList(a, () -> Either.<A>lazyLefts(list.tail())),
+                    b -> lazyLefts(list.tail()));
         }
     }
 
@@ -334,7 +335,8 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
             return List.nil();
         } else {
             Either<?, B> head = list.head();
-            return head.either(a -> lazyRights(list.tail()), b -> List.newLazyList(b, () -> lazyRights(list.tail())));
+            return head.<List<B>>either(a -> lazyRights(list.tail()),
+                    b -> List.newLazyList(b, () -> Either.<B>lazyRights(list.tail())));
         }
     }
 
@@ -400,7 +402,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return the value extracted from Left or Right
      */
     public static <A> A unify(Either<A, A> either) {
-        return either.either(Functions.<A>id(), Functions.<A>id());
+        return either.either(Function.<A>identity(), Function.<A>identity());
     }
 
     /**
@@ -420,7 +422,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
                 return false;
             } else if (one.isLeft() && two.isLeft()) {
                 return eqA.eq(one.getLeft(), two.getLeft());
-            }  else {
+            } else {
                 return one.isRight() && two.isRight() && eqB.eq(one.getRight(), two.getRight());
             }
         };
@@ -449,14 +451,15 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return the Either monad
      */
     public static <S> EitherMonad<S> monad() {
-        return new EitherMonad<S>(){};
+        return new EitherMonad<S>() {
+        };
     }
 
     /**
      * The MonadPlus instance of Either which prefers the first Right value.
      *
      * @param monoid the Monoid used to combine Left values
-     * @param <S> the Left type of Either
+     * @param <S>    the Left type of Either
      * @return the Either MonadPlus instance
      */
     public static <S> EitherMonadPlus<S> firstBiasedMonadPlus(Monoid<S> monoid) {
@@ -467,7 +470,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * The MonadPlus instance of Either which prefers the last Right value.
      *
      * @param monoid the Monoid used to combine Left values
-     * @param <S> the Left type of Either
+     * @param <S>    the Left type of Either
      * @return the Either MonadPlus instance
      */
     public static <S> EitherMonadPlus<S> lastBiasedMonadPlus(Monoid<S> monoid) {

@@ -4,9 +4,11 @@ import org.highj.data.functions.Functions;
 import org.highj.data.structural.Endo;
 import org.highj.typeclass0.group.Monoid;
 
+import java.util.function.Function;
+
 public class EndoMonoid<A> implements Monoid<Endo<A>> {
 
-    private final Endo<A> id =  new Endo<>(Functions.id());
+    private final Endo<A> id =  new Endo<>(Function.identity());
 
     @Override
     public Endo<A> identity() {

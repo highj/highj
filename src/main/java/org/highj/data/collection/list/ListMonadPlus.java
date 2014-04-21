@@ -7,15 +7,15 @@ import org.highj.typeclass1.monad.MonadPlus;
 import java.util.Stack;
 import java.util.function.Function;
 
-public class ListMonadPlus extends ListFunctor implements MonadPlus<List.µ> {
+public interface ListMonadPlus extends ListFunctor, MonadPlus<List.µ> {
 
     @Override
-    public <A> List<A> pure(A a) {
+    public default <A> List<A> pure(A a) {
         return List.of(a);
     }
 
     @Override
-    public <A, B> List<B> ap(_<List.µ, Function<A, B>> fn, _<List.µ, A> nestedA) {
+    public default <A, B> List<B> ap(_<List.µ, Function<A, B>> fn, _<List.µ, A> nestedA) {
         List<Function<A, B>> listFn = List.narrow(fn);
         List<A> listA = List.narrow(nestedA);
         Stack<B> stack = new Stack<>();
@@ -28,7 +28,7 @@ public class ListMonadPlus extends ListFunctor implements MonadPlus<List.µ> {
     }
 
     @Override
-    public <A> List<A> join(_<List.µ, _<List.µ, A>> nestedNestedA) {
+    public default <A> List<A> join(_<List.µ, _<List.µ, A>> nestedNestedA) {
         List<_<List.µ, A>> nestedList = List.narrow(nestedNestedA);
         Stack<A> stack = new Stack<>();
         for (_<List.µ, A> list : nestedList) {
@@ -40,12 +40,12 @@ public class ListMonadPlus extends ListFunctor implements MonadPlus<List.µ> {
     }
 
     @Override
-    public <A> List<A> mzero() {
+    public default <A> List<A> mzero() {
         return List.nil();
     }
 
     @Override
-    public <A> List<A> mplus(_<List.µ, A> one, _<List.µ, A> two) {
+    public default <A> List<A> mplus(_<List.µ, A> one, _<List.µ, A> two) {
         List<A> listOne = List.narrow(one);
         List<A> listTwo = List.narrow(two);
         return List.append(listOne, listTwo);

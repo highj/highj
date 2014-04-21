@@ -10,19 +10,25 @@ import java.util.function.Function;
 import static  org.highj.data.collection.List.*;
 
 //Todo extends to Traversable1
-public class ListTraversable extends ListFunctor implements Traversable<µ> {
+public interface ListTraversable extends ListFunctor, Traversable<µ> {
+
     @Override
-    public <A, B> B foldr(Function<A, Function<B, B>> fn, B b, _<µ, A> nestedA) {
+    public default <A, B> List<B> map(final Function<A, B> fn, _<List.µ, A> nestedA) {
+        return ListFunctor.super.map(fn,nestedA);
+    }
+
+    @Override
+    public default <A, B> B foldr(Function<A, Function<B, B>> fn, B b, _<µ, A> nestedA) {
         return narrow(nestedA).foldr(fn, b);
     }
 
     @Override
-    public <A, B> A foldl(Function<A, Function<B, A>> fn, A a, _<µ, B> bs) {
+    public default <A, B> A foldl(Function<A, Function<B, A>> fn, A a, _<µ, B> bs) {
         return narrow(bs).foldl(a, fn);
     }
 
     @Override
-    public <A, B, X> _<X, _<µ, B>> traverse(Applicative<X> applicative, Function<A, _<X, B>> fn, _<µ, A> traversable) {
+    public default <A, B, X> _<X, _<µ, B>> traverse(Applicative<X> applicative, Function<A, _<X, B>> fn, _<µ, A> traversable) {
         //traverse f = Prelude.foldr cons_f (pure [])
         //  where cons_f x ys = (:) <$> f x <*> ys
         List<A> listA = narrow(traversable);
