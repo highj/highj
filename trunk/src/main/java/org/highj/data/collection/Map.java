@@ -136,7 +136,7 @@ public class Map<A, B> implements __<Map.µ, A, B>, Iterable<T2<A, B>>, Function
             return T2.of(this, right);
         } else {
             T2<Map<A, B>, Map<A, B>> pair = left.removeMin();
-            return T2.of(pair._1(), new Map<>(hc, bucket, pair._2(), right));
+            return T2.<Map<A, B>, Map<A, B>>of(pair._1(), new Map<>(hc, bucket, pair._2(), right));
         }
     }
 
@@ -269,12 +269,12 @@ public class Map<A, B> implements __<Map.µ, A, B>, Iterable<T2<A, B>>, Function
             for (T2<A, B> t2 : bucket) {
                 newBucket = newBucket.plus(t2.map_2(fn));
             }
-            return new Map<>(hc, newBucket, left.map(fn), right.map(fn));
+            return new Map<A,C>(hc, newBucket, left.map(fn), right.map(fn));
         }
     }
 
     private static <S> MapApply<S> mapApply() {
-        return new MapApply<>();
+        return new MapApply<S>(){};
     }
 
 

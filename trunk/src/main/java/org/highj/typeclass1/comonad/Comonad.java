@@ -39,7 +39,7 @@ public interface Comonad<W> extends Extend<W> {
     }
 
     public default <A> List<_<W, A>> parallelW(_<W, List<A>> nestedList) {
-        return mapW(Functions.<_<W, A>>id()).apply(nestedList);
+        return mapW(Function.<_<W, A>>identity()).apply(nestedList);
     }
 
     public default <A,B> Function<_<W,A>, Stream<B>> unfoldW(final Function<_<W, A>, T2<B,A>> fn) {

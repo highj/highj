@@ -17,7 +17,7 @@ import java.util.function.Function;
 public interface Foldable<F> {
 
     public default <A> A fold(Monoid<A> ma, _<F, A> nestedA) {
-        return foldMap(ma, Functions.<A>id(), nestedA);
+        return foldMap(ma, Function.<A>identity(), nestedA);
     }
 
     public default <A, B> B foldMap(final Monoid<B> mb, final Function<A, B> fn, _<F, A> nestedA) {
@@ -32,11 +32,11 @@ public interface Foldable<F> {
     //This is very inefficient, please override if possible.
     public default <A, B> A foldl(final Function<A, Function<B, A>> fn, A a, _<F, B> bs) {
         //foldl f a bs = foldr (\b h -> \a ->h (f a b)  ) id bs a
-        return foldr((B b) -> (Function<A, A> h) -> (A x) -> h.apply(fn.apply(x).apply(b)), Functions.<A>id(), bs).apply(a);
+        return foldr((B b) -> (Function<A, A> h) -> (A x) -> h.apply(fn.apply(x).apply(b)), Function.<A>identity(), bs).apply(a);
     }
 
     public default <A> A fold1(Semigroup<A> sa, _<F, A> nestedA) {
-        return foldMap1(sa, Functions.<A>id(), nestedA);
+        return foldMap1(sa, Function.<A>identity(), nestedA);
     }
 
     public default <A, B> B foldMap1(Semigroup<B> sa, Function<A, B> fn, _<F, A> nestedA) {

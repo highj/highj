@@ -133,7 +133,7 @@ public class Dequeue<A> implements _<Dequeue.µ, A>, Iterable<A> {
                 default: throw new AssertionError("Queue is too far unbalanced.");
             }
         } else {
-            return T2.of(front.maybeHead(), new Dequeue<>(sizeFront - 1, front.tail(), sizeRear, rear));
+            return T2.of(front.maybeHead(), new Dequeue<A>(sizeFront - 1, front.tail(), sizeRear, rear));
         }
     }
 
@@ -156,7 +156,7 @@ public class Dequeue<A> implements _<Dequeue.µ, A>, Iterable<A> {
                 default: throw new AssertionError("Queue is too far unbalanced.");
             }
         } else {
-            return T2.of(rear.maybeHead(), new Dequeue<>(sizeFront, front, sizeRear - 1, rear.tail()));
+            return T2.of(rear.maybeHead(), new Dequeue<A>(sizeFront, front, sizeRear - 1, rear.tail()));
         }
     }
 

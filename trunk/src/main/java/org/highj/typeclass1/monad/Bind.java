@@ -15,7 +15,7 @@ public interface Bind<M> extends Apply<M> {
 
     // join (Control.Monad)
     public default <A> _<M, A> join(_<M, _<M, A>> nestedNestedA) {
-        return bind(nestedNestedA, Functions.<_<M, A>>id());
+        return bind(nestedNestedA, Function.<_<M, A>>identity());
     }
 
     // (>>) (Control.Monad)

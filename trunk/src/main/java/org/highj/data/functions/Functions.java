@@ -12,14 +12,6 @@ import java.util.function.Supplier;
 public enum Functions {
     ;
 
-    private static final Function ID = a -> a;
-
-
-    @SuppressWarnings("unchecked")
-    public static <A> Function<A, A> id() {
-        return (Function<A,A>) ID;
-    }
-
     public static <A, B, C> Function<A, Function<B, C>> curry2(Function<T2<A, B>, C> fn) {
         return a -> b -> fn.apply(T2.of(a, b));
     }
@@ -77,7 +69,7 @@ public enum Functions {
         return new Monoid<Function<A,A>>() {
             @Override
             public Function<A,A> identity() {
-                return id();
+                return Function.identity();
             }
 
             @Override
@@ -158,7 +150,7 @@ public enum Functions {
     }
 
     public static <A> List<A> iterate(Function<A,A> fn, A start) {
-        return List.newLazyList(start, () -> iterate(fn, fn.apply(start)));
+        return List.newLazyList(start, () -> Functions.<A>iterate(fn, fn.apply(start)));
     }
 
     public static <A,B> Function<A,Maybe<B>> fromJavaMap(Map<A,B> map) {

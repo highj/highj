@@ -4,7 +4,6 @@ import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.data.collection.Either;
-import org.highj.data.functions.Functions;
 import org.highj.data.kleisli.Kleisli;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass1.monad.Monad;
@@ -61,13 +60,13 @@ public class KleisliArrow<M> implements ArrowChoice<___.µ<Kleisli.µ, M>>, Arro
     @Override
     public <B, C, D> Kleisli<M, Either<B, D>, Either<C, D>> left(__<___.µ<Kleisli.µ, M>, B, C> arrow) {
         // left f = f +++ arr id
-        return merge(arrow, arr(Functions.<D>id()));
+        return merge(arrow, arr(Function.<D>identity()));
     }
 
     @Override
     public <B, C, D> Kleisli<M, Either<D, B>, Either<D, C>> right(__<___.µ<Kleisli.µ, M>, B, C> arrow) {
         // right f = arr id +++ f
-        return merge(arr(Functions.<D>id()), arrow);
+        return merge(arr(Function.<D>identity()), arrow);
     }
 
     @Override

@@ -250,7 +250,7 @@ public class ListTest {
 
     @Test
     public void testAppend() throws Exception {
-        assertEquals("List(2,5,3,8,9)", List.append(List.of(2, 5), List.of(3, 8, 9)).toString());
+        assertEquals("List(2,5,3,8,9)", List.<Integer>append(List.of(2, 5), List.of(3, 8, 9)).toString());
         assertEquals("List(2,5)", List.append(List.of(2, 5), List.<Integer>of()).toString());
         assertEquals("List(3,8,9)", List.append(List.<Integer>of(), List.of(3, 8, 9)).toString());
         assertEquals("List()", List.append(List.<Integer>of(), List.<Integer>of()).toString());

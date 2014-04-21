@@ -16,8 +16,8 @@ public interface Biapply<F> extends Bifunctor<F> {
     public default <A, B, C, D> __<F, C, D> rightShift(__<F, A, B> a, __<F, C, D> b) {
         // a .>> b = bimap (const id) (const id) <<$>> a <<.>> b
         return biapply(bimap(
-                Functions.<A, Function<C, C>>constant(Functions.<C>id()),
-                Functions.<B, Function<D, D>>constant(Functions.<D>id()), a), b);
+                Functions.<A, Function<C, C>>constant(Function.<C>identity()),
+                Functions.<B, Function<D, D>>constant(Function.<D>identity()), a), b);
     }
 
     // (<<.)
@@ -42,7 +42,7 @@ public interface Biapply<F> extends Bifunctor<F> {
         return biapply(biapply(bimap(f, g, a), b), c);
     }
 
-    public default <X> Apply<__.µ<F,X>> getApply(Semigroup<X> semigroup) {
+    public default <X> Apply<__.µ<F, X>> getApply(Semigroup<X> semigroup) {
         return new CurriedApply<>(this, semigroup);
     }
 

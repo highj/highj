@@ -22,7 +22,6 @@ public interface F1<A, B> extends  __<F1.µ, A, B>, Function<A,B> {
     public static class µ {
     }
 
-
     static <A> F1<A, A> id() {
         return a -> a;
     }
