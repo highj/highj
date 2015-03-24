@@ -1,80 +1,47 @@
 package org.highj.data.transformer;
 
 import org.highj._;
+import org.highj.__;
 import org.highj.data.collection.Maybe;
+import org.highj.data.transformer.maybe.MaybeTApplicative;
+import org.highj.data.transformer.maybe.MaybeTApply;
+import org.highj.data.transformer.maybe.MaybeTFunctor;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Applicative;
+import org.highj.typeclass1.monad.Apply;
 
 import java.util.function.Function;
 
-public class MaybeT<M, A> implements _<_<MaybeT.µ, M>, A> {
+public class MaybeT<M, A> implements __<MaybeT.µ, M, A> {
 
     public static class µ {
     }
 
-    private final _<M, _<Maybe.µ, A>> value;
+    private final _<M, Maybe<A>> value;
 
-    public MaybeT(_<M, _<Maybe.µ, A>> value) {
+    public MaybeT(_<M, Maybe<A>> value) {
         this.value = value;
     }
 
-    public _<M, _<Maybe.µ, A>> get() {
+    public _<M, Maybe<A>> get() {
         return value;
     }
 
     @SuppressWarnings("unchecked")
-    public static <M, A> MaybeT<M, A> narrow(_<_<µ, M>, A> value) {
+    public static <M, A> MaybeT<M, A> narrow(_<__.µ<µ, M>, A> value) {
         return (MaybeT) value;
     }
 
     public static <M> Functor<_<µ, M>> functor(final Functor<M> functorM) {
-        return new Functor<_<µ, M>>() {
-            @Override
-            public <A, B> _<_<µ, M>, B> map(Function<A, B> fn, _<_<µ, M>, A> nestedA) {
-                MaybeT<M, A> aId = narrow(nestedA);
-                Function<_<Maybe.µ, A>, _<Maybe.µ, B>> liftedFn = Maybe.monad.lift(fn);
-                return new MaybeT<>(functorM.map(liftedFn, aId.get()));
-            }
-        };
+        return (MaybeTFunctor) () -> functorM;
+    }
+
+    public static <M> Apply<_<µ, M>> apply(final Apply<M> applyM) {
+        return (MaybeTApply) () -> applyM;
     }
 
     public static <M> Applicative<_<µ, M>> applicative(final Applicative<M> applicativeM) {
-        return new Applicative<_<µ, M>>() {
-            @Override
-            public <A, B> _<_<µ, M>, B> map(Function<A, B> fn, _<_<µ, M>, A> nestedA) {
-                MaybeT<M, A> aMaybeT = narrow(nestedA);
-                Function<_<Maybe.µ, A>, _<Maybe.µ, B>> liftedFn = Maybe.monad.lift(fn);
-                return new MaybeT<>(applicativeM.map(liftedFn, aMaybeT.get()));
-            }
-
-            @Override
-            public <A> _<_<µ, M>, A> pure(A a) {
-                _<Maybe.µ, A> justA = Maybe.monad.pure(a);
-                return new MaybeT<>(applicativeM.pure(justA));
-            }
-
-            //this looks too complicated...
-            @Override
-            public <A, B> _<_<µ, M>, B> ap(_<_<µ, M>, Function<A, B>> fn, _<_<µ, M>, A> nestedA) {
-                final MaybeT<M, A> aId = narrow(nestedA);
-                MaybeT<M, Function<A, B>> fnMaybeT = narrow(fn);
-                _<M, _<Maybe.µ, Function<A, B>>> fnMaybe = fnMaybeT.get();
-                _<M, Function<_<Maybe.µ, A>, _<Maybe.µ, B>>> fnConv = applicativeM.map(new Function<_<Maybe.µ, Function<A, B>>, Function<_<Maybe.µ, A>, _<Maybe.µ, B>>>() {
-                    @Override
-                    public Function<_<Maybe.µ, A>, _<Maybe.µ, B>> apply(_<Maybe.µ, Function<A, B>> maybeFnNested) {
-                        final Maybe<Function<A, B>> maybeFn = Maybe.narrow(maybeFnNested);
-                        return maybeANested -> {
-                            Maybe<A> maybeA = Maybe.narrow(maybeANested);
-                            return maybeFn.isJust() && maybeA.isJust()
-                                    ? Maybe.Just(maybeFn.get().apply(maybeA.get()))
-                                    : Maybe.<B>Nothing();
-                        };
-                    }
-                }, fnMaybe);
-                _<M, _<Maybe.µ, B>> apResult = applicativeM.ap(fnConv, aId.get());
-                return new MaybeT<>(apResult);
-            }
-        };
+        return (MaybeTApplicative) () -> applicativeM;
     }
 
 

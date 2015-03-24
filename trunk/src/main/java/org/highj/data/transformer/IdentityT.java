@@ -1,6 +1,7 @@
 package org.highj.data.transformer;
 
 import org.highj._;
+import org.highj.__;
 import org.highj.data.transformer.identity.*;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.foldable.Foldable;
@@ -11,7 +12,7 @@ import org.highj.typeclass1.monad.*;
 
 import java.util.function.Function;
 
-public class IdentityT<M, A> implements _<_<IdentityT.µ, M>, A> {
+public class IdentityT<M, A> implements __<IdentityT.µ, M, A> {
 
     public static class µ {
     }
@@ -23,7 +24,7 @@ public class IdentityT<M, A> implements _<_<IdentityT.µ, M>, A> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <M, A> IdentityT<M, A> narrow(_<_<µ, M>, A> value) {
+    public static <M, A> IdentityT<M, A> narrow(_<__.µ<µ, M>, A> value) {
         return (IdentityT) value;
     }
 
@@ -45,19 +46,19 @@ public class IdentityT<M, A> implements _<_<IdentityT.µ, M>, A> {
         };
     }
 
-    public static <M> Functor<_<µ, M>> functor(final Functor<M> functorM) {
+    public static <M> Functor<__.µ<µ, M>> functor(final Functor<M> functorM) {
         return (IdentityTFunctor<M>) () -> functorM;
     }
 
-    public static <M> Apply<_<µ, M>> apply(final Apply<M> applyM) {
+    public static <M> Apply<__.µ<µ, M>> apply(final Apply<M> applyM) {
         return (IdentityTApply<M>) () -> applyM;
     }
 
-    public static <M> Applicative<_<µ, M>> applicative(final Applicative<M> applicativeM) {
+    public static <M> Applicative<__.µ<µ, M>> applicative(final Applicative<M> applicativeM) {
         return (IdentityTApplicative<M>) () -> applicativeM;
     }
 
-    public static <M> Bind<_<µ, M>> bind(final Bind<M> bindM) {
+    public static <M> Bind<__.µ<µ, M>> bind(final Bind<M> bindM) {
         return (IdentityTBind<M>) () -> bindM;
     }
 
@@ -65,23 +66,23 @@ public class IdentityT<M, A> implements _<_<IdentityT.µ, M>, A> {
         return (IdentityTMonadTrans<M>) () -> monad;
     }
 
-    public static <M> MonadZero<_<µ, M>> monadZero(final MonadZero<M> monadZero) {
+    public static <M> MonadZero<__.µ<µ, M>> monadZero(final MonadZero<M> monadZero) {
         return (IdentityTMonadZero<M>) () -> monadZero;
     }
 
-    public static <M> MonadPlus<_<µ, M>> monadPlus(final MonadPlus<M> monadPlus) {
+    public static <M> MonadPlus<__.µ<µ, M>> monadPlus(final MonadPlus<M> monadPlus) {
         return (IdentityTMonadPlus<M>) () -> monadPlus;
     }
 
-    public static <M> Foldable<_<µ, M>> foldable(final Foldable<M> foldableM) {
+    public static <M> Foldable<__.µ<µ, M>> foldable(final Foldable<M> foldableM) {
         return (IdentityTFoldable<M>) () -> foldableM;
     }
 
-    public static <M> Traversable<_<µ, M>> traversable(final Traversable<M> traversableM) {
+    public static <M> Traversable<__.µ<µ, M>> traversable(final Traversable<M> traversableM) {
         return (IdentityTTraversable<M>) () -> traversableM;
     }
 
-    public static <M> Traversable1<_<µ, M>> traversable1(final Traversable1<M> traversable1M) {
+    public static <M> Traversable1<__.µ<µ, M>> traversable1(final Traversable1<M> traversable1M) {
         return (IdentityTTraversable1<M>) () -> traversable1M;
     }
 
