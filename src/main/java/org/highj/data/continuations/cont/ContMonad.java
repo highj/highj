@@ -10,10 +10,19 @@ import java.util.function.Function;
 
 import static org.highj.data.continuations.Cont.*;
 
+/**
+ * @author Daniel Gronau
+ * @author Clinton Selke
+ */
 public class ContMonad<S>  implements Monad<__.µ<Cont.µ, S>> {
     @Override
     public <A> Cont<S, A> pure(A a) {
         return new Cont<>(Functions.<A,S>flipApply().apply(a));
+    }
+
+    @Override
+    public <A, B> Cont<S, B> ap(_<__.µ<Cont.µ, S>, Function<A, B>> fn, _<__.µ<Cont.µ, S>, A> nestedA) {
+        return bind(fn, (Function<A, B> fn2) -> map(fn2, nestedA));
     }
 
     @Override

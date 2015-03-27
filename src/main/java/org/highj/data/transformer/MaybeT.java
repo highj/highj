@@ -5,13 +5,21 @@ import org.highj.__;
 import org.highj.data.collection.Maybe;
 import org.highj.data.transformer.maybe.MaybeTApplicative;
 import org.highj.data.transformer.maybe.MaybeTApply;
+import org.highj.data.transformer.maybe.MaybeTBind;
 import org.highj.data.transformer.maybe.MaybeTFunctor;
+import org.highj.data.transformer.maybe.MaybeTMonad;
+import org.highj.data.transformer.maybe.MaybeTMonadTrans;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Applicative;
 import org.highj.typeclass1.monad.Apply;
+import org.highj.typeclass1.monad.Monad;
 
-import java.util.function.Function;
-
+/**
+ * @param <M> the wrapped monad
+ * @param <A> the element type
+ * @author Daniel Gronau
+ * @author Clinton Selke
+ */
 public class MaybeT<M, A> implements __<MaybeT.µ, M, A> {
 
     public static class µ {
@@ -32,18 +40,29 @@ public class MaybeT<M, A> implements __<MaybeT.µ, M, A> {
         return (MaybeT) value;
     }
 
-    public static <M> Functor<_<µ, M>> functor(final Functor<M> functorM) {
-        return (MaybeTFunctor) () -> functorM;
+    public static <M> MaybeTFunctor<M> functor(final Functor<M> functorM) {
+        return () -> functorM;
     }
 
-    public static <M> Apply<_<µ, M>> apply(final Apply<M> applyM) {
-        return (MaybeTApply) () -> applyM;
+    public static <M> MaybeTApply<M> apply(final Apply<M> applyM) {
+        return () -> applyM;
     }
 
-    public static <M> Applicative<_<µ, M>> applicative(final Applicative<M> applicativeM) {
-        return (MaybeTApplicative) () -> applicativeM;
+    public static <M> MaybeTApplicative<M> applicative(final Applicative<M> applicativeM) {
+        return () -> applicativeM;
     }
 
+    public static <M> MaybeTBind<M> bind(final Monad<M> mMonad) {
+        return () -> mMonad;
+    }
+
+    public static <M> MaybeTMonad<M> monad(final Monad<M> mMonad) {
+        return () -> mMonad;
+    }
+
+    public static <M> MaybeTMonadTrans<M> monadTrans(final Monad<M> mMonad) {
+        return () -> mMonad;
+    }
 
 }
 
