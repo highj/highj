@@ -1,5 +1,13 @@
 #summary News
 
+= 2015-03-27 =
+
+I got an interesting conversation with Clinton Selke, who suggested some minor changes in the monad transformers and contributed code for MaybeT and StateT, as well as the MonadState class, so you can see some substantial progress in this area. 
+
+I'm very glad to see that people use code or ideas from this project, and I'll definitely continue to work on it. 
+
+One thing I don't want to postpone is the GitHub migration, so expect this to be the last entry on Google Code.
+
 = 2013-09-10 =
 
 I work sporadic on highJ. I added some stuff and did a lot of refactoring. I think I'm close to have something like a coherent "core". Probably I should throw away some not-so-related stuff, stop to add new features, and start to "polish". Especially I need more tests, and a 
