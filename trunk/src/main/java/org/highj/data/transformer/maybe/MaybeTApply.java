@@ -9,7 +9,8 @@ import org.highj.data.transformer.MaybeT;
 import org.highj.typeclass1.monad.Apply;
 
 /**
- * @author Daniel Gronau <daniel.gronau@skillcert.de>
+ * @author Daniel Gronau
+ * @author Clinton Selke
  */
 public interface MaybeTApply<M> extends MaybeTFunctor<M>, Apply<__.µ<MaybeT.µ, M>> {
 
@@ -17,7 +18,7 @@ public interface MaybeTApply<M> extends MaybeTFunctor<M>, Apply<__.µ<MaybeT.µ,
     public Apply<M> get();
 
     @Override
-    public default <A, B> __<MaybeT.µ, M, B> ap(_<__.µ<MaybeT.µ, M>, Function<A, B>> fn, _<__.µ<MaybeT.µ, M>, A> nestedA) {
+    public default <A, B> MaybeT<M, B> ap(_<__.µ<MaybeT.µ, M>, Function<A, B>> fn, _<__.µ<MaybeT.µ, M>, A> nestedA) {
         _<M, Maybe<A>> m_a = MaybeT.narrow(nestedA).get();
         _<M, Maybe<Function<A, B>>> m_fn = MaybeT.narrow(fn).get();
         _<M, Function<Maybe<A>, Maybe<B>>> m_fm = get().map(

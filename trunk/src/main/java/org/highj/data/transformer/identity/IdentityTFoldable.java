@@ -1,12 +1,12 @@
 package org.highj.data.transformer.identity;
 
+import java.util.function.Function;
+
 import org.highj._;
 import org.highj.__;
 import org.highj.data.transformer.IdentityT;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.foldable.Foldable;
-
-import java.util.function.Function;
 
 public interface IdentityTFoldable<M> extends Foldable<__.µ<IdentityT.µ, M>> {
 

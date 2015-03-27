@@ -6,7 +6,7 @@ import org.highj.data.transformer.MaybeT;
 import org.highj.typeclass1.monad.Applicative;
 
 /**
- * @author Daniel Gronau <daniel.gronau@skillcert.de>
+ * @author Daniel Gronau
  */
 public interface MaybeTApplicative<M> extends MaybeTApply<M>, Applicative<__.µ<MaybeT.µ, M>> {
 
@@ -14,7 +14,7 @@ public interface MaybeTApplicative<M> extends MaybeTApply<M>, Applicative<__.µ<
     public Applicative<M> get();
 
     @Override
-    public default <A> __<MaybeT.µ, M, A> pure(A a) {
+    public default <A> MaybeT<M, A> pure(A a) {
         return new MaybeT<>(get().pure(Maybe.monad.pure(a)));
     }
 

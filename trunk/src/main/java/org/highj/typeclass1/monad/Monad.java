@@ -7,6 +7,11 @@ import org.highj.util.Mutable;
 
 import java.util.function.Function;
 
+/**
+ * @param <M> the monadic type
+ * @author Daniel Gronau
+ * @author Clinton Selke
+ */
 public interface Monad<M> extends Applicative<M>, Bind<M> {
 
     // mapM (Control.Monad)
@@ -70,12 +75,6 @@ public interface Monad<M> extends Applicative<M>, Bind<M> {
     public default <A> _<M, T0> sequence_(List<_<M, A>> list) {
         sequence(list);
         return pure(T0.unit);
-    }
-
-    @Override
-    public default <A, B> _<M, B> ap(_<M, Function<A, B>> fn, _<M, A> nestedA) {
-        //ap mf m = do f <- mf; x <- m; return (f x)
-        return bind(fn, f -> this.<A,B>bind(nestedA, x -> this.<B>pure(f.apply(x))));
     }
 
 }
