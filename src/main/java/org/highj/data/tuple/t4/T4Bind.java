@@ -15,9 +15,9 @@ public interface T4Bind<S,T,U> extends T4Apply<S,T,U>, Bind<__.µ<___.µ<____.µ
                                                              Function<A, _<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>, B>> fn) {
         T4<S, T, U, A> ta = T4.narrow(nestedA);
         T4<S, T, U, B> tb = T4.narrow(fn.apply(ta._4()));
-        return T4.of(getS().dot(ta._1(), tb._1()),
-                getT().dot(ta._2(), tb._2()),
-                getU().dot(ta._3(), tb._3()),
+        return T4.of(getS().apply(ta._1(), tb._1()),
+                getT().apply(ta._2(), tb._2()),
+                getU().apply(ta._3(), tb._3()),
                 tb._4());
     }
 }

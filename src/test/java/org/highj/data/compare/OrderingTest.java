@@ -1,6 +1,5 @@
 package org.highj.data.compare;
 
-import org.highj.data.collection.List;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -17,11 +16,11 @@ public class OrderingTest {
     @Test
     public void monoidTest() throws Exception {
         assertEquals(EQ, group.identity());
-        assertEquals(EQ, group.dot(EQ, EQ));
-        assertEquals(LT, group.dot(LT, EQ));
-        assertEquals(LT, group.dot(LT, GT));
-        assertEquals(GT, group.dot(GT, EQ));
-        assertEquals(GT, group.dot(EQ, GT));
+        assertEquals(EQ, group.apply(EQ, EQ));
+        assertEquals(LT, group.apply(LT, EQ));
+        assertEquals(LT, group.apply(LT, GT));
+        assertEquals(GT, group.apply(GT, EQ));
+        assertEquals(GT, group.apply(EQ, GT));
         assertEquals(GT, group.fold(EQ, EQ, GT, LT, EQ));
     }
 

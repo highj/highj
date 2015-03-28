@@ -1,12 +1,12 @@
 package org.highj.data.transformer.identity;
 
-import java.util.function.Function;
-
 import org.highj._;
 import org.highj.__;
 import org.highj.data.transformer.IdentityT;
 import org.highj.typeclass1.foldable.Traversable;
 import org.highj.typeclass1.monad.Applicative;
+
+import java.util.function.Function;
 
 public interface IdentityTTraversable<M> extends Traversable<__.µ<IdentityT.µ, M>> {
 

@@ -1,12 +1,12 @@
 package org.highj.data.transformer.identity;
 
-import java.util.function.Function;
-
 import org.highj._;
 import org.highj.__;
 import org.highj.data.transformer.IdentityT;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadTrans;
+
+import java.util.function.Function;
 
 
 public interface IdentityTMonadTrans<M> extends IdentityTBind<M>, IdentityTApplicative<M>, MonadTrans<IdentityT.µ, M> {

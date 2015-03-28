@@ -3,10 +3,12 @@ package org.highj.data.functions;
 import org.highj._;
 import org.highj.__;
 import org.highj.data.collection.Maybe;
-import org.highj.data.functions.f1.F1Monad;
 import org.highj.data.functions.f1.F1Arrow;
-import org.highj.data.functions.f1.F1EndoMonoid;
-import org.highj.data.tuple.*;
+import org.highj.data.functions.f1.F1Monad;
+import org.highj.data.tuple.T0;
+import org.highj.data.tuple.T2;
+import org.highj.data.tuple.T3;
+import org.highj.data.tuple.T4;
 import org.highj.typeclass0.group.Monoid;
 
 import java.util.Map;
@@ -17,7 +19,7 @@ import java.util.function.Supplier;
  * A class representing an unary function.
  */
 @FunctionalInterface
-public interface F1<A, B> extends  __<F1.µ, A, B>, Function<A,B> {
+public interface F1<A, B> extends __<F1.µ, A, B>, Function<A, B> {
 
     public static class µ {
     }
@@ -60,8 +62,8 @@ public interface F1<A, B> extends  __<F1.µ, A, B>, Function<A,B> {
         return fn -> fn.apply(a);
     }
 
-    static <A> Monoid<F1<A,A>> endoMonoid() {
-        return new F1EndoMonoid<>();
+    static <A> Monoid<F1<A, A>> endoMonoid() {
+        return Monoid.create(F1.id(), (x, y) -> F1.compose(F1.narrow(x), F1.narrow(y)));
     }
 
     static <A, B> F1<A, F1<F1<A, B>, B>> flipApply() {
@@ -112,11 +114,11 @@ public interface F1<A, B> extends  __<F1.µ, A, B>, Function<A,B> {
 
     public static F1Arrow arrow = new F1Arrow();
 
-    public static <A,B> F1<A,Maybe<B>> fromJavaMap(Map<A,B> map) {
+    public static <A, B> F1<A, Maybe<B>> fromJavaMap(Map<A, B> map) {
         return a -> map.containsKey(a) ? Maybe.Just(map.get(a)) : Maybe.<B>Nothing();
     }
 
-    public static <A,B> F1<A,B> fromJavaMap(Map<A,B> map, B defaultValue) {
+    public static <A, B> F1<A, B> fromJavaMap(Map<A, B> map, B defaultValue) {
         return a -> map.containsKey(a) ? map.get(a) : defaultValue;
     }
 }

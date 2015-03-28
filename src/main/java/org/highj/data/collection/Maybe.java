@@ -2,23 +2,16 @@ package org.highj.data.collection;
 
 import org.highj._;
 import org.highj.data.collection.maybe.*;
-import org.highj.typeclass0.compare.Eq;
 import org.highj.data.functions.Functions;
+import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.group.Monoid;
-import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass1.comonad.Extend;
 import org.highj.typeclass1.foldable.Traversable;
-import org.highj.typeclass1.monad.Monad;
-import org.highj.typeclass1.monad.MonadFix;
-import org.highj.typeclass1.monad.MonadPlus;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Stack;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 /**
  * A data type which may or may not hold a value. A calculation that may fail. A.k.a. "Option" or "Box".
@@ -90,6 +83,7 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     public static <Super_A, A extends Super_A> Maybe<Super_A> contravariant(Maybe<A> maybe) {
         return (Maybe) maybe;
     }
+
     public boolean isNothing() {
         return this == NOTHING;
     }
@@ -198,16 +192,16 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     public static final Extend<µ> extend = new MaybeExtend();
 
     public static <A> Monoid<Maybe<A>> firstMonoid() {
-        return new MaybeFirstMonoid<>();
+        return Monoid.create(Maybe.Nothing(), (x, y) -> x.isJust() ? x : y);
     }
 
     public static <A> Monoid<Maybe<A>> lastMonoid() {
-        return new MaybeLastMonoid<>();
+        return Monoid.create(Maybe.Nothing(), (x, y) -> y.isJust() ? y : x);
     }
 
-    public static <A> Monoid<Maybe<A>> monoid(final Semigroup<A> semigroup) {
-        return new MaybeMonoidFromSemigroup<>(semigroup);
+    public static <A> Monoid<Maybe<A>> monoid(final BinaryOperator<A> semigroup) {
+        return Monoid.create(Maybe.Nothing(), (x, y) ->
+                x.bind(xValue -> y.<A>map(yValue -> semigroup.apply(xValue, yValue))));
     }
-
 
 }

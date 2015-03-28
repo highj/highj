@@ -1,11 +1,11 @@
 package org.highj.data.transformer.identity;
 
-import java.util.function.Function;
-
 import org.highj._;
 import org.highj.__;
 import org.highj.data.transformer.IdentityT;
 import org.highj.typeclass1.monad.MonadPlus;
+
+import java.util.function.Function;
 
 public interface IdentityTMonadPlus<M> extends IdentityTMonadZero<M>, MonadPlus<__.µ<IdentityT.µ, M>> {
 

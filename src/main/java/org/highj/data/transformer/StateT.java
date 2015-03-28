@@ -1,18 +1,15 @@
 package org.highj.data.transformer;
 
 import org.highj._;
+import org.highj.__;
 import org.highj.___;
-import org.highj.data.transformer.state.StateTApplicative;
-import org.highj.data.transformer.state.StateTApply;
-import org.highj.data.transformer.state.StateTBind;
-import org.highj.data.transformer.state.StateTFunctor;
-import org.highj.data.transformer.state.StateTMonad;
-import org.highj.data.transformer.state.StateTMonadState;
-import org.highj.data.transformer.state.StateTMonadTrans;
+import org.highj.data.transformer.state.*;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Bind;
 import org.highj.typeclass1.monad.Monad;
+
+import static org.highj.HigherKinded.uncurry3;
 
 /**
  * @author Clinton Selke
@@ -23,6 +20,10 @@ public interface StateT<S, M, A> extends ___<StateT.µ, S, M, A> {
 
     public static <S, M, A> StateT<S, M, A> narrow(___<StateT.µ, S, M, A> a) {
         return (StateT<S, M, A>) a;
+    }
+
+    public static <S, M, A> StateT<S, M, A> narrow(_<__.µ<___.µ<StateT.µ, S>, M>, A> a) {
+        return narrow(uncurry3(a));
     }
 
     public _<M, T2<A, S>> run(S s);

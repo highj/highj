@@ -2,8 +2,10 @@ package org.highj.typeclass0.group;
 
 import org.highj.data.collection.List;
 
+import java.util.function.BinaryOperator;
+
 /**
- * A <code>Semigroup<code/> with an identity element: dot(x,identity) == dot(identity,x) == x
+ * A <code>Semigroup<code/> with an identity element: apply(x,identity) == apply(identity,x) == x
  */
 public interface Monoid<A> extends Semigroup<A> {
 
@@ -14,16 +16,19 @@ public interface Monoid<A> extends Semigroup<A> {
     }
 
     public static <A> Monoid<A> dual(Monoid<A> monoid) {
-        return new Monoid<A>() {
+        return create(monoid.identity(), (x,y) -> monoid.apply(y,x));
+    }
 
+    public static <A> Monoid<A> create(A identity, BinaryOperator<A> fn) {
+        return new Monoid<A>() {
             @Override
             public A identity() {
-                return monoid.identity();
+                return identity;
             }
 
             @Override
-            public A dot(A x, A y) {
-                return monoid.dot(y, x);
+            public A apply(A x, A y) {
+                return fn.apply(x,y);
             }
         };
     }

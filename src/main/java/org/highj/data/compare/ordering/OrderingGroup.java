@@ -13,7 +13,7 @@ public class OrderingGroup implements Group<Ordering> {
     }
 
     @Override
-    public Ordering dot(Ordering x, Ordering y) {
+    public Ordering apply(Ordering x, Ordering y) {
         return x == EQ ? y : x;
     }
 

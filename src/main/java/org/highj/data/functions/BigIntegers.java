@@ -26,34 +26,11 @@ public enum BigIntegers {
 
     public final static Function<BigInteger, Boolean> odd = bigInteger -> bigInteger.testBit(0);
 
-    public final static Group<BigInteger> additiveGroup = new Group<BigInteger>(){
-        @Override
-        public BigInteger inverse(BigInteger x) {
-            return x.negate();
-        }
+    public final static Group<BigInteger> additiveGroup = Group.create(
+            BigInteger.ZERO, BigInteger::add, BigInteger::negate);
 
-        @Override
-        public BigInteger identity() {
-            return BigInteger.ZERO;
-        }
-
-        @Override
-        public BigInteger dot(BigInteger x, BigInteger y) {
-            return x.add(y);
-        }
-    };
-
-    public final static Monoid<BigInteger> multiplicativeMonoid = new Monoid<BigInteger>(){
-        @Override
-        public BigInteger identity() {
-            return BigInteger.ONE;
-        }
-
-        @Override
-        public BigInteger dot(BigInteger x, BigInteger y) {
-            return x.multiply(y);
-        }
-    };
+    public final static Monoid<BigInteger> multiplicativeMonoid =
+            Monoid.create(BigInteger.ONE, BigInteger::multiply);
 
     public final static Semigroup<BigInteger> minSemigroup = BigInteger::min;
 

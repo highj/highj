@@ -66,17 +66,7 @@ public enum Functions {
     }
 
     public static <A> Monoid<Function<A,A>> endoMonoid() {
-        return new Monoid<Function<A,A>>() {
-            @Override
-            public Function<A,A> identity() {
-                return Function.identity();
-            }
-
-            @Override
-            public Function<A, A> dot(Function<A, A> f, Function<A, A> g) {
-                return x -> g.apply(f.apply(x));
-            }
-        };
+        return Monoid.create(Function.<A>identity(), (f,g) -> x -> g.apply(f.apply(x)));
     }
 
     public static <A, B> Function<A, Function<Function<A, B>, B>> flipApply() {

@@ -2,10 +2,9 @@ package org.highj.data.collection;
 
 import org.highj._;
 import org.highj.data.collection.set.SetMonadPlus;
-import org.highj.data.collection.set.SetMonoid;
 import org.highj.data.compare.Ordering;
-import org.highj.data.tuple.T2;
 import org.highj.data.functions.Strings;
+import org.highj.data.tuple.T2;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Iterators;
@@ -17,7 +16,7 @@ import java.util.function.Function;
 
 /**
  * A crude, hash-based Set implementation.
- * <p/>
+ * <p>
  * Note that the provided monadTrans instance could be considered a hack, based on the fact that every
  * Java Object has a hashCode and an equals implementation, which might be rather useless in some cases.
  *
@@ -221,44 +220,44 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
     //we need to output the hashCodes in order, else different insertion orders would lead to different iteration orders
     public Iterator<A> iterator() {
         return (isEmpty()) ? Iterators.emptyIterator() :
-        new Iterator<A>() {
+                new Iterator<A>() {
 
-            private List<A> list = List.empty();
-            private List<Either<Set<A>,List<A>>> todo = List.of(Either.<Set<A>, List<A>>newLeft(Set.this));
+                    private List<A> list = List.empty();
+                    private List<Either<Set<A>, List<A>>> todo = List.of(Either.<Set<A>, List<A>>newLeft(Set.this));
 
-            @Override
-            public boolean hasNext() {
-                return ! list.isEmpty() || ! todo.isEmpty();
-            }
-
-            @Override
-            public A next() {
-                if (! hasNext()) {
-                    throw new NoSuchElementException();
-                }
-                while(list.isEmpty()) {
-                   Either<Set<A>,List<A>> current = todo.head();
-                   todo = todo.tail();
-                    if (current.isRight()) {
-                        list = current.getRight();
-                    } else {
-                        Set<A> set = current.getLeft();
-                        addIfNotEmpty(set.right);
-                        todo = todo.plus(Either.newRight(set.bucket));
-                        addIfNotEmpty(set.left);
+                    @Override
+                    public boolean hasNext() {
+                        return !list.isEmpty() || !todo.isEmpty();
                     }
-                }
-                A result = list.head();
-                list = list.tail();
-                return result;
-            }
 
-            private void addIfNotEmpty(Set<A> set) {
-                if (!set.isEmpty()) {
-                    todo = todo.plus(Either.newLeft(set));
-                }
-            }
-        };
+                    @Override
+                    public A next() {
+                        if (!hasNext()) {
+                            throw new NoSuchElementException();
+                        }
+                        while (list.isEmpty()) {
+                            Either<Set<A>, List<A>> current = todo.head();
+                            todo = todo.tail();
+                            if (current.isRight()) {
+                                list = current.getRight();
+                            } else {
+                                Set<A> set = current.getLeft();
+                                addIfNotEmpty(set.right);
+                                todo = todo.plus(Either.newRight(set.bucket));
+                                addIfNotEmpty(set.left);
+                            }
+                        }
+                        A result = list.head();
+                        list = list.tail();
+                        return result;
+                    }
+
+                    private void addIfNotEmpty(Set<A> set) {
+                        if (!set.isEmpty()) {
+                            todo = todo.plus(Either.newLeft(set));
+                        }
+                    }
+                };
     }
 
     @Override
@@ -290,10 +289,10 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
     }
 
     private void toJSetHelper(java.util.Set<A> jSet) {
-        if (! isEmpty()) {
+        if (!isEmpty()) {
             left.toJSetHelper(jSet);
-            for(A a : bucket) {
-               jSet.add(a);
+            for (A a : bucket) {
+                jSet.add(a);
             }
             right.toJSetHelper(jSet);
         }
@@ -312,7 +311,7 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
     @Override
     public int hashCode() {
         int result = 19;
-        for(A a : this) {
+        for (A a : this) {
             result += a.hashCode();
         }
         return result;
@@ -321,6 +320,6 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
     public static SetMonadPlus monadPlus = new SetMonadPlus();
 
     public static <A> Monoid<Set<A>> monoid() {
-        return new SetMonoid<>();
+        return Monoid.create(Set.empty(), (x, y) -> x.plus(y));
     }
 }

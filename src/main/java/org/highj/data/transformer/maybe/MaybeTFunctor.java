@@ -1,12 +1,12 @@
 package org.highj.data.transformer.maybe;
 
-import java.util.function.Function;
-
 import org.highj._;
 import org.highj.__;
 import org.highj.data.collection.Maybe;
 import org.highj.data.transformer.MaybeT;
 import org.highj.typeclass1.functor.Functor;
+
+import java.util.function.Function;
 
 /**
  * @author Daniel Gronau

@@ -1,13 +1,15 @@
 package org.highj.data.tuple;
 
 import org.highj._;
-import org.highj.data.tuple.t1.*;
+import org.highj.data.tuple.t1.T1Comonad;
+import org.highj.data.tuple.t1.T1Monad;
 import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -18,6 +20,7 @@ public abstract class T1<A> implements _<T1.µ, A>, Supplier<A> {
     public static class µ {
 
     }
+
     @Override
     public A get() {
         return _1();
@@ -75,7 +78,7 @@ public abstract class T1<A> implements _<T1.µ, A>, Supplier<A> {
         return false;
     }
 
-    public static <A,B,C> T1<C> merge(T1<A> a, T1<B> b, Function<A,Function<B,C>> fn) {
+    public static <A, B, C> T1<C> merge(T1<A> a, T1<B> b, Function<A, Function<B, C>> fn) {
         return new T1<C>() {
             @Override
             public C _1() {
@@ -95,16 +98,19 @@ public abstract class T1<A> implements _<T1.µ, A>, Supplier<A> {
     public static final T1Monad monad = new T1Monad();
     public static final T1Comonad comonad = new T1Comonad();
 
-    public static <A> Semigroup<T1<A>> semigroup(Semigroup<A> semigroupA) {
-        return T1Semigroup.from(semigroupA);
+    public static <A> Semigroup<T1<A>> semigroup(BinaryOperator<A> semigroupA) {
+        return (x, y) -> T1.of(semigroupA.apply(x._1(), y._1()));
     }
 
     public static <A> Monoid<T1<A>> monoid(Monoid<A> monoidA) {
-        return T1Monoid.from(monoidA);
+        return Monoid.create(T1.of(monoidA.identity()),
+                (x, y) -> T1.of(monoidA.apply(x._1(), y._1())));
     }
 
     public static <A> Group<T1<A>> group(Group<A> groupA) {
-        return T1Group.from(groupA);
+        return Group.create(T1.of(groupA.identity()),
+                (x, y) -> T1.of(groupA.apply(x._1(), y._1())),
+                z -> T1.of(groupA.inverse(z._1())));
     }
 
 }

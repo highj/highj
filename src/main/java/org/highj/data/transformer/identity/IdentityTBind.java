@@ -1,12 +1,12 @@
 package org.highj.data.transformer.identity;
 
-import java.util.function.Function;
-
 import org.highj._;
 import org.highj.__;
 import org.highj.data.functions.Functions;
 import org.highj.data.transformer.IdentityT;
 import org.highj.typeclass1.monad.Bind;
+
+import java.util.function.Function;
 
 public interface IdentityTBind<M> extends IdentityTApply<M>, Bind<__.µ<IdentityT.µ, M>> {
 

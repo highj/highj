@@ -11,6 +11,7 @@ public class EndoInvariant implements Invariant<Endo.µ> {
 
     @Override
     public <A, B> _<Endo.µ, B> invmap(Function<A, B> fn, Function<B, A> nf, _<Endo.µ, A> nestedA) {
-        return new Endo<>(Functions.compose(fn, Endo.narrow(nestedA).appEndo, nf));
+        Endo<A> endoA = Endo.narrow(nestedA);
+        return new Endo<>(b -> fn.apply(endoA.apply(nf.apply(b))));
     }
 }

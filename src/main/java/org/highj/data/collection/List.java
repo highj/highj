@@ -1,17 +1,14 @@
 package org.highj.data.collection;
 
 import org.highj._;
-import org.highj.data.collection.list.ListTraversable;
 import org.highj.data.collection.list.ListMonadPlus;
-import org.highj.data.collection.list.ListMonoid;
+import org.highj.data.collection.list.ListTraversable;
 import org.highj.data.collection.list.ZipApplicative;
 import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
-import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Monoid;
-import org.highj.typeclass1.foldable.Foldable;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Iterables;
 import org.highj.util.Lazy;
@@ -171,7 +168,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     }
 
     public List<A> plus(A a) {
-        assert(a != null);
+        assert (a != null);
         return newList(a, this);
     }
 
@@ -343,7 +340,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         }
         List<A> current = this;
         List<A> next;
-        while(! (next = current.tail()).isEmpty()) {
+        while (!(next = current.tail()).isEmpty()) {
             current = next;
         }
         return current.head();
@@ -492,7 +489,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     }
 
     public <B> List<B> concatMap(Function<? super A, List<? extends B>> fn) {
-        if(isEmpty()) {
+        if (isEmpty()) {
             return nil();
         } else {
             List<B> headList = List.contravariant(fn.apply(head()));
@@ -607,14 +604,17 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         return isEmpty() || tail().isEmpty() ? this : newLazyList(this.head(), () -> newList(a, tail().intersperse(a)));
     }
 
-    public static final ListTraversable traversable = new ListTraversable(){};
+    public static final ListTraversable traversable = new ListTraversable() {
+    };
 
-    public static final ZipApplicative zipApplicative = new ZipApplicative(){};
+    public static final ZipApplicative zipApplicative = new ZipApplicative() {
+    };
 
-    public static final ListMonadPlus monadPlus = new ListMonadPlus(){};
+    public static final ListMonadPlus monadPlus = new ListMonadPlus() {
+    };
 
-    public static <A> ListMonoid<A> monoid() {
-        return new ListMonoid<A>(){};
+    public static <A> Monoid<List<A>> monoid() {
+        return Monoid.create(List.empty(), List::append);
     }
 
 }

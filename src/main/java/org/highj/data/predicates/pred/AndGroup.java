@@ -18,7 +18,7 @@ public class AndGroup<A> implements Group<Pred<A>> {
     }
 
     @Override
-    public Pred<A> dot(Pred<A> f, Pred<A> g) {
+    public Pred<A> apply(Pred<A> f, Pred<A> g) {
         return x -> f.test(x) && g.test(x);
     }
 }

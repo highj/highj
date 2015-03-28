@@ -18,7 +18,7 @@ public class AndGroup<A> implements Group<Predicate<A>> {
     }
 
     @Override
-    public Predicate<A> dot(Predicate<A> f, Predicate<A> g) {
+    public Predicate<A> apply(Predicate<A> f, Predicate<A> g) {
         return x -> f.test(x) && g.test(x);
     }
 }

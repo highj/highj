@@ -19,7 +19,7 @@ public interface ConstApply<S> extends Apply<__.µ<µ,S>>, ConstFunctor<S> {
     public default <A, B> Const<S, B> ap(_<__.µ<µ, S>, Function<A, B>> fn, _<__.µ<µ, S>, A> nestedA) {
         S s1 = narrow(fn).get();
         S s2 = narrow(nestedA).get();
-        return new Const<>(getS().dot(s1, s2));
+        return new Const<>(getS().apply(s1, s2));
     }
 
 }

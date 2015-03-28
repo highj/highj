@@ -1,14 +1,14 @@
 package org.highj.data.functions;
 
 import org.highj.typeclass0.compare.Eq;
-import org.highj.typeclass0.group.*;
+import org.highj.typeclass0.group.Group;
+import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass0.group.Semigroup;
 import org.highj.util.Contracts;
 
 import java.util.function.Function;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.min;
-import static java.lang.Math.max;
+import static java.lang.Math.*;
 
 public enum Integers {
     ;
@@ -29,7 +29,7 @@ public enum Integers {
         Contracts.require(y >= 0, "exponent must be non-negative");
         int result = 1;
         int factor = x;
-        while(y > 0) {
+        while (y > 0) {
             if ((y & 1) == 1) {
                 result *= factor;
             }
@@ -42,8 +42,8 @@ public enum Integers {
     public final static Function<Integer, Function<Integer, Integer>> gcd = a -> b -> {
         int absA = abs(a);
         int absB = abs(b);
-        int x = max(absA,absB);
-        int y = min(absA,absB);
+        int x = max(absA, absB);
+        int y = min(absA, absB);
         while (y > 0) {
             int temp = x % y;
             x = y;
@@ -62,58 +62,13 @@ public enum Integers {
 
     public final static Function<Integer, Boolean> odd = x -> (x & 1) == 1;
 
-    public final static Group<Integer> additiveGroup = new Group<Integer>(){
-        @Override
-        public Integer inverse(Integer x) {
-            return -x;
-        }
+    public final static Group<Integer> additiveGroup = Group.create(0, (x, y) -> x + y, z -> -z);
 
-        @Override
-        public Integer identity() {
-            return 0;
-        }
+    public final static Monoid<Integer> multiplicativeMonoid = Monoid.create(1, (x, y) -> x * y);
 
-        @Override
-        public Integer dot(Integer x, Integer y) {
-            return x + y;
-        }
-    };
+    public final static Monoid<Integer> minMonoid = Monoid.create(Integer.MAX_VALUE, Math::min);
 
-    public final static Monoid<Integer> multiplicativeMonoid = new Monoid<Integer>(){
-        @Override
-        public Integer identity() {
-            return 1;
-        }
-
-        @Override
-        public Integer dot(Integer x, Integer y) {
-            return x * y;
-        }
-    };
-
-    public final static Monoid<Integer> minMonoid = new Monoid<Integer>(){
-        @Override
-        public Integer identity() {
-            return Integer.MAX_VALUE;
-        }
-
-        @Override
-        public Integer dot(Integer x, Integer y) {
-            return Math.min(x, y);
-        }
-    };
-
-    public final static Monoid<Integer> maxMonoid = new Monoid<Integer>(){
-        @Override
-        public Integer identity() {
-            return Integer.MIN_VALUE;
-        }
-
-        @Override
-        public Integer dot(Integer x, Integer y) {
-            return Math.max(x, y);
-        }
-    };
+    public final static Monoid<Integer> maxMonoid = Monoid.create(Integer.MIN_VALUE, Math::max);
 
     public final static Semigroup<Integer> xorSemigroup = (x, y) -> x ^ y;
 }

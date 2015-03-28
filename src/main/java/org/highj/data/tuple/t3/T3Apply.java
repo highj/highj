@@ -18,8 +18,8 @@ public interface T3Apply<S,T> extends T3Functor<S,T>, Apply<__.µ<___.µ<T3.µ, 
                                                           _<__.µ<___.µ<T3.µ, S>,T>, A> nestedA) {
         T3<S, T, Function<A, B>> fnTriple = T3.narrow(fn);
         T3<S, T, A> aTriple = T3.narrow(nestedA);
-        return T3.of(getS().dot(fnTriple._1(), aTriple._1()),
-                getT().dot(fnTriple._2(), aTriple._2()),
+        return T3.of(getS().apply(fnTriple._1(), aTriple._1()),
+                getT().apply(fnTriple._2(), aTriple._2()),
                 fnTriple._3().apply(aTriple._3()));
     }
 }

@@ -10,6 +10,7 @@ import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -173,16 +174,23 @@ public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
         };
     }
 
-    public static <A, B, C> Semigroup<T3<A, B, C>> semigroup(Semigroup<A> semigroupA, Semigroup<B> semigroupB, Semigroup<C> semigroupC) {
-        return T3Semigroup.from(semigroupA, semigroupB, semigroupC);
+    public static <A, B, C> Semigroup<T3<A, B,C>> semigroup(BinaryOperator<A> semigroupA,
+                                                            BinaryOperator<B> semigroupB,
+                                                            BinaryOperator<C> semigroupC) {
+        return (x,y) -> T3.of(semigroupA.apply(x._1(), y._1()),
+                semigroupB.apply(x._2(), y._2()),
+                semigroupC.apply(x._3(), y._3()));
     }
 
-    public static <A, B, C> Monoid<T3<A, B, C>> monoid(Monoid<A> monoidA, Monoid<B> monoidB, Monoid<C> monoidC) {
-        return T3Monoid.from(monoidA, monoidB, monoidC);
+    public static <A, B, C> Monoid<T3<A, B,C>> monoid(Monoid<A> monoidA, Monoid<B> monoidB, Monoid<C> monoidC) {
+        return Monoid.create(T3.of(monoidA.identity(), monoidB.identity(), monoidC.identity()),
+                (x, y) -> T3.of(monoidA.apply(x._1(), y._1()), monoidB.apply(x._2(), y._2()), monoidC.apply(x._3(), y._3())));
     }
 
     public static <A, B, C> Group<T3<A, B, C>> group(Group<A> groupA, Group<B> groupB, Group<C> groupC) {
-        return T3Group.from(groupA, groupB, groupC);
+        return Group.create(T3.of(groupA.identity(), groupB.identity(), groupC.identity()),
+                (x, y) -> T3.of(groupA.apply(x._1(), y._1()), groupB.apply(x._2(), y._2()), groupC.apply(x._3(), y._3())),
+                z -> T3.of(groupA.inverse(z._1()), groupB.inverse(z._2()), groupC.inverse(z._3())));
     }
 
     public static <S> T3Bifunctor<S> bifunctor() {

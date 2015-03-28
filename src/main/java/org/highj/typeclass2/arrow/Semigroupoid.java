@@ -4,7 +4,7 @@ import org.highj.__;
 
 public interface Semigroupoid<A> {
 
-    // dot (Data.Semigroupoid), (.) (Control.Category)
+    // apply (Data.Semigroupoid), (.) (Control.Category)
     <B, C, D> __<A, B, D> dot(__<A, C, D> cd, __<A, B, C> bc);
 
     // (>>>) (Control.Category, Control.Arrow)

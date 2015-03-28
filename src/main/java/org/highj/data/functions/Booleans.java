@@ -17,7 +17,7 @@ public enum Booleans {
         }
 
         @Override
-        public Boolean dot(Boolean x, Boolean y) {
+        public Boolean apply(Boolean x, Boolean y) {
             return x && y;
         }
     };
@@ -34,7 +34,7 @@ public enum Booleans {
         }
 
         @Override
-        public Boolean dot(Boolean x, Boolean y) {
+        public Boolean apply(Boolean x, Boolean y) {
             return x || y;
         }
     };

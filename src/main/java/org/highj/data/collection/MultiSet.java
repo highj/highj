@@ -1,7 +1,6 @@
 package org.highj.data.collection;
 
 import org.highj._;
-import org.highj.data.collection.multiset.MultiSetMonoid;
 import org.highj.data.compare.Ordering;
 import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
@@ -17,7 +16,7 @@ import java.util.function.Function;
 
 /**
  * A crude, hash-based Multiset implementation.
- * <p/>
+ * <p>
  *
  * @param <A> The element type.
  */
@@ -351,7 +350,7 @@ public class MultiSet<A> implements _<MultiSet.µ, A>, Iterable<T2<A, Integer>>,
 
     public Set<A> toSet() {
         Set<A> result = Set.empty();
-        for(T2<A,Integer> pair : this) {
+        for (T2<A, Integer> pair : this) {
             result.plus(pair._1());
         }
         return result;
@@ -402,6 +401,6 @@ public class MultiSet<A> implements _<MultiSet.µ, A>, Iterable<T2<A, Integer>>,
     }
 
     public static <A> Monoid<MultiSet<A>> monoid() {
-        return new MultiSetMonoid<>();
+        return Monoid.create(MultiSet.empty(), MultiSet::plus);
     }
 }

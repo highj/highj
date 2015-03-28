@@ -23,7 +23,7 @@ public class EitherMonadPlus<S> implements EitherMonad<S>, MonadPlus<__.µ<Eithe
         Either<S,A> first = Either.narrow(one);
         Either<S,A> second = Either.narrow(two);
         if (first.isLeft()) {
-            return second.isRight() ? second :  Either.newLeft(monoid.dot(first.getLeft(), second.getLeft()));
+            return second.isRight() ? second :  Either.newLeft(monoid.apply(first.getLeft(), second.getLeft()));
         } else {
             return second.isLeft() || bias == Bias.FIRST_RIGHT ? first : second;
         }

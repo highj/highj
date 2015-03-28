@@ -28,7 +28,7 @@ public class DualTest {
 
         F1<Integer, Integer> squareNegate = F1.narrow(squareNegateDual.get());
         // executes square first, and then negate
-        // in contrast to category.dot(sqr, negate), which negates first, and squares then
+        // in contrast to category.apply(sqr, negate), which negates first, and squares then
         assertEquals(Integer.valueOf(-16), squareNegate.apply(4));
     }
 }

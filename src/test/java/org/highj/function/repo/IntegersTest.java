@@ -108,7 +108,7 @@ public class IntegersTest {
     @Test
     public void additiveGroupTest() {
         assertInt(0, Integers.additiveGroup.identity());
-        assertInt(40, Integers.additiveGroup.dot(17, 23));
+        assertInt(40, Integers.additiveGroup.apply(17, 23));
         assertInt(-5, Integers.additiveGroup.inverse(5));
         assertInt(5, Integers.additiveGroup.inverse(-5));
         assertInt(0, Integers.additiveGroup.inverse(0));
@@ -118,27 +118,27 @@ public class IntegersTest {
     @Test
     public void multiplicativeMonoidTest() {
         assertInt(1, Integers.multiplicativeMonoid.identity());
-        assertInt(391, Integers.multiplicativeMonoid.dot(17, 23));
+        assertInt(391, Integers.multiplicativeMonoid.apply(17, 23));
         assertInt(24, Integers.multiplicativeMonoid.fold(1, 2, 3, 4));
     }
 
     @Test
     public void minMonoidTest() {
         assertInt(Integer.MAX_VALUE, Integers.minMonoid.identity());
-        assertInt(17, Integers.minMonoid.dot(17, 23));
+        assertInt(17, Integers.minMonoid.apply(17, 23));
         assertInt(-3, Integers.minMonoid.fold(2, -3, 1, 4));
     }
 
     @Test
     public void maxMonoidTest() {
         assertInt(Integer.MIN_VALUE, Integers.maxMonoid.identity());
-        assertInt(23, Integers.maxMonoid.dot(17, 23));
+        assertInt(23, Integers.maxMonoid.apply(17, 23));
         assertInt(4, Integers.maxMonoid.fold(2, -3, 4, 1));
     }
 
     @Test
     public void xorSemigroupTest() {
-        assertInt(6, Integers.xorSemigroup.dot(17, 23));
+        assertInt(6, Integers.xorSemigroup.apply(17, 23));
         assertInt(2, Integers.xorSemigroup.fold(1, 2, 1));
     }
 

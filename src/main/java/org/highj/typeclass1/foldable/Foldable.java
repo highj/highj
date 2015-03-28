@@ -21,7 +21,7 @@ public interface Foldable<F> {
     }
 
     public default <A, B> B foldMap(final Monoid<B> mb, final Function<A, B> fn, _<F, A> nestedA) {
-        return foldr((A a) -> b -> mb.dot(fn.apply(a), b), mb.identity(), nestedA);
+        return foldr((A a) -> b -> mb.apply(fn.apply(a), b), mb.identity(), nestedA);
     }
 
     public default <A, B> B foldr(final Function<A, Function<B, B>> fn, B b, _<F, A> as) {

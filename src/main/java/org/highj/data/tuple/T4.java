@@ -11,6 +11,7 @@ import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -213,19 +214,29 @@ public abstract class T4<A, B, C, D> implements ____<T4.µ, A, B, C, D> {
         };
     }
 
-    public static <A, B, C, D> Semigroup<T4<A, B, C, D>> semigroup(Semigroup<A> semigroupA, Semigroup<B> semigroupB,
-                                                                   Semigroup<C> semigroupC, Semigroup<D> semigroupD) {
-        return T4Semigroup.from(semigroupA, semigroupB, semigroupC, semigroupD);
+    public static <A, B, C, D> Semigroup<T4<A, B, C, D>> semigroup(BinaryOperator<A> semigroupA, BinaryOperator<B> semigroupB,
+                                                                   BinaryOperator<C> semigroupC, BinaryOperator<D> semigroupD) {
+        return (x, y) -> T4.of(semigroupA.apply(x._1(), y._1()),
+                semigroupB.apply(x._2(), y._2()),
+                semigroupC.apply(x._3(), y._3()),
+                semigroupD.apply(x._4(), y._4()));
     }
 
     public static <A, B, C, D> Monoid<T4<A, B, C, D>> monoid(Monoid<A> monoidA, Monoid<B> monoidB, Monoid<C> monoidC,
                                                              Monoid<D> monoidD) {
-        return T4Monoid.from(monoidA, monoidB, monoidC, monoidD);
+        return Monoid.create(T4.of(monoidA.identity(), monoidB.identity(), monoidC.identity(), monoidD.identity()),
+                (x, y) -> T4.of(monoidA.apply(x._1(), y._1()), monoidB.apply(x._2(), y._2()),
+                        monoidC.apply(x._3(), y._3()), monoidD.apply(x._4(), y._4())));
+
     }
 
     public static <A, B, C, D> Group<T4<A, B, C, D>> group(Group<A> groupA, Group<B> groupB, Group<C> groupC,
                                                            Group<D> groupD) {
-        return T4Group.from(groupA, groupB, groupC, groupD);
+        return Group.create(T4.of(groupA.identity(), groupB.identity(), groupC.identity(), groupD.identity()),
+                (x, y) -> T4.of(groupA.apply(x._1(), y._1()), groupB.apply(x._2(), y._2()),
+                        groupC.apply(x._3(), y._3()), groupD.apply(x._4(), y._4())),
+                z -> T4.of(groupA.inverse(z._1()), groupB.inverse(z._2()),
+                        groupC.inverse(z._3()), groupD.inverse(z._4())));
     }
 
     public static <S, T> T4Bifunctor<S, T> bifunctor() {

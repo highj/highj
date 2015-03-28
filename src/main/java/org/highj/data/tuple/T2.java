@@ -9,8 +9,10 @@ import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 /**
  * A tuple of arity 2, a.k.a. "pair".
@@ -135,16 +137,19 @@ public abstract class T2<A, B> implements __<T2.µ, A, B> {
         };
     }
 
-    public static <A, B> Semigroup<T2<A, B>> semigroup(Semigroup<A> semigroupA, Semigroup<B> semigroupB) {
-        return T2Semigroup.from(semigroupA, semigroupB);
+    public static <A, B> Semigroup<T2<A, B>> semigroup(BinaryOperator<A> semigroupA, BinaryOperator<B> semigroupB) {
+        return (x,y) -> T2.of(semigroupA.apply(x._1(), y._1()), semigroupB.apply(x._2(), y._2()));
     }
 
     public static <A, B> Monoid<T2<A, B>> monoid(Monoid<A> monoidA, Monoid<B> monoidB) {
-        return T2Monoid.from(monoidA, monoidB);
+        return Monoid.create(T2.of(monoidA.identity(), monoidB.identity()),
+                (x,y) -> T2.of(monoidA.apply(x._1(), y._1()), monoidB.apply(x._2(),y._2())));
     }
 
     public static <A, B> Group<T2<A, B>> group(Group<A> groupA, Group<B> groupB) {
-        return T2Group.from(groupA, groupB);
+        return Group.create(T2.of(groupA.identity(), groupB.identity()),
+                (x, y) -> T2.of(groupA.apply(x._1(), y._1()), groupB.apply(x._2(), y._2())),
+                z -> T2.of(groupA.inverse(z._1()), groupB.inverse(z._2())));
     }
 
     public static final T2Biapplicative biapplicative = new T2Biapplicative() {

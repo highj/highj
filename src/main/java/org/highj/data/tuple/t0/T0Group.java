@@ -15,7 +15,7 @@ public class T0Group implements Group<T0> {
     }
 
     @Override
-    public T0 dot(T0 x, T0 y) {
+    public T0 apply(T0 x, T0 y) {
         return T0.unit;
     }
 }

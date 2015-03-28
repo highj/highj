@@ -45,7 +45,7 @@ public enum Strings {
         }
 
         @Override
-        public String dot(String x, String y) {
+        public String apply(String x, String y) {
             return x + y;
         }
     };

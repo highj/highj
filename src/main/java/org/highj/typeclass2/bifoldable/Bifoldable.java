@@ -37,7 +37,7 @@ public interface Bifoldable<P> {
     public default <M, A, B> M bifoldMap(Monoid<M> monoid, Function<A,M> fn1, Function<B,M> fn2, __<P,A,B> nestedAB) {
         //bifoldMap :: Monoid m => (a -> m) -> (b -> m) -> p a b -> m
         //bifoldMap f g = bifoldr (mappend . f) (mappend . g) mempty
-        return bifoldr(a -> m -> monoid.dot(fn1.apply(a), m), b -> m -> monoid.dot(fn2.apply(b), m), monoid.identity(), nestedAB);
+        return bifoldr(a -> m -> monoid.apply(fn1.apply(a), m), b -> m -> monoid.apply(fn2.apply(b), m), monoid.identity(), nestedAB);
     }
 
     public default <A,B,C> C bifoldr(Function<A, Function<C,C>> fn1, Function<B, Function<C,C>> fn2, C start, __<P,A,B> nestedAB) {
