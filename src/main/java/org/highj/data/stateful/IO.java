@@ -2,6 +2,7 @@ package org.highj.data.stateful;
 
 import org.highj._;
 import org.highj.data.functions.Functions;
+import org.highj.data.stateful.io.IOMonad;
 import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
@@ -18,35 +19,26 @@ public class IO<A> implements _<IO.µ, A> {
 
     Supplier<A> thunk;
 
-    private IO(A a) {
+    public IO(A a) {
         thunk = Functions.constantF0(a);
     }
 
-    private IO(Supplier<A> thunk) {
+    public IO(Supplier<A> thunk) {
         this.thunk = thunk;
     }
 
-    public final static Monad<IO.µ> monad = new Monad<IO.µ>() {
+    public <B> IO<B> map(Function<A, B> fn) {
+        return new IO<>(() -> fn.apply(thunk.get()));
+    }
 
-        @Override
-        public <A, B> _<IO.µ, B> bind(_<IO.µ, A> nestedA, Function<A, _<µ, B>> fn) {
-            return fn.apply(narrow(nestedA).thunk.get());
-        }
+    public <B> IO<B> ap(IO<Function<A, B>> fn) {
+        return new IO<>(() -> fn.thunk.get().apply(this.thunk.get()));
+    }
 
-        @Override
-        public <A, B> _<IO.µ, B> ap(_<IO.µ, Function<A, B>> fn, _<IO.µ, A> nestedA) {
-            return new IO<>(narrow(fn).thunk.get().apply(narrow(nestedA).thunk.get()));
-        }
+    public <B> IO<B> bind(Function<A, _<µ, B>> fn) {
+        return narrow(fn.apply(thunk.get()));
+    }
 
-        @Override
-        public <A> _<IO.µ, A> pure(A a) {
-            return new IO<>(a);
-        }
 
-        @Override
-        public <A, B> _<µ, B> map(Function<A, B> fn, _<µ, A> nestedA) {
-            Supplier<A> thunk = narrow(nestedA).thunk;
-            return new IO<B>(() -> fn.apply(thunk.get()));
-        }
-    };
+    public final static IOMonad monad = new IOMonad(){};
 }
