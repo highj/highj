@@ -14,8 +14,6 @@ import org.highj._;
  */
 public interface MonadError<E,M> extends Monad<M> {
     
-    public MonadError<E,M> get();
-    
     public <A> _<M,A> throwError(E error);
     
     public <A> _<M,A> catchError(_<M,A> ma, Function<E,_<M,A>> fn);
