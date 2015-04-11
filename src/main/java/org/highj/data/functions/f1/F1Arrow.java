@@ -6,10 +6,11 @@ import org.highj.data.functions.F1;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.ArrowApply;
 import org.highj.typeclass2.arrow.ArrowChoice;
+import org.highj.typeclass2.arrow.ArrowLoop;
 
 import java.util.function.Function;
 
-public class F1Arrow implements ArrowChoice<F1.µ>, ArrowApply<F1.µ> {
+public class F1Arrow implements ArrowChoice<F1.µ>, ArrowApply<F1.µ>, ArrowLoop<F1.µ> {
     @Override
     public <A, B> F1<A, B> arr(Function<A, B> fn) {
         return fn::apply;
@@ -67,5 +68,17 @@ public class F1Arrow implements ArrowChoice<F1.µ>, ArrowApply<F1.µ> {
     @Override
     public <A, B> F1<T2<__<F1.µ, A, B>,A>, B> app() {
         return pair -> F1.narrow(pair._1()).apply(pair._2());
+    }
+
+    @Override
+    public <B, C, D> F1<B, C> loop(__<F1.µ, T2<B, D>, T2<C, D>> arrow) {
+        F1<T2<B,D>,T2<C,D>> fn = F1.narrow(arrow);
+        class Util {
+            T2<B,D> input(B b) {
+                return T2.ofLazy(() -> b, () -> fn.apply(input(b))._2());
+            }
+        }
+        final Util util = new Util();
+        return (B b) -> fn.apply(util.input(b))._1();
     }
 }

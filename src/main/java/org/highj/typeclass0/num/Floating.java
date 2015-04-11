@@ -49,13 +49,13 @@ public interface Floating<A> extends Fractional<A> {
     
     public A cosh(A a);
     
-    public A tanh(A a);
+    public default A tanh(A a) {
+        return divide(sinh(a), cosh(a));
+    }
     
     public A asinh(A a);
     
     public A acosh(A a);
     
-    public default A atanh(A a) {
-        return divide(sinh(a), cosh(a));
-    }
+    public A atanh(A a);
 }
