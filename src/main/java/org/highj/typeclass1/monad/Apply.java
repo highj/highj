@@ -21,7 +21,7 @@ public interface Apply<M> extends Functor<M> {
 
     // *> (Control.Applicative)
     public default <A, B> _<M, B> rightSeq(_<M, A> nestedA, _<M, B> nestedB) {
-        return leftSeq(nestedB, nestedA);
+        return lift2((A a) -> (B b) -> b).apply(nestedA).apply(nestedB);
     }
 
     //liftA2 (Control.Applicative), liftM2 (Control.Monad)
