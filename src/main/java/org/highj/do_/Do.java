@@ -22,18 +22,18 @@ import org.highj.typeclass1.monad.Monad;
  *
  * @author clintonselke
  */
-public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
-    private final Monad<M> monad;
-    private final StateT<DoState,M,R> mr;
-    private final StateTMonadTrans<DoState,M> stateMonadTrans;
-    private final StateTMonadState<DoState,M> stateMonadState;
-    private final StateTMonad<DoState,M> stateMonad;
+public class Do<Mon, Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> {
+    private final Monad<Mon> monad;
+    private final StateT<DoState, Mon, Res> mr;
+    private final StateTMonadTrans<DoState, Mon> stateMonadTrans;
+    private final StateTMonadState<DoState, Mon> stateMonadState;
+    private final StateTMonad<DoState, Mon> stateMonad;
     
-    private Do(Monad<M> monad, StateT<DoState,M,R> mr) {
+    private Do(Monad<Mon> monad, StateT<DoState, Mon, Res> mr) {
         this(monad, mr, StateT.monadTrans(monad), StateT.monadState(monad));
     }
     
-    private Do(Monad<M> monad, StateT<DoState,M,R> mr, StateTMonadTrans<DoState,M> stateMonadTrans, StateTMonadState<DoState,M> stateMonadState) {
+    private Do(Monad<Mon> monad, StateT<DoState, Mon, Res> mr, StateTMonadTrans<DoState, Mon> stateMonadTrans, StateTMonadState<DoState, Mon> stateMonadState) {
         this.monad = monad;
         this.mr = mr;
         this.stateMonadTrans = stateMonadTrans;
@@ -41,19 +41,19 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
         this.stateMonad = this.stateMonadTrans;
     }
     
-    private <R2,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2_,S2,T2,U2,V2,W2,X2,Y2,Z2> Do<M,R2,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2_,S2,T2,U2,V2,W2,X2,Y2,Z2> changeMr(_<__.µ<___.µ<StateT.µ,DoState>,M>,R2> mr2) {
+    private <Res2,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> Do<Mon, Res2,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2, R2,S2,T2,U2,V2,W2,X2,Y2,Z2> changeMr(_<__.µ<___.µ<StateT.µ,DoState>, Mon>, Res2> mr2) {
         return new Do<>(monad, StateT.narrow(mr2), stateMonadTrans, stateMonadState);
     }
     
-    public static <M> Do<M,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0> with(Monad<M> monad) {
-        return new Do<>(monad, StateT.<DoState,M>monad(monad).pure(T0.of()));
+    public static <Mon> Do<Mon,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0,T0> with(Monad<Mon> monad) {
+        return new Do<>(monad, StateT.<DoState, Mon>monad(monad).pure(T0.of()));
     }
     
-    public <R2> Do<M,R2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> seq(_<M,R2> m) {
+    public <Res2> Do<Mon, Res2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> seq(_<Mon, Res2> m) {
         return changeMr(stateMonad.rightSeq(mr, stateMonadTrans.lift(m)));
     }
     
-    private <X,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> Do<M,X,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> assign(char var, _<M,X> m) {
+    private <X,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> Do<Mon,X,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> assign(char var, _<Mon,X> m) {
         return changeMr(stateMonad.rightSeq(mr,
             stateMonad.bind(
                 stateMonadTrans.lift(m),
@@ -68,111 +68,112 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
         ));
     }
     
-    public <X2> Do<M,X2,X2,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.A var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,X2,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.A var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,X2,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.B var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,X2,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.B var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,X2,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.C var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,X2,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.C var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,X2,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.D var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,X2,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.D var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,X2,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.E var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,X2,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.E var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,X2,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.F var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,X2,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.F var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,X2,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.G var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,X2,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.G var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,X2,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.H var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,X2,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.H var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,X2,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.I var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,X2,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.I var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,X2,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.J var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,X2,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.J var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,X2,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.K var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,X2,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.K var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,X2,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.L var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,X2,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.L var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,L,X2,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.M var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,X2,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.M var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,L,M_,X2,O,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.N var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,M,X2,O,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.N var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,X2,P,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.O var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,X2,P,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.O var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,X2,Q,R_,S,T,U,V,W,X,Y,Z> assign(Var.P var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,X2,Q,R,S,T,U,V,W,X,Y,Z> assign(Var.P var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,X2,R_,S,T,U,V,W,X,Y,Z> assign(Var.Q var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,X2,R,S,T,U,V,W,X,Y,Z> assign(Var.Q var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,X2,S,T,U,V,W,X,Y,Z> assign(Var.R var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,X2,S,T,U,V,W,X,Y,Z> assign(Var.R var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,X2,T,U,V,W,X,Y,Z> assign(Var.S var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,X2,T,U,V,W,X,Y,Z> assign(Var.S var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,X2,U,V,W,X,Y,Z> assign(Var.T var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,X2,U,V,W,X,Y,Z> assign(Var.T var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,X2,V,W,X,Y,Z> assign(Var.U var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,X2,V,W,X,Y,Z> assign(Var.U var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,X2,W,X,Y,Z> assign(Var.V var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,X2,W,X,Y,Z> assign(Var.V var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,X2,X,Y,Z> assign(Var.W var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,X2,X,Y,Z> assign(Var.W var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X2,Y,Z> assign(Var.X var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X2,Y,Z> assign(Var.X var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,X2,Z> assign(Var.Y var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,X2,Z> assign(Var.Y var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
     
-    public <X2> Do<M,X2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,X2> assign(Var.Z var, _<M,X2> m) {
+    public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,X2> assign(Var.Z var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
-    
-    private <X3,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> Do<M,X3,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> returnVar(char var) {
+
+    @SuppressWarnings("unchecked")
+    private <X3,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> Do<Mon,X3,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> returnVar(char var) {
         return changeMr(stateMonad.rightSeq(mr,
             stateMonad.map(
                 (DoState state) -> (X3)state.get(var),
@@ -181,107 +182,107 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
         ));
     }
     
-    public Do<M,A,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.A var) {
+    public Do<Mon,A,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.A var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,B,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.B var) {
+    public Do<Mon,B,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.B var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,C,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.C var) {
+    public Do<Mon,C,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.C var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,D,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.D var) {
+    public Do<Mon,D,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.D var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,E,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.E var) {
+    public Do<Mon,E,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.E var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,F,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.F var) {
+    public Do<Mon,F,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.F var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,G,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.G var) {
+    public Do<Mon,G,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.G var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,H,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.H var) {
+    public Do<Mon,H,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.H var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,I,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.I var) {
+    public Do<Mon,I,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.I var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,J,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.J var) {
+    public Do<Mon,J,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.J var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,K,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.K var) {
+    public Do<Mon,K,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.K var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,L,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.L var) {
+    public Do<Mon,L,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.L var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,M_,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.M var) {
+    public Do<Mon, M,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.M var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,N,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.N var) {
+    public Do<Mon,N,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.N var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,O,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.O var) {
+    public Do<Mon,O,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.O var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,P,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.P var) {
+    public Do<Mon,P,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.P var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,Q,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.Q var) {
+    public Do<Mon,Q,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.Q var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,R_,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.R var) {
+    public Do<Mon,R,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.R var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,S,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.S var) {
+    public Do<Mon,S,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.S var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,T,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.T var) {
+    public Do<Mon,T,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.T var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,U,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.U var) {
+    public Do<Mon,U,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.U var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,V,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.V var) {
+    public Do<Mon,V,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.V var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,W,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.W var) {
+    public Do<Mon,W,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.W var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,X,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.X var) {
+    public Do<Mon,X,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.X var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,Y,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.Y var) {
+    public Do<Mon,Y,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.Y var) {
         return returnVar(var.letter());
     }
     
-    public Do<M,Z,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> return_(Var.Z var) {
+    public Do<Mon,Z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> return_(Var.Z var) {
         return returnVar(var.letter());
     }
     
@@ -333,7 +334,7 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
         return new With1<>(var.letter());
     }
     
-    public With1<M_> with(Var.M var) {
+    public With1<M> with(Var.M var) {
         return new With1<>(var.letter());
     }
     
@@ -353,7 +354,7 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
         return new With1<>(var.letter());
     }
     
-    public With1<R_> with(Var.R var) {
+    public With1<R> with(Var.R var) {
         return new With1<>(var.letter());
     }
     
@@ -389,8 +390,8 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
         return new With1<>(var.letter());
     }
     
-    public _<M,R> done() {
-        return mr.eval(monad, DoState.repeat(T0.of(), 8));
+    public _<Mon, Res> done() {
+        return mr.eval(monad, DoState.repeat(T0.of(), 26));
     }
     
     public class With1<X1> {
@@ -398,7 +399,9 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
         private With1(char var1) {
             this.var1 = var1;
         }
-        public <Y2> Do<M,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> apply(F1<X1,Y2> fn) {
+
+        @SuppressWarnings("unchecked")
+        public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> apply(F1<X1,Y2> fn) {
             return changeMr(stateMonad.rightSeq(
                 mr,
                 stateMonad.map(
@@ -443,7 +446,7 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
         public With2<X1,L> and(Var.L var) {
             return new With2<>(var1, var.letter());
         }
-        public With2<X1,M_> and(Var.M var) {
+        public With2<X1,M> and(Var.M var) {
             return new With2<>(var1, var.letter());
         }
         public With2<X1,N> and(Var.N var) {
@@ -458,7 +461,7 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
         public With2<X1,Q> and(Var.Q var) {
             return new With2<>(var1, var.letter());
         }
-        public With2<X1,R_> and(Var.R var) {
+        public With2<X1,R> and(Var.R var) {
             return new With2<>(var1, var.letter());
         }
         public With2<X1,S> and(Var.S var) {
@@ -494,7 +497,9 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
             this.var1 = var1;
             this.var2 = var2;
         }
-        public <Y2> Do<M,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> apply(F2<X1,X2,Y2> fn) {
+
+        @SuppressWarnings("unchecked")
+        public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L, M,N,O,P,Q, R,S,T,U,V,W,X,Y,Z> apply(F2<X1,X2,Y2> fn) {
             return changeMr(stateMonad.rightSeq(
                 mr,
                 stateMonad.map(
@@ -503,7 +508,7 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
                 )
             ));
         }
-        public <Y2> Do<M,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> apply(F1<X1,F1<X2,Y2>> fn) {
+        public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> apply(F1<X1,F1<X2,Y2>> fn) {
             return apply((X1 x1, X2 x2) -> fn.apply(x1).apply(x2));
         }
         public With3<X1,X2,A> and(Var.A var) {
@@ -542,7 +547,7 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
         public With3<X1,X2,L> and(Var.L var) {
             return new With3<>(var1, var2, var.letter());
         }
-        public With3<X1,X2,M_> and(Var.M var) {
+        public With3<X1,X2,M> and(Var.M var) {
             return new With3<>(var1, var2, var.letter());
         }
         public With3<X1,X2,N> and(Var.N var) {
@@ -557,7 +562,7 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
         public With3<X1,X2,Q> and(Var.Q var) {
             return new With3<>(var1, var2, var.letter());
         }
-        public With3<X1,X2,R_> and(Var.R var) {
+        public With3<X1,X2,R> and(Var.R var) {
             return new With3<>(var1, var2, var.letter());
         }
         public With3<X1,X2,S> and(Var.S var) {
@@ -595,7 +600,9 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
             this.var2 = var2;
             this.var3 = var3;
         }
-        public <Y2> Do<M,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> apply(F3<X1,X2,X3,Y2> fn) {
+
+        @SuppressWarnings("unchecked")
+        public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> apply(F3<X1,X2,X3,Y2> fn) {
             return changeMr(stateMonad.rightSeq(
                 mr,
                 stateMonad.map(
@@ -604,7 +611,7 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
                 )
             ));
         }
-        public <Y2> Do<M,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> apply(F1<X1,F1<X2,F1<X3,Y2>>> fn) {
+        public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> apply(F1<X1,F1<X2,F1<X3,Y2>>> fn) {
             return apply((X1 x1, X2 x2, X3 x3) -> fn.apply(x1).apply(x2).apply(x3));
         }
     }
