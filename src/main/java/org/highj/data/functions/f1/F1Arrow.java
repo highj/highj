@@ -40,7 +40,9 @@ public class F1Arrow implements ArrowChoice<F1.µ>, ArrowApply<F1.µ>, ArrowLoop
 
     @Override
     public <A, B, C> F1<A, C> dot(__<F1.µ, B, C> bc, __<F1.µ, A, B> ab) {
-        return F1.compose(F1.narrow(bc), F1.narrow(ab));
+        F1<B, C> bcFn = F1.narrow(bc);
+        F1<A, B> abFn = F1.narrow(ab);
+        return F1.compose(bcFn, abFn);
     }
 
     @Override
