@@ -333,7 +333,7 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
         return new With1<>(var.letter());
     }
     
-    public With1<M> with(Var.M var) {
+    public With1<M_> with(Var.M var) {
         return new With1<>(var.letter());
     }
     
@@ -353,7 +353,7 @@ public class Do<M,R,A,B,C,D,E,F,G,H,I,J,K,L,M_,N,O,P,Q,R_,S,T,U,V,W,X,Y,Z> {
         return new With1<>(var.letter());
     }
     
-    public With1<R> with(Var.R var) {
+    public With1<R_> with(Var.R var) {
         return new With1<>(var.letter());
     }
     
