@@ -171,7 +171,8 @@ public class Do<Mon, Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> {
     public <X2> Do<Mon,X2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,X2> assign(Var.Z var, _<Mon,X2> m) {
         return assign(var.letter(), m);
     }
-    
+
+    @SuppressWarnings("unchecked")
     private <X3,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> Do<Mon,X3,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> returnVar(char var) {
         return changeMr(stateMonad.rightSeq(mr,
             stateMonad.map(
@@ -398,6 +399,8 @@ public class Do<Mon, Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> {
         private With1(char var1) {
             this.var1 = var1;
         }
+
+        @SuppressWarnings("unchecked")
         public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> apply(F1<X1,Y2> fn) {
             return changeMr(stateMonad.rightSeq(
                 mr,
@@ -494,6 +497,8 @@ public class Do<Mon, Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> {
             this.var1 = var1;
             this.var2 = var2;
         }
+
+        @SuppressWarnings("unchecked")
         public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L, M,N,O,P,Q, R,S,T,U,V,W,X,Y,Z> apply(F2<X1,X2,Y2> fn) {
             return changeMr(stateMonad.rightSeq(
                 mr,
@@ -595,6 +600,8 @@ public class Do<Mon, Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> {
             this.var2 = var2;
             this.var3 = var3;
         }
+
+        @SuppressWarnings("unchecked")
         public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> apply(F3<X1,X2,X3,Y2> fn) {
             return changeMr(stateMonad.rightSeq(
                 mr,
