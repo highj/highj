@@ -3,10 +3,13 @@ package org.highj.data.collection;
 import org.highj._;
 import org.highj.data.collection.maybe.*;
 import org.highj.data.functions.Functions;
+import org.highj.data.tuple.T0;
+import org.highj.do_.Do;
 import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.comonad.Extend;
 import org.highj.typeclass1.foldable.Traversable;
+import org.highj.typeclass1.monad.Monad;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -144,6 +147,12 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     @SuppressWarnings("unchecked")
     public static <A> Maybe<A> narrow(_<µ, A> value) {
         return (Maybe) value;
+    }
+
+    public static <Res, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z> Maybe<Res> doBlock(
+            Function<Do<µ, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0>,
+                    Do<µ, Res, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z>> doit) {
+        return Maybe.narrow(doit.apply(Do.with(Maybe.monad)).done());
     }
 
     public Iterator<A> iterator() {
