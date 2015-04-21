@@ -12,10 +12,10 @@ import org.highj.typeclass1.monad.Monad;
  */
 public interface StateTApplicative<S, M> extends StateTApply<S, M>, Applicative<__.µ<___.µ<StateT.µ, S>, M>> {
 
-    public Monad<M> get();
+    public Monad<M> m();
 
     @Override
     public default <A> StateT<S, M, A> pure(A a) {
-        return (S s) -> get().pure(T2.of(a, s));
+        return (S s) -> m().pure(T2.of(a, s));
     }
 }

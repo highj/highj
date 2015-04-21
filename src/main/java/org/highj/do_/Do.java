@@ -58,9 +58,9 @@ public class Do<Mon, Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> {
             stateMonad.bind(
                 stateMonadTrans.lift(m),
                 (X x) -> stateMonad.bind(
-                    stateMonadState.getState(),
+                    stateMonadState.get(),
                     (DoState s) -> stateMonad.rightSeq(
-                        stateMonadState.putState(s.set(var, x)),
+                        stateMonadState.put(s.set(var, x)),
                         stateMonad.pure(x)
                     )
                 )
@@ -177,7 +177,7 @@ public class Do<Mon, Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> {
         return changeMr(stateMonad.rightSeq(mr,
             stateMonad.map(
                 (DoState state) -> (X3)state.get(var),
-                stateMonadState.getState()
+                stateMonadState.get()
             )
         ));
     }
@@ -394,6 +394,120 @@ public class Do<Mon, Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> {
         return mr.eval(monad, DoState.repeat(T0.of(), 26));
     }
     
+    private <A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> Do<Mon,Res,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> assignResultTo(char var) {
+        return changeMr(stateMonad.bind(
+            mr,
+            (Res r) -> stateMonad.rightSeq(
+                stateMonadState.modify((DoState state) -> state.set(var, r)),
+                stateMonad.pure(r)
+            )
+        ));
+    }
+    
+    public Do<Mon,Res,Res,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.A var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,Res,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.B var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,Res,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.C var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,Res,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.D var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,Res,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.E var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,Res,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.F var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,Res,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.G var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,Res,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.H var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,Res,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.I var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,Res,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.J var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,Res,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.K var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,Res,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.L var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,L,Res,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.M var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,L,M,Res,O,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.N var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,Res,P,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.O var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,Res,Q,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.P var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Res,R,S,T,U,V,W,X,Y,Z> assignResultTo(Var.Q var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,Res,S,T,U,V,W,X,Y,Z> assignResultTo(Var.R var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,Res,T,U,V,W,X,Y,Z> assignResultTo(Var.S var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,Res,U,V,W,X,Y,Z> assignResultTo(Var.T var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,Res,V,W,X,Y,Z> assignResultTo(Var.U var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,Res,W,X,Y,Z> assignResultTo(Var.V var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,Res,X,Y,Z> assignResultTo(Var.W var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,Res,Y,Z> assignResultTo(Var.X var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Res,Z> assignResultTo(Var.Y var) {
+        return assignResultTo(var.letter());
+    }
+    
+    public Do<Mon,Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Res> assignResultTo(Var.Z var) {
+        return assignResultTo(var.letter());
+    }
+    
     public class With1<X1> {
         private final char var1;
         private With1(char var1) {
@@ -406,10 +520,22 @@ public class Do<Mon, Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> {
                 mr,
                 stateMonad.map(
                     (DoState state) -> fn.apply((X1)state.get(var1)),
-                    stateMonadState.getState()
+                    stateMonadState.get()
                 )
             ));
         }
+        
+        @SuppressWarnings("unchecked")
+        public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> bind(F1<X1,_<Mon,Y2>> fn) {
+            return changeMr(stateMonad.rightSeq(
+                mr,
+                stateMonad.bind(
+                    stateMonadState.get(),
+                    (DoState state) -> stateMonadTrans.lift(fn.apply((X1)state.get(var1)))
+                )
+            ));
+        }
+        
         public With2<X1,A> and(Var.A var) {
             return new With2<>(var1, var.letter());
         }
@@ -504,13 +630,30 @@ public class Do<Mon, Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> {
                 mr,
                 stateMonad.map(
                     (DoState state) -> fn.apply((X1)state.get(var1), (X2)state.get(var2)),
-                    stateMonadState.getState()
+                    stateMonadState.get()
                 )
             ));
         }
+        
+        @SuppressWarnings("unchecked")
+        public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> bind(F2<X1,X2,_<Mon,Y2>> fn) {
+            return changeMr(stateMonad.rightSeq(
+                mr,
+                stateMonad.bind(
+                    stateMonadState.get(),
+                    (DoState state) -> stateMonadTrans.lift(fn.apply((X1)state.get(var1), (X2)state.get(var2)))
+                )
+            ));
+        }
+        
         public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> apply(F1<X1,F1<X2,Y2>> fn) {
             return apply((X1 x1, X2 x2) -> fn.apply(x1).apply(x2));
         }
+        
+        public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> bind(F1<X1,F1<X2,_<Mon,Y2>>> fn) {
+            return bind((X1 x1, X2 x2) -> fn.apply(x1).apply(x2));
+        }
+        
         public With3<X1,X2,A> and(Var.A var) {
             return new With3<>(var1, var2, var.letter());
         }
@@ -607,12 +750,28 @@ public class Do<Mon, Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> {
                 mr,
                 stateMonad.map(
                     (DoState state) -> fn.apply((X1)state.get(var1), (X2)state.get(var2), (X3)state.get(var3)),
-                    stateMonadState.getState()
+                    stateMonadState.get()
                 )
             ));
         }
+        
+        @SuppressWarnings("unchecked")
+        public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> bind(F3<X1,X2,X3,_<Mon,Y2>> fn) {
+            return changeMr(stateMonad.rightSeq(
+                mr,
+                stateMonad.bind(
+                    stateMonadState.get(),
+                    (DoState state) -> stateMonadTrans.lift(fn.apply((X1)state.get(var1), (X2)state.get(var2), (X3)state.get(var3)))
+                )
+            ));
+        }
+        
         public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> apply(F1<X1,F1<X2,F1<X3,Y2>>> fn) {
             return apply((X1 x1, X2 x2, X3 x3) -> fn.apply(x1).apply(x2).apply(x3));
+        }
+        
+        public <Y2> Do<Mon,Y2,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> bind(F1<X1,F1<X2,F1<X3,_<Mon,Y2>>>> fn) {
+            return bind((X1 x1, X2 x2, X3 x3) -> fn.apply(x1).apply(x2).apply(x3));
         }
     }
     
