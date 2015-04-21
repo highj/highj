@@ -14,11 +14,11 @@ import java.util.function.Function;
  */
 public interface StateTBind<S, M> extends StateTApply<S, M>, Bind<__.µ<___.µ<StateT.µ, S>, M>> {
 
-    public Bind<M> get();
+    public Bind<M> m();
 
     @Override
     public default <A, B> StateT<S, M, B> bind(_<__.µ<___.µ<StateT.µ, S>, M>, A> nestedA, Function<A, _<__.µ<___.µ<StateT.µ, S>, M>, B>> fn) {
-        return (S s1) -> get().bind(
+        return (S s1) -> m().bind(
                 StateT.narrow(nestedA).run(s1),
                 (T2<A, S> x) -> {
                     A a = x._1();

@@ -6,6 +6,7 @@ import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.highj.data.collection.Either;
 import org.highj.data.collection.List;
 
 /**
@@ -50,5 +51,24 @@ public class DoTest {
                         with(Var.a).and(Var.b).apply((a, b) -> a + b)
         );
         assertTrue(empty.isNothing());
+    }
+
+    @Test
+    public void testBind() {
+        Either<String, Integer> handSum = Either.narrow(
+                Do.with(Either.<String>monad()).
+                        assign(Var.a, Either.<String, Integer>newRight(6)).
+                        assign(Var.b, Either.<String, Integer>newRight(7)).
+                        with(Var.a).and(Var.b).bind((Integer a, Integer b) -> {
+                    int r = a + b;
+                    if (r > 10) {
+                        return Either.<String, Integer>newLeft("Not enough fingers!");
+                    } else {
+                        return Either.<String, Integer>newRight(r);
+                    }
+                }).
+                        done()
+        );
+        assertEquals("Left(Not enough fingers!)", handSum.toString());
     }
 }

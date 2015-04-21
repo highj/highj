@@ -12,11 +12,11 @@ import org.highj.typeclass1.monad.MonadTrans;
  */
 public interface StateTMonadTrans<S, M> extends StateTMonad<S, M>, MonadTrans<___.µ<StateT.µ, S>, M> {
 
-    public Monad<M> get();
+    public Monad<M> m();
 
     @Override
     public default <A> StateT<S, M, A> lift(_<M, A> nestedA) {
-        return (S s) -> get().map((A a) -> T2.of(a, s), nestedA);
+        return (S s) -> m().map((A a) -> T2.of(a, s), nestedA);
     }
 
 }
