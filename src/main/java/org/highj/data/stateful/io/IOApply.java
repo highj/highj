@@ -9,7 +9,9 @@ import java.util.function.Function;
 public interface IOApply extends IOFunctor, Apply<IO.µ> {
     @Override
     default <A, B> IO<B> ap(_<IO.µ, Function<A, B>> fn, _<IO.µ, A> nestedA) {
-        return IO.narrow(nestedA).ap(IO.narrow(fn));
+        return () -> {
+            Function<A,B> fn2 = IO.narrow(fn).run(); // <-- this side effect 1st.
+            return fn2.apply(IO.narrow(nestedA).run()); // <-- this side effect 2nd.
+        };
     }
-
 }

@@ -9,6 +9,6 @@ import java.util.function.Function;
 public interface IOFunctor extends Functor<IO.µ> {
     @Override
     default <A, B> IO<B> map(Function<A, B> fn, _<IO.µ, A> nestedA) {
-        return IO.narrow(nestedA).map(fn);
+        return () -> fn.apply(IO.narrow(nestedA).run());
     }
 }

@@ -1,44 +1,61 @@
 package org.highj.data.stateful;
 
+import java.io.IOException;
 import org.highj._;
-import org.highj.data.functions.Functions;
 import org.highj.data.stateful.io.IOMonad;
-import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
+import org.highj.data.collection.Either;
+import org.highj.data.stateful.io.IOApplicative;
+import org.highj.data.stateful.io.IOApply;
+import org.highj.data.stateful.io.IOBind;
+import org.highj.data.stateful.io.IOFunctor;
+import org.highj.data.stateful.io.IOMonadError;
+import org.highj.data.stateful.io.IOMonadIO;
 
-public class IO<A> implements _<IO.µ, A> {
+public interface IO<A> extends _<IO.µ, A> {
 
     public static final class µ {}
 
-    @SuppressWarnings("unchecked")
     public static <A> IO<A> narrow(_<µ, A> value) {
-        return (IO) value;
+        return (IO<A>)value;
+    }
+    
+    public A run() throws IOException;
+    
+    public default SafeIO<Either<IOException,A>> toSafeIO() {
+        return () -> {
+            try {
+                return Either.<IOException,A>newRight(run());
+            } catch (IOException ex) {
+                return Either.<IOException,A>newLeft(ex);
+            }
+        };
     }
 
-    Supplier<A> thunk;
-
-    public IO(A a) {
-        thunk = Functions.constantF0(a);
+    public default <B> IO<B> map(Function<A, B> fn) {
+        return functor.map(fn, this);
     }
 
-    public IO(Supplier<A> thunk) {
-        this.thunk = thunk;
+    public default <B> IO<B> ap(IO<Function<A, B>> fn) {
+        return apply.ap(fn, this);
     }
 
-    public <B> IO<B> map(Function<A, B> fn) {
-        return new IO<>(() -> fn.apply(thunk.get()));
+    public default <B> IO<B> bind(Function<A, _<µ, B>> fn) {
+        return bind.bind(this, fn);
     }
 
-    public <B> IO<B> ap(IO<Function<A, B>> fn) {
-        return new IO<>(() -> fn.thunk.get().apply(this.thunk.get()));
-    }
+    public static final IOFunctor functor = new IOFunctor() {};
+    
+    public static final IOApply apply = new IOApply() {};
+    
+    public static final IOApplicative applicative = new IOApplicative() {};
+    
+    public static final IOBind bind = new IOBind() {};
 
-    public <B> IO<B> bind(Function<A, _<µ, B>> fn) {
-        return narrow(fn.apply(thunk.get()));
-    }
-
-
-    public final static IOMonad monad = new IOMonad(){};
+    public static final IOMonad monad = new IOMonad() {};
+    
+    public static final IOMonadError monadError = new IOMonadError() {};
+    
+    public static final IOMonadIO monadIO = new IOMonadIO() {};
 }
