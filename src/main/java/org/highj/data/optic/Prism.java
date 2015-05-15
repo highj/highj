@@ -102,9 +102,24 @@ public final class Prism<S, A> extends PPrism<S, S, A, A> implements __<Prism.µ
         return new Prism<>(PPrism.pId());
     }
 
-    /** create a {@link Prism} using the canonical functions: getOrModify and reverseGet */
-    public static <S, A> Prism<S, A> prism(final Function<S, Either<S, A>> getOrModify, final Function<A, S> reverseGet) {
-        return new Prism<>(PPrism.pPrism(getOrModify, reverseGet));
+    public static <S, A> Prism<S, A> prism(final Function<S, Maybe<A>> getMaybe, final Function<A, S> reverseGet) {
+        return new Prism<>(new PPrism<S, S, A, A>() {
+
+            @Override
+            public Either<S, A> getOrModify(final S s) {
+                return getMaybe.apply(s).cata(Either.newLeft(s), Either::newRight);
+            }
+
+            @Override
+            public S reverseGet(final A a) {
+                return reverseGet.apply(a);
+            }
+
+            @Override
+            public Maybe<A> getMaybe(final S s) {
+                return getMaybe.apply(s);
+            }
+        });
     }
 
     public static final Category<Prism.µ> prismCategory = new Category<Prism.µ>() {

@@ -121,10 +121,38 @@ public final class Optional<S, A> extends POptional<S, S, A, A> implements __<Op
         return new Optional<>(POptional.pId());
     }
 
-    /** create a {@link Optional} using the canonical functions: getOrModify and set */
-    public static final <S, A> Optional<S, A> optional(final Function<S, Either<S, A>> getOrModify,
+    public static final <S, A> Optional<S, A> optional(final Function<S, Maybe<A>> getMaybe,
             final Function<A, F1<S, S>> set) {
-        return new Optional<>(POptional.pOptional(getOrModify, set));
+        return new Optional<>(new POptional<S, S, A, A>() {
+
+            @Override
+            public Either<S, A> getOrModify(final S s) {
+                return getMaybe.apply(s).cata(Either.newLeft(s), Either::newRight);
+            }
+
+            @Override
+            public F1<S, S> set(final A a) {
+                return set.apply(a);
+            }
+
+            @Override
+            public Maybe<A> getMaybe(final S s) {
+                return getMaybe.apply(s);
+            }
+
+            @Override
+            public <X> F1<S, _<X, S>> modifyF(final Applicative<X> applicative, final Function<A, _<X, A>> f) {
+                return s -> getOrModify(s).<_<X, S>> either(
+                        applicative::pure,
+                        a -> applicative.map(b -> set.apply(b).apply(s), f.apply(a))
+                        );
+            }
+
+            @Override
+            public F1<S, S> modify(final Function<A, A> f) {
+                return s -> getOrModify(s).either(F1.id(), a -> set.apply(f.apply(a)).apply(s));
+            }
+        });
     }
 
 }
