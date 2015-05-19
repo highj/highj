@@ -107,7 +107,7 @@ public final class Prism<S, A> extends PPrism<S, S, A, A> implements __<Prism.µ
 
             @Override
             public Either<S, A> getOrModify(final S s) {
-                return getMaybe.apply(s).cata(Either.newLeft(s), Either::newRight);
+                return getMaybe.apply(s).cata(Either.<S, A>newLeft(s), Either::<S, A>newRight);
             }
 
             @Override
