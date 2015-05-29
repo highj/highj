@@ -25,7 +25,10 @@ public interface RWSTBind<R,W,S,M> extends RWSTApply<R,W,S,M>, Bind<__.µ<___.µ
     public default <A, B> RWST<R, W, S, M, B> bind(_<__.µ<___.µ<____.µ<_____.µ<RWST.µ, R>, W>, S>, M>, A> nestedA, Function<A, _<__.µ<___.µ<____.µ<_____.µ<RWST.µ, R>, W>, S>, M>, B>> fn) {
         return (R r, S s) -> m().bind(
             RWST.narrow(nestedA).run(r, s),
-            (T3<A,S,W> x) -> RWST.narrow(fn.apply(x._1())).run(r, x._2())
+            (T3<A,S,W> x) -> m().map(
+                (T3<B,S,W> x2) -> T3.of(x2._1(), x2._2(), w().apply(x._3(), x2._3())),
+                RWST.narrow(fn.apply(x._1())).run(r, x._2())
+            )
         );
     }
 }
