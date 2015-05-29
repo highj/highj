@@ -16,10 +16,13 @@ import org.highj.data.transformer.rws.RWSTApply;
 import org.highj.data.transformer.rws.RWSTBind;
 import org.highj.data.transformer.rws.RWSTFunctor;
 import org.highj.data.transformer.rws.RWSTMonad;
+import org.highj.data.transformer.rws.RWSTMonadRWS;
 import org.highj.data.transformer.rws.RWSTMonadReader;
 import org.highj.data.transformer.rws.RWSTMonadState;
 import org.highj.data.transformer.rws.RWSTMonadTrans;
 import org.highj.data.transformer.rws.RWSTMonadWriter;
+import org.highj.data.tuple.T0;
+import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
@@ -128,6 +131,19 @@ public interface RWST<R,W,S,M,A> extends _____<RWST.µ,R,W,S,M,A> {
 
     public static <R,W,S,M> RWSTMonadState<R,W,S,M> monadState(Monad<M> mMonad, Monoid<W> wMonoid) {
         return new RWSTMonadState<R,W,S,M>() {
+            @Override
+            public Monad<M> m() {
+                return mMonad;
+            }
+            @Override
+            public Monoid<W> w() {
+                return wMonoid;
+            }
+        };
+    }
+    
+    public static <R,W,S,M> RWSTMonadRWS<R,W,S,M> monadRWS(Monad<M> mMonad, Monoid<W> wMonoid) {
+        return new RWSTMonadRWS<R,W,S,M>() {
             @Override
             public Monad<M> m() {
                 return mMonad;
