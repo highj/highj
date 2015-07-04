@@ -13,6 +13,7 @@ import org.highj.data.collection.Either;
 import org.highj.data.transformer.error_arrow.ErrorArrowArrow;
 import org.highj.data.transformer.error_arrow.ErrorArrowArrowChoice;
 import org.highj.data.transformer.error_arrow.ErrorArrowArrowError;
+import org.highj.data.transformer.error_arrow.ErrorArrowArrowTransformer;
 import org.highj.data.transformer.error_arrow.ErrorArrowCategory;
 import org.highj.data.transformer.error_arrow.ErrorArrowSemigroupoid;
 import org.highj.typeclass2.arrow.ArrowChoice;
@@ -71,6 +72,10 @@ public class ErrorArrow<EX,A,B,C> implements ____<ErrorArrow.µ,EX,A,B,C> {
     }
     
     public static <EX,A> ErrorArrowArrowChoice<EX,A> arrowChoice(ArrowChoice<A> a) {
+        return () -> a;
+    }
+    
+    public static <EX,A> ErrorArrowArrowTransformer<EX,A> arrowTransformer(ArrowChoice<A> a) {
         return () -> a;
     }
 }
