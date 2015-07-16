@@ -12,10 +12,12 @@ import org.highj.data.collection.Stream;
 import org.highj.data.transformer.stream_arrow.StreamArrowArrow;
 import org.highj.data.transformer.stream_arrow.StreamArrowArrowCircuit;
 import org.highj.data.transformer.stream_arrow.StreamArrowArrowLoop;
+import org.highj.data.transformer.stream_arrow.StreamArrowArrowTransformer;
 import org.highj.data.transformer.stream_arrow.StreamArrowCategory;
 import org.highj.data.transformer.stream_arrow.StreamArrowSemigroupoid;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.Arrow;
+import org.highj.typeclass2.arrow.ArrowLazy;
 import org.highj.typeclass2.arrow.ArrowLoop;
 import org.highj.typeclass2.arrow.Category;
 import org.highj.typeclass2.arrow.Semigroupoid;
@@ -78,6 +80,10 @@ public class StreamArrow<A,B,C> implements ___<StreamArrow.µ,A,B,C> {
     }
     
     public static <A> StreamArrowArrowCircuit<A> arrowCircuit(ArrowLoop<A> a) {
+        return () -> a;
+    }
+    
+    public static <A> StreamArrowArrowTransformer<A> arrowTransformer(ArrowLazy<A> a) {
         return () -> a;
     }
 }
