@@ -7,7 +7,6 @@ import org.highj.data.kleisli.kleisli.KleisliArrow;
 import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
-import org.highj.data.kleisli.kleisli.KleisliArrowLazy;
 
 public class Kleisli<M, A, B> implements ___<Kleisli.µ, M, A, B>, Function<A, _<M, B>> {
 
@@ -32,10 +31,6 @@ public class Kleisli<M, A, B> implements ___<Kleisli.µ, M, A, B>, Function<A, _
 
     public static <M> KleisliArrow<M> arrow(Monad<M> monad) {
         return new KleisliArrow<>(monad);
-    }
-
-    public static <M> KleisliArrowLazy<M> arrowLazy(Monad<M> monad) {
-        return new KleisliArrowLazy<>(monad);
     }
 }
 

@@ -5,7 +5,6 @@ import org.highj.__;
 import org.highj.data.collection.Maybe;
 import org.highj.data.functions.f1.F1Arrow;
 import org.highj.data.functions.f1.F1Monad;
-import org.highj.data.functions.f1.F1ArrowLazy;
 import org.highj.data.tuple.T0;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
@@ -115,8 +114,6 @@ public interface F1<A, B> extends __<F1.µ, A, B>, Function<A, B> {
 
     public static final F1Arrow arrow = new F1Arrow();
     
-    public static final F1ArrowLazy arrowLazy = new F1ArrowLazy();
-
     public static <A, B> F1<A, Maybe<B>> fromJavaMap(Map<A, B> map) {
         return a -> map.containsKey(a) ? Maybe.Just(map.get(a)) : Maybe.<B>Nothing();
     }
