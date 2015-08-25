@@ -35,7 +35,7 @@ public class Cont<R,A> implements __<Cont.µ, R, A> {
         return new Cont<>(Functions.compose(fn,transform));
     }
 
-    private static <S> ContMonad<S> monad()  {
+    public static <S> ContMonad<S> monad()  {
         return new ContMonad<>();
     }
 
