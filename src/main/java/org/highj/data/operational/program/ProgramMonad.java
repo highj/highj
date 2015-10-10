@@ -5,8 +5,12 @@
  */
 package org.highj.data.operational.program;
 
+import org.highj.__;
+import org.highj.data.operational.Program;
+import org.highj.typeclass1.monad.Monad;
+
 /**
  *
  * @author clintonselke
  */
-public interface ProgramMonad<INSTR> extends ProgramApplicative<INSTR>, ProgramBind<INSTR> {}
+public interface ProgramMonad<INSTR> extends ProgramApplicative<INSTR>, ProgramBind<INSTR>, Monad<__.µ<Program.µ,INSTR>> {}
