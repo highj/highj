@@ -11,12 +11,12 @@ import java.util.function.Function;
 /**
  * @author Daniel Gronau
  */
-public interface MaybeTFunctor<M> extends Functor<__.µ<MaybeT.µ, M>> {
+public interface MaybeTFunctor<M> extends Functor<_<MaybeT.µ, M>> {
 
     Functor<M> get();
 
     @Override
-    public default <A, B> MaybeT<M, B> map(Function<A, B> fn, _<__.µ<MaybeT.µ, M>, A> nestedA) {
+    public default <A, B> MaybeT<M, B> map(Function<A, B> fn, _<_<MaybeT.µ, M>, A> nestedA) {
         _<M, Maybe<A>> m_a = MaybeT.narrow(nestedA).get();
         _<M, Maybe<B>> m_b = get().map(ma -> ma.map(fn), m_a);
         return new MaybeT<>(m_b);

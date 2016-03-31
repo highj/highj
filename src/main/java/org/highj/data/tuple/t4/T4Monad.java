@@ -10,7 +10,7 @@ import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
 
-public interface T4Monad<S,T,U> extends T4Applicative<S,T,U>, T4Bind<S,T,U>, Monad<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>> {
+public interface T4Monad<S,T,U> extends T4Applicative<S,T,U>, T4Bind<S,T,U>, Monad<_<_<_<T4.µ,S>, T>, U>> {
     @Override
     public Monoid<S> getS();
 
@@ -21,8 +21,8 @@ public interface T4Monad<S,T,U> extends T4Applicative<S,T,U>, T4Bind<S,T,U>, Mon
     public Monoid<U> getU();
 
 
-    public default <A, B> T4<S, T, U, B> ap(_<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>, Function<A, B>> fn,
-                                                           _<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>, A> nestedA) {
+    public default <A, B> T4<S, T, U, B> ap(_<_<_<_<T4.µ,S>, T>, U>, Function<A, B>> fn,
+                                                           _<_<_<_<T4.µ,S>, T>, U>, A> nestedA) {
         return T4Applicative.super.ap(fn, nestedA);
     }
 }

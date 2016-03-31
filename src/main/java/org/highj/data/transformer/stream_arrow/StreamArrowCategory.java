@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer.stream_arrow;
 
+import org.highj._;
 import org.highj.___;
 import org.highj.data.transformer.StreamArrow;
 import org.highj.typeclass2.arrow.Category;
@@ -13,7 +14,7 @@ import org.highj.typeclass2.arrow.Category;
  *
  * @author clintonselke
  */
-public interface StreamArrowCategory<A> extends StreamArrowSemigroupoid<A>, Category<___.µ<StreamArrow.µ,A>> {
+public interface StreamArrowCategory<A> extends StreamArrowSemigroupoid<A>, Category<_<StreamArrow.µ,A>> {
     
     @Override
     public Category<A> a();

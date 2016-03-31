@@ -10,7 +10,7 @@ import org.highj.typeclass1.monad.MonadTrans;
 /**
  * @author Clinton Selke
  */
-public interface StateTMonadTrans<S, M> extends StateTMonad<S, M>, MonadTrans<___.µ<StateT.µ, S>, M> {
+public interface StateTMonadTrans<S, M> extends StateTMonad<S, M>, MonadTrans<_<StateT.µ, S>, M> {
 
     public Monad<M> m();
 

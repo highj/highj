@@ -7,7 +7,7 @@ import org.highj.typeclass1.monad.MonadZero;
 
 import java.util.function.Function;
 
-public interface IdentityTMonadZero<M> extends IdentityTMonadTrans<M>, MonadZero<__.µ<IdentityT.µ, M>> {
+public interface IdentityTMonadZero<M> extends IdentityTMonadTrans<M>, MonadZero<_<IdentityT.µ, M>> {
 
     @Override
     public MonadZero<M> get();
@@ -18,7 +18,7 @@ public interface IdentityTMonadZero<M> extends IdentityTMonadTrans<M>, MonadZero
     }
 
     @Override
-    public default <A, B> IdentityT<M, B> ap(_<__.µ<IdentityT.µ, M>, Function<A, B>> fn, _<__.µ<IdentityT.µ, M>, A> nestedA) {
+    public default <A, B> IdentityT<M, B> ap(_<_<IdentityT.µ, M>, Function<A, B>> fn, _<_<IdentityT.µ, M>, A> nestedA) {
         return IdentityTMonadTrans.super.ap(fn, nestedA);
     }
 

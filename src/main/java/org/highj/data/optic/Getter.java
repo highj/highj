@@ -97,7 +97,7 @@ public abstract class Getter<S, A> implements __<Getter.µ, S, A> {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Getter<S, A> narrow(final _<__.µ<Getter.µ, S>, A> value) {
+    public static <S, A> Getter<S, A> narrow(final _<_<Getter.µ, S>, A> value) {
         return (Getter) value;
     }
 

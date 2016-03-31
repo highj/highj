@@ -1,5 +1,6 @@
 package org.highj.typeclass2.bifunctor;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.data.functions.Functions;
 import org.highj.typeclass0.group.Semigroup;
@@ -42,7 +43,7 @@ public interface Biapply<F> extends Bifunctor<F> {
         return biapply(biapply(bimap(f, g, a), b), c);
     }
 
-    public default <X> Apply<__.µ<F, X>> getApply(Semigroup<X> semigroup) {
+    public default <X> Apply<_<F, X>> getApply(Semigroup<X> semigroup) {
         return new CurriedApply<>(this, semigroup);
     }
 

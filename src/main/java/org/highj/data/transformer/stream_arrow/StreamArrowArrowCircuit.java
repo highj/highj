@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer.stream_arrow;
 
+import org.highj._;
 import org.highj.___;
 import org.highj.data.collection.Stream;
 import org.highj.data.transformer.StreamArrow;
@@ -14,7 +15,7 @@ import org.highj.typeclass2.arrow.ArrowCircuit;
  *
  * @author clintonselke
  */
-public interface StreamArrowArrowCircuit<A> extends StreamArrowArrowLoop<A>, ArrowCircuit<___.µ<StreamArrow.µ,A>> {
+public interface StreamArrowArrowCircuit<A> extends StreamArrowArrowLoop<A>, ArrowCircuit<_<StreamArrow.µ,A>> {
 
     @Override
     public default <B> StreamArrow<A, B, B> delay(B b) {

@@ -161,7 +161,7 @@ public abstract class Fold<S, A> implements __<Fold.µ, S, A> {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Fold<S, A> narrow(final _<__.µ<Fold.µ, S>, A> value) {
+    public static <S, A> Fold<S, A> narrow(final _<_<Fold.µ, S>, A> value) {
         return (Fold) value;
     }
 

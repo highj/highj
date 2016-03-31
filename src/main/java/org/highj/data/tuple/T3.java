@@ -70,7 +70,7 @@ public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A, B, C> T3<A, B, C> narrow(_<__.µ<___.µ<µ, A>, B>, C> value) {
+    public static <A, B, C> T3<A, B, C> narrow(_<_<_<µ, A>, B>, C> value) {
         return (T3) value;
     }
 

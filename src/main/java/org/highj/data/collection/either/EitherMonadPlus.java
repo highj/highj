@@ -6,7 +6,9 @@ import org.highj.data.collection.Either;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.monad.MonadPlus;
 
-public class EitherMonadPlus<S> implements EitherMonad<S>, MonadPlus<__.µ<Either.µ,S>> {
+import java.util.function.Function;
+
+public class EitherMonadPlus<S> implements EitherMonad<S>, MonadPlus<_<Either.µ,S>> {
 
     public static enum Bias {FIRST_RIGHT, LAST_RIGHT}
 
@@ -19,7 +21,7 @@ public class EitherMonadPlus<S> implements EitherMonad<S>, MonadPlus<__.µ<Eithe
     }
 
     @Override
-    public <A> Either<S, A> mplus(_<__.µ<Either.µ, S>, A> one, _<__.µ<Either.µ, S>, A> two) {
+    public <A> Either<S, A> mplus(_<_<Either.µ, S>, A> one, _<_<Either.µ, S>, A> two) {
         Either<S,A> first = Either.narrow(one);
         Either<S,A> second = Either.narrow(two);
         if (first.isLeft()) {

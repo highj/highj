@@ -13,7 +13,7 @@ public interface F3<A, B, C, D> extends ____<F3.µ, A, B, C, D> {
     }
 
     @SuppressWarnings("unchecked")
-    static <A, B, C, D> F3<A, B, C, D> narrow(_<__.µ<___.µ<____.µ<µ, A>, B>, C>, D> function) {
+    static <A, B, C, D> F3<A, B, C, D> narrow(_<_<_<_<µ, A>, B>, C>, D> function) {
         return (F3) function;
     }
 

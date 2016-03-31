@@ -11,12 +11,12 @@ import java.util.function.Function;
 import static org.highj.data.structural.Const.narrow;
 import static org.highj.data.structural.Const.µ;
 
-public interface ConstApply<S> extends Apply<__.µ<µ,S>>, ConstFunctor<S> {
+public interface ConstApply<S> extends Apply<_<µ,S>>, ConstFunctor<S> {
 
     public Semigroup<S> getS();
 
     @Override
-    public default <A, B> Const<S, B> ap(_<__.µ<µ, S>, Function<A, B>> fn, _<__.µ<µ, S>, A> nestedA) {
+    public default <A, B> Const<S, B> ap(_<_<µ, S>, Function<A, B>> fn, _<_<µ, S>, A> nestedA) {
         S s1 = narrow(fn).get();
         S s2 = narrow(nestedA).get();
         return new Const<>(getS().apply(s1, s2));

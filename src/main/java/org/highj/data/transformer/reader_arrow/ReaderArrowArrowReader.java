@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer.reader_arrow;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.____;
@@ -16,7 +17,7 @@ import org.highj.typeclass2.arrow.ArrowReader;
  *
  * @author clintonselke
  */
-public interface ReaderArrowArrowReader<R,A> extends ReaderArrowArrow<R,A>, ArrowReader<R,___.µ<____.µ<ReaderArrow.µ,R>,A>> {
+public interface ReaderArrowArrowReader<R,A> extends ReaderArrowArrow<R,A>, ArrowReader<R,_<_<ReaderArrow.µ,R>,A>> {
 
     @Override
     public default <B> ReaderArrow<R, A, B, R> readState() {
@@ -24,7 +25,7 @@ public interface ReaderArrowArrowReader<R,A> extends ReaderArrowArrow<R,A>, Arro
     }
 
     @Override
-    public default <B, C> ReaderArrow<R, A, T2<B, R>, C> newReader(__<___.µ<____.µ<ReaderArrow.µ, R>, A>, B, C> a) {
+    public default <B, C> ReaderArrow<R, A, T2<B, R>, C> newReader(__<_<_<ReaderArrow.µ, R>, A>, B, C> a) {
         return ReaderArrow.readerArrow(
             a().dot(
                 ReaderArrow.narrow(a).run(),

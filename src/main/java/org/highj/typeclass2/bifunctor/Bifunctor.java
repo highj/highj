@@ -1,5 +1,6 @@
 package org.highj.typeclass2.bifunctor;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.data.functions.Functions;
 import org.highj.typeclass1.functor.Functor;
@@ -25,7 +26,7 @@ public interface Bifunctor<F> {
     }
 
     //functionality of second as a Functor (with left-curried argumets)
-    public default <X> Functor<__.µ<F, X>> getFunctor() {
+    public default <X> Functor<_<F, X>> getFunctor() {
         return new CurriedFunctor<>(this);
     }
 }

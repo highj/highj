@@ -54,7 +54,7 @@ public final class Setter<S, A> extends PSetter<S, S, A, A> implements __<Setter
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Setter<S, A> narrow(final _<__.µ<Setter.µ, S>, A> value) {
+    public static <S, A> Setter<S, A> narrow(final _<_<Setter.µ, S>, A> value) {
         return (Setter) value;
     }
 

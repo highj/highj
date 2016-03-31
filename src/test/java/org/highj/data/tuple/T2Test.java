@@ -44,7 +44,7 @@ public class T2Test {
         assertEquals("(,42)", answer.toString());
         T2<String, Integer> foo = T2.of("foo", 14);
         F1<Integer, T2<String, Integer>> doubleBar = value -> T2.of("bar", 2 * value);
-        F1<Integer, _<__.µ<T2.µ,String>,Integer>> castedDoubleBar = F1.<Integer,_<__.µ<T2.µ,String>,Integer>,T2<String, Integer>>contravariant(doubleBar);
+        F1<Integer, _<_<T2.µ,String>,Integer>> castedDoubleBar = F1.<Integer,_<_<T2.µ,String>,Integer>,T2<String, Integer>>contravariant(doubleBar);
         T2<String, Integer> fooBar = monad.bind(foo, castedDoubleBar);
         assertEquals("(foobar,28)", fooBar.toString());
     }

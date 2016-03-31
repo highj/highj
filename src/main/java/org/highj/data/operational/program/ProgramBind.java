@@ -15,10 +15,10 @@ import org.highj.typeclass1.monad.Bind;
  *
  * @author clintonselke
  */
-public interface ProgramBind<INSTR> extends ProgramApply<INSTR>, Bind<__.µ<Program.µ,INSTR>> {
+public interface ProgramBind<INSTR> extends ProgramApply<INSTR>, Bind<_<Program.µ,INSTR>> {
 
     @Override
-    public default <A, B> Program<INSTR, B> bind(_<__.µ<Program.µ, INSTR>, A> nestedA, Function<A, _<__.µ<Program.µ, INSTR>, B>> fn) {
+    public default <A, B> Program<INSTR, B> bind(_<_<Program.µ, INSTR>, A> nestedA, Function<A, _<_<Program.µ, INSTR>, B>> fn) {
         return Program.bind(Program.narrow(nestedA), (A x) -> Program.narrow(fn.apply(x)));
     }
 }

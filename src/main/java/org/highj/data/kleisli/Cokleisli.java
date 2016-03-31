@@ -25,7 +25,7 @@ public class Cokleisli<W, A, B> implements ___<Cokleisli.µ, W, A, B>, Function<
     }
 
     @SuppressWarnings("unchecked")
-    public static <W, A, B> Cokleisli<W, A, B> narrow(_<__.µ<___.µ<µ, W>, A>, B> nested) {
+    public static <W, A, B> Cokleisli<W, A, B> narrow(_<_<_<µ, W>, A>, B> nested) {
         return (Cokleisli) nested;
     }
 

@@ -11,12 +11,12 @@ import java.util.function.Function;
 /**
  * @author Clinton Selke
  */
-public interface ReaderTFunctor<R, M> extends Functor<__.µ<___.µ<ReaderT.µ, R>, M>> {
+public interface ReaderTFunctor<R, M> extends Functor<_<_<ReaderT.µ, R>, M>> {
 
     public Functor<M> get();
 
     @Override
-    public default <A, B> ReaderT<R, M, B> map(Function<A, B> fn, _<__.µ<___.µ<ReaderT.µ, R>, M>, A> nestedA) {
+    public default <A, B> ReaderT<R, M, B> map(Function<A, B> fn, _<_<_<ReaderT.µ, R>, M>, A> nestedA) {
         return (R r) -> get().map(
                 fn,
                 ReaderT.narrow(nestedA).run(r)

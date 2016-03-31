@@ -33,7 +33,7 @@ public abstract class Program<INSTR,A> implements __<Program.µ,INSTR,A> {
         return (Program<INSTR,A>)a;
     }
     
-    public static <INSTR,A> Program<INSTR,A> narrow(_<__.µ<Program.µ,INSTR>,A> a) {
+    public static <INSTR,A> Program<INSTR,A> narrow(_<_<Program.µ,INSTR>,A> a) {
         return (Program<INSTR,A>)a;
     }
     

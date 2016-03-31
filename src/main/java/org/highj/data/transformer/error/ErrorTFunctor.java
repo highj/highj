@@ -17,12 +17,12 @@ import org.highj.typeclass1.functor.Functor;
  *
  * @author clintonselke
  */
-public interface ErrorTFunctor<E,M> extends Functor<__.µ<___.µ<ErrorT.µ,E>,M>> {
+public interface ErrorTFunctor<E,M> extends Functor<_<_<ErrorT.µ,E>,M>> {
     
     public Functor<M> get();
 
     @Override
-    public default <A, B> ErrorT<E, M, B> map(Function<A, B> fn, _<__.µ<___.µ<ErrorT.µ, E>, M>, A> nestedA) {
+    public default <A, B> ErrorT<E, M, B> map(Function<A, B> fn, _<_<_<ErrorT.µ, E>, M>, A> nestedA) {
         return () -> get().map(
             (Either<E,A> x) -> x.rightMap(fn),
             ErrorT.narrow(nestedA).run()

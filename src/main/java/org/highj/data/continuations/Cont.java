@@ -19,7 +19,7 @@ public class Cont<R,A> implements __<Cont.µ, R, A> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <R,A>  Cont<R,A> narrow(_<__.µ<µ, R>, A> cont) {
+    public static <R,A>  Cont<R,A> narrow(_<_<µ, R>, A> cont) {
         return (Cont) cont;
     }
 

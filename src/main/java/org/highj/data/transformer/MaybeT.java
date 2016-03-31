@@ -31,7 +31,7 @@ public class MaybeT<M, A> implements __<MaybeT.µ, M, A> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <M, A> MaybeT<M, A> narrow(_<__.µ<µ, M>, A> value) {
+    public static <M, A> MaybeT<M, A> narrow(_<_<µ, M>, A> value) {
         return (MaybeT) value;
     }
 

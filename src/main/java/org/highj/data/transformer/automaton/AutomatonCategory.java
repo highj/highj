@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer.automaton;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.data.transformer.Automaton;
@@ -16,7 +17,7 @@ import org.highj.typeclass2.arrow.Category;
  *
  * @author clintonselke
  */
-public interface AutomatonCategory<A> extends Category<___.µ<Automaton.µ,A>> {
+public interface AutomatonCategory<A> extends Category<_<Automaton.µ,A>> {
     
     public Arrow<A> get();
 
@@ -26,7 +27,7 @@ public interface AutomatonCategory<A> extends Category<___.µ<Automaton.µ,A>> {
     }
 
     @Override
-    public default <B, C, D> Automaton<A,B,D> dot(__<___.µ<Automaton.µ, A>, C, D> cd, __<___.µ<Automaton.µ, A>, B, C> bc) {
+    public default <B, C, D> Automaton<A,B,D> dot(__<_<Automaton.µ, A>, C, D> cd, __<_<Automaton.µ, A>, B, C> bc) {
         return () -> get().dot(
             get().dot(
                 get().arr((T2<T2<D,Automaton<A,C,D>>,Automaton<A,B,C>> x) -> T2.of(x._1()._1(), dot(x._1()._2(), x._2()))),

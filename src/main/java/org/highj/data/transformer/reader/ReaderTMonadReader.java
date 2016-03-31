@@ -12,7 +12,7 @@ import java.util.function.Function;
 /**
  * @author Clinton Selke
  */
-public interface ReaderTMonadReader<R, M> extends ReaderTMonad<R, M>, MonadReader<R, __.µ<___.µ<ReaderT.µ, R>, M>> {
+public interface ReaderTMonadReader<R, M> extends ReaderTMonad<R, M>, MonadReader<R, _<_<ReaderT.µ, R>, M>> {
 
     @Override
     public Monad<M> get();
@@ -23,7 +23,7 @@ public interface ReaderTMonadReader<R, M> extends ReaderTMonad<R, M>, MonadReade
     }
 
     @Override
-    public default <A> ReaderT<R, M, A> local(Function<R, R> modFn, _<__.µ<___.µ<ReaderT.µ, R>, M>, A> nestedA) {
+    public default <A> ReaderT<R, M, A> local(Function<R, R> modFn, _<_<_<ReaderT.µ, R>, M>, A> nestedA) {
         return (R r) -> ReaderT.narrow(nestedA).run(modFn.apply(r));
     }
 }

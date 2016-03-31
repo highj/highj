@@ -39,15 +39,15 @@ public class ErrorArrow<EX,A,B,C> implements ____<ErrorArrow.µ,EX,A,B,C> {
         return (ErrorArrow<EX,A,B,C>)a;
     }
     
-    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(___<____.µ<ErrorArrow.µ,EX>,A,B,C> a) {
+    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(___<_<ErrorArrow.µ,EX>,A,B,C> a) {
         return (ErrorArrow<EX,A,B,C>)a;
     }
     
-    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(__<___.µ<____.µ<ErrorArrow.µ,EX>,A>,B,C> a) {
+    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(__<_<_<ErrorArrow.µ,EX>,A>,B,C> a) {
         return (ErrorArrow<EX,A,B,C>)a;
     }
     
-    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(_<__.µ<___.µ<____.µ<ErrorArrow.µ,EX>,A>,B>,C> a) {
+    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(_<_<_<_<ErrorArrow.µ,EX>,A>,B>,C> a) {
         return (ErrorArrow<EX,A,B,C>)a;
     }
     

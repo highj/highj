@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer.rws;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.____;
@@ -16,5 +17,5 @@ import org.highj.typeclass1.monad.Monad;
  *
  * @author clintonselke
  */
-public interface RWSTMonad<R,W,S,M> extends RWSTApplicative<R,W,S,M>, RWSTBind<R,W,S,M>, Monad<__.µ<___.µ<____.µ<_____.µ<RWST.µ,R>,W>,S>,M>> {
+public interface RWSTMonad<R,W,S,M> extends RWSTApplicative<R,W,S,M>, RWSTBind<R,W,S,M>, Monad<_<_<_<_<RWST.µ,R>,W>,S>,M>> {
 }

@@ -11,12 +11,12 @@ import java.util.function.Function;
 import static org.highj.HigherKinded.uncurry2;
 
 @FunctionalInterface
-public interface ApplicativeFromArrow<Arr,X> extends Applicative<__.µ<Arr, X>> {
+public interface ApplicativeFromArrow<Arr,X> extends Applicative<_<Arr, X>> {
 
     public Arrow<Arr> getArrow();
 
     @Override
-    public default <A, B> __<Arr, X, B> ap(_<__.µ<Arr, X>, Function<A, B>> fn, _<__.µ<Arr, X>, A> nestedA) {
+    public default <A, B> __<Arr, X, B> ap(_<_<Arr, X>, Function<A, B>> fn, _<_<Arr, X>, A> nestedA) {
         return getArrow().then(getArrow().fanout(uncurry2(fn), uncurry2(nestedA)), getArrow().arr(
                 (T2<Function<A, B>, A> pair) -> pair._1().apply(pair._2())));
     }
@@ -27,7 +27,7 @@ public interface ApplicativeFromArrow<Arr,X> extends Applicative<__.µ<Arr, X>> 
     }
 
     @Override
-    public default <A, B> __<Arr, X, B> map(Function<A, B> fn, _<__.µ<Arr, X>, A> nestedA) {
+    public default <A, B> __<Arr, X, B> map(Function<A, B> fn, _<_<Arr, X>, A> nestedA) {
         return getArrow().then(uncurry2(nestedA), getArrow().arr(fn));
     }
 }

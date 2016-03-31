@@ -14,7 +14,7 @@ import org.highj.typeclass1.monad.Applicative;
  *
  * @author clintonselke
  */
-public interface ProgramApplicative<INSTR> extends ProgramApply<INSTR>, Applicative<__.µ<Program.µ,INSTR>> {
+public interface ProgramApplicative<INSTR> extends ProgramApply<INSTR>, Applicative<_<Program.µ,INSTR>> {
 
     @Override
     public default <A> Program<INSTR, A> pure(A a) {

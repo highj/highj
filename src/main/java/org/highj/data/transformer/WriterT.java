@@ -26,7 +26,7 @@ public interface WriterT<W, M, A> extends ___<WriterT.µ, W, M, A> {
         return (WriterT<W, M, A>) a;
     }
 
-    public static <W, M, A> WriterT<W, M, A> narrow(_<__.µ<___.µ<WriterT.µ, W>, M>, A> a) {
+    public static <W, M, A> WriterT<W, M, A> narrow(_<_<_<WriterT.µ, W>, M>, A> a) {
         return narrow(uncurry3(a));
     }
 

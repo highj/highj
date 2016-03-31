@@ -41,7 +41,7 @@ public interface RWST<R,W,S,M,A> extends _____<RWST.µ,R,W,S,M,A> {
         return (RWST<R,W,S,M,A>)a;
     }
 
-    public static <R,W,S,M,A> RWST<R,W,S,M,A> narrow(_<__.µ<___.µ<____.µ<_____.µ<RWST.µ, R>, W>, S>, M>, A> a) {
+    public static <R,W,S,M,A> RWST<R,W,S,M,A> narrow(_<_<_<_<_<RWST.µ, R>, W>, S>, M>, A> a) {
         return (RWST<R,W,S,M,A>)a;
     }
 

@@ -334,7 +334,7 @@ public class EitherTest {
         assertEquals(newRight(String.class, 12), eitherMonad.pure(12));
         //bind
         Either<String, Integer> rightOdd = newRight(43);
-        Function<Integer, _<__.µ<Either.µ,String>, Integer>> halfEven = x -> x % 2 == 0 ? newRight(x / 2) : newLeft("Odd");
+        Function<Integer, _<_<Either.µ,String>, Integer>> halfEven = x -> x % 2 == 0 ? newRight(x / 2) : newLeft("Odd");
         assertEquals(newLeft("Test", Integer.class), eitherMonad.bind(left, halfEven));
         assertEquals(newRight(String.class, 21), eitherMonad.bind(right, halfEven));
         assertEquals(newLeft("Odd", Integer.class), eitherMonad.bind(rightOdd, halfEven));

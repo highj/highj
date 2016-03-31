@@ -41,7 +41,7 @@ public class Map<A, B> implements __<Map.µ, A, B>, Iterable<T2<A, B>>, Function
     }
 
     @SuppressWarnings("unchecked")
-    public static <A, B> Map<A, B> narrow(_<__.µ<Map.µ, A>, B> value) {
+    public static <A, B> Map<A, B> narrow(_<_<Map.µ, A>, B> value) {
         return (Map) value;
     }
 

@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer.state_arrow;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.____;
@@ -15,7 +16,7 @@ import org.highj.typeclass2.arrow.Category;
  *
  * @author clintonselke
  */
-public interface StateArrowCategory<S,A> extends StateArrowSemigroupoid<S,A>, Category<___.µ<____.µ<StateArrow.µ,S>,A>> {
+public interface StateArrowCategory<S,A> extends StateArrowSemigroupoid<S,A>, Category<_<_<StateArrow.µ,S>,A>> {
     
     @Override
     public Category<A> a();

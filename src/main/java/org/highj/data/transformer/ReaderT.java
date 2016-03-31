@@ -23,7 +23,7 @@ public interface ReaderT<R, M, A> extends ___<ReaderT.µ, R, M, A> {
         return (ReaderT<R, M, A>) a;
     }
 
-    public static <R, M, A> ReaderT<R, M, A> narrow(_<__.µ<___.µ<ReaderT.µ, R>, M>, A> a) {
+    public static <R, M, A> ReaderT<R, M, A> narrow(_<_<_<ReaderT.µ, R>, M>, A> a) {
         return narrow(uncurry3(a));
     }
 

@@ -102,7 +102,7 @@ public final class Lens<S, A> extends PLens<S, S, A, A> implements __<Lens.µ, S
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Lens<S, A> narrow(final _<__.µ<Lens.µ, S>, A> value) {
+    public static <S, A> Lens<S, A> narrow(final _<_<Lens.µ, S>, A> value) {
         return (Lens) value;
     }
 

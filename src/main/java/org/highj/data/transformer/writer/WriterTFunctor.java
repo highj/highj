@@ -12,12 +12,12 @@ import java.util.function.Function;
 /**
  * @author Cinton Selke
  */
-public interface WriterTFunctor<W, M> extends Functor<__.µ<___.µ<WriterT.µ, W>, M>> {
+public interface WriterTFunctor<W, M> extends Functor<_<_<WriterT.µ, W>, M>> {
 
     public Functor<M> get();
 
     @Override
-    public default <A, B> WriterT<W, M, B> map(Function<A, B> fn, _<__.µ<___.µ<WriterT.µ, W>, M>, A> nestedA) {
+    public default <A, B> WriterT<W, M, B> map(Function<A, B> fn, _<_<_<WriterT.µ, W>, M>, A> nestedA) {
         return () -> get().map(
                 (T2<A, W> x) -> T2.of(fn.apply(x._1()), x._2()),
                 WriterT.narrow(nestedA).run()

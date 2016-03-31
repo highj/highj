@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer.automaton;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.data.collection.Either;
@@ -16,12 +17,12 @@ import org.highj.typeclass2.arrow.ArrowChoice;
  *
  * @author clintonselke
  */
-public interface AutomatonArrowChoice<A> extends AutomatonArrow<A>, ArrowChoice<___.µ<Automaton.µ,A>> {
+public interface AutomatonArrowChoice<A> extends AutomatonArrow<A>, ArrowChoice<_<Automaton.µ,A>> {
     
     public ArrowChoice<A> get();
     
     @Override
-    public default <B, C, D> Automaton<A, Either<B, D>, Either<C, D>> left(__<___.µ<Automaton.µ, A>, B, C> arrow) {
+    public default <B, C, D> Automaton<A, Either<B, D>, Either<C, D>> left(__<_<Automaton.µ, A>, B, C> arrow) {
         return () -> get().dot(
             get().arr((Either<T2<C,Automaton<A,B,C>>,D> x1) ->
                 x1.either(

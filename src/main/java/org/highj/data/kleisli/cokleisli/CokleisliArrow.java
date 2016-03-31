@@ -11,7 +11,7 @@ import org.highj.typeclass2.arrow.Arrow;
 
 import java.util.function.Function;
 
-public class CokleisliArrow<W> implements Arrow<___.µ<Cokleisli.µ, W>> {
+public class CokleisliArrow<W> implements Arrow<_<Cokleisli.µ, W>> {
 
     private final Comonad<W> comonad;
 
@@ -26,19 +26,19 @@ public class CokleisliArrow<W> implements Arrow<___.µ<Cokleisli.µ, W>> {
     }
 
     @Override
-    public <A, B, C> Cokleisli<W, T2<A, C>, T2<B, C>> first(__<___.µ<Cokleisli.µ, W>, A, B> arrow) {
+    public <A, B, C> Cokleisli<W, T2<A, C>, T2<B, C>> first(__<_<Cokleisli.µ, W>, A, B> arrow) {
         //first a = a *** CoKleisli extract
         return split(arrow, new Cokleisli<W, C, C>(comonad::extract));
     }
 
     @Override
-    public <A, B, C> Cokleisli<W, T2<C, A>, T2<C, B>> second(__<___.µ<Cokleisli.µ, W>, A, B> arrow) {
+    public <A, B, C> Cokleisli<W, T2<C, A>, T2<C, B>> second(__<_<Cokleisli.µ, W>, A, B> arrow) {
         //second a = CoKleisli extract *** a
         return split(new Cokleisli<W, C, C>(comonad::extract), arrow);
     }
 
     @Override
-    public <A, B, AA, BB> Cokleisli<W, T2<A, AA>, T2<B, BB>> split(__<___.µ<Cokleisli.µ, W>, A, B> arr1, __<___.µ<Cokleisli.µ, W>, AA, BB> arr2) {
+    public <A, B, AA, BB> Cokleisli<W, T2<A, AA>, T2<B, BB>> split(__<_<Cokleisli.µ, W>, A, B> arr1, __<_<Cokleisli.µ, W>, AA, BB> arr2) {
         //CoKleisli a *** CoKleisli b = CoKleisli (a . fmap fst &&& b . fmap snd)
         F1<_<W, A>, B> wab = Cokleisli.narrow(arr1)::apply;
         F1<_<W, AA>, BB> waabb = Cokleisli.narrow(arr2)::apply;
@@ -50,7 +50,7 @@ public class CokleisliArrow<W> implements Arrow<___.µ<Cokleisli.µ, W>> {
     }
 
     @Override
-    public <A, B, C> Cokleisli<W, A, T2<B, C>> fanout(__<___.µ<Cokleisli.µ, W>, A, B> arr1, __<___.µ<Cokleisli.µ, W>, A, C> arr2) {
+    public <A, B, C> Cokleisli<W, A, T2<B, C>> fanout(__<_<Cokleisli.µ, W>, A, B> arr1, __<_<Cokleisli.µ, W>, A, C> arr2) {
         //CoKleisli a &&& CoKleisli b = CoKleisli (a &&& b)
         F1<_<W, A>, B> wab = Cokleisli.narrow(arr1)::apply;
         F1<_<W, A>, C> wac = Cokleisli.narrow(arr2)::apply;
@@ -64,7 +64,7 @@ public class CokleisliArrow<W> implements Arrow<___.µ<Cokleisli.µ, W>> {
     }
 
     @Override
-    public <A, B, C> Cokleisli<W, A, C> dot(__<___.µ<Cokleisli.µ, W>, B, C> bc, __<___.µ<Cokleisli.µ, W>, A, B> ab) {
+    public <A, B, C> Cokleisli<W, A, C> dot(__<_<Cokleisli.µ, W>, B, C> bc, __<_<Cokleisli.µ, W>, A, B> ab) {
         //CoKleisli b . CoKleisli a = CoKleisli (b . fmap a . duplicate)
         Cokleisli<W, B, C> wbc = Cokleisli.narrow(bc);
         Cokleisli<W, A, B> wab = Cokleisli.narrow(ab);

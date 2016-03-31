@@ -1,12 +1,13 @@
 package org.highj.data.tuple.t4;
 
+import org.highj._;
 import org.highj.___;
 import org.highj.____;
 import org.highj.data.tuple.T4;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass2.bifunctor.Biapplicative;
 
-public interface T4Biapplicative<S, T> extends T4Biapply<S, T>, Biapplicative<___.µ<____.µ<T4.µ, S>, T>> {
+public interface T4Biapplicative<S, T> extends T4Biapply<S, T>, Biapplicative<_<_<T4.µ, S>, T>> {
     @Override
     public Monoid<S> getS();
 

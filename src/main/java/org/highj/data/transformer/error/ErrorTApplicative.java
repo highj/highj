@@ -16,7 +16,7 @@ import org.highj.typeclass1.monad.Applicative;
  *
  * @author clintonselke
  */
-public interface ErrorTApplicative<E,M> extends ErrorTApply<E,M>, Applicative<__.µ<___.µ<ErrorT.µ,E>,M>> {
+public interface ErrorTApplicative<E,M> extends ErrorTApply<E,M>, Applicative<_<_<ErrorT.µ,E>,M>> {
     
     public Applicative<M> get();
 

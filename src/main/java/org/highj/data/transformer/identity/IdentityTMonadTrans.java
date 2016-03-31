@@ -20,7 +20,7 @@ public interface IdentityTMonadTrans<M> extends IdentityTBind<M>, IdentityTAppli
     }
 
     @Override
-    public default <A, B> IdentityT<M, B> ap(_<__.µ<IdentityT.µ, M>, Function<A, B>> fn, _<__.µ<IdentityT.µ, M>, A> nestedA) {
+    public default <A, B> IdentityT<M, B> ap(_<_<IdentityT.µ, M>, Function<A, B>> fn, _<_<IdentityT.µ, M>, A> nestedA) {
         return IdentityTApplicative.super.ap(fn, nestedA);
     }
 

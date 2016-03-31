@@ -23,7 +23,7 @@ public class MapTest {
         __<Map.µ,String, Integer> map = aMap;
         Map<String, Integer> result = Map.narrow(map);
         assertEquals("Map(x->3,y->5,z->10)", result.toString());
-        _<__.µ<Map.µ,String>, Integer> map1 = aMap;
+        _<_<Map.µ,String>, Integer> map1 = aMap;
         Map<String, Integer> result1 = Map.narrow(map1);
         assertEquals("Map(x->3,y->5,z->10)", result1.toString());
     }

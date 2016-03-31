@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer.error_arrow;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.____;
@@ -17,7 +18,7 @@ import org.highj.typeclass2.arrow.ArrowError;
  *
  * @author clintonselke
  */
-public interface ErrorArrowArrowError<EX,A> extends ErrorArrowArrow<EX,A>, ArrowError<EX,___.µ<____.µ<ErrorArrow.µ,EX>,A>> {
+public interface ErrorArrowArrowError<EX,A> extends ErrorArrowArrow<EX,A>, ArrowError<EX,_<_<ErrorArrow.µ,EX>,A>> {
 
     @Override
     public default <B> ErrorArrow<EX, A, EX, B> raise() {
@@ -25,7 +26,7 @@ public interface ErrorArrowArrowError<EX,A> extends ErrorArrowArrow<EX,A>, Arrow
     }
 
     @Override
-    public default <B, C, D> ErrorArrow<EX, A, B, D> tryInUnless(__<___.µ<____.µ<ErrorArrow.µ, EX>, A>, B, C> body, __<___.µ<____.µ<ErrorArrow.µ, EX>, A>, T2<B, C>, D> onSuccess, __<___.µ<____.µ<ErrorArrow.µ, EX>, A>, T2<B, EX>, D> onError) {
+    public default <B, C, D> ErrorArrow<EX, A, B, D> tryInUnless(__<_<_<ErrorArrow.µ, EX>, A>, B, C> body, __<_<_<ErrorArrow.µ, EX>, A>, T2<B, C>, D> onSuccess, __<_<_<ErrorArrow.µ, EX>, A>, T2<B, EX>, D> onError) {
         class Util {
             <X,Y> Either<T2<X,EX>,T2<X,Y>> distr(T2<X,Either<EX,Y>> x) {
                 return x._2().either(

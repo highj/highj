@@ -19,7 +19,7 @@ import org.highj.typeclass1.monad.MonadReader;
  *
  * @author clintonselke
  */
-public interface RWSTMonadReader<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadReader<R,__.µ<___.µ<____.µ<_____.µ<RWST.µ,R>,W>,S>,M>> {
+public interface RWSTMonadReader<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadReader<R,_<_<_<_<RWST.µ,R>,W>,S>,M>> {
 
     @Override
     public default RWST<R, W, S, M, R> ask() {
@@ -27,7 +27,7 @@ public interface RWSTMonadReader<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadReade
     }
 
     @Override
-    public default <A> RWST<R, W, S, M, A> local(Function<R, R> modFn, _<__.µ<___.µ<____.µ<_____.µ<RWST.µ, R>, W>, S>, M>, A> nestedA) {
+    public default <A> RWST<R, W, S, M, A> local(Function<R, R> modFn, _<_<_<_<_<RWST.µ, R>, W>, S>, M>, A> nestedA) {
         return (R r, S s) -> RWST.narrow(nestedA).run(modFn.apply(r), s);
     }
 }

@@ -118,7 +118,7 @@ public final class Iso<S, A> extends PIso<S, S, A, A> implements __<Iso.µ, S, A
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Iso<S, A> narrow(final _<__.µ<Iso.µ, S>, A> value) {
+    public static <S, A> Iso<S, A> narrow(final _<_<Iso.µ, S>, A> value) {
         return (Iso) value;
     }
 

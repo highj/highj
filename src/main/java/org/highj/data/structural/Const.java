@@ -1,5 +1,6 @@
 package org.highj.data.structural;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.data.structural.constant.*;
 import org.highj.typeclass0.group.Monoid;
@@ -21,7 +22,7 @@ public class Const<A, B> implements __<Const.µ, A, B> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A, B> Const<A, B> narrow(org.highj._<__.µ<µ, A>, B> value) {
+    public static <A, B> Const<A, B> narrow(_<_<µ, A>, B> value) {
         return (Const) value;
     }
 

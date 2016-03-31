@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer.error_arrow;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.____;
@@ -16,10 +17,10 @@ import org.highj.typeclass2.arrow.ArrowChoice;
  *
  * @author clintonselke
  */
-public interface ErrorArrowArrowChoice<EX,A> extends ErrorArrowArrow<EX,A>, ArrowChoice<___.µ<____.µ<ErrorArrow.µ,EX>,A>> {
+public interface ErrorArrowArrowChoice<EX,A> extends ErrorArrowArrow<EX,A>, ArrowChoice<_<_<ErrorArrow.µ,EX>,A>> {
 
     @Override
-    public default <B, C, D> ErrorArrow<EX, A, Either<B, D>, Either<C, D>> left(__<___.µ<____.µ<ErrorArrow.µ, EX>, A>, B, C> arrow) {
+    public default <B, C, D> ErrorArrow<EX, A, Either<B, D>, Either<C, D>> left(__<_<_<ErrorArrow.µ, EX>, A>, B, C> arrow) {
         class Util {
             <X,Y,Z> Either<X,Either<Y,Z>> assocsum(Either<Either<X,Y>,Z> x) {
                 return x.either(

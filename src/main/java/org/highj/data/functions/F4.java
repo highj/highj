@@ -10,7 +10,7 @@ public interface F4<A, B, C, D, E> extends _____<F4.µ, A, B, C, D, E> {
     }
 
     @SuppressWarnings("unchecked")
-    static <A, B, C, D, E> F4<A, B, C, D, E> narrow(_<__.µ<___.µ<____.µ<_____.µ<µ, A>, B>, C>, D>, E> function) {
+    static <A, B, C, D, E> F4<A, B, C, D, E> narrow(_<_<_<_<_<µ, A>, B>, C>, D>, E> function) {
         return (F4) function;
     }
 

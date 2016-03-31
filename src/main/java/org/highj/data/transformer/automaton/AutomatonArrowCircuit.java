@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer.automaton;
 
+import org.highj._;
 import org.highj.___;
 import org.highj.data.transformer.Automaton;
 import org.highj.data.tuple.T2;
@@ -14,7 +15,7 @@ import org.highj.typeclass2.arrow.ArrowCircuit;
  *
  * @author clintonselke
  */
-public interface AutomatonArrowCircuit<A> extends AutomatonArrowLoop<A>, ArrowCircuit<___.µ<Automaton.µ,A>> {
+public interface AutomatonArrowCircuit<A> extends AutomatonArrowLoop<A>, ArrowCircuit<_<Automaton.µ,A>> {
 
     @Override
     public default <B> Automaton<A,B,B> delay(B b1) {

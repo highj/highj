@@ -41,11 +41,11 @@ public class StreamArrow<A,B,C> implements ___<StreamArrow.µ,A,B,C> {
         return (StreamArrow<A,B,C>)a;
     }
     
-    public static <A,B,C> StreamArrow<A,B,C> narrow(__<___.µ<StreamArrow.µ,A>,B,C> a) {
+    public static <A,B,C> StreamArrow<A,B,C> narrow(__<_<StreamArrow.µ,A>,B,C> a) {
         return (StreamArrow<A,B,C>)a;
     }
     
-    public static <A,B,C> StreamArrow<A,B,C> narrow(_<__.µ<___.µ<StreamArrow.µ,A>,B>,C> a) {
+    public static <A,B,C> StreamArrow<A,B,C> narrow(_<_<_<StreamArrow.µ,A>,B>,C> a) {
         return (StreamArrow<A,B,C>)a;
     }
     

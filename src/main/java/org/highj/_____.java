@@ -9,6 +9,6 @@ package org.highj;
  *
  * @author clintonselke
  */
-public interface _____<X,A,B,C,D,E> extends ____<_____.µ<X,A>,B,C,D,E> {
-    public static class µ<Y,T> {}
+public interface _____<X,A,B,C,D,E> extends ____<_<X,A>,B,C,D,E> {
+
 }

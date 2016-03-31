@@ -17,7 +17,7 @@ import org.highj.typeclass1.monad.MonadTrans;
  *
  * @author clintonselke
  */
-public interface RWSTMonadTrans<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadTrans<___.µ<____.µ<_____.µ<RWST.µ,R>,W>,S>,M> {
+public interface RWSTMonadTrans<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadTrans<_<_<_<RWST.µ,R>,W>,S>,M> {
 
     @Override
     public default <A> RWST<R, W, S, M, A> lift(_<M, A> nestedA) {

@@ -40,15 +40,15 @@ public class StateArrow<S,A,B,C> implements ____<StateArrow.µ,S,A,B,C> {
         return (StateArrow<S,A,B,C>)a;
     }
     
-    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(___<____.µ<StateArrow.µ,S>,A,B,C> a) {
+    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(___<_<StateArrow.µ,S>,A,B,C> a) {
         return (StateArrow<S,A,B,C>)a;
     }
     
-    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(__<___.µ<____.µ<StateArrow.µ,S>,A>,B,C> a) {
+    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(__<_<_<StateArrow.µ,S>,A>,B,C> a) {
         return (StateArrow<S,A,B,C>)a;
     }
     
-    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(_<__.µ<___.µ<____.µ<StateArrow.µ,S>,A>,B>,C> a) {
+    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(_<_<_<_<StateArrow.µ,S>,A>,B>,C> a) {
         return (StateArrow<S,A,B,C>)a;
     }
     

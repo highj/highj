@@ -31,7 +31,7 @@ public interface ErrorT<E,M,A> extends ___<ErrorT.µ,E,M,A> {
         return (ErrorT<E,M,A>)a;
     }
     
-    public static <E,M,A> ErrorT<E,M,A> narrow(_<__.µ<___.µ<ErrorT.µ, E>, M>, A> a) {
+    public static <E,M,A> ErrorT<E,M,A> narrow(_<_<_<ErrorT.µ, E>, M>, A> a) {
         return (ErrorT<E,M,A>)a;
     }
     

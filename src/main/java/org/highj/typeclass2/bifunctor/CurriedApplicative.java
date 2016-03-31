@@ -1,10 +1,11 @@
 package org.highj.typeclass2.bifunctor;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.monad.Applicative;
 
-public class CurriedApplicative<F,X> extends CurriedApply<F,X> implements Applicative<__.µ<F,X>> {
+public class CurriedApplicative<F,X> extends CurriedApply<F,X> implements Applicative<_<F,X>> {
 
     private final Biapplicative<F> biapplicative;
     private final Monoid<X> monoid;

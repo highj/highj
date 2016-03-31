@@ -13,7 +13,7 @@ public interface F2<A,B,C>  extends ___<F2.µ,A,B,C>, BiFunction<A,B,C> {
     }
 
     @SuppressWarnings("unchecked")
-    static <A, B, C> F2<A, B, C> narrow(_<__.µ<___.µ<µ, A>, B>, C> function) {
+    static <A, B, C> F2<A, B, C> narrow(_<_<_<µ, A>, B>, C> function) {
         return (F2) function;
     }
 

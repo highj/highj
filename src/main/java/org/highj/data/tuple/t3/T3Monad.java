@@ -9,7 +9,7 @@ import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
 
-public interface T3Monad<S,T> extends T3Bind<S,T>, T3Applicative<S,T>, Monad<__.µ<___.µ<T3.µ, S>, T>> {
+public interface T3Monad<S,T> extends T3Bind<S,T>, T3Applicative<S,T>, Monad<_<_<T3.µ, S>, T>> {
 
     @Override
     public Monoid<S> getS();
@@ -17,8 +17,8 @@ public interface T3Monad<S,T> extends T3Bind<S,T>, T3Applicative<S,T>, Monad<__.
     @Override
     public Monoid<T> getT();
 
-    public default <A, B> T3<S, T, B> ap(_<__.µ<___.µ<T3.µ, S>, T>, Function<A, B>> fn,
-                                                           _<__.µ<___.µ<T3.µ, S>, T>, A> nestedA) {
+    public default <A, B> T3<S, T, B> ap(_<_<_<T3.µ, S>, T>, Function<A, B>> fn,
+                                                           _<_<_<T3.µ, S>, T>, A> nestedA) {
         return T3Applicative.super.ap(fn, nestedA);
     }
 }

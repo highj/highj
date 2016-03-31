@@ -25,7 +25,7 @@ public class Kleisli<M, A, B> implements ___<Kleisli.µ, M, A, B>, Function<A, _
     }
 
     @SuppressWarnings("unchecked")
-    public static <M, A, B> Kleisli<M, A, B> narrow(_<__.µ<___.µ<µ, M>, A>, B> nested) {
+    public static <M, A, B> Kleisli<M, A, B> narrow(_<_<_<µ, M>, A>, B> nested) {
         return (Kleisli) nested;
     }
 

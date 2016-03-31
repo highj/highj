@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.data.collection.Stream;
@@ -34,7 +35,7 @@ public interface Automaton<A,B,C> extends ___<Automaton.µ, A, B, C> {
         return (Automaton<A,B,C>)a;
     }
     
-    public static <A,B,C> Automaton<A,B,C> narrow(__<___.µ<Automaton.µ, A>, B, C> a) {
+    public static <A,B,C> Automaton<A,B,C> narrow(__<_<µ, A>, B, C> a) {
         return (Automaton<A,B,C>)a;
     }
     

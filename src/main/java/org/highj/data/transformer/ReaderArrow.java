@@ -38,15 +38,15 @@ public class ReaderArrow<R,A,B,C> implements ____<ReaderArrow.µ,R,A,B,C> {
         return (ReaderArrow<R,A,B,C>)a;
     }
     
-    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(___<____.µ<ReaderArrow.µ,R>,A,B,C> a) {
+    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(___<_<ReaderArrow.µ,R>,A,B,C> a) {
         return (ReaderArrow<R,A,B,C>)a;
     }
     
-    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(__<___.µ<____.µ<ReaderArrow.µ,R>,A>,B,C> a) {
+    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(__<_<_<ReaderArrow.µ,R>,A>,B,C> a) {
         return (ReaderArrow<R,A,B,C>)a;
     }
     
-    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(_<__.µ<___.µ<____.µ<ReaderArrow.µ,R>,A>,B>,C> a) {
+    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(_<_<_<_<ReaderArrow.µ,R>,A>,B>,C> a) {
         return (ReaderArrow<R,A,B,C>)a;
     }
     

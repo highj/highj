@@ -10,7 +10,7 @@ import org.highj.typeclass1.monad.MonadTrans;
 /**
  * @author Clinton Selke
  */
-public interface WriterTMonadTrans<W, M> extends WriterTMonad<W, M>, MonadTrans<___.µ<WriterT.µ, W>, M> {
+public interface WriterTMonadTrans<W, M> extends WriterTMonad<W, M>, MonadTrans<_<WriterT.µ, W>, M> {
 
     @Override
     public Monad<M> get();

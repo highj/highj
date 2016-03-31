@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer.reader_arrow;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.____;
@@ -17,12 +18,12 @@ import org.highj.typeclass2.arrow.Semigroupoid;
  *
  * @author clintonselke
  */
-public interface ReaderArrowSemigroupoid<R,A> extends Semigroupoid<___.µ<____.µ<ReaderArrow.µ,R>,A>> {
+public interface ReaderArrowSemigroupoid<R,A> extends Semigroupoid<_<_<ReaderArrow.µ,R>,A>> {
     
     public Arrow<A> a();
 
     @Override
-    public default <B, C, D> ReaderArrow<R, A, B, D> dot(__<___.µ<____.µ<ReaderArrow.µ, R>, A>, C, D> cd, __<___.µ<____.µ<ReaderArrow.µ, R>, A>, B, C> bc) {
+    public default <B, C, D> ReaderArrow<R, A, B, D> dot(__<_<_<ReaderArrow.µ, R>, A>, C, D> cd, __<_<_<ReaderArrow.µ, R>, A>, B, C> bc) {
         return ReaderArrow.readerArrow(
             a().dot(
                 ReaderArrow.narrow(cd).run(),

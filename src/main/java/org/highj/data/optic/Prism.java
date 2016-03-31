@@ -94,7 +94,7 @@ public final class Prism<S, A> extends PPrism<S, S, A, A> implements __<Prism.µ
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Prism<S, A> narrow(final _<__.µ<Prism.µ, S>, A> value) {
+    public static <S, A> Prism<S, A> narrow(final _<_<Prism.µ, S>, A> value) {
         return (Prism) value;
     }
 

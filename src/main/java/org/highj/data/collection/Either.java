@@ -36,7 +36,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * Recovers an Either value
      * @param value
      */
-    public static <A, B> Either<A, B> narrow(_<__.µ<µ, A>, B> value) {
+    public static <A, B> Either<A, B> narrow(_<_<µ, A>, B> value) {
         return (Either) value;
     }
 

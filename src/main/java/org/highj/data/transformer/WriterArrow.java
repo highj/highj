@@ -40,15 +40,15 @@ public class WriterArrow<W,A,B,C> implements ____<WriterArrow.µ,W,A,B,C> {
         return (WriterArrow<W,A,B,C>)a;
     }
     
-    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(___<____.µ<WriterArrow.µ,W>,A,B,C> a) {
+    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(___<_<WriterArrow.µ,W>,A,B,C> a) {
         return (WriterArrow<W,A,B,C>)a;
     }
     
-    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(__<___.µ<____.µ<WriterArrow.µ,W>,A>,B,C> a) {
+    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(__<_<_<WriterArrow.µ,W>,A>,B,C> a) {
         return (WriterArrow<W,A,B,C>)a;
     }
     
-    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(_<__.µ<___.µ<____.µ<WriterArrow.µ,W>,A>,B>,C> a) {
+    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(_<_<_<_<WriterArrow.µ,W>,A>,B>,C> a) {
         return (WriterArrow<W,A,B,C>)a;
     }
     

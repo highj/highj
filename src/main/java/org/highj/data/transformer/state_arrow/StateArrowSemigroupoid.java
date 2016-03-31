@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer.state_arrow;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.____;
@@ -15,12 +16,12 @@ import org.highj.typeclass2.arrow.Semigroupoid;
  *
  * @author clintonselke
  */
-public interface StateArrowSemigroupoid<S,A> extends Semigroupoid<___.µ<____.µ<StateArrow.µ,S>,A>> {
+public interface StateArrowSemigroupoid<S,A> extends Semigroupoid<_<_<StateArrow.µ,S>,A>> {
     
     public Semigroupoid<A> a();
 
     @Override
-    public default <B, C, D> StateArrow<S, A, B, D> dot(__<___.µ<____.µ<StateArrow.µ, S>, A>, C, D> cd, __<___.µ<____.µ<StateArrow.µ, S>, A>, B, C> bc) {
+    public default <B, C, D> StateArrow<S, A, B, D> dot(__<_<_<StateArrow.µ, S>, A>, C, D> cd, __<_<_<StateArrow.µ, S>, A>, B, C> bc) {
         return StateArrow.stateArrow(a().dot(
             StateArrow.narrow(cd).run(),
             StateArrow.narrow(bc).run()

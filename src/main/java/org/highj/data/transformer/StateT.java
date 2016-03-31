@@ -22,7 +22,7 @@ public interface StateT<S, M, A> extends ___<StateT.µ, S, M, A> {
         return (StateT<S, M, A>) a;
     }
 
-    public static <S, M, A> StateT<S, M, A> narrow(_<__.µ<___.µ<StateT.µ, S>, M>, A> a) {
+    public static <S, M, A> StateT<S, M, A> narrow(_<_<_<StateT.µ, S>, M>, A> a) {
         return narrow(uncurry3(a));
     }
 

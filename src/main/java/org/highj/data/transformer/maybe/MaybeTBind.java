@@ -12,12 +12,12 @@ import java.util.function.Function;
 /**
  * @author Clinton Selke
  */
-public interface MaybeTBind<M> extends MaybeTApply<M>, Bind<__.µ<MaybeT.µ, M>> {
+public interface MaybeTBind<M> extends MaybeTApply<M>, Bind<_<MaybeT.µ, M>> {
 
     public Monad<M> get();
 
     @Override
-    public default <A, B> MaybeT<M, B> bind(_<__.µ<MaybeT.µ, M>, A> nestedA, Function<A, _<__.µ<MaybeT.µ, M>, B>> fn) {
+    public default <A, B> MaybeT<M, B> bind(_<_<MaybeT.µ, M>, A> nestedA, Function<A, _<_<MaybeT.µ, M>, B>> fn) {
         _<M, Maybe<B>> m_maybeB = get().bind(
                 MaybeT.narrow(nestedA).get(),
                 maybeA -> maybeA.cata(

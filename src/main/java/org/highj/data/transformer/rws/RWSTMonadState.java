@@ -19,7 +19,7 @@ import org.highj.typeclass1.monad.MonadState;
  *
  * @author clintonselke
  */
-public interface RWSTMonadState<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadState<S,__.µ<___.µ<____.µ<_____.µ<RWST.µ,R>,W>,S>,M>> {
+public interface RWSTMonadState<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadState<S,_<_<_<_<RWST.µ,R>,W>,S>,M>> {
 
     @Override
     public default RWST<R, W, S, M, S> get() {

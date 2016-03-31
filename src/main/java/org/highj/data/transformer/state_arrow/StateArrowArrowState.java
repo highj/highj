@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer.state_arrow;
 
+import org.highj._;
 import org.highj.___;
 import org.highj.____;
 import org.highj.data.transformer.StateArrow;
@@ -16,7 +17,7 @@ import org.highj.typeclass2.arrow.ArrowState;
  *
  * @author clintonselke
  */
-public interface StateArrowArrowState<S,A> extends StateArrowArrow<S,A>, ArrowState<S,___.µ<____.µ<StateArrow.µ,S>,A>> {
+public interface StateArrowArrowState<S,A> extends StateArrowArrow<S,A>, ArrowState<S,_<_<StateArrow.µ,S>,A>> {
 
     @Override
     public default <B> StateArrow<S, A, B, S> fetch() {

@@ -56,7 +56,7 @@ public final class Traversal<S, A> extends PTraversal<S, S, A, A> implements __<
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Traversal<S, A> narrow(final _<__.µ<Traversal.µ, S>, A> value) {
+    public static <S, A> Traversal<S, A> narrow(final _<_<Traversal.µ, S>, A> value) {
         return (Traversal) value;
     }
 

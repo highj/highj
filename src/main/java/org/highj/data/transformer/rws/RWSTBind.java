@@ -19,10 +19,10 @@ import org.highj.typeclass1.monad.Bind;
  *
  * @author clintonselke
  */
-public interface RWSTBind<R,W,S,M> extends RWSTApply<R,W,S,M>, Bind<__.µ<___.µ<____.µ<_____.µ<RWST.µ,R>,W>,S>,M>> {
+public interface RWSTBind<R,W,S,M> extends RWSTApply<R,W,S,M>, Bind<_<_<_<_<RWST.µ,R>,W>,S>,M>> {
 
     @Override
-    public default <A, B> RWST<R, W, S, M, B> bind(_<__.µ<___.µ<____.µ<_____.µ<RWST.µ, R>, W>, S>, M>, A> nestedA, Function<A, _<__.µ<___.µ<____.µ<_____.µ<RWST.µ, R>, W>, S>, M>, B>> fn) {
+    public default <A, B> RWST<R, W, S, M, B> bind(_<_<_<_<_<RWST.µ, R>, W>, S>, M>, A> nestedA, Function<A, _<_<_<_<_<RWST.µ, R>, W>, S>, M>, B>> fn) {
         return (R r, S s) -> m().bind(
             RWST.narrow(nestedA).run(r, s),
             (T3<A,S,W> x) -> m().map(

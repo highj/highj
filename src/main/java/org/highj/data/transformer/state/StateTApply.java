@@ -13,12 +13,12 @@ import java.util.function.Function;
 /**
  * @author Clinton Selke
  */
-public interface StateTApply<S, M> extends StateTFunctor<S, M>, Apply<__.µ<___.µ<StateT.µ, S>, M>> {
+public interface StateTApply<S, M> extends StateTFunctor<S, M>, Apply<_<_<StateT.µ, S>, M>> {
 
     public Bind<M> m();
 
     @Override
-    public default <A, B> StateT<S, M, B> ap(_<__.µ<___.µ<StateT.µ, S>, M>, Function<A, B>> fn, _<__.µ<___.µ<StateT.µ, S>, M>, A> nestedA) {
+    public default <A, B> StateT<S, M, B> ap(_<_<_<StateT.µ, S>, M>, Function<A, B>> fn, _<_<_<StateT.µ, S>, M>, A> nestedA) {
         return (S s1) -> m().bind(StateT.narrow(fn).run(s1),
                 (T2<Function<A, B>, S> x1) -> {
                     Function<A, B> fn2 = x1._1();

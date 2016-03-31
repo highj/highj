@@ -113,7 +113,7 @@ public final class Optional<S, A> extends POptional<S, S, A, A> implements __<Op
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Optional<S, A> narrow(final _<__.µ<Optional.µ, S>, A> value) {
+    public static <S, A> Optional<S, A> narrow(final _<_<Optional.µ, S>, A> value) {
         return (Optional) value;
     }
 

@@ -9,7 +9,7 @@ import org.highj.typeclass1.monad.MonadTrans;
 /**
  * @author Clinton Selke
  */
-public interface ReaderTMonadTrans<R, M> extends ReaderTMonad<R, M>, MonadTrans<___.µ<ReaderT.µ, R>, M> {
+public interface ReaderTMonadTrans<R, M> extends ReaderTMonad<R, M>, MonadTrans<_<ReaderT.µ, R>, M> {
 
     @Override
     public Monad<M> get();

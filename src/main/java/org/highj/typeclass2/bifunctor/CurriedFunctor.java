@@ -7,7 +7,7 @@ import org.highj.typeclass1.functor.Functor;
 
 import java.util.function.Function;
 
-public class CurriedFunctor<F,X> implements Functor<__.µ<F,X>> {
+public class CurriedFunctor<F,X> implements Functor<_<F,X>> {
 
     private final Bifunctor<F> bifunctor;
 
@@ -16,7 +16,7 @@ public class CurriedFunctor<F,X> implements Functor<__.µ<F,X>> {
     }
 
     @Override
-    public <A,B> __<F, X, B> map(Function<A,B> fn, _<__.µ<F, X>, A> nestedA) {
+    public <A,B> __<F, X, B> map(Function<A,B> fn, _<_<F, X>, A> nestedA) {
         return bifunctor.second(fn, HigherKinded.uncurry2(nestedA));
     }
 

@@ -23,7 +23,7 @@ public class IdentityT<M, A> implements __<IdentityT.µ, M, A> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <M, A> IdentityT<M, A> narrow(_<__.µ<µ, M>, A> value) {
+    public static <M, A> IdentityT<M, A> narrow(_<_<µ, M>, A> value) {
         return (IdentityT) value;
     }
 

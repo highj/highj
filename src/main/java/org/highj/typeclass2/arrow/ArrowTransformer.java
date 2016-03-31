@@ -5,6 +5,7 @@
  */
 package org.highj.typeclass2.arrow;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.___;
 
@@ -12,7 +13,7 @@ import org.highj.___;
  *
  * @author clintonselke
  */
-public interface ArrowTransformer<F,A> extends Arrow<___.µ<F,A>> {
+public interface ArrowTransformer<F,A> extends Arrow<_<F,A>> {
     
     public <B,C> ___<F,A,B,C> lift(__<A,B,C> arrow);
 }

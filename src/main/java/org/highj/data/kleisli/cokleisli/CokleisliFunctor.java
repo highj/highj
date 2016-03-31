@@ -9,11 +9,11 @@ import org.highj.typeclass1.functor.Functor;
 
 import java.util.function.Function;
 
-public class CokleisliFunctor<W, S> implements Functor<__.µ<___.µ<Cokleisli.µ, W>, S>> {
+public class CokleisliFunctor<W, S> implements Functor<_<_<Cokleisli.µ, W>, S>> {
 
 
     @Override
-    public <A, B> Cokleisli<W, S, B> map(Function<A, B> fn, _<__.µ<___.µ<Cokleisli.µ, W>, S>, A> nestedA) {
+    public <A, B> Cokleisli<W, S, B> map(Function<A, B> fn, _<_<_<Cokleisli.µ, W>, S>, A> nestedA) {
         Cokleisli<W, S, A> wsa = Cokleisli.narrow(nestedA);
         return new Cokleisli<>(Functions.compose(fn, wsa));
     }

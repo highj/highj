@@ -5,6 +5,7 @@
  */
 package org.highj.data.transformer.error;
 
+import org.highj._;
 import org.highj.__;
 import org.highj.___;
 import org.highj.data.transformer.ErrorT;
@@ -14,5 +15,5 @@ import org.highj.typeclass1.monad.Monad;
  *
  * @author clintonselke
  */
-public interface ErrorTMonad<E,M> extends ErrorTApplicative<E,M>, ErrorTBind<E,M>, Monad<__.µ<___.µ<ErrorT.µ,E>,M>> {
+public interface ErrorTMonad<E,M> extends ErrorTApplicative<E,M>, ErrorTBind<E,M>, Monad<_<_<ErrorT.µ,E>,M>> {
 }

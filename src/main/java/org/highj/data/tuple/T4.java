@@ -80,7 +80,7 @@ public abstract class T4<A, B, C, D> implements ____<T4.µ, A, B, C, D> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A, B, C, D> T4<A, B, C, D> narrow(_<__.µ<___.µ<____.µ<µ, A>, B>, C>, D> value) {
+    public static <A, B, C, D> T4<A, B, C, D> narrow(_<_<_<_<µ, A>, B>, C>, D> value) {
         return (T4) value;
     }
 

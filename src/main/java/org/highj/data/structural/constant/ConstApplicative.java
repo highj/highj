@@ -8,7 +8,7 @@ import org.highj.typeclass1.monad.Applicative;
 
 import static org.highj.data.structural.Const.µ;
 
-public interface ConstApplicative<S> extends Applicative<__.µ<µ,S>>, ConstApply<S> {
+public interface ConstApplicative<S> extends Applicative<_<µ,S>>, ConstApply<S> {
 
     public Monoid<S> getS();
 

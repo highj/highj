@@ -41,7 +41,7 @@ public class Do<Mon, Res,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z> {
         this.stateMonad = this.stateMonadTrans;
     }
     
-    private <Res2,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> Do<Mon, Res2,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2, R2,S2,T2,U2,V2,W2,X2,Y2,Z2> changeMr(_<__.µ<___.µ<StateT.µ,DoState>, Mon>, Res2> mr2) {
+    private <Res2,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2,R2,S2,T2,U2,V2,W2,X2,Y2,Z2> Do<Mon, Res2,A2,B2,C2,D2,E2,F2,G2,H2,I2,J2,K2,L2,M2,N2,O2,P2,Q2, R2,S2,T2,U2,V2,W2,X2,Y2,Z2> changeMr(_<_<_<StateT.µ,DoState>, Mon>, Res2> mr2) {
         return new Do<>(monad, StateT.narrow(mr2), stateMonadTrans, stateMonadState);
     }
     

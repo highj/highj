@@ -9,10 +9,10 @@ import org.highj.typeclass1.monad.Bind;
 
 import java.util.function.Function;
 
-public interface T4Bind<S,T,U> extends T4Apply<S,T,U>, Bind<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>> {
+public interface T4Bind<S,T,U> extends T4Apply<S,T,U>, Bind<_<_<_<T4.µ,S>, T>, U>> {
     @Override
-    public default <A, B> T4<S, T, U, B> bind(_<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>, A> nestedA,
-                                                             Function<A, _<__.µ<___.µ<____.µ<T4.µ,S>, T>, U>, B>> fn) {
+    public default <A, B> T4<S, T, U, B> bind(_<_<_<_<T4.µ,S>, T>, U>, A> nestedA,
+                                                             Function<A, _<_<_<_<T4.µ,S>, T>, U>, B>> fn) {
         T4<S, T, U, A> ta = T4.narrow(nestedA);
         T4<S, T, U, B> tb = T4.narrow(fn.apply(ta._4()));
         return T4.of(getS().apply(ta._1(), tb._1()),

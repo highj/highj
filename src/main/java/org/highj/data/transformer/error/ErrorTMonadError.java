@@ -17,7 +17,7 @@ import org.highj.typeclass1.monad.MonadError;
  *
  * @author clintonselke
  */
-public interface ErrorTMonadError<E,M> extends ErrorTMonad<E,M>, MonadError<E,__.µ<___.µ<ErrorT.µ,E>,M>> {
+public interface ErrorTMonadError<E,M> extends ErrorTMonad<E,M>, MonadError<E,_<_<ErrorT.µ,E>,M>> {
     
     @Override
     public default <A> ErrorT<E, M, A> throwError(E error) {
@@ -25,7 +25,7 @@ public interface ErrorTMonadError<E,M> extends ErrorTMonad<E,M>, MonadError<E,__
     }
 
     @Override
-    public default <A> ErrorT<E, M, A> catchError(_<__.µ<___.µ<ErrorT.µ, E>, M>, A> ma, Function<E, _<__.µ<___.µ<ErrorT.µ, E>, M>, A>> fn) {
+    public default <A> ErrorT<E, M, A> catchError(_<_<_<ErrorT.µ, E>, M>, A> ma, Function<E, _<_<_<ErrorT.µ, E>, M>, A>> fn) {
         return () -> get().bind(
             ErrorT.narrow(ma).run(),
             (Either<E,A> a) -> a.either(

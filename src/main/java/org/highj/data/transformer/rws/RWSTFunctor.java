@@ -19,12 +19,12 @@ import org.highj.typeclass1.functor.Functor;
  *
  * @author clintonselke
  */
-public interface RWSTFunctor<R,W,S,M> extends Functor<__.µ<___.µ<____.µ<_____.µ<RWST.µ,R>,W>,S>,M>> {
+public interface RWSTFunctor<R,W,S,M> extends Functor<_<_<_<_<RWST.µ,R>,W>,S>,M>> {
 
     public Functor<M> m();
 
     @Override
-    public default <A, B> RWST<R, W, S, M, B> map(Function<A, B> f, _<__.µ<___.µ<____.µ<_____.µ<RWST.µ, R>, W>, S>, M>, A> nestedA) {
+    public default <A, B> RWST<R, W, S, M, B> map(Function<A, B> f, _<_<_<_<_<RWST.µ, R>, W>, S>, M>, A> nestedA) {
         return (R r, S s) -> m().map(
             (T3<A,S,W> x) -> T3.of(f.apply(x._1()), x._2(), x._3()),
             RWST.narrow(nestedA).run(r, s)
