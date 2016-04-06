@@ -76,9 +76,13 @@ public class Dequeue<A> implements _<Dequeue.µ, A>, Iterable<A> {
         return List.append(front, rear.reverse());
     }
 
-    public static <A> Dequeue<A> of() {
+    public static <A> Dequeue<A> empty() {
         //empty = BankersDequeue 0 [] 0 []
         return new Dequeue<>(0, List.of(), 0, List.of());
+    }
+
+    public static <A> Dequeue<A> of(A ... values) {
+        return fromList(List.of(values));
     }
 
     public boolean isEmpty() {
@@ -150,7 +154,7 @@ public class Dequeue<A> implements _<Dequeue.µ, A>, Iterable<A> {
         //popBack (BankersDequeue sizeF front sizeR (r : rs)) =
         //  (Just r, check $ BankersDequeue sizeF front (sizeR - 1) rs)
         if (sizeRear == 0) {
-            switch(sizeRear) {
+            switch(sizeFront) {
                 case 0 : return T2.of(Maybe.Nothing(), of());
                 case 1: return  T2.of(front.maybeHead(), of());
                 default: throw new AssertionError("Queue is too far unbalanced.");
