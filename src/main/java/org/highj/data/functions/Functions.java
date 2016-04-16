@@ -117,7 +117,7 @@ public enum Functions {
             try {
                 exception = exClass.getConstructor(String.class).newInstance(message);
             } catch (Exception ex) {
-                throw new RuntimeException(ex);
+                throw new AssertionError(ex);
             }
             throw exception;
         };

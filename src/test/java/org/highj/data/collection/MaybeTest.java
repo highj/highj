@@ -3,152 +3,164 @@ package org.highj.data.collection;
 import org.highj._;
 import org.highj.data.functions.Functions;
 import org.highj.data.functions.Integers;
+import org.highj.data.tuple.T0;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass1.monad.MonadFix;
 import org.highj.typeclass1.monad.MonadPlus;
+import org.highj.typeclass1.monad.MonadRec;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.highj.data.collection.Maybe.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 public class MaybeTest {
+
+    @Rule
+    public ExpectedException shouldThrow = ExpectedException.none();
+
     @Test
     public void testCata() {
         Maybe<String> nothing = Nothing();
-        assertEquals("foo", nothing.cata("foo", Functions.<String, String>constant("bar")));
+        assertThat(nothing.cata("foo", Functions.<String, String>constant("bar"))).isEqualTo("foo");
+
         Maybe<String> baz = Just("baz");
-        assertEquals("bar", baz.cata("foo", Functions.<String, String>constant("bar")));
-        assertEquals("baz", baz.cata("foo", Function.<String>identity()));
+        assertThat(baz.cata("foo", Functions.constant("bar"))).isEqualTo("bar");
+        assertThat(baz.cata("foo", Function.identity())).isEqualTo("baz");
     }
 
     @Test
     public void testCataThunk() {
         Supplier<String> thunk = () -> "foo";
         Maybe<String> nothing = Nothing();
-        assertEquals("foo", nothing.cataLazy(thunk, Functions.<String, String>constant("bar")));
+        assertThat(nothing.cataLazy(thunk, Functions.constant("bar"))).isEqualTo("foo");
+
         Maybe<String> baz = Just("baz");
-        assertEquals("bar", baz.cataLazy(thunk, Functions.<String, String>constant("bar")));
-        assertEquals("baz", baz.cataLazy(thunk, Function.<String>identity()));
+        assertThat(baz.cataLazy(thunk, Functions.constant("bar"))).isEqualTo("bar");
+        assertThat(baz.cataLazy(thunk, Function.identity())).isEqualTo("baz");
     }
 
     @Test
     public void testNothing() {
         Maybe<String> nothing = Nothing();
-        assertEquals("Nothing", nothing.toString());
+        assertThat(nothing.isNothing()).isTrue();
     }
 
     @Test
     public void testJust() {
         Maybe<String> bar = Just("bar");
-        assertEquals("Just(bar)", bar.toString());
+        assertThat(bar.isJust()).isTrue();
+        assertThat(bar.get()).isEqualTo("bar");
     }
 
     @Test
     public void testJustFn() {
-        Function<String, Maybe<String>> just = Maybe::<String>Just;
+        Function<String, Maybe<String>> just = Maybe::Just;
         Maybe<String> bar = just.apply("bar");
-        assertEquals("Just(bar)", bar.toString());
+        assertThat(bar.isJust()).isTrue();
+        assertThat(bar.get()).isEqualTo("bar");
     }
 
     @Test
     public void testJustThunk() {
         Supplier<String> thunk = () -> "bar";
         Maybe<String> bar = JustLazy(thunk);
-        assertEquals("Just(bar)", bar.toString());
+        assertThat(bar.isJust()).isTrue();
+        assertThat(bar.get()).isEqualTo("bar");
     }
 
     @Test
-    public void testIsEmpty() {   //note that isNothing is just a synonym 
+    public void testIsNothing() {
         Maybe<String> nothing = Nothing();
-        assertTrue(nothing.isNothing());
+        assertThat(nothing.isNothing()).isTrue();
         Maybe<String> bar = Just("bar");
-        assertFalse(bar.isNothing());
+        assertThat(bar.isNothing()).isFalse();
     }
 
     @Test
     public void testIsJust() {
         Maybe<String> nothing = Nothing();
-        assertFalse(nothing.isJust());
+        assertThat(nothing.isJust()).isFalse();
         Maybe<String> bar = Just("bar");
-        assertTrue(bar.isJust());
+        assertThat(bar.isJust()).isTrue();
     }
 
     @Test
     public void testGetOrElse() {
         Maybe<String> nothing = Nothing();
-        assertEquals("foo", nothing.getOrElse("foo"));
+        assertThat(nothing.getOrElse("foo")).isEqualTo("foo");
         Maybe<String> bar = Just("bar");
-        assertEquals("bar", bar.getOrElse("foo"));
+        assertThat(bar.getOrElse("foo")).isEqualTo("bar");
     }
 
     @Test
     public void testGetOrElseThunk() {
         Supplier<String> thunk = () -> "foo";
         Maybe<String> nothing = Nothing();
-        assertEquals("foo", nothing.getOrElse(thunk));
+        assertThat(nothing.getOrElse(thunk)).isEqualTo("foo");
         Maybe<String> bar = Just("bar");
-        assertEquals("bar", bar.getOrElse(thunk));
+        assertThat(bar.getOrElse(thunk)).isEqualTo("bar");
     }
 
     @Test
-    public void testGet() throws Exception {
+    public void testGet() {
         Maybe<String> bar = Just("bar");
-        assertEquals("bar", bar.get());
-        try {
-           Maybe<String> nothing = Nothing();
-           nothing.get();
-        } catch (RuntimeException ex) {
-            return;
-        }
-        fail("error not thrown");
+        assertThat(bar.get()).isEqualTo("bar");
+    }
+
+    @Test
+    public void testGetThrowingException()  {
+        Maybe<String> nothing = Nothing();
+        shouldThrow.expect(NoSuchElementException.class);
+        nothing.get();
     }
 
     @Test
     public void testGetOrErrorMsg() {
         Maybe<String> bar = Just("bar");
-        assertEquals("bar", bar.getOrError("argh!"));
-        try {
-            Maybe<String> nothing = Nothing();
-            nothing.getOrError("argh!");
-        } catch (RuntimeException ex) {
-            assertEquals("argh!", ex.getMessage());
-            return;
-        }
-        fail("error not thrown");
+        assertThat(bar.getOrError("argh!")).isEqualTo("bar");
     }
+
+    @Test
+    public void testGetOrErrorMsgThrowingException() {
+        Maybe<String> nothing = Nothing();
+        shouldThrow.expect(RuntimeException.class);
+        shouldThrow.expectMessage("argh!");
+        nothing.getOrError("argh!");
+    }
+
 
     @Test
     public void testGetOrErrorClass() {
         Maybe<String> bar = Just("bar");
-        assertEquals("bar", bar.getOrError(NoSuchElementException.class));
-        try {
-            Maybe<String> nothing = Nothing();
-            nothing.getOrError(NoSuchElementException.class);
-        } catch (NoSuchElementException ex) {
-            return;
-        }
-        fail("error not thrown");
+        assertThat(bar.getOrError(NoSuchElementException.class)).isEqualTo("bar");
     }
 
     @Test
-    public void testGetOrErrorClassMsg() throws Exception {
-        Maybe<String> bar = Just("bar");
-        assertEquals("bar", bar.getOrError(NoSuchElementException.class, "argh!"));
-        try {
-            Maybe<String> nothing = Nothing();
-            nothing.getOrError(NoSuchElementException.class, "argh!");
-        } catch (NoSuchElementException ex) {
-            assertEquals("argh!", ex.getMessage());
-            return;
-        }
-        fail("error not thrown");
+    public void testGetOrErrorClassThrowingException() {
+        Maybe<String> nothing = Nothing();
+        shouldThrow.expect(IllegalArgumentException.class);
+        nothing.getOrError(IllegalArgumentException.class);
+    }
 
+    @Test
+    public void testGetOrErrorClassMsg() {
+        Maybe<String> bar = Just("bar");
+        assertThat(bar.getOrError(IllegalArgumentException.class, "argh!")).isEqualTo("bar");
+    }
+
+    @Test
+    public void testGetOrErrorClassMsgThrowingException() {
+        Maybe<String> nothing = Nothing();
+        shouldThrow.expect(IllegalArgumentException.class);
+        shouldThrow.expectMessage("argh!");
+        nothing.getOrError(IllegalArgumentException.class, "argh!");
     }
 
     @Test
@@ -156,110 +168,109 @@ public class MaybeTest {
         Maybe<String> foo = Just("foo");
         Maybe<String> bar = Just("bar");
         Maybe<String> nothing = Nothing();
-        assertEquals("Just(foo)", foo.orElse(bar).toString());
-        assertEquals("Just(foo)", foo.orElse(nothing).toString());
-        assertEquals("Just(bar)", nothing.orElse(bar).toString());
-        assertEquals("Nothing", nothing.orElse(nothing).toString());
+        assertThat(foo.orElse(bar).get()).isEqualTo("foo");
+        assertThat(foo.orElse(nothing).get()).isEqualTo("foo");
+        assertThat(nothing.orElse(bar).get()).isEqualTo("bar");
+        assertThat(nothing.orElse(nothing).isNothing()).isTrue();
     }
 
     @Test
-    public void testIterator() throws Exception {
-        Maybe<String> nothing = Nothing();
-        for(String s : nothing) {
-            fail("Nothing() iterates");
-        }
-        Maybe<String> bar = Just("bar");
-        java.util.List<String> strings = new ArrayList<String>();
-        for(String s: bar) {
-            strings.add(s);
-        }
-        assertEquals(1, strings.size());
-        assertEquals("bar", strings.get(0));
+    public void testIterator() {
+        assertThat(Nothing()).isEmpty();
+        assertThat(Just("bar")).containsExactly("bar");
     }
 
     @Test
-    public void testEq() throws Exception {
+    public void testEq() {
         Eq<Maybe<String>> eq = eq(new Eq.JavaEq<String>());
         Maybe<String> nothing1 = Nothing();
         Maybe<String> nothing2 = Nothing();
         Maybe<String> foo1 = Just("foo");
         Maybe<String> foo2 = Just("foo");
         Maybe<String> bar = Just("bar");
-        assertTrue(eq.eq(nothing1, nothing2));
-        assertTrue(eq.eq(foo1, foo2));
-        assertFalse(eq.eq(nothing1, foo1));
-        assertFalse(eq.eq(foo1, bar));
+        assertThat(eq.eq(nothing1, nothing2)).isTrue();
+        assertThat(eq.eq(foo1, foo2)).isTrue();
+        assertThat(eq.eq(nothing1, foo1)).isFalse();
+        assertThat(eq.eq(foo1, nothing1)).isFalse();
+        assertThat(eq.eq(foo1, bar)).isFalse();
     }
 
     @Test
-    public void testMap() throws Exception {
+    public void testMap() {
         Maybe<String> nothing = Nothing();
-        assertEquals("Nothing", nothing.map(String::length).toString());
+        assertThat(nothing.map(String::length).isNothing()).isTrue();
         Maybe<String> foo = Just("foo");
-        assertEquals("Just(3)", foo.map(String::length).toString());
+        assertThat(foo.map(String::length).get()).isEqualTo(3);
     }
     
     @Test
-    public void testMonad() throws Exception {
+    public void testMonad() {
         Monad<Maybe.µ> monad = Maybe.monad;
+
         //pure
-        assertEquals("Just(foo)", monad.pure("foo").toString());
+        assertThat(Maybe.narrow(monad.pure("foo")).get()).isEqualTo("foo");
+
         //map
         Maybe<String> nothing = Nothing();
-        assertEquals("Nothing", monad.map(String::length, nothing).toString());
+        assertThat(Maybe.narrow(monad.map(String::length, nothing)).isNothing()).isTrue();
         Maybe<String> foo = Just("foo");
-        assertEquals("Just(3)", monad.map(String::length, foo).toString());
+        assertThat(Maybe.narrow(monad.map(String::length, foo)).get()).isEqualTo(3);
+
         //ap
         Maybe<Function<String,Integer>> noFn = Nothing();
-        Maybe<Function<String,Integer>> lenFn = Just(x -> x.length());
-        assertEquals("Nothing", monad.ap(noFn, nothing).toString());
-        assertEquals("Nothing", monad.ap(lenFn, nothing).toString());
-        assertEquals("Nothing", monad.ap(noFn, foo).toString());
-        assertEquals("Just(3)", monad.ap(lenFn, foo).toString());
+        Maybe<Function<String,Integer>> lenFn = Just(String::length);
+        assertThat(Maybe.narrow(monad.ap(noFn, nothing)).isNothing()).isTrue();
+        assertThat(Maybe.narrow(monad.ap(lenFn, nothing)).isNothing()).isTrue();
+        assertThat(Maybe.narrow(monad.ap(noFn, foo)).isNothing()).isTrue();
+        assertThat(Maybe.narrow(monad.ap(lenFn, foo)).get()).isEqualTo(3);
+
         //bind
         Maybe<String> fool = Just("fool");
-        Function<String, _<Maybe.µ, Integer>> lenIfEven = s -> {
-            int len = s.length();
-            return len % 2 == 0 ? Just(len) : Maybe.<Integer>Nothing();
-        };
-        assertEquals("Nothing", monad.bind(nothing, lenIfEven).toString());
-        assertEquals("Nothing", monad.bind(foo, lenIfEven).toString());
-        assertEquals("Just(4)", monad.bind(fool, lenIfEven).toString());
+        Function<String, _<Maybe.µ, Integer>> lenIfEven =
+                s -> s.length() % 2 == 0 ? Just(s.length()) : Maybe.Nothing();
+        assertThat(Maybe.narrow(monad.bind(nothing, lenIfEven)).isNothing()).isTrue();
+        assertThat(Maybe.narrow(monad.bind(foo, lenIfEven)).isNothing()).isTrue();
+        assertThat(Maybe.narrow(monad.bind(fool, lenIfEven)).get()).isEqualTo(4);
     }
 
-    public void testMonadPlus(MonadPlus<µ> monadPlus) throws Exception {
+    private void testMonadPlus(MonadPlus<µ> monadPlus) {
         Maybe<String> foo = Just("foo");
         Maybe<String> bar = Just("bar");
         Maybe<String> baz = Just("baz");
         Maybe<String> nothing = Nothing();
+
         //mzero
-        assertEquals("Nothing", monadPlus.mzero().toString());
+        assertThat(Maybe.narrow(monadPlus.mzero()).isNothing()).isTrue();
+
         //mplus
         //result of  monadPlus.mplus(foo, bar) depends on bias
-        assertEquals("Just(foo)", monadPlus.mplus(foo, nothing).toString());
-        assertEquals("Just(bar)", monadPlus.mplus(nothing, bar).toString());
-        assertEquals("Nothing", monadPlus.mplus(nothing, nothing).toString());
+        assertThat(Maybe.narrow(monadPlus.mplus(foo, nothing)).get()).isEqualTo("foo");
+        assertThat(Maybe.narrow(monadPlus.mplus(nothing, bar)).get()).isEqualTo("bar");
+        assertThat(Maybe.narrow(monadPlus.mplus(nothing, nothing)).isNothing()).isTrue();
+
         //guard
-        assertEquals("Nothing", monadPlus.guard(false).toString());
-        assertEquals("Just(())", monadPlus.guard(true).toString());
+        assertThat(Maybe.narrow(monadPlus.guard(false)).isNothing()).isTrue();
+        assertThat(Maybe.narrow(monadPlus.guard(true)).get()).isEqualTo(T0.unit);
+
         //mfilter
         Maybe<Integer> one = Just(1);
-        assertEquals("Just(1)", monadPlus.mfilter(Integers.odd, one).toString());
-        assertEquals("Nothing", monadPlus.mfilter(Integers.even, one).toString());
+        assertThat(Maybe.narrow(monadPlus.mfilter(Integers.odd, one)).get()).isEqualTo(1);
+        assertThat(Maybe.narrow(monadPlus.mfilter(Integers.even, one)).isNothing()).isTrue();
+
         //msum
-        List<_<Maybe.µ,String>> fooNothingNothing = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, nothing, nothing));
-        assertEquals("Just(foo)", monadPlus.msum(fooNothingNothing).toString());
-        List<_<Maybe.µ,String>> nothingBarNothing = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(nothing, bar, nothing));
-        assertEquals("Just(bar)", monadPlus.msum(nothingBarNothing).toString());
-        List<_<Maybe.µ,String>> nothingNothingBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(nothing, nothing, baz));
-        assertEquals("Just(baz)", monadPlus.msum(nothingNothingBaz).toString());
-        List<_<Maybe.µ,String>> nothingNothingNothing = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(nothing, nothing, nothing));
-        assertEquals("Nothing", monadPlus.msum(nothingNothingNothing).toString());
+        List<_<Maybe.µ,String>> fooNothingNothing = List.contravariant(List.of(foo, nothing, nothing));
+        assertThat(Maybe.narrow(monadPlus.msum(fooNothingNothing)).get()).isEqualTo("foo");
+        List<_<Maybe.µ,String>> nothingBarNothing = List.contravariant(List.of(nothing, bar, nothing));
+        assertThat(Maybe.narrow(monadPlus.msum(nothingBarNothing)).get()).isEqualTo("bar");
+        List<_<Maybe.µ,String>> nothingNothingBaz = List.contravariant(List.of(nothing, nothing, baz));
+        assertThat(Maybe.narrow(monadPlus.msum(nothingNothingBaz)).get()).isEqualTo("baz");
+        List<_<Maybe.µ,String>> nothingNothingNothing = List.contravariant(List.of(nothing, nothing, nothing));
+        assertThat(Maybe.narrow(monadPlus.msum(nothingNothingNothing)).isNothing()).isTrue();
     }
 
 
     @Test
-    public void testFirstBiasedMonadPlus() throws Exception {
+    public void testFirstBiasedMonadPlus() {
         MonadPlus<µ> monadPlus = Maybe.firstBiasedMonadPlus;
         testMonadPlus(monadPlus);
 
@@ -269,18 +280,19 @@ public class MaybeTest {
         Maybe<String> nothing = Nothing();
 
         //mplus
-        assertEquals("Just(foo)", monadPlus.mplus(foo, bar).toString());
+        assertThat(Maybe.narrow(monadPlus.mplus(foo, bar)).get()).isEqualTo("foo");
+
         //msum
         List<_<Maybe.µ,String>> fooBarBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, bar, baz));
-        assertEquals("Just(foo)", monadPlus.msum(fooBarBaz).toString());
+        assertThat(Maybe.narrow(monadPlus.msum(fooBarBaz)).get()).isEqualTo("foo");
         List<_<Maybe.µ,String>> fooBarNothing = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, bar, nothing));
-        assertEquals("Just(foo)", monadPlus.msum(fooBarNothing).toString());
+        assertThat(Maybe.narrow(monadPlus.msum(fooBarNothing)).get()).isEqualTo("foo");
         List<_<Maybe.µ,String>> fooNothingBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, nothing, baz));
-        assertEquals("Just(foo)", monadPlus.msum(fooNothingBaz).toString());
+        assertThat(Maybe.narrow(monadPlus.msum(fooNothingBaz)).get()).isEqualTo("foo");
     }
 
     @Test
-    public void testLastBiasedMonadPlus() throws Exception {
+    public void testLastBiasedMonadPlus() {
         MonadPlus<µ> monadPlus = Maybe.lastBiasedMonadPlus;
         testMonadPlus(monadPlus);
 
@@ -290,19 +302,19 @@ public class MaybeTest {
         Maybe<String> nothing = Nothing();
 
         //mplus
-        assertEquals("Just(bar)", monadPlus.mplus(foo, bar).toString());
+        assertThat(Maybe.narrow(monadPlus.mplus(foo, bar)).get()).isEqualTo("bar");
+
         //msum
-        List<_<Maybe.µ,String>> fooBarBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, bar, baz));
-        assertEquals("Just(baz)", monadPlus.msum(fooBarBaz).toString());
-        List<_<Maybe.µ,String>> fooBarNothing = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, bar, nothing));
-        assertEquals("Just(bar)", monadPlus.msum(fooBarNothing).toString());
-        List<_<Maybe.µ,String>> fooNothingBaz = List.<_<Maybe.µ,String>,Maybe<String>>contravariant(List.of(foo, nothing, baz));
-        assertEquals("Just(baz)", monadPlus.msum(fooNothingBaz).toString());
+        List<_<Maybe.µ,String>> fooBarBaz = List.contravariant(List.of(foo, bar, baz));
+        assertThat(Maybe.narrow(monadPlus.msum(fooBarBaz)).get()).isEqualTo("baz");
+        List<_<Maybe.µ,String>> fooBarNothing = List.contravariant(List.of(foo, bar, nothing));
+        assertThat(Maybe.narrow(monadPlus.msum(fooBarNothing)).get()).isEqualTo("bar");
+        List<_<Maybe.µ,String>> fooNothingBaz = List.contravariant(List.of(foo, nothing, baz));
+        assertThat(Maybe.narrow(monadPlus.msum(fooNothingBaz)).get()).isEqualTo("baz");
     }
 
-
     @Test
-    public void testJusts() throws Exception {
+    public void testJusts() {
          List<Maybe<String>> maybes = List.of(
                  Maybe.<String>Nothing(),
                  Just("foo"),
@@ -310,24 +322,39 @@ public class MaybeTest {
                  Maybe.<String>JustLazy(() -> "bar"),
                  Maybe.<String>Nothing());
          List<String> strings = justs(maybes);
-         assertEquals("List(foo,bar)", strings.toString());
+         assertThat(strings).containsExactly("foo", "bar");
     }
     
     @Test
-    public void testAsList() throws Exception {
-        Maybe<String> foo = Just("foo");
-        assertEquals("List(foo)", foo.asList().toString());
-        Supplier<String> thunk = () -> "bar";
-        Maybe<String> bar = JustLazy(thunk);
-        assertEquals("List(bar)", bar.asList().toString());
-        Maybe<String> nothing = Nothing();
-        assertEquals("List()", nothing.asList().toString());
+    public void testAsList() {
+        assertThat(Just("foo").asList()).containsExactly("foo");
+        assertThat(JustLazy(() -> "bar").asList()).containsExactly("bar");
+        assertThat(Nothing().asList()).isEmpty();
     }
 
     @Test
-    public void testMonadFix() throws Exception {
-        MonadFix<µ> monadFix = Maybe.monadFix;
+    public void testMonadFix() {
+        MonadFix<µ> monadFix = Maybe.monad;
         Maybe<String> foo = narrow(monadFix.mfix((Supplier<String> x) -> Just("foo")));
-        assertEquals("Just(foo)", foo.toString());
+        assertThat(foo.get()).isEqualTo("foo");
     }
+
+    @Test
+    public void testMonadRec()  {
+        MonadRec<µ> monadRec = Maybe.monad;
+
+        Function<Integer, _<µ, Either<Integer, String>>> divisibleBy3 = i -> {
+           if (i < 10) {
+               return i == 0 || i == 3 || i == 6 || i == 9
+                       ? Maybe.Just(Either.newRight("divisible"))
+                       : Maybe.Nothing();
+           } else {
+               return Maybe.Just(Either.newLeft(i / 10 + i % 10));
+           }
+        };
+
+        assertThat(Maybe.narrow(monadRec.tailRec(divisibleBy3, 123456789)).get()).isEqualTo("divisible");
+        assertThat(Maybe.narrow(monadRec.tailRec(divisibleBy3, 123456788)).isNothing()).isTrue();
+    }
+
 }

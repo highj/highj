@@ -194,7 +194,6 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     public static final MaybeMonad monad = new MaybeMonad();
     public static final MaybeMonadPlus firstBiasedMonadPlus = new MaybeMonadPlus(MaybeMonadPlus.Bias.FIRST_JUST);
     public static final MaybeMonadPlus lastBiasedMonadPlus = new MaybeMonadPlus(MaybeMonadPlus.Bias.LAST_JUST);
-    public static final MaybeMonadFix monadFix = new MaybeMonadFix();
 
     public static final Traversable<µ> traversable = new MaybeTraversable();
 
