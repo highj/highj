@@ -7,11 +7,9 @@ import org.highj._;
 import org.highj.data.collection.Maybe;
 import org.highj.typeclass1.monad.MonadPlus;
 
-import java.util.function.Function;
-
 public class MaybeMonadPlus extends MaybeMonad implements MonadPlus<µ> {
 
-    public static enum Bias {FIRST_JUST, LAST_JUST}
+    public enum Bias {FIRST_JUST, LAST_JUST}
 
     private final Bias bias;
 
@@ -21,7 +19,7 @@ public class MaybeMonadPlus extends MaybeMonad implements MonadPlus<µ> {
 
     @Override
     public <A> Maybe<A> mzero() {
-        return Nothing();
+        return newNothing();
     }
 
     @Override

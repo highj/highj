@@ -14,7 +14,7 @@ public interface MaybeTMonadTrans<M> extends MaybeTMonad<M>, MonadTrans<MaybeT.Â
     Monad<M> get();
 
     @Override
-    public default <A> MaybeT<M, A> lift(_<M, A> nestedA) {
-        return new MaybeT<>(get().map(Maybe::Just, nestedA));
+    default <A> MaybeT<M, A> lift(_<M, A> nestedA) {
+        return new MaybeT<>(get().map(Maybe::newJust, nestedA));
     }
 }

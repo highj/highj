@@ -28,12 +28,12 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
 
         @Override
         public Maybe<Object> maybeHead() {
-            return Maybe.Nothing();
+            return Maybe.newNothing();
         }
 
         @Override
         public Maybe<List<Object>> maybeTail() {
-            return Maybe.Nothing();
+            return Maybe.newNothing();
         }
     };
 
@@ -47,8 +47,8 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
             index--;
         }
         return (index < 0 || current.isEmpty())
-                ? Maybe.<A>Nothing()
-                : Maybe.Just(current.head());
+                ? Maybe.<A>newNothing()
+                : Maybe.newJust(current.head());
     }
 
     @SuppressWarnings("unchecked")
@@ -127,12 +127,12 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
 
             @Override
             public Maybe<A> maybeHead() {
-                return Maybe.Just(head);
+                return Maybe.newJust(head);
             }
 
             @Override
             public Maybe<List<A>> maybeTail() {
-                return Maybe.Just(tail);
+                return Maybe.newJust(tail);
             }
         };
     }
@@ -142,12 +142,12 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
 
             @Override
             public Maybe<A> maybeHead() {
-                return Maybe.Just(head);
+                return Maybe.newJust(head);
             }
 
             @Override
             public Maybe<List<A>> maybeTail() {
-                return Maybe.JustLazy(thunkTail);
+                return Maybe.lazyJust(thunkTail);
             }
         };
     }
@@ -157,12 +157,12 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
 
             @Override
             public Maybe<A> maybeHead() {
-                return Maybe.Just(stream.head());
+                return Maybe.newJust(stream.head());
             }
 
             @Override
             public Maybe<List<A>> maybeTail() {
-                return Maybe.Just(List.<A>fromStream(stream.tail()));
+                return Maybe.newJust(List.<A>fromStream(stream.tail()));
             }
         };
     }
@@ -238,7 +238,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     }
 
     public A get(int index) throws IndexOutOfBoundsException {
-        return apply(index).getOrError(IndexOutOfBoundsException.class, "Index: " + index);
+        return apply(index).getOrException(IndexOutOfBoundsException.class, "Index: " + index);
     }
 
     public boolean contains(A value) {
@@ -494,16 +494,6 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         } else {
             List<B> headList = List.contravariant(fn.apply(head()));
             return List.<B>append(headList, tail().concatMap(fn));
-        }
-    }
-
-    public List<A> filter(final Function<A, Boolean> predicate) {
-        if (isEmpty()) {
-            return this;
-        } else if (predicate.apply(head())) {
-            return newLazyList(head(), () -> tail().filter(predicate));
-        } else {
-            return tail().filter(predicate);
         }
     }
 

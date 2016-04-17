@@ -106,7 +106,7 @@ public class StreamTest {
 
     @Test
     public void testFilter() throws Exception {
-        Stream<Integer> stream = range(1).filter(Integers.even);
+        Stream<Integer> stream = range(1).filter(Integers.even::test);
         assertEquals(Integer.valueOf(2), stream.head());
         stream = stream.tail();
         assertEquals(Integer.valueOf(4), stream.head());
@@ -117,13 +117,13 @@ public class StreamTest {
 
     @Test
     public void testToString() throws Exception {
-        Stream<Integer> stream = range(1).filter(Integers.even);
+        Stream<Integer> stream = range(1).filter(Integers.even::test);
         assertEquals("Stream(2,4,6,8,10,12,14,16,18,20...)", stream.toString());
     }
 
     @Test
     public void testTake() throws Exception {
-        Stream<Integer> stream = range(1).filter(Integers.odd);
+        Stream<Integer> stream = range(1).filter(Integers.odd::test);
         assertEquals("List(1,3,5,7)", stream.take(4).toString());
         assertEquals("List()", stream.take(0).toString());
         assertEquals("List()", stream.take(-4).toString());

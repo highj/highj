@@ -265,7 +265,7 @@ public class ListTest {
     @Test
     public void testMap() throws Exception {
         List<Integer> list = List.of(2, 5, 3, 8);
-        assertEquals("List(true,false,false,true)", list.map(Integers.even).toString());
+        assertEquals("List(true,false,false,true)", list.map(Integers.even::test).toString());
     }
 
     @Test

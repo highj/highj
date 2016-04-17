@@ -1,7 +1,6 @@
 package org.highj.data.transformer.maybe;
 
 import org.highj._;
-import org.highj.__;
 import org.highj.data.collection.Maybe;
 import org.highj.data.transformer.MaybeT;
 import org.highj.typeclass1.monad.Bind;
@@ -14,14 +13,14 @@ import java.util.function.Function;
  */
 public interface MaybeTBind<M> extends MaybeTApply<M>, Bind<_<MaybeT.µ, M>> {
 
-    public Monad<M> get();
+    Monad<M> get();
 
     @Override
-    public default <A, B> MaybeT<M, B> bind(_<_<MaybeT.µ, M>, A> nestedA, Function<A, _<_<MaybeT.µ, M>, B>> fn) {
+    default <A, B> MaybeT<M, B> bind(_<_<MaybeT.µ, M>, A> nestedA, Function<A, _<_<MaybeT.µ, M>, B>> fn) {
         _<M, Maybe<B>> m_maybeB = get().bind(
                 MaybeT.narrow(nestedA).get(),
                 maybeA -> maybeA.cata(
-                        get().pure(Maybe.<B>Nothing()),
+                        get().pure(Maybe.<B>newNothing()),
                         (A a) -> MaybeT.narrow(fn.apply(a)).get()
                 )
         );

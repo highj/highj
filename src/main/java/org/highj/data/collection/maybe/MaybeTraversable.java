@@ -35,8 +35,8 @@ public class MaybeTraversable extends MaybeFunctor implements Traversable<µ> {
         //traverse f (Just x) = Just <$> f x
         Maybe<A> maybe = narrow(traversable);
         return maybe.isNothing()
-                ? applicative.<_<µ, B>>pure(Maybe.Nothing())
-                : applicative.<B,_<µ, B>>map(Maybe::Just, fn.apply(maybe.get()));
+                ? applicative.<_<µ, B>>pure(Maybe.newNothing())
+                : applicative.<B,_<µ, B>>map(Maybe::newJust, fn.apply(maybe.get()));
     }
 
 }

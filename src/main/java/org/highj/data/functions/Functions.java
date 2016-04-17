@@ -144,7 +144,7 @@ public enum Functions {
     }
 
     public static <A,B> Function<A,Maybe<B>> fromJavaMap(Map<A,B> map) {
-        return a -> map.containsKey(a) ? Maybe.Just(map.get(a)) : Maybe.<B>Nothing();
+        return a -> Maybe.justWhenTrue(map.containsKey(a), () -> map.get(a));
     }
 
     public static <A,B> Function<A,B> fromJavaMap(Map<A,B> map, B defaultValue) {

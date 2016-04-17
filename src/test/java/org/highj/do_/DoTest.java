@@ -39,15 +39,15 @@ public class DoTest {
     @Test
     public void testDoBlock() {
         Maybe<String> onetwo = Maybe.doBlock(doit -> doit.
-                        assign(Var.a, Maybe.Just("one")).
-                        assign(Var.b, Maybe.Just("two")).
+                        assign(Var.a, Maybe.newJust("one")).
+                        assign(Var.b, Maybe.newJust("two")).
                         with(Var.a).and(Var.b).apply((a, b) -> a + b)
         );
         assertEquals("onetwo", onetwo.get());
 
         Maybe<String> empty = Maybe.doBlock(doit -> doit.
-                        assign(Var.a, Maybe.Just("one")).
-                        assign(Var.b, Maybe.Nothing()).
+                        assign(Var.a, Maybe.newJust("one")).
+                        assign(Var.b, Maybe.newNothing()).
                         with(Var.a).and(Var.b).apply((a, b) -> a + b)
         );
         assertTrue(empty.isNothing());

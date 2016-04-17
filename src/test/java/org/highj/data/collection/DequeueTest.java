@@ -27,8 +27,8 @@ public class DequeueTest {
     public void testEmpty() throws Exception {
         Dequeue<String> dq = Dequeue.empty();
         assertThat(dq).isEmpty();
-        assertThat(dq.getFirst()).isEqualTo(Maybe.Nothing());
-        assertThat(dq.getLast()).isEqualTo(Maybe.Nothing());
+        assertThat(dq.getFirst()).isEqualTo(Maybe.newNothing());
+        assertThat(dq.getLast()).isEqualTo(Maybe.newNothing());
     }
 
     @Test

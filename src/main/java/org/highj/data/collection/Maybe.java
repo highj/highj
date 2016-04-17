@@ -9,7 +9,6 @@ import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.comonad.Extend;
 import org.highj.typeclass1.foldable.Traversable;
-import org.highj.typeclass1.monad.Monad;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -38,22 +37,22 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
         }
 
         @Override
-        public <B> B cataLazy(Supplier<B> defaultThunk, Function<Object, B> fn) {
+        public <B> B lazyCata(Supplier<B> defaultThunk, Function<Object, B> fn) {
             return defaultThunk.get();
         }
     };
 
     @SuppressWarnings("unchecked")
-    public static <A> Maybe<A> Nothing() {
+    public static <A> Maybe<A> newNothing() {
         return (Maybe) NOTHING;
     }
 
-    public static <A> Maybe<A> Just(final A value) {
+    public static <A> Maybe<A> newJust(final A value) {
         if (value == null) {
-            throw new IllegalArgumentException("Just() can't take null argument");
+            throw new IllegalArgumentException("newJust() can't take null argument");
         }
         return new Maybe<A>() {
-            public <B> B cataLazy(Supplier<B> defaultThunk, Function<A, B> fn) {
+            public <B> B lazyCata(Supplier<B> defaultThunk, Function<A, B> fn) {
                 return fn.apply(value);
             }
 
@@ -64,10 +63,10 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
         };
     }
 
-    public static <A> Maybe<A> JustLazy(final Supplier<A> thunk) {
+    public static <A> Maybe<A> lazyJust(final Supplier<A> thunk) {
         return new Maybe<A>() {
 
-            public <B> B cataLazy(Supplier<B> defaultThunk, Function<A, B> fn) {
+            public <B> B lazyCata(Supplier<B> defaultThunk, Function<A, B> fn) {
                 return fn.apply(thunk.get());
             }
 
@@ -76,11 +75,15 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
                 return fn.apply(thunk.get());
             }
         };
+    }
+
+    public static <A> Maybe<A> justWhenTrue(boolean condition, Supplier<A> thunk) {
+        return condition ? newJust(thunk.get()) : newNothing();
     }
 
     public abstract <B> B cata(B defaultValue, Function<A, B> fn);
 
-    public abstract <B> B cataLazy(Supplier<B> defaultThunk, Function<A, B> fn);
+    public abstract <B> B lazyCata(Supplier<B> defaultThunk, Function<A, B> fn);
 
     @SuppressWarnings("unchecked")
     public static <Super_A, A extends Super_A> Maybe<Super_A> contravariant(Maybe<A> maybe) {
@@ -100,23 +103,23 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     }
 
     public A getOrElse(Supplier<A> defaultThunk) {
-        return cataLazy(defaultThunk, x -> x);
+        return lazyCata(defaultThunk, x -> x);
     }
 
-    public A getOrError(Class<? extends RuntimeException> exClass) {
+    public A getOrException(Class<? extends RuntimeException> exClass) {
         return getOrElse(Functions.<A>error(exClass));
     }
 
-    public A getOrError(Class<? extends RuntimeException> exClass, String message) {
+    public A getOrException(Class<? extends RuntimeException> exClass, String message) {
         return getOrElse(Functions.<A>error(exClass, message));
     }
 
-    public A getOrError(String message) {
+    public A getOrException(String message) {
         return getOrElse(Functions.<A>error(message));
     }
 
     public A get() throws NoSuchElementException {
-        return getOrError(NoSuchElementException.class);
+        return getOrException(NoSuchElementException.class);
     }
 
     public Maybe<A> orElse(Maybe<A> that) {
@@ -129,7 +132,7 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     }
 
     public Maybe<A> filter(Predicate<? super A> predicate) {
-        return isJust() && predicate.test(get()) ? this : Nothing();
+        return isJust() && predicate.test(get()) ? this : newNothing();
     }
 
     public List<A> asList() {
@@ -137,11 +140,11 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     }
 
     public <B> Maybe<B> bind(Function<A, Maybe<B>> fn) {
-        return cata(Maybe.<B>Nothing(), fn);
+        return cata(Maybe.<B>newNothing(), fn);
     }
 
     public <B> Maybe<B> map(Function<? super A, ? extends B> fn) {
-        return bind(a -> Maybe.<B>Just(fn.apply(a)));
+        return bind(a -> Maybe.<B>newJust(fn.apply(a)));
     }
 
     @SuppressWarnings("unchecked")
@@ -200,15 +203,15 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
     public static final Extend<µ> extend = new MaybeExtend();
 
     public static <A> Monoid<Maybe<A>> firstMonoid() {
-        return Monoid.create(Maybe.Nothing(), (x, y) -> x.isJust() ? x : y);
+        return Monoid.create(Maybe.newNothing(), (x, y) -> x.isJust() ? x : y);
     }
 
     public static <A> Monoid<Maybe<A>> lastMonoid() {
-        return Monoid.create(Maybe.Nothing(), (x, y) -> y.isJust() ? y : x);
+        return Monoid.create(Maybe.newNothing(), (x, y) -> y.isJust() ? y : x);
     }
 
     public static <A> Monoid<Maybe<A>> monoid(final BinaryOperator<A> semigroup) {
-        return Monoid.create(Maybe.Nothing(), (x, y) ->
+        return Monoid.create(Maybe.newNothing(), (x, y) ->
                 x.bind(xValue -> y.<A>map(yValue -> semigroup.apply(xValue, yValue))));
     }
 

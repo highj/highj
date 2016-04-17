@@ -11,20 +11,20 @@ import org.highj.util.Lazy;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.highj.data.collection.Maybe.Just;
+import static org.highj.data.collection.Maybe.newJust;
 import static org.highj.data.collection.Maybe.narrow;
 
 public class MaybeMonad extends MaybeFunctor implements Monad<Maybe.µ>, MonadFix<Maybe.µ>, MonadRec<Maybe.µ> {
 
     @Override
     public <A> Maybe<A> pure(A a) {
-        return Just(a);
+        return newJust(a);
     }
 
     @Override
     public <A, B> Maybe<B> ap(_<Maybe.µ, Function<A, B>> fn, _<Maybe.µ, A> nestedA) {
-        return narrow(narrow(fn).cata(Maybe.<B>Nothing(), f1 -> narrow(nestedA).<_<Maybe.µ, B>>cata(
-                Maybe.<B>Nothing(), a -> Just(f1.apply(a)))
+        return narrow(narrow(fn).cata(Maybe.<B>newNothing(), f1 -> narrow(nestedA).<_<Maybe.µ, B>>cata(
+                Maybe.<B>newNothing(), a -> newJust(f1.apply(a)))
         ));
     }
 
@@ -37,12 +37,12 @@ public class MaybeMonad extends MaybeFunctor implements Monad<Maybe.µ>, MonadFi
     public <A> Maybe<A> mfix(Function<Supplier<A>, _<Maybe.µ, A>> fn) {
         Lazy<A> lazy = new Lazy<>();
         lazy.set(Maybe.narrow(fn.apply(lazy)).get());
-        return Maybe.Just(lazy.get());
+        return Maybe.newJust(lazy.get());
     }
 
     @Override
     public <A, B> _<Maybe.µ, B> tailRec(Function<A, _<Maybe.µ, Either<A, B>>> function, A startValue) {
-        Maybe<Either<A, B>> step = Maybe.Just(Either.newLeft(startValue));
+        Maybe<Either<A, B>> step = Maybe.newJust(Either.newLeft(startValue));
         while(step.isJust() && step.get().isLeft()) {
             step = Maybe.narrow(function.apply(step.get().getLeft()));
         }

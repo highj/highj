@@ -47,7 +47,7 @@ public class Map<A, B> implements __<Map.µ, A, B>, Iterable<T2<A, B>>, Function
 
     public Maybe<B> apply(A key) {
         if (isEmpty()) {
-            return Maybe.Nothing();
+            return Maybe.newNothing();
         }
 
         int khc = key.hashCode();
@@ -59,10 +59,10 @@ public class Map<A, B> implements __<Map.µ, A, B>, Iterable<T2<A, B>>, Function
             case EQ:
                 for (T2<A, B> t2 : bucket) {
                     if (key.equals(t2._1())) {
-                        return Maybe.Just(t2._2());
+                        return Maybe.newJust(t2._2());
                     }
                 }
-                return Maybe.Nothing();
+                return Maybe.newNothing();
             default:
                 throw new AssertionError();
         }

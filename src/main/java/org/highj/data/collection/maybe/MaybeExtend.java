@@ -8,7 +8,7 @@ public class MaybeExtend extends MaybeFunctor implements Extend<Maybe.µ> {
     @Override
     public <A> Maybe<_<Maybe.µ, A>> duplicate(_<Maybe.µ, A> nestedA) {
         return Maybe.narrow(nestedA).isNothing()
-                ? Maybe.<_<Maybe.µ, A>>Nothing()
-                : Maybe.Just(nestedA);
+                ? Maybe.<_<Maybe.µ, A>>newNothing()
+                : Maybe.newJust(nestedA);
     }
 }

@@ -191,7 +191,7 @@ public abstract class PLens<S, T, A, B> {
 
             @Override
             public Maybe<A> getMaybe(final S s) {
-                return Maybe.Just(self.get(s));
+                return Maybe.newJust(self.get(s));
             }
 
             @Override

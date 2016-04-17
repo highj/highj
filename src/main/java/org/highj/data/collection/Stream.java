@@ -109,11 +109,11 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
         return newLazyStream(iterator.next(), () -> newLazyStream(iterator));
     }
 
-    //returns iterator values wrapped in JustLazy, and Nothing when the iterator gets empty
+    //returns iterator values wrapped in Just, and Nothing when the iterator gets empty
     public static <A> Stream<Maybe<A>> maybeFromIterator(Iterator<A> iterator) {
         return newLazyStream(iterator.hasNext()
-                ? Maybe.Just(iterator.next())
-                : Maybe.<A>Nothing(),
+                ? Maybe.newJust(iterator.next())
+                : Maybe.<A>newNothing(),
                 () -> maybeFromIterator(iterator));
     }
 

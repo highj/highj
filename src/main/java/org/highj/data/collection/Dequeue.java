@@ -132,7 +132,7 @@ public class Dequeue<A> implements _<Dequeue.µ, A>, Iterable<A> {
         //  (Just f, check $ BankersDequeue (sizeF - 1) fs sizeR rear)
         if (sizeFront == 0) {
             switch(sizeRear) {
-                case 0 : return T2.of(Maybe.Nothing(), of());
+                case 0 : return T2.of(Maybe.newNothing(), of());
                 case 1: return  T2.of(rear.maybeHead(), of());
                 default: throw new AssertionError("Queue is too far unbalanced.");
             }
@@ -155,7 +155,7 @@ public class Dequeue<A> implements _<Dequeue.µ, A>, Iterable<A> {
         //  (Just r, check $ BankersDequeue sizeF front (sizeR - 1) rs)
         if (sizeRear == 0) {
             switch(sizeFront) {
-                case 0 : return T2.of(Maybe.Nothing(), of());
+                case 0 : return T2.of(Maybe.newNothing(), of());
                 case 1: return  T2.of(front.maybeHead(), of());
                 default: throw new AssertionError("Queue is too far unbalanced.");
             }

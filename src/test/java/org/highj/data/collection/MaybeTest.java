@@ -27,147 +27,147 @@ public class MaybeTest {
 
     @Test
     public void testCata() {
-        Maybe<String> nothing = Nothing();
+        Maybe<String> nothing = newNothing();
         assertThat(nothing.cata("foo", Functions.<String, String>constant("bar"))).isEqualTo("foo");
 
-        Maybe<String> baz = Just("baz");
+        Maybe<String> baz = newJust("baz");
         assertThat(baz.cata("foo", Functions.constant("bar"))).isEqualTo("bar");
         assertThat(baz.cata("foo", Function.identity())).isEqualTo("baz");
     }
 
     @Test
-    public void testCataThunk() {
+    public void testLazyCata() {
         Supplier<String> thunk = () -> "foo";
-        Maybe<String> nothing = Nothing();
-        assertThat(nothing.cataLazy(thunk, Functions.constant("bar"))).isEqualTo("foo");
+        Maybe<String> nothing = newNothing();
+        assertThat(nothing.lazyCata(thunk, Functions.constant("bar"))).isEqualTo("foo");
 
-        Maybe<String> baz = Just("baz");
-        assertThat(baz.cataLazy(thunk, Functions.constant("bar"))).isEqualTo("bar");
-        assertThat(baz.cataLazy(thunk, Function.identity())).isEqualTo("baz");
+        Maybe<String> baz = newJust("baz");
+        assertThat(baz.lazyCata(thunk, Functions.constant("bar"))).isEqualTo("bar");
+        assertThat(baz.lazyCata(thunk, Function.identity())).isEqualTo("baz");
     }
 
     @Test
-    public void testNothing() {
-        Maybe<String> nothing = Nothing();
+    public void testNewNothing() {
+        Maybe<String> nothing = newNothing();
         assertThat(nothing.isNothing()).isTrue();
     }
 
     @Test
-    public void testJust() {
-        Maybe<String> bar = Just("bar");
+    public void testNewJust() {
+        Maybe<String> bar = newJust("bar");
         assertThat(bar.isJust()).isTrue();
         assertThat(bar.get()).isEqualTo("bar");
     }
 
     @Test
     public void testJustFn() {
-        Function<String, Maybe<String>> just = Maybe::Just;
+        Function<String, Maybe<String>> just = Maybe::newJust;
         Maybe<String> bar = just.apply("bar");
         assertThat(bar.isJust()).isTrue();
         assertThat(bar.get()).isEqualTo("bar");
     }
 
     @Test
-    public void testJustThunk() {
+    public void testLazyJust() {
         Supplier<String> thunk = () -> "bar";
-        Maybe<String> bar = JustLazy(thunk);
+        Maybe<String> bar = lazyJust(thunk);
         assertThat(bar.isJust()).isTrue();
         assertThat(bar.get()).isEqualTo("bar");
     }
 
     @Test
     public void testIsNothing() {
-        Maybe<String> nothing = Nothing();
+        Maybe<String> nothing = newNothing();
         assertThat(nothing.isNothing()).isTrue();
-        Maybe<String> bar = Just("bar");
+        Maybe<String> bar = newJust("bar");
         assertThat(bar.isNothing()).isFalse();
     }
 
     @Test
     public void testIsJust() {
-        Maybe<String> nothing = Nothing();
+        Maybe<String> nothing = newNothing();
         assertThat(nothing.isJust()).isFalse();
-        Maybe<String> bar = Just("bar");
+        Maybe<String> bar = newJust("bar");
         assertThat(bar.isJust()).isTrue();
     }
 
     @Test
     public void testGetOrElse() {
-        Maybe<String> nothing = Nothing();
+        Maybe<String> nothing = newNothing();
         assertThat(nothing.getOrElse("foo")).isEqualTo("foo");
-        Maybe<String> bar = Just("bar");
+        Maybe<String> bar = newJust("bar");
         assertThat(bar.getOrElse("foo")).isEqualTo("bar");
     }
 
     @Test
     public void testGetOrElseThunk() {
         Supplier<String> thunk = () -> "foo";
-        Maybe<String> nothing = Nothing();
+        Maybe<String> nothing = newNothing();
         assertThat(nothing.getOrElse(thunk)).isEqualTo("foo");
-        Maybe<String> bar = Just("bar");
+        Maybe<String> bar = newJust("bar");
         assertThat(bar.getOrElse(thunk)).isEqualTo("bar");
     }
 
     @Test
     public void testGet() {
-        Maybe<String> bar = Just("bar");
+        Maybe<String> bar = newJust("bar");
         assertThat(bar.get()).isEqualTo("bar");
     }
 
     @Test
     public void testGetThrowingException()  {
-        Maybe<String> nothing = Nothing();
+        Maybe<String> nothing = newNothing();
         shouldThrow.expect(NoSuchElementException.class);
         nothing.get();
     }
 
     @Test
     public void testGetOrErrorMsg() {
-        Maybe<String> bar = Just("bar");
-        assertThat(bar.getOrError("argh!")).isEqualTo("bar");
+        Maybe<String> bar = newJust("bar");
+        assertThat(bar.getOrException("argh!")).isEqualTo("bar");
     }
 
     @Test
     public void testGetOrErrorMsgThrowingException() {
-        Maybe<String> nothing = Nothing();
+        Maybe<String> nothing = newNothing();
         shouldThrow.expect(RuntimeException.class);
         shouldThrow.expectMessage("argh!");
-        nothing.getOrError("argh!");
+        nothing.getOrException("argh!");
     }
 
 
     @Test
-    public void testGetOrErrorClass() {
-        Maybe<String> bar = Just("bar");
-        assertThat(bar.getOrError(NoSuchElementException.class)).isEqualTo("bar");
+    public void testGetOrExceptionClass() {
+        Maybe<String> bar = newJust("bar");
+        assertThat(bar.getOrException(NoSuchElementException.class)).isEqualTo("bar");
     }
 
     @Test
-    public void testGetOrErrorClassThrowingException() {
-        Maybe<String> nothing = Nothing();
+    public void testGetOrExceptionClassThrowingException() {
+        Maybe<String> nothing = newNothing();
         shouldThrow.expect(IllegalArgumentException.class);
-        nothing.getOrError(IllegalArgumentException.class);
+        nothing.getOrException(IllegalArgumentException.class);
     }
 
     @Test
-    public void testGetOrErrorClassMsg() {
-        Maybe<String> bar = Just("bar");
-        assertThat(bar.getOrError(IllegalArgumentException.class, "argh!")).isEqualTo("bar");
+    public void testGetOrExceptionClassMsg() {
+        Maybe<String> bar = newJust("bar");
+        assertThat(bar.getOrException(IllegalArgumentException.class, "argh!")).isEqualTo("bar");
     }
 
     @Test
-    public void testGetOrErrorClassMsgThrowingException() {
-        Maybe<String> nothing = Nothing();
+    public void testGetOrExceptionClassMsgThrowingException() {
+        Maybe<String> nothing = newNothing();
         shouldThrow.expect(IllegalArgumentException.class);
         shouldThrow.expectMessage("argh!");
-        nothing.getOrError(IllegalArgumentException.class, "argh!");
+        nothing.getOrException(IllegalArgumentException.class, "argh!");
     }
 
     @Test
     public void testOrElse() {
-        Maybe<String> foo = Just("foo");
-        Maybe<String> bar = Just("bar");
-        Maybe<String> nothing = Nothing();
+        Maybe<String> foo = newJust("foo");
+        Maybe<String> bar = newJust("bar");
+        Maybe<String> nothing = newNothing();
         assertThat(foo.orElse(bar).get()).isEqualTo("foo");
         assertThat(foo.orElse(nothing).get()).isEqualTo("foo");
         assertThat(nothing.orElse(bar).get()).isEqualTo("bar");
@@ -176,18 +176,18 @@ public class MaybeTest {
 
     @Test
     public void testIterator() {
-        assertThat(Nothing()).isEmpty();
-        assertThat(Just("bar")).containsExactly("bar");
+        assertThat(newNothing()).isEmpty();
+        assertThat(newJust("bar")).containsExactly("bar");
     }
 
     @Test
     public void testEq() {
         Eq<Maybe<String>> eq = eq(new Eq.JavaEq<String>());
-        Maybe<String> nothing1 = Nothing();
-        Maybe<String> nothing2 = Nothing();
-        Maybe<String> foo1 = Just("foo");
-        Maybe<String> foo2 = Just("foo");
-        Maybe<String> bar = Just("bar");
+        Maybe<String> nothing1 = newNothing();
+        Maybe<String> nothing2 = newNothing();
+        Maybe<String> foo1 = newJust("foo");
+        Maybe<String> foo2 = newJust("foo");
+        Maybe<String> bar = newJust("bar");
         assertThat(eq.eq(nothing1, nothing2)).isTrue();
         assertThat(eq.eq(foo1, foo2)).isTrue();
         assertThat(eq.eq(nothing1, foo1)).isFalse();
@@ -197,9 +197,9 @@ public class MaybeTest {
 
     @Test
     public void testMap() {
-        Maybe<String> nothing = Nothing();
+        Maybe<String> nothing = newNothing();
         assertThat(nothing.map(String::length).isNothing()).isTrue();
-        Maybe<String> foo = Just("foo");
+        Maybe<String> foo = newJust("foo");
         assertThat(foo.map(String::length).get()).isEqualTo(3);
     }
     
@@ -211,33 +211,33 @@ public class MaybeTest {
         assertThat(Maybe.narrow(monad.pure("foo")).get()).isEqualTo("foo");
 
         //map
-        Maybe<String> nothing = Nothing();
+        Maybe<String> nothing = newNothing();
         assertThat(Maybe.narrow(monad.map(String::length, nothing)).isNothing()).isTrue();
-        Maybe<String> foo = Just("foo");
+        Maybe<String> foo = newJust("foo");
         assertThat(Maybe.narrow(monad.map(String::length, foo)).get()).isEqualTo(3);
 
         //ap
-        Maybe<Function<String,Integer>> noFn = Nothing();
-        Maybe<Function<String,Integer>> lenFn = Just(String::length);
+        Maybe<Function<String,Integer>> noFn = newNothing();
+        Maybe<Function<String,Integer>> lenFn = newJust(String::length);
         assertThat(Maybe.narrow(monad.ap(noFn, nothing)).isNothing()).isTrue();
         assertThat(Maybe.narrow(monad.ap(lenFn, nothing)).isNothing()).isTrue();
         assertThat(Maybe.narrow(monad.ap(noFn, foo)).isNothing()).isTrue();
         assertThat(Maybe.narrow(monad.ap(lenFn, foo)).get()).isEqualTo(3);
 
         //bind
-        Maybe<String> fool = Just("fool");
+        Maybe<String> fool = newJust("fool");
         Function<String, _<Maybe.µ, Integer>> lenIfEven =
-                s -> s.length() % 2 == 0 ? Just(s.length()) : Maybe.Nothing();
+                s -> s.length() % 2 == 0 ? newJust(s.length()) : Maybe.newNothing();
         assertThat(Maybe.narrow(monad.bind(nothing, lenIfEven)).isNothing()).isTrue();
         assertThat(Maybe.narrow(monad.bind(foo, lenIfEven)).isNothing()).isTrue();
         assertThat(Maybe.narrow(monad.bind(fool, lenIfEven)).get()).isEqualTo(4);
     }
 
     private void testMonadPlus(MonadPlus<µ> monadPlus) {
-        Maybe<String> foo = Just("foo");
-        Maybe<String> bar = Just("bar");
-        Maybe<String> baz = Just("baz");
-        Maybe<String> nothing = Nothing();
+        Maybe<String> foo = newJust("foo");
+        Maybe<String> bar = newJust("bar");
+        Maybe<String> baz = newJust("baz");
+        Maybe<String> nothing = newNothing();
 
         //mzero
         assertThat(Maybe.narrow(monadPlus.mzero()).isNothing()).isTrue();
@@ -253,9 +253,9 @@ public class MaybeTest {
         assertThat(Maybe.narrow(monadPlus.guard(true)).get()).isEqualTo(T0.unit);
 
         //mfilter
-        Maybe<Integer> one = Just(1);
-        assertThat(Maybe.narrow(monadPlus.mfilter(Integers.odd, one)).get()).isEqualTo(1);
-        assertThat(Maybe.narrow(monadPlus.mfilter(Integers.even, one)).isNothing()).isTrue();
+        Maybe<Integer> one = newJust(1);
+        assertThat(Maybe.narrow(monadPlus.mfilter(Integers.odd::test, one)).get()).isEqualTo(1);
+        assertThat(Maybe.narrow(monadPlus.mfilter(Integers.even::test, one)).isNothing()).isTrue();
 
         //msum
         List<_<Maybe.µ,String>> fooNothingNothing = List.contravariant(List.of(foo, nothing, nothing));
@@ -274,10 +274,10 @@ public class MaybeTest {
         MonadPlus<µ> monadPlus = Maybe.firstBiasedMonadPlus;
         testMonadPlus(monadPlus);
 
-        Maybe<String> foo = Just("foo");
-        Maybe<String> bar = Just("bar");
-        Maybe<String> baz = Just("baz");
-        Maybe<String> nothing = Nothing();
+        Maybe<String> foo = newJust("foo");
+        Maybe<String> bar = newJust("bar");
+        Maybe<String> baz = newJust("baz");
+        Maybe<String> nothing = newNothing();
 
         //mplus
         assertThat(Maybe.narrow(monadPlus.mplus(foo, bar)).get()).isEqualTo("foo");
@@ -296,10 +296,10 @@ public class MaybeTest {
         MonadPlus<µ> monadPlus = Maybe.lastBiasedMonadPlus;
         testMonadPlus(monadPlus);
 
-        Maybe<String> foo = Just("foo");
-        Maybe<String> bar = Just("bar");
-        Maybe<String> baz = Just("baz");
-        Maybe<String> nothing = Nothing();
+        Maybe<String> foo = newJust("foo");
+        Maybe<String> bar = newJust("bar");
+        Maybe<String> baz = newJust("baz");
+        Maybe<String> nothing = newNothing();
 
         //mplus
         assertThat(Maybe.narrow(monadPlus.mplus(foo, bar)).get()).isEqualTo("bar");
@@ -316,26 +316,26 @@ public class MaybeTest {
     @Test
     public void testJusts() {
          List<Maybe<String>> maybes = List.of(
-                 Maybe.<String>Nothing(),
-                 Just("foo"),
-                 Maybe.<String>Nothing(),
-                 Maybe.<String>JustLazy(() -> "bar"),
-                 Maybe.<String>Nothing());
+                 Maybe.<String>newNothing(),
+                 newJust("foo"),
+                 Maybe.<String>newNothing(),
+                 Maybe.<String>lazyJust(() -> "bar"),
+                 Maybe.<String>newNothing());
          List<String> strings = justs(maybes);
          assertThat(strings).containsExactly("foo", "bar");
     }
     
     @Test
     public void testAsList() {
-        assertThat(Just("foo").asList()).containsExactly("foo");
-        assertThat(JustLazy(() -> "bar").asList()).containsExactly("bar");
-        assertThat(Nothing().asList()).isEmpty();
+        assertThat(newJust("foo").asList()).containsExactly("foo");
+        assertThat(lazyJust(() -> "bar").asList()).containsExactly("bar");
+        assertThat(newNothing().asList()).isEmpty();
     }
 
     @Test
     public void testMonadFix() {
         MonadFix<µ> monadFix = Maybe.monad;
-        Maybe<String> foo = narrow(monadFix.mfix((Supplier<String> x) -> Just("foo")));
+        Maybe<String> foo = narrow(monadFix.mfix((Supplier<String> x) -> newJust("foo")));
         assertThat(foo.get()).isEqualTo("foo");
     }
 
@@ -346,10 +346,10 @@ public class MaybeTest {
         Function<Integer, _<µ, Either<Integer, String>>> divisibleBy3 = i -> {
            if (i < 10) {
                return i == 0 || i == 3 || i == 6 || i == 9
-                       ? Maybe.Just(Either.newRight("divisible"))
-                       : Maybe.Nothing();
+                       ? Maybe.newJust(Either.newRight("divisible"))
+                       : Maybe.newNothing();
            } else {
-               return Maybe.Just(Either.newLeft(i / 10 + i % 10));
+               return Maybe.newJust(Either.newLeft(i / 10 + i % 10));
            }
         };
 

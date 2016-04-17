@@ -7,6 +7,7 @@ import org.highj.typeclass0.group.Semigroup;
 import org.highj.util.Contracts;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static java.lang.Math.*;
 
@@ -52,15 +53,15 @@ public enum Integers {
         return x;
     };
 
-    public final static Function<Integer, Boolean> negative = x -> x < 0;
+    public final static Predicate<Integer> negative = x -> x < 0;
 
-    public final static Function<Integer, Boolean> positive = x -> x > 0;
+    public final static Predicate<Integer> positive = x -> x > 0;
 
-    public final static Function<Integer, Boolean> zero = x -> x == 0;
+    public final static Predicate<Integer> zero = x -> x == 0;
 
-    public final static Function<Integer, Boolean> even = x -> (x & 1) == 0;
+    public final static Predicate<Integer> even = x -> (x & 1) == 0;
 
-    public final static Function<Integer, Boolean> odd = x -> (x & 1) == 1;
+    public final static Predicate<Integer> odd = x -> (x & 1) == 1;
 
     public final static Group<Integer> additiveGroup = Group.create(0, (x, y) -> x + y, z -> -z);
 

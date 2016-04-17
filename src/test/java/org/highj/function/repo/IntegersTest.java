@@ -68,41 +68,41 @@ public class IntegersTest {
 
     @Test
     public void negativeTest() {
-        assertTrue(!Integers.negative.apply(0));
-        assertTrue(!Integers.negative.apply(42));
-        assertTrue(Integers.negative.apply(-42));
+        assertTrue(!Integers.negative.test(0));
+        assertTrue(!Integers.negative.test(42));
+        assertTrue(Integers.negative.test(-42));
     }
 
     @Test
     public void positiveTest() {
-        assertTrue(!Integers.positive.apply(0));
-        assertTrue(Integers.positive.apply(42));
-        assertTrue(!Integers.positive.apply(-42));
+        assertTrue(!Integers.positive.test(0));
+        assertTrue(Integers.positive.test(42));
+        assertTrue(!Integers.positive.test(-42));
     }
 
     @Test
     public void zeroTest() {
-        assertTrue(Integers.zero.apply(0));
-        assertTrue(!Integers.zero.apply(42));
-        assertTrue(!Integers.zero.apply(-42));
+        assertTrue(Integers.zero.test(0));
+        assertTrue(!Integers.zero.test(42));
+        assertTrue(!Integers.zero.test(-42));
     }
 
     @Test
     public void evenTest() {
-        assertTrue(Integers.even.apply(0));
-        assertTrue(Integers.even.apply(42));
-        assertTrue(Integers.even.apply(-42));
-        assertTrue(!Integers.even.apply(43));
-        assertTrue(!Integers.even.apply(-43));
+        assertTrue(Integers.even.test(0));
+        assertTrue(Integers.even.test(42));
+        assertTrue(Integers.even.test(-42));
+        assertTrue(!Integers.even.test(43));
+        assertTrue(!Integers.even.test(-43));
     }
 
     @Test
     public void oddTest() {
-        assertTrue(!Integers.odd.apply(0));
-        assertTrue(!Integers.odd.apply(42));
-        assertTrue(!Integers.odd.apply(-42));
-        assertTrue(Integers.odd.apply(43));
-        assertTrue(Integers.odd.apply(-43));
+        assertTrue(!Integers.odd.test(0));
+        assertTrue(!Integers.odd.test(42));
+        assertTrue(!Integers.odd.test(-42));
+        assertTrue(Integers.odd.test(43));
+        assertTrue(Integers.odd.test(-43));
     }
 
     @Test

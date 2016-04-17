@@ -51,7 +51,7 @@ public abstract class PTraversal<S, T, A, B> {
 
     /** find the first target of a {@link PTraversal} matching the predicate */
     public final F1<S, Maybe<A>> find(final Function<A, Boolean> p) {
-        return foldMap(Maybe.firstMonoid(), a -> p.apply(a) ? Maybe.Just(a) : Maybe.Nothing());
+        return foldMap(Maybe.firstMonoid(), a -> Maybe.justWhenTrue(p.apply(a),() -> a));
     }
 
     /** get the first target of a {@link PTraversal} */
@@ -87,8 +87,8 @@ public abstract class PTraversal<S, T, A, B> {
             public <X> F1<Either<S, S1>, _<X, Either<T, T1>>> modifyF(final Applicative<X> applicative,
                     final Function<A, _<X, B>> f) {
                 return ss1 -> ss1.either(
-                        s -> applicative.map(Either::newLeft, self.modifyF(applicative, f).apply(s)),
-                        s1 -> applicative.map(Either::newRight, other.modifyF(applicative, f).apply(s1))
+                        s -> applicative.map(Either::<T,T1>newLeft, self.modifyF(applicative, f).apply(s)),
+                        s1 -> applicative.map(Either::<T,T1>newRight, other.modifyF(applicative, f).apply(s1))
                         );
             }
 
@@ -177,8 +177,8 @@ public abstract class PTraversal<S, T, A, B> {
             public <X> F1<Either<S, S>, _<X, Either<T, T>>> modifyF(final Applicative<X> applicative,
                     final Function<S, _<X, T>> f) {
                 return s -> s.bimap(f, f).either(
-                        e -> applicative.map(Either::newLeft, e),
-                        e -> applicative.map(Either::newRight, e)
+                        e -> applicative.map(Either::<T,T>newLeft, e),
+                        e -> applicative.map(Either::<T,T>newRight, e)
                         );
             }
 

@@ -2,7 +2,6 @@ package org.highj.data.collection;
 
 import org.highj._;
 import org.highj.__;
-import org.highj.data.collection.either.EitherBifunctor;
 import org.highj.data.collection.either.EitherMonad;
 import org.highj.data.collection.either.EitherMonadPlus;
 import org.highj.data.functions.Strings;
@@ -11,7 +10,6 @@ import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.compare.Ord;
 import org.junit.Test;
 
-import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
@@ -50,24 +48,24 @@ public class EitherTest {
     public void testBimap() throws Exception {
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
-        assertEquals(newLeft("TestTest", Integer.class), left.bimap(x -> x + x, y -> y / 7));
-        assertEquals(newRight(String.class, 6), right.bimap(x -> x + x, y -> y / 7));
+        assertEquals(newLeft("TestTest", Integer.class), left.<String, Integer>bimap(x -> x + x, y -> y / 7));
+        assertEquals(newRight(String.class, 6), right.<String, Integer>bimap(x -> x + x, y -> y / 7));
     }
 
     @Test
     public void testLeftMap() throws Exception {
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
-        assertEquals(newLeft("TestTest", Integer.class), left.leftMap(x -> x + x));
-        assertEquals(newRight(String.class, 42), right.leftMap(x -> x + x));
+        assertEquals(newLeft("TestTest", Integer.class), left.<String>leftMap(x -> x + x));
+        assertEquals(newRight(String.class, 42), right.<String>leftMap(x -> x + x));
     }
 
     @Test
     public void testRightMap() throws Exception {
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
-        assertEquals(newLeft("Test", Integer.class), left.rightMap(x -> x / 7));
-        assertEquals(newRight(String.class, 6), right.rightMap(x -> x / 7));
+        assertEquals(newLeft("Test", Integer.class), left.<Integer>rightMap(x -> x / 7));
+        assertEquals(newRight(String.class, 6), right.<Integer>rightMap(x -> x / 7));
     }
 
     @Test
@@ -122,16 +120,16 @@ public class EitherTest {
     public void testMaybeLeft() throws Exception {
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
-        assertEquals(Maybe.Just("Test"), left.maybeLeft());
-        assertEquals(Maybe.<String>Nothing(), right.maybeLeft());
+        assertEquals(Maybe.newJust("Test"), left.maybeLeft());
+        assertEquals(Maybe.<String>newNothing(), right.maybeLeft());
     }
 
     @Test
     public void testMaybeRight() throws Exception {
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
-        assertEquals(Maybe.<Integer>Nothing(), left.maybeRight());
-        assertEquals(Maybe.Just(42), right.maybeRight());
+        assertEquals(Maybe.<Integer>newNothing(), left.maybeRight());
+        assertEquals(Maybe.newJust(42), right.maybeRight());
     }
 
     @Test

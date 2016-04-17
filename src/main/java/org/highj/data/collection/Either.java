@@ -223,7 +223,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return a Maybe containing the Left value, if it exists
      */
     public Maybe<A> maybeLeft() {
-        return either(Maybe::<A>Just, Functions.<B, Maybe<A>>constant(Maybe.<A>Nothing()));
+        return either(Maybe::<A>newJust, Functions.constant(Maybe.newNothing()));
     }
 
     /**
@@ -232,7 +232,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return a Maybe containing Right value, if it exists
      */
     public Maybe<B> maybeRight() {
-        return either(Functions.<A, Maybe<B>>constant(Maybe.<B>Nothing()), Maybe::<B>Just);
+        return either(Functions.constant(Maybe.newNothing()), Maybe::<B>newJust);
     }
 
     /**
@@ -242,7 +242,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return the newLeft value if it exists, else the default value
      */
     public A leftOrElse(A defaultValue) {
-        return either(Function.<A>identity(), Functions.<B, A>constant(defaultValue));
+        return either(Function.identity(), Functions.constant(defaultValue));
     }
 
     /**
@@ -261,8 +261,8 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return the Left value, or throws an exception if none exists
      */
     public A getLeft() throws NoSuchElementException {
-        return either(Function.<A>identity(), Functions.<B, A>constant(
-                Functions.<A>error(NoSuchElementException.class, "getLeft called on a lazyRight")));
+        return either(Function.identity(), Functions.constant(
+                Functions.error(NoSuchElementException.class, "getLeft called on a lazyRight")));
     }
 
     /**
@@ -271,8 +271,8 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return the Right value, or throws an exception if none exists
      */
     public B getRight() throws NoSuchElementException {
-        return either(Functions.<A, B>constant(
-                Functions.<B>error(NoSuchElementException.class, "getRight called on a lazyLeft")), Function.<B>identity());
+        return either(Functions.constant(
+                Functions.error(NoSuchElementException.class, "getRight called on a lazyLeft")), Function.identity());
     }
 
     /**
@@ -366,7 +366,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      */
     @Override
     public String toString() {
-        return either(Strings.<A>format(SHOW_LEFT), Strings.<B>format(SHOW_RIGHT));
+        return either(Strings.format(SHOW_LEFT), Strings.format(SHOW_RIGHT));
     }
 
     /**
@@ -402,7 +402,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return the value extracted from Left or Right
      */
     public static <A> A unify(Either<A, A> either) {
-        return either.either(Function.<A>identity(), Function.<A>identity());
+        return either.either(Function.identity(), Function.identity());
     }
 
     /**

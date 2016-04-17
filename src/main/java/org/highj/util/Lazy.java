@@ -10,7 +10,7 @@ import java.util.function.Supplier;
  */
 public class Lazy<A> implements Supplier<A> {
 
-    private Maybe<A> value = Maybe.Nothing();
+    private Maybe<A> value = Maybe.newNothing();
 
     public static <A> Lazy<A> newLazy() {
         return new Lazy<>();
@@ -18,7 +18,7 @@ public class Lazy<A> implements Supplier<A> {
 
     public void set(A a) {
         Contracts.require(value.isNothing(), "Lazy already initialized");
-        value = Maybe.Just(a);
+        value = Maybe.newJust(a);
     }
 
     public A get() {

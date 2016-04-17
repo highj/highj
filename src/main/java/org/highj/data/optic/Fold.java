@@ -50,7 +50,7 @@ public abstract class Fold<S, A> implements __<Fold.µ, S, A> {
 
     /** find the first target of a {@link Fold} matching the predicate */
     public final F1<S, Maybe<A>> find(final F1<A, Boolean> p) {
-        return foldMap(Maybe.firstMonoid(), a -> p.apply(a) ? Maybe.Just(a) : Maybe.Nothing());
+        return foldMap(Maybe.firstMonoid(), a -> Maybe.justWhenTrue(p.apply(a), () -> a));
     }
 
     /** get the first target of a {@link Fold} */
