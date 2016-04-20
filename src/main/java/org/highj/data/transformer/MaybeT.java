@@ -8,6 +8,7 @@ import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Applicative;
 import org.highj.typeclass1.monad.Apply;
 import org.highj.typeclass1.monad.Monad;
+import org.highj.typeclass1.monad.MonadRec;
 
 /**
  * @param <M> the wrapped monad
@@ -57,6 +58,10 @@ public class MaybeT<M, A> implements __<MaybeT.µ, M, A> {
 
     public static <M> MaybeTMonadTrans<M> monadTrans(final Monad<M> mMonad) {
         return () -> mMonad;
+    }
+    
+    public static <M> MaybeTMonadRec<M> monadRec(final MonadRec<M> mMonadRec) {
+        return () -> mMonadRec;
     }
 
 }
