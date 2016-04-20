@@ -5,11 +5,7 @@
  */
 package org.highj.data.transformer;
 
-import java.util.function.Function;
 import org.highj._;
-import org.highj.__;
-import org.highj.___;
-import org.highj.____;
 import org.highj._____;
 import org.highj.data.transformer.rws.RWSTApplicative;
 import org.highj.data.transformer.rws.RWSTApply;
@@ -18,17 +14,17 @@ import org.highj.data.transformer.rws.RWSTFunctor;
 import org.highj.data.transformer.rws.RWSTMonad;
 import org.highj.data.transformer.rws.RWSTMonadRWS;
 import org.highj.data.transformer.rws.RWSTMonadReader;
+import org.highj.data.transformer.rws.RWSTMonadRec;
 import org.highj.data.transformer.rws.RWSTMonadState;
 import org.highj.data.transformer.rws.RWSTMonadTrans;
 import org.highj.data.transformer.rws.RWSTMonadWriter;
-import org.highj.data.tuple.T0;
-import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Bind;
 import org.highj.typeclass1.monad.Monad;
+import org.highj.typeclass1.monad.MonadRec;
 
 /**
  *
@@ -160,6 +156,19 @@ public interface RWST<R,W,S,M,A> extends _____<RWST.µ,R,W,S,M,A> {
             @Override
             public Monad<M> m() {
                 return mMonad;
+            }
+            @Override
+            public Monoid<W> w() {
+                return wMonoid;
+            }
+        };
+    }
+    
+    public static <R,W,S,M> RWSTMonadRec<R,W,S,M> monadRec(MonadRec<M> mMonadRec, Monoid<W> wMonoid) {
+        return new RWSTMonadRec<R,W,S,M>() {
+            @Override
+            public MonadRec<M> m() {
+                return mMonadRec;
             }
             @Override
             public Monoid<W> w() {
