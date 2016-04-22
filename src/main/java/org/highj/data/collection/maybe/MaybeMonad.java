@@ -41,7 +41,7 @@ public class MaybeMonad extends MaybeFunctor implements Monad<Maybe.µ>, MonadFi
     }
 
     @Override
-    public <A, B> _<Maybe.µ, B> tailRec(Function<A, _<Maybe.µ, Either<A, B>>> function, A startValue) {
+    public <A, B> Maybe<B> tailRec(Function<A, _<Maybe.µ, Either<A, B>>> function, A startValue) {
         Maybe<Either<A, B>> step = Maybe.newJust(Either.newLeft(startValue));
         while(step.isJust() && step.get().isLeft()) {
             step = Maybe.narrow(function.apply(step.get().getLeft()));

@@ -7,10 +7,10 @@ import org.highj.typeclass1.functor.Functor;
 
 import java.util.function.Function;
 
-public interface EitherFunctor<S> extends Functor<_<Either.µ, S>> {
+interface EitherFunctor<S> extends Functor<_<Either.µ, S>> {
 
     @Override
-    public default <A, B> Either<S, B> map(Function<A, B> fn, _<_<Either.µ, S>, A> nestedA) {
+    default <A, B> Either<S, B> map(Function<A, B> fn, _<_<Either.µ, S>, A> nestedA) {
         return Either.narrow(nestedA).rightMap(fn);
     }
 }

@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 public class EitherMonadPlus<S> implements EitherMonad<S>, MonadPlus<_<Either.µ,S>> {
 
-    public static enum Bias {FIRST_RIGHT, LAST_RIGHT}
+    public enum Bias {FIRST_RIGHT, LAST_RIGHT}
 
     private final Monoid<S> monoid;
     private final Bias bias;
