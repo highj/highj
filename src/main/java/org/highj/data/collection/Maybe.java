@@ -470,8 +470,9 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
      * @return the {@link Monoid} instance
      */
     public static <A> Monoid<Maybe<A>> monoid(final BinaryOperator<A> semigroup) {
-        BiFunction<Maybe<A>, Maybe<A>, Maybe<A>> function = lift2(semigroup);
-        return Monoid.create(Maybe.newNothing(), function::apply);
+        BinaryOperator<Maybe<A>> op = (mx,my) ->
+                mx.map(x -> my.map(y -> semigroup.apply(x,y)).getOrElse(x)).orElse(my);
+        return Monoid.create(Maybe.newNothing(), op);
     }
 
 }

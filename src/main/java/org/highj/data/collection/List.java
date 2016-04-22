@@ -250,15 +250,6 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         return false;
     }
 
-    public boolean contains(Function<A, Boolean> predicate) {
-        for (A a : this) {
-            if (predicate.apply(a)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean contains(Predicate<? super A> predicate) {
         for (A a : this) {
             if (predicate.test(a)) {
@@ -266,16 +257,6 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
             }
         }
         return false;
-    }
-
-    public int count(Function<A, Boolean> predicate) {
-        int result = 0;
-        for (A a : this) {
-            if (predicate.apply(a)) {
-                result++;
-            }
-        }
-        return result;
     }
 
     public int count(Predicate<? super A> predicate) {
@@ -302,10 +283,6 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         return n <= 0 || isEmpty() ? nil() : newLazyList(head(), () -> tail().take(n - 1));
     }
 
-    public List<A> takeWhile(final Function<A, Boolean> predicate) {
-        return isEmpty() || !predicate.apply(head()) ? nil() : newLazyList(head(), () -> tail().takeWhile(predicate));
-    }
-
     public List<A> takeWhile(final Predicate<? super A> predicate) {
         return isEmpty() || !predicate.test(head()) ? nil() : newLazyList(head(), () -> tail().takeWhile(predicate));
     }
@@ -313,14 +290,6 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     public List<A> drop(int n) {
         List<A> result = this;
         while (n-- > 0 && !result.isEmpty()) {
-            result = result.tail();
-        }
-        return result;
-    }
-
-    public List<A> dropWhile(Function<A, Boolean> predicate) {
-        List<A> result = this;
-        while (!result.isEmpty() && predicate.apply(result.head())) {
             result = result.tail();
         }
         return result;
@@ -346,11 +315,19 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
         return current.head();
     }
 
+    public Maybe<A> maybeLast() {
+        return Maybe.justWhenTrue(! isEmpty(), this::last);
+    }
+
     public List<A> init() throws NoSuchElementException {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
         return tail().isEmpty() ? tail() : newList(head(), tail().init());
+    }
+
+    public Maybe<List<A>> maybeInit() {
+        return Maybe.justWhenTrue(! isEmpty(), this::init);
     }
 
     public List<A> initLazy() throws NoSuchElementException {
@@ -366,7 +343,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
     }
 
     public List<List<A>> tailsLazy() {
-        return newLazyList(this, (Supplier<List<List<A>>>) () -> isEmpty() ? empty() : tail().tails());
+        return newLazyList(this, () -> isEmpty() ? empty() : tail().tails());
     }
 
     //won't terminate for infinite Lists
