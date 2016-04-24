@@ -1,7 +1,7 @@
 package org.highj.data.collection;
 
 import org.highj._;
-import org.highj.data.collection.dequeue.DequeueFoldable;
+import org.highj.data.collection.dequeue.DequeueTraversable;
 import org.highj.data.collection.dequeue.DequeueFunctor;
 import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
@@ -189,5 +189,5 @@ public class Dequeue<A> implements _<Dequeue.µ, A>, Iterable<A> {
 
     public static final DequeueFunctor functor = new DequeueFunctor() {};
 
-    public static final DequeueFoldable foldable = new DequeueFoldable() {};
+    public static final DequeueTraversable traversable = new DequeueTraversable() {};
 }

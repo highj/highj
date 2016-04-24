@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 public interface ListFunctor extends Functor<List.µ> {
     @Override
-    public default <A, B> List<B> map(final Function<A, B> fn, _<List.µ, A> nestedA) {
+    default <A, B> List<B> map(final Function<A, B> fn, _<List.µ, A> nestedA) {
         return List.narrow(nestedA).map(fn);
     }
 }

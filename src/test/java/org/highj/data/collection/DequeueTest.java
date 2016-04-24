@@ -185,7 +185,7 @@ public class DequeueTest {
     @Test
     public void testFoldable() throws Exception {
         Dequeue<String> dq = Dequeue.of("a","bb","cccc");
-        Integer result = Dequeue.foldable.foldl(i -> s -> 10*i + s.length(), 5, dq);
+        Integer result = Dequeue.traversable.foldl(i -> s -> 10*i + s.length(), 5, dq);
         assertThat(result).isEqualTo(5124);
     }
 }

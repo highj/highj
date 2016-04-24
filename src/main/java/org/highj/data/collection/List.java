@@ -399,17 +399,24 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
 
     @SafeVarargs
     public static <A> List<A> cycle(final A... as) {
-        List<A> result = newLazyList(as[as.length - 1], () -> List.<A>cycle(as));
-        for (int i = as.length - 1; i > 0; i--) {
-            result = newList(as[i - 1], result);
+        switch (as.length) {
+            case 0:
+                throw new NoSuchElementException();
+            case 1:
+                return repeat(as[0]);
+            default:
+                List<A> result = newLazyList(as[as.length - 1], () -> List.cycle(as));
+                for (int i = as.length - 1; i > 0; i--) {
+                    result = newList(as[i - 1], result);
+                }
+                return result;
         }
-        return result;
     }
 
     //for performance reasons
     public static <A> List<A> repeat(final A a) {
         final Lazy<List<A>> ls = Lazy.newLazy();
-        ls.set(newLazyList(a, ls::get));
+        ls.set(newLazyList(a, ls));
         return ls.get();
     }
 
