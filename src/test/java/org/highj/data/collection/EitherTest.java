@@ -2,383 +2,419 @@ package org.highj.data.collection;
 
 import org.highj._;
 import org.highj.__;
+import org.highj.data.collection.either.EitherExtend;
 import org.highj.data.collection.either.EitherMonad;
 import org.highj.data.collection.either.EitherMonadPlus;
 import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.compare.Ord;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.highj.data.collection.Either.*;
-import static org.highj.data.collection.Either.bifunctor;
-import static org.junit.Assert.*;
+
 
 public class EitherTest {
-    @Test
-    public void testNarrow() throws Exception {
-        __<Either.µ, String, Integer> wideLeft = newLeft("Test");
-        Either<String, Integer> left = narrow(wideLeft);
-        assertEquals(newLeft("Test", Integer.class), left);
-        __<Either.µ, String, Integer> wideRight = newRight(42);
-        Either<String, Integer> right = narrow(wideRight);
-        assertEquals(newRight(String.class, 42), right);
-    }
+
+    @Rule
+    public ExpectedException shouldThrow = ExpectedException.none();
 
     @Test
-    public void testEither() throws Exception {
+    public void testBiFunctor() {
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
-        assertEquals(Integer.valueOf(4), left.either(String::length, x -> x));
-        assertEquals(Integer.valueOf(42), right.either(String::length, x -> x));
+        assertThat(bifunctor.bimap(x -> x + x, y -> y / 7, left).getLeft()).isEqualTo("TestTest");
+        assertThat(bifunctor.bimap(x -> x + x, y -> y / 7, right).getRight()).isEqualTo(6);
     }
 
     @Test
-    public void testConstant() throws Exception {
+    public void testBimap() {
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
-        assertEquals("x", left.constant("x", "y"));
-        assertEquals("y", right.constant("x", "y"));
+        assertThat(left.bimap(x -> x + x, y -> y / 7).getLeft()).isEqualTo("TestTest");
+        assertThat(right.bimap(x -> x + x, y -> y / 7).getRight()).isEqualTo(6);
     }
 
     @Test
-    public void testBimap() throws Exception {
+    public void testConstant() {
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
-        assertEquals(newLeft("TestTest", Integer.class), left.<String, Integer>bimap(x -> x + x, y -> y / 7));
-        assertEquals(newRight(String.class, 6), right.<String, Integer>bimap(x -> x + x, y -> y / 7));
+        assertThat(left.constant("x", "y")).isEqualTo("x");
+        assertThat(right.constant("x", "y")).isEqualTo("y");
     }
 
     @Test
-    public void testLeftMap() throws Exception {
+    public void testEither() {
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
-        assertEquals(newLeft("TestTest", Integer.class), left.<String>leftMap(x -> x + x));
-        assertEquals(newRight(String.class, 42), right.<String>leftMap(x -> x + x));
+        assertThat(left.either(String::length, Function.identity())).isEqualTo(4);
+        assertThat(right.either(String::length, Function.identity())).isEqualTo(42);
     }
 
     @Test
-    public void testRightMap() throws Exception {
+    public void testEq() {
+        Eq<Either<String, Integer>> eq = eq(new Eq.JavaEq<String>(), new Eq.JavaEq<Integer>());
+        Either<String, Integer> left = newLeft("Test");
+        Either<String, Integer> left2 = newLeft("Test");
+        Either<String, Integer> left3 = newLeft("TestX");
+        Either<String, Integer> lazyLeft = lazyLeft(() -> "Test");
+        Either<String, Integer> right = newRight(42);
+        Either<String, Integer> right2 = newRight(42);
+        Either<String, Integer> right3 = newRight(43);
+        Either<String, Integer> lazyRight = lazyRight(() -> 42);
+        assertThat(eq.eq(left, left2)).isTrue();
+        assertThat(eq.eq(left, left3)).isFalse();
+        assertThat(eq.eq(left, lazyLeft)).isTrue();
+        assertThat(eq.eq(right, right2)).isTrue();
+        assertThat(eq.eq(right, right3)).isFalse();
+        assertThat(eq.eq(right, lazyRight)).isTrue();
+        assertThat(eq.eq(left, right)).isFalse();
+        assertThat(eq.eq(left, null)).isFalse();
+        assertThat(eq.eq(null, right)).isFalse();
+        assertThat(eq.eq(null, null)).isTrue();
+    }
+
+    @Test
+    public void testEquals() {
+        Either<String, Integer> left = newLeft("Test");
+        Either<String, Integer> left2 = newLeft("Test");
+        Either<String, Integer> left3 = newLeft("TestX");
+        Either<String, Integer> lazyLeft = lazyLeft(() -> "Test");
+        Either<String, Integer> right = newRight(42);
+        Either<String, Integer> right2 = newRight(42);
+        Either<String, Integer> right3 = newRight(43);
+        Either<String, Integer> lazyRight = lazyRight(() -> 42);
+        Either<Integer, String> rightString = newRight("Test");
+        assertThat(left.equals(left2)).isTrue();
+        assertThat(left.equals(left3)).isFalse();
+        assertThat(left.equals(lazyLeft)).isTrue();
+        assertThat(right.equals(right2)).isTrue();
+        assertThat(right.equals(right3)).isFalse();
+        assertThat(right.equals(lazyRight)).isTrue();
+        assertThat(left.equals(right)).isFalse();
+        assertThat(left.equals(rightString)).isFalse();
+    }
+
+    @Test
+    public void testExtend() {
+        EitherExtend<String> extend = Either.extend();
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
-        assertEquals(newLeft("Test", Integer.class), left.<Integer>rightMap(x -> x / 7));
-        assertEquals(newRight(String.class, 6), right.<Integer>rightMap(x -> x / 7));
+        assertThat(Either.narrow(extend.duplicate(left)).getLeft()).isEqualTo("Test");
+        assertThat(Either.narrow(Either.narrow(extend.duplicate(right)).getRight()).getRight()).isEqualTo(42);
+
+        Function<_<_<Either.µ, String>,Integer>, _<_<Either.µ, String>,Integer>> fun = extend.extend(
+                either -> Either.narrow(either).rightMap(x -> x / 2).rightOrElse(-1));
+        assertThat(Either.narrow(fun.apply(left)).getLeft()).isEqualTo("Test");
+        assertThat(Either.narrow(fun.apply(right)).getRight()).isEqualTo(21);
     }
 
     @Test
-    public void testNewLeft() throws Exception {
-        Either<String, Integer> left = newLeft("Test");
-        assertEquals("Left(Test)", left.toString());
+    public void testFirstBiasedMonadPlus() {
+        EitherMonadPlus<String> eitherMonadPlus = Either.firstBiasedMonadPlus(Strings.group);
+        //mzero
+        testMonadPlus(eitherMonadPlus, 1);
     }
 
     @Test
-    public void testLazyLeft() throws Exception {
-        Either<String, Integer> left = lazyLeft(() -> "Test");
-        assertEquals(newLeft("Test", Integer.class), left);
-    }
-
-    @Test
-    public void testNewRight() throws Exception {
-        Either<String, Integer> right = newRight(42);
-        assertEquals("Right(42)", right.toString());
-    }
-
-    @Test
-    public void testLazyRight() throws Exception {
-        Either<String, Integer> right = lazyRight(() -> 42);
-        assertEquals(newRight(String.class, 42), right);
-    }
-
-    @Test
-    public void testSwap() throws Exception {
+    public void testGetLeft() {
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
-        assertEquals(newRight(Integer.class, "Test"), left.swap());
-        assertEquals(newLeft(42, String.class), right.swap());
-    }
-
-    @Test
-    public void testIsLeft() throws Exception {
-        Either<String, Integer> left = newLeft("Test");
-        Either<String, Integer> right = newRight(42);
-        assertTrue(left.isLeft());
-        assertFalse(right.isLeft());
-    }
-
-    @Test
-    public void testIsRight() throws Exception {
-        Either<String, Integer> left = newLeft("Test");
-        Either<String, Integer> right = newRight(42);
-        assertFalse(left.isRight());
-        assertTrue(right.isRight());
-    }
-
-    @Test
-    public void testMaybeLeft() throws Exception {
-        Either<String, Integer> left = newLeft("Test");
-        Either<String, Integer> right = newRight(42);
-        assertEquals(Maybe.newJust("Test"), left.maybeLeft());
-        assertEquals(Maybe.<String>newNothing(), right.maybeLeft());
-    }
-
-    @Test
-    public void testMaybeRight() throws Exception {
-        Either<String, Integer> left = newLeft("Test");
-        Either<String, Integer> right = newRight(42);
-        assertEquals(Maybe.<Integer>newNothing(), left.maybeRight());
-        assertEquals(Maybe.newJust(42), right.maybeRight());
-    }
-
-    @Test
-    public void testLeftOrElse() throws Exception {
-        Either<String, Integer> left = newLeft("Test");
-        Either<String, Integer> right = newRight(42);
-        assertEquals("Test", left.leftOrElse("Default"));
-        assertEquals("Default", right.leftOrElse("Default"));
-    }
-
-    @Test
-    public void testRightOrElse() throws Exception {
-        Either<String, Integer> left = newLeft("Test");
-        Either<String, Integer> right = newRight(42);
-        assertEquals(Integer.valueOf(12), left.rightOrElse(12));
-        assertEquals(Integer.valueOf(42), right.rightOrElse(12));
-    }
-
-    @Test(expected = NoSuchElementException.class)
-    public void testGetLeft() throws Exception {
-        Either<String, Integer> left = newLeft("Test");
-        Either<String, Integer> right = newRight(42);
-        assertEquals("Test", left.getLeft());
+        assertThat(left.getLeft()).isEqualTo("Test");
+        shouldThrow.expect(NoSuchElementException.class);
         right.getLeft();
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testGetRight() throws Exception {
+    @Test
+    public void testGetRight() {
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
-        assertEquals(Integer.valueOf(42), right.getRight());
+        assertThat(right.getRight()).isEqualTo(42);
+        shouldThrow.expect(NoSuchElementException.class);
         left.getRight();
     }
 
     @Test
-    public void testLefts() throws Exception {
-        List<Either<String, Integer>> list = List.of(
-                newLeft("a", Integer.class),
-                newLeft("b", Integer.class),
-                newRight(String.class, 1),
-                newLeft("c", Integer.class),
-                newRight(String.class, 2));
-        assertEquals(List.of("a", "b", "c"), lefts(list));
+    public void testHashCode() {
+        Either<String, Integer> left = newLeft("Test");
+        Either<String, Integer> left2 = newLeft("Test");
+        Either<String, Integer> left3 = newLeft("TestX");
+        Either<String, Integer> lazyLeft = lazyLeft(() -> "Test");
+        Either<String, Integer> right = newRight(42);
+        Either<String, Integer> right2 = newRight(42);
+        Either<String, Integer> right3 = newRight(43);
+        Either<String, Integer> lazyRight = lazyRight(() -> 42);
+        Either<Integer, String> rightString = newRight("Test");
+        assertThat(left.hashCode()).isEqualTo(left2.hashCode());
+        assertThat(left.hashCode()).isNotEqualTo(left3.hashCode());
+        assertThat(left.hashCode()).isEqualTo(lazyLeft.hashCode());
+        assertThat(right.hashCode()).isEqualTo(right2.hashCode());
+        assertThat(right.hashCode()).isNotEqualTo(right3.hashCode());
+        assertThat(right.hashCode()).isEqualTo(lazyRight.hashCode());
+        assertThat(left.hashCode()).isNotEqualTo(right.hashCode());
+        assertThat(left.hashCode()).isNotEqualTo(rightString.hashCode());
     }
 
     @Test
-    public void testLazyLefts() throws Exception {
+    public void testIsLeft() {
+        Either<String, Integer> left = newLeft("Test");
+        Either<String, Integer> right = newRight(42);
+        assertThat(left.isLeft()).isTrue();
+        assertThat(right.isLeft()).isFalse();
+    }
+
+    @Test
+    public void testIsRight() {
+        Either<String, Integer> left = newLeft("Test");
+        Either<String, Integer> right = newRight(42);
+        assertThat(left.isRight()).isFalse();
+        assertThat(right.isRight()).isTrue();
+    }
+
+    @Test
+    public void testLastBiasedMonadPlus() {
+        EitherMonadPlus<String> eitherMonadPlus = Either.lastBiasedMonadPlus(Strings.group);
+        //mzero
+        testMonadPlus(eitherMonadPlus, 2);
+    }
+
+    @Test
+    public void testLazyLeft() {
+        String[] sideEffects = {"unchanged"};
+        Either<String, Integer> left = lazyLeft(() -> {
+            sideEffects[0] = "changed";
+            return "Test";
+        });
+        assertThat(left.isLeft()).isTrue();
+        assertThat(sideEffects[0]).isEqualTo("unchanged");
+        assertThat(left.getLeft()).isEqualTo("Test");
+        assertThat(sideEffects[0]).isEqualTo("changed");
+    }
+
+    @Test
+    public void testLazyLefts() {
         List<Either<String, Integer>> list = List.cycle(
                 newLeft("a", Integer.class),
                 newLeft("b", Integer.class),
                 newRight(String.class, 1));
-        assertEquals(List.of("a", "b", "a", "b"), lazyLefts(list).take(4));
+        assertThat(lazyLefts(list).take(4)).containsExactly("a", "b", "a", "b");
     }
 
     @Test
-    public void testRights() throws Exception {
-        List<Either<String, Integer>> list = List.of(
-                newLeft("a", Integer.class),
-                newLeft("b", Integer.class),
-                newRight(String.class, 1),
-                newLeft("c", Integer.class),
-                newRight(String.class, 2));
-        assertEquals(List.of(1,2), rights(list));
+    public void testLazyRight() {
+        String[] sideEffects = {"unchanged"};
+        Either<String, Integer> right = lazyRight(() -> {
+            sideEffects[0] = "changed";
+            return 42;
+        });
+        assertThat(right.isRight()).isTrue();
+        assertThat(sideEffects[0]).isEqualTo("unchanged");
+        assertThat(right.getRight()).isEqualTo(42);
+        assertThat(sideEffects[0]).isEqualTo("changed");
     }
 
     @Test
-    public void testLazyRights() throws Exception {
+    public void testLazyRights() {
         List<Either<String, Integer>> list = List.cycle(
                 newLeft("a", Integer.class),
                 newRight(String.class, 1),
                 newRight(String.class, 2));
-        assertEquals(List.of(1, 2, 1, 2), lazyRights(list).take(4));
+        assertThat(lazyRights(list).take(4)).containsExactly(1, 2, 1, 2);
 
     }
 
     @Test
-    public void testSplit() throws Exception {
+    public void testLeftMap() {
+        Either<String, Integer> left = newLeft("Test");
+        Either<String, Integer> right = newRight(42);
+        assertThat(left.leftMap(x -> x + x).getLeft()).isEqualTo("TestTest");
+        assertThat(right.leftMap(x -> x + x).getRight()).isEqualTo(42);
+    }
+
+    @Test
+    public void testLeftOrElse() {
+        Either<String, Integer> left = newLeft("Test");
+        Either<String, Integer> right = newRight(42);
+        assertThat(left.leftOrElse("Default")).isEqualTo("Test");
+        assertThat(right.leftOrElse("Default")).isEqualTo("Default");
+    }
+
+    @Test
+    public void testLefts() {
         List<Either<String, Integer>> list = List.of(
                 newLeft("a", Integer.class),
                 newLeft("b", Integer.class),
                 newRight(String.class, 1),
                 newLeft("c", Integer.class),
                 newRight(String.class, 2));
-        assertEquals(T2.of(List.of("a", "b", "c"), List.of(1, 2)), split(list));
+        assertThat(lefts(list)).containsExactly("a", "b", "c");
     }
 
     @Test
-    public void testToString() throws Exception {
-        assertEquals("Left(Test)", newLeft("Test").toString());
-        assertEquals("Right(42)", newRight(42).toString());
-    }
-
-    @Test
-    public void testHashCode() throws Exception {
+    public void testMaybeLeft() {
         Either<String, Integer> left = newLeft("Test");
-        Either<String, Integer> left2 = newLeft("Test");
-        Either<String, Integer> left3 = newLeft("TestX");
-        Either<String, Integer> lazyLeft = lazyLeft(() -> "Test");
         Either<String, Integer> right = newRight(42);
-        Either<String, Integer> right2 = newRight(42);
-        Either<String, Integer> right3 = newRight(43);
-        Either<String, Integer> lazyRight = lazyRight(() -> 42);
-        Either<Integer,String> rightString = newRight("Test");
-        assertTrue(left.hashCode() == left2.hashCode());
-        assertTrue(left.hashCode() != left3.hashCode());
-        assertTrue(left.hashCode() == lazyLeft.hashCode());
-        assertTrue(right.hashCode() == right2.hashCode());
-        assertTrue(right.hashCode() != right3.hashCode());
-        assertTrue(right.hashCode() == lazyRight.hashCode());
-        assertTrue(left.hashCode() != right.hashCode());
-        assertTrue(left.hashCode() != rightString.hashCode());
+        assertThat(left.maybeLeft()).isEqualTo(Maybe.newJust("Test"));
+        assertThat(right.maybeLeft().isNothing()).isTrue();
     }
 
     @Test
-    public void testEquals() throws Exception {
+    public void testMaybeRight() {
         Either<String, Integer> left = newLeft("Test");
-        Either<String, Integer> left2 = newLeft("Test");
-        Either<String, Integer> left3 = newLeft("TestX");
-        Either<String, Integer> lazyLeft = lazyLeft(() -> "Test");
         Either<String, Integer> right = newRight(42);
-        Either<String, Integer> right2 = newRight(42);
-        Either<String, Integer> right3 = newRight(43);
-        Either<String, Integer> lazyRight = lazyRight(() -> 42);
-        Either<Integer,String> rightString = newRight("Test");
-        assertTrue(left.equals(left2));
-        assertFalse(left.equals(left3));
-        assertTrue(left.equals(lazyLeft));
-        assertTrue(right.equals(right2));
-        assertFalse(right.equals(right3));
-        assertTrue(right.equals(lazyRight));
-        assertFalse(left.equals(right));
-        assertFalse(left.equals(rightString));
+        assertThat(left.maybeRight().isNothing()).isTrue();
+        assertThat(right.maybeRight()).isEqualTo(Maybe.newJust(42));
     }
 
     @Test
-    public void testUnify() throws Exception {
-        Either<String, String> left = newLeft("Foo");
-        Either<String, String> right = newRight("Bar");
-        assertEquals("Foo", unify(left));
-        assertEquals("Bar", unify(right));
-    }
-
-    @Test
-    public void testEq() throws Exception {
-        Eq<Either<String,Integer>> eq = eq(new Eq.JavaEq<String>(), new Eq.JavaEq<Integer>());
+    public void testMonad() {
+        EitherMonad<String> eitherMonad = Either.monad();
+        //map
         Either<String, Integer> left = newLeft("Test");
-        Either<String, Integer> left2 = newLeft("Test");
-        Either<String, Integer> left3 = newLeft("TestX");
-        Either<String, Integer> lazyLeft = lazyLeft(() -> "Test");
         Either<String, Integer> right = newRight(42);
-        Either<String, Integer> right2 = newRight(42);
-        Either<String, Integer> right3 = newRight(43);
-        Either<String, Integer> lazyRight = lazyRight(() -> 42);
-        assertTrue(eq.eq(left,left2));
-        assertFalse(eq.eq(left, left3));
-        assertTrue(eq.eq(left, lazyLeft));
-        assertTrue(eq.eq(right, right2));
-        assertFalse(eq.eq(right, right3));
-        assertTrue(eq.eq(right, lazyRight));
-        assertFalse(eq.eq(left, right));
-        assertFalse(eq.eq(left, null));
-        assertFalse(eq.eq(null, right));
-        assertTrue(eq.eq(null, null));
+        assertThat(eitherMonad.map(x -> x / 2, left).getLeft()).isEqualTo("Test");
+        assertThat(eitherMonad.map(x -> x / 2, right).getRight()).isEqualTo(21);
+        //ap
+        Either<String, Function<Integer, Integer>> leftFn = newLeft("Nope");
+        Either<String, Function<Integer, Integer>> rightFn = newRight(x -> x / 2);
+        assertThat(eitherMonad.ap(leftFn, left).getLeft()).isEqualTo("Nope");  //left biased like Haskell
+        assertThat(eitherMonad.ap(leftFn, right).getLeft()).isEqualTo("Nope");
+        assertThat(eitherMonad.ap(rightFn, left).getLeft()).isEqualTo("Test");
+        assertThat(eitherMonad.ap(rightFn, right).getRight()).isEqualTo(21);
+        //pure
+        assertThat(eitherMonad.pure(12).getRight()).isEqualTo(12);
+        //bind
+        Either<String, Integer> rightOdd = newRight(43);
+        Function<Integer, _<_<Either.µ, String>, Integer>> halfEven =
+                x -> x % 2 == 0 ? newRight(x / 2) : newLeft("Odd");
+        assertThat(eitherMonad.bind(left, halfEven).getLeft()).isEqualTo("Test");
+        assertThat(eitherMonad.bind(right, halfEven).getRight()).isEqualTo(21);
+        assertThat(eitherMonad.bind(rightOdd, halfEven).getLeft()).isEqualTo("Odd");
+    }
+
+    private void testMonadPlus(EitherMonadPlus<String> eitherMonadPlus, Integer expectedWhenBiased) {
+        Either<String, Integer> zero = eitherMonadPlus.mzero();
+        assertThat(zero.getLeft()).isEqualTo("");
+        //mplus
+        Either<String, Integer> left1 = newLeft("one");
+        Either<String, Integer> left2 = newLeft("two");
+        Either<String, Integer> right1 = newRight(1);
+        Either<String, Integer> right2 = newRight(2);
+        assertThat(eitherMonadPlus.mplus(left1, left2).getLeft()).isEqualTo("onetwo");
+        assertThat(eitherMonadPlus.mplus(right1, left2).getRight()).isEqualTo(1);
+        assertThat(eitherMonadPlus.mplus(left1, right2).getRight()).isEqualTo(2);
+        assertThat(eitherMonadPlus.mplus(right1, right2).getRight()).isEqualTo(expectedWhenBiased);
     }
 
     @Test
-    public void testOrd() throws Exception {
-        Ord<Either<String,Integer>> ord = Either.ord(Ord.<String>fromComparable(), Ord.<Integer>fromComparable());
+    public void testNarrow() {
+        __<Either.µ, String, Integer> wideLeft = newLeft("Test");
+        Either<String, Integer> left = narrow(wideLeft);
+        assertThat(left).isEqualTo(wideLeft);
+        __<Either.µ, String, Integer> wideRight = newRight(42);
+        Either<String, Integer> right = narrow(wideRight);
+        assertThat(right).isEqualTo(wideRight);
+    }
+
+    @Test
+    public void testNewLeft() {
+        Either<String, Integer> left = newLeft("Test");
+        assertThat(left.isLeft()).isTrue();
+        assertThat(left.getLeft()).isEqualTo("Test");
+    }
+
+    @Test
+    public void testNewRight() {
+        Either<String, Integer> right = newRight(42);
+        assertThat(right.isRight()).isTrue();
+        assertThat(right.getRight()).isEqualTo(42);
+    }
+
+    @Test
+    public void testOrd() {
+        Ord<Either<String, Integer>> ord = Either.ord(
+                Ord.<String>fromComparable(),
+                Ord.<Integer>fromComparable());
         List<Either<String, Integer>> list = List.of(
                 newLeft("a", Integer.class),
                 newLeft("c", Integer.class),
                 newRight(String.class, 2),
                 newLeft("b", Integer.class),
                 newRight(String.class, 1));
-        List<Either<String, Integer>> expected = List.of(
+        assertThat(list.sort(ord)).containsExactly(
                 newLeft("a", Integer.class),
                 newLeft("b", Integer.class),
                 newLeft("c", Integer.class),
                 newRight(String.class, 1),
                 newRight(String.class, 2));
-        assertEquals(expected, list.sort(ord));
     }
 
     @Test
-    public void testMonad() throws Exception {
-        EitherMonad<String> eitherMonad = Either.monad();
-        //map
+    public void testRightMap() {
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
-        assertEquals(newLeft("Test", Integer.class), eitherMonad.map(x -> x / 2, left));
-        assertEquals(newRight(String.class, 21), eitherMonad.map(x -> x / 2, right));
-        //ap
-        Either<String, Function<Integer,Integer>> leftFn = newLeft("Nope");
-        Either<String, Function<Integer,Integer>> rightFn = newRight(x -> x / 2);
-        assertEquals(newLeft("Nope", Integer.class), eitherMonad.ap(leftFn, left));  //left biased like Haskell
-        assertEquals(newLeft("Nope", Integer.class), eitherMonad.ap(leftFn, right));
-        assertEquals(newLeft("Test", Integer.class), eitherMonad.ap(rightFn, left));
-        assertEquals(newRight(String.class, 21), eitherMonad.ap(rightFn, right));
-        //pure
-        assertEquals(newRight(String.class, 12), eitherMonad.pure(12));
-        //bind
-        Either<String, Integer> rightOdd = newRight(43);
-        Function<Integer, _<_<Either.µ,String>, Integer>> halfEven = x -> x % 2 == 0 ? newRight(x / 2) : newLeft("Odd");
-        assertEquals(newLeft("Test", Integer.class), eitherMonad.bind(left, halfEven));
-        assertEquals(newRight(String.class, 21), eitherMonad.bind(right, halfEven));
-        assertEquals(newLeft("Odd", Integer.class), eitherMonad.bind(rightOdd, halfEven));
-    }
-
-
-    @Test
-    public void testFirstBiasedMonadPlus() throws Exception {
-        EitherMonadPlus<String> eitherMonadPlus = Either.firstBiasedMonadPlus(Strings.group);
-        //mzero
-        Either<String,Integer> zero = eitherMonadPlus.mzero();
-        assertEquals(newLeft("", Integer.class), zero);
-        //mplus
-        Either<String, Integer> left1 = newLeft("one");
-        Either<String, Integer> left2 = newLeft("two");
-        Either<String, Integer> right1 = newRight(1);
-        Either<String, Integer> right2 = newRight(2);
-        assertEquals(newLeft("onetwo", Integer.class), eitherMonadPlus.mplus(left1,left2));
-        assertEquals(newRight(String.class, 1), eitherMonadPlus.mplus(right1,left2));
-        assertEquals(newRight(String.class, 2), eitherMonadPlus.mplus(left1,right2));
-        assertEquals(newRight(String.class, 1), eitherMonadPlus.mplus(right1,right2)); //first biased
+        assertThat(left.rightMap(x -> x / 7).getLeft()).isEqualTo("Test");
+        assertThat(right.rightMap(x -> x / 7).getRight()).isEqualTo(6);
     }
 
     @Test
-    public void testLastBiasedMonadPlus() throws Exception {
-        EitherMonadPlus<String> eitherMonadPlus = Either.lastBiasedMonadPlus(Strings.group);
-        //mzero
-        Either<String,Integer> zero = eitherMonadPlus.mzero();
-        assertEquals(newLeft("", Integer.class), zero);
-        //mplus
-        Either<String, Integer> left1 = newLeft("one");
-        Either<String, Integer> left2 = newLeft("two");
-        Either<String, Integer> right1 = newRight(1);
-        Either<String, Integer> right2 = newRight(2);
-        assertEquals(newLeft("onetwo", Integer.class), eitherMonadPlus.mplus(left1,left2));
-        assertEquals(newRight(String.class, 1), eitherMonadPlus.mplus(right1,left2));
-        assertEquals(newRight(String.class, 2), eitherMonadPlus.mplus(left1,right2));
-        assertEquals(newRight(String.class, 2), eitherMonadPlus.mplus(right1,right2)); //last biased
-    }
-
-    @Test
-    public void testBiFunctor() throws Exception {
+    public void testRightOrElse() {
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
-        assertEquals(newLeft("TestTest", Integer.class), bifunctor.bimap(x -> x + x, y -> y / 7, left));
-        assertEquals(newRight(String.class, 6), bifunctor.bimap(x -> x + x, y -> y / 7, right));
+        assertThat(left.rightOrElse(12)).isEqualTo(12);
+        assertThat(right.rightOrElse(12)).isEqualTo(42);
+    }
+
+    @Test
+    public void testRights() {
+        List<Either<String, Integer>> list = List.of(
+                newLeft("a", Integer.class),
+                newLeft("b", Integer.class),
+                newRight(String.class, 1),
+                newLeft("c", Integer.class),
+                newRight(String.class, 2));
+        assertThat(rights(list)).containsExactly(1, 2);
+    }
+
+    @Test
+    public void testSplit() {
+        List<Either<String, Integer>> list = List.of(
+                newLeft("a", Integer.class),
+                newLeft("b", Integer.class),
+                newRight(String.class, 1),
+                newLeft("c", Integer.class),
+                newRight(String.class, 2));
+        T2<List<String>, List<Integer>> t2 = split(list);
+        assertThat(t2._1()).containsExactly("a", "b", "c");
+        assertThat(t2._2()).containsExactly(1, 2);
+    }
+
+    @Test
+    public void testSwap() {
+        Either<String, Integer> left = newLeft("Test");
+        Either<String, Integer> right = newRight(42);
+        assertThat(left.swap()).isEqualTo(newRight(Integer.class, "Test"));
+        assertThat(right.swap()).isEqualTo(newLeft(42, String.class));
+    }
+
+    @Test
+    public void testToString() {
+        assertThat(newLeft("Test").toString()).isEqualTo("Left(Test)");
+        assertThat(newRight(42).toString()).isEqualTo("Right(42)");
+    }
+
+    @Test
+    public void testUnify() {
+        Either<String, String> left = newLeft("Foo");
+        Either<String, String> right = newRight("Bar");
+        assertThat(unify(left)).isEqualTo("Foo");
+        assertThat(unify(right)).isEqualTo("Bar");
     }
 
 }

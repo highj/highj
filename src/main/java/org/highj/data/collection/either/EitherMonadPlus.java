@@ -8,31 +8,26 @@ import org.highj.typeclass1.monad.MonadPlus;
 
 import java.util.function.Function;
 
-public class EitherMonadPlus<S> implements EitherMonad<S>, MonadPlus<_<Either.µ,S>> {
+public interface EitherMonadPlus<S> extends EitherMonad<S>, MonadPlus<_<Either.µ,S>> {
 
-    public enum Bias {FIRST_RIGHT, LAST_RIGHT}
-
-    private final Monoid<S> monoid;
-    private final Bias bias;
-
-    public EitherMonadPlus(Monoid<S> monoid, Bias bias) {
-        this.monoid = monoid;
-        this.bias = bias;
-    }
+    Monoid<S> monoid();
+    Bias bias();
 
     @Override
-    public <A> Either<S, A> mplus(_<_<Either.µ, S>, A> one, _<_<Either.µ, S>, A> two) {
+    default <A> Either<S, A> mplus(_<_<Either.µ, S>, A> one, _<_<Either.µ, S>, A> two) {
         Either<S,A> first = Either.narrow(one);
         Either<S,A> second = Either.narrow(two);
         if (first.isLeft()) {
-            return second.isRight() ? second :  Either.newLeft(monoid.apply(first.getLeft(), second.getLeft()));
+            return second.isRight() ? second :  Either.newLeft(monoid().apply(first.getLeft(), second.getLeft()));
+        } else if (second.isLeft()) {
+            return first;
         } else {
-            return second.isLeft() || bias == Bias.FIRST_RIGHT ? first : second;
+            return bias().select(first,second);
         }
     }
 
     @Override
-    public <A> Either<S, A> mzero() {
-        return Either.newLeft(monoid.identity());
+    default <A> Either<S, A> mzero() {
+        return Either.newLeft(monoid().identity());
     }
 }

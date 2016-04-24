@@ -10,6 +10,7 @@ import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.comonad.Extend;
 import org.highj.typeclass1.foldable.Traversable;
+import org.highj.typeclass1.monad.MonadPlus;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -423,28 +424,28 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
      *
      * Note that it implements some subinterfaces of {@link org.highj.typeclass1.monad.Monad} as well
      */
-    public static final MaybeMonad monad = new MaybeMonad();
+    public static final MaybeMonad monad = new MaybeMonad(){};
 
     /**
      * Returns the {@link MaybeMonadPlus} which chooses the first non-empty {@link Maybe}.
      */
-    public static final MaybeMonadPlus firstBiasedMonadPlus = new MaybeMonadPlus(MaybeMonadPlus.Bias.FIRST_JUST);
+    public static final MaybeMonadPlus firstBiasedMonadPlus = () -> MonadPlus.Bias.FIRST;
 
     /**
      * Returns the {@link MaybeMonadPlus} which chooses the last non-empty {@link Maybe}.
      */
-    public static final MaybeMonadPlus lastBiasedMonadPlus = new MaybeMonadPlus(MaybeMonadPlus.Bias.LAST_JUST);
+    public static final MaybeMonadPlus lastBiasedMonadPlus = () -> MonadPlus.Bias.LAST;
 
 
     /**
      * Returns the {@link Traversable} instance of {@link Maybe}.
      */
-    public static final Traversable<µ> traversable = new MaybeTraversable();
+    public static final Traversable<µ> traversable = new MaybeTraversable(){};
 
     /**
      * Returns the {@link Extend} instance of {@link Maybe}.
      */
-    public static final Extend<µ> extend = new MaybeExtend();
+    public static final Extend<µ> extend = new MaybeExtend(){};
 
     /**
      * Returns the {@link Monoid} which chooses the first non-empty {@link Maybe}.

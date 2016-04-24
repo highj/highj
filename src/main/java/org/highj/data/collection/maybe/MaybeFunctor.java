@@ -8,9 +8,9 @@ import java.util.function.Function;
 
 import static org.highj.data.collection.Maybe.narrow;
 
-public class MaybeFunctor implements Functor<Maybe.µ> {
+public interface MaybeFunctor extends Functor<Maybe.µ> {
 
-    public <A, B> Maybe<B> map(Function<A, B> fn, _<Maybe.µ, A> nestedA) {
+    default <A, B> Maybe<B> map(Function<A, B> fn, _<Maybe.µ, A> nestedA) {
         return narrow(nestedA).map(fn);
     }
 

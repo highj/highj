@@ -3,6 +3,7 @@ package org.highj.data.collection;
 import org.highj._;
 import org.highj.__;
 import org.highj.data.collection.either.EitherBifunctor;
+import org.highj.data.collection.either.EitherExtend;
 import org.highj.data.collection.either.EitherMonad;
 import org.highj.data.collection.either.EitherMonadPlus;
 import org.highj.data.compare.Ordering;
@@ -12,6 +13,7 @@ import org.highj.data.tuple.T2;
 import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass1.monad.MonadPlus;
 
 import java.util.NoSuchElementException;
 import java.util.function.Function;
@@ -99,6 +101,12 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
             public <C> C either(Function<A, C> leftFn, Function<B, C> rightFn) {
                 return leftFn.apply(a);
             }
+
+            @Override
+            public boolean isLeft() {
+                return true;
+            }
+
         };
     }
 
@@ -134,6 +142,11 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
             public <C> C either(Function<A, C> leftFn, Function<B, C> rightFn) {
                 return leftFn.apply(thunk.get());
             }
+
+            @Override
+            public boolean isLeft() {
+                return true;
+            }
         };
     }
 
@@ -151,6 +164,11 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
             @Override
             public <C> C either(Function<A, C> leftFn, Function<B, C> rightFn) {
                 return rightFn.apply(b);
+            }
+
+            @Override
+            public boolean isLeft() {
+                return false;
             }
         };
     }
@@ -187,6 +205,11 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
             public <C> C either(Function<A, C> leftFn, Function<B, C> rightFn) {
                 return rightFn.apply(thunk.get());
             }
+
+            @Override
+            public boolean isLeft() {
+                return false;
+            }
         };
     }
 
@@ -204,9 +227,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      *
      * @return true if this is a newLeft
      */
-    public boolean isLeft() {
-        return constant(true, false);
-    }
+    public abstract boolean isLeft();
 
     /**
      * Test for Right
@@ -214,7 +235,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return true if this is a newRight
      */
     public boolean isRight() {
-        return constant(false, true);
+        return ! isLeft();
     }
 
     /**
@@ -445,7 +466,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
     }
 
     /**
-     * The Monad of Either
+     * The Monad type class of Either
      *
      * @param <S> the Left type of Either
      * @return the Either monad
@@ -456,30 +477,60 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
     }
 
     /**
-     * The MonadPlus instance of Either which prefers the first Right value.
+     * The MonadPlus type class instance of Either which prefers the first Right value.
      *
      * @param monoid the Monoid used to combine Left values
      * @param <S>    the Left type of Either
      * @return the Either MonadPlus instance
      */
     public static <S> EitherMonadPlus<S> firstBiasedMonadPlus(Monoid<S> monoid) {
-        return new EitherMonadPlus<>(monoid, EitherMonadPlus.Bias.FIRST_RIGHT);
+        return new EitherMonadPlus<S>() {
+            @Override
+            public Monoid monoid() {
+                return monoid;
+            }
+
+            @Override
+            public Bias bias() {
+                return Bias.FIRST;
+            }
+        };
     }
 
     /**
-     * The MonadPlus instance of Either which prefers the last Right value.
+     * The MonadPlus type class instance of Either which prefers the last Right value.
      *
      * @param monoid the Monoid used to combine Left values
      * @param <S>    the Left type of Either
      * @return the Either MonadPlus instance
      */
     public static <S> EitherMonadPlus<S> lastBiasedMonadPlus(Monoid<S> monoid) {
-        return new EitherMonadPlus<>(monoid, EitherMonadPlus.Bias.LAST_RIGHT);
+        return new EitherMonadPlus<S>(){
+            @Override
+            public Monoid monoid() {
+                return monoid;
+            }
+
+            @Override
+            public Bias bias() {
+                return Bias.LAST;
+            }
+        };
     }
 
     /**
-     * The Bifunctor instance of Either.
+     * The Bifunctor type class instance of Either.
      */
     public static final EitherBifunctor bifunctor = new EitherBifunctor() {
     };
+
+    /**
+     * The Extend type class instance of Either.
+     * @param <S> the Left type of Either
+     * @return the Extend instance
+     */
+    public static <S> EitherExtend<S> extend() {
+        return new EitherExtend<S>() {
+        };
+    }
 }

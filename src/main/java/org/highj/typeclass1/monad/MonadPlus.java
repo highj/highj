@@ -14,4 +14,20 @@ public interface MonadPlus<M> extends MonadZero<M>, Alternative<M> {
     public default <A> _<M, A> msum(_<List.µ, _<M, A>> list) {
         return List.narrow(list).foldr((_<M, A> one) -> (_<M, A> two) -> mplus(one, two), this.<A>mzero());
     }
+
+    enum Bias {
+        FIRST {
+            @Override
+            public <T> T select(T first, T last) {
+                return first;
+            }
+        }, LAST {
+            @Override
+            public <T> T select(T first, T last) {
+                return last;
+            }
+        };
+
+        public abstract <T> T select(T first, T last);
+    }
 }
