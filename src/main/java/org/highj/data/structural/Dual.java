@@ -16,17 +16,25 @@ public class Dual<M, A, B> implements __<_<Dual.µ, M>, A, B> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <M, A, B> Dual<M, A, B> narrow(__<_<Dual.µ, M>, A, B> value) {
-        return (Dual) value;
+    public static <M, A, B> Dual<M, A, B> narrow(__<_<Dual.µ, M>, A, B> dual) {
+        return (Dual) dual;
     }
 
     @SuppressWarnings("unchecked")
-    public static <M, A, B> Dual<M, A, B> narrow(_<_<_<Dual.µ, M>, A>, B> value) {
-        return (Dual) value;
+    public static <M, A, B> Dual<M, A, B> narrow(_<_<_<Dual.µ, M>, A>, B> dual) {
+        return (Dual) dual;
     }
 
     public __<M, B, A> get() {
         return value;
+    }
+
+    public static <M,A,B> __<M, B, A> get(__<_<Dual.µ, M>, A, B> dual) {
+        return narrow(dual).get();
+    }
+
+    public static <M,A,B> __<M, B, A> get(_<_<_<Dual.µ, M>, A>, B> dual) {
+        return narrow(dual).get();
     }
 
     public static <M> DualCategory<M> category(final Category<M> category) {

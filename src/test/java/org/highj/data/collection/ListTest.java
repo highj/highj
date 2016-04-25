@@ -13,6 +13,7 @@ import org.junit.rules.ExpectedException;
 
 import java.util.NoSuchElementException;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

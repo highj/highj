@@ -129,7 +129,7 @@ public interface F1<A, B> extends __<F1.µ, A, B>, Function<A, B> {
 
     F1Arrow arrow = new F1Arrow();
     
-    public static <A, B> F1<A, Maybe<B>> fromJavaMap(Map<A, B> map) {
+    static <A, B> F1<A, Maybe<B>> fromJavaMap(Map<A, B> map) {
         return a -> map.containsKey(a) ? Maybe.newJust(map.get(a)) : Maybe.<B>newNothing();
     }
 
