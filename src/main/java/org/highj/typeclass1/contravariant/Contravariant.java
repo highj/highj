@@ -14,9 +14,9 @@ import java.util.function.Function;
 public interface Contravariant<F> extends Invariant<F> {
 
     // contramap (Data.Functor.Contravariant)
-    public <A, B> _<F, A> contramap(Function<A, B> fn, _<F, B> nestedB);
+    <A, B> _<F, A> contramap(Function<A, B> fn, _<F, B> nestedB);
 
-    public default <A, B> _<F, B> invmap(Function<A, B> fn, Function<B,A> nf, _<F, A> nestedA) {
+    default <A, B> _<F, B> invmap(Function<A, B> fn, Function<B,A> nf, _<F, A> nestedA) {
         return contramap(nf, nestedA);
     }
 }

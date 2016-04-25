@@ -20,6 +20,11 @@ public class Dual<M, A, B> implements __<_<Dual.µ, M>, A, B> {
         return (Dual) value;
     }
 
+    @SuppressWarnings("unchecked")
+    public static <M, A, B> Dual<M, A, B> narrow(_<_<_<Dual.µ, M>, A>, B> value) {
+        return (Dual) value;
+    }
+
     public __<M, B, A> get() {
         return value;
     }

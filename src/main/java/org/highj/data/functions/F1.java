@@ -5,6 +5,7 @@ import org.highj.__;
 import org.highj.data.collection.Maybe;
 import org.highj.data.functions.f1.F1Arrow;
 import org.highj.data.functions.f1.F1Monad;
+import org.highj.data.optic.Optional;
 import org.highj.data.tuple.T0;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
@@ -21,7 +22,7 @@ import java.util.function.Supplier;
 @FunctionalInterface
 public interface F1<A, B> extends __<F1.µ, A, B>, Function<A, B> {
 
-    public static class µ {
+    class µ {
     }
 
     static <A> F1<A, A> id() {
@@ -47,7 +48,20 @@ public interface F1<A, B> extends __<F1.µ, A, B>, Function<A, B> {
     }
 
     static <A, B> F1<A, B> constant(final Supplier<B> thunk) {
-        return a -> thunk.get();
+        //without memoization we cannot be sure that the constant function is really constant
+        return new F1<A, B>() {
+            Maybe<B> memo = Maybe.newNothing();
+
+            @Override
+            public B apply(A a) {
+                if (memo.isJust()) {
+                    return memo.get();
+                }
+                B b = thunk.get();
+                memo = Maybe.newJust(b);
+                return b;
+            }
+        };
     }
 
     static <A, B, C> F1<A, C> compose(final Function<? super B, ? extends C> f, final Function<? super A, ? extends B> g) {
@@ -63,7 +77,7 @@ public interface F1<A, B> extends __<F1.µ, A, B>, Function<A, B> {
     }
 
     static <A> Monoid<F1<A, A>> endoMonoid() {
-        return Monoid.create(F1.id(), (x, y) -> F1.compose(F1.narrow(x), F1.narrow(y)));
+        return Monoid.create(F1.id(), (x, y) -> F1.compose(x, y));
     }
 
     static <A, B> F1<A, F1<F1<A, B>, B>> flipApply() {
@@ -104,21 +118,22 @@ public interface F1<A, B> extends __<F1.µ, A, B>, Function<A, B> {
     }
 
 
-    public default Supplier<B> lazy(A a) {
+    default Supplier<B> lazy(A a) {
         return lazy(this, a);
     }
 
-    public default <C> F1<A, C> andThen(_<_<µ, B>, C> that) {
+    //avoid name clash with Function.andThen()
+    default <C> F1<A, C> then(_<_<µ, B>, C> that) {
         return compose(narrow(that), this);
     }
 
-    public static final F1Arrow arrow = new F1Arrow();
+    F1Arrow arrow = new F1Arrow();
     
     public static <A, B> F1<A, Maybe<B>> fromJavaMap(Map<A, B> map) {
         return a -> map.containsKey(a) ? Maybe.newJust(map.get(a)) : Maybe.<B>newNothing();
     }
 
-    public static <A, B> F1<A, B> fromJavaMap(Map<A, B> map, B defaultValue) {
+    static <A, B> F1<A, B> fromJavaMap(Map<A, B> map, B defaultValue) {
         return a -> map.containsKey(a) ? map.get(a) : defaultValue;
     }
 }
