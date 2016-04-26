@@ -12,6 +12,7 @@ import org.highj.data.stateful.io.IOBind;
 import org.highj.data.stateful.io.IOFunctor;
 import org.highj.data.stateful.io.IOMonadError;
 import org.highj.data.stateful.io.IOMonadIO;
+import org.highj.data.stateful.io.IOMonadRec;
 
 public interface IO<A> extends _<IO.µ, A> {
 
@@ -58,4 +59,6 @@ public interface IO<A> extends _<IO.µ, A> {
     public static final IOMonadError monadError = new IOMonadError() {};
     
     public static final IOMonadIO monadIO = new IOMonadIO() {};
+    
+    public static final IOMonadRec monadRec = new IOMonadRec() {};
 }
