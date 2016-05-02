@@ -362,12 +362,6 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
         return (Maybe) value;
     }
 
-    public static <Res, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z> Maybe<Res> doBlock(
-            Function<Do<µ, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0, T0>,
-                    Do<µ, Res, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z>> doit) {
-        return Maybe.narrow(doit.apply(Do.with(Maybe.monad)).done());
-    }
-
     @Override
     public Iterator<A> iterator() {
         return asList().iterator();
