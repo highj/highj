@@ -118,7 +118,6 @@ public class EitherTest {
     @Test
     public void testFirstBiasedMonadPlus() {
         EitherMonadPlus<String> eitherMonadPlus = Either.firstBiasedMonadPlus(Strings.group);
-        //mzero
         testMonadPlus(eitherMonadPlus, 1);
     }
 
@@ -180,7 +179,6 @@ public class EitherTest {
     @Test
     public void testLastBiasedMonadPlus() {
         EitherMonadPlus<String> eitherMonadPlus = Either.lastBiasedMonadPlus(Strings.group);
-        //mzero
         testMonadPlus(eitherMonadPlus, 2);
     }
 
@@ -275,11 +273,13 @@ public class EitherTest {
     @Test
     public void testMonad() {
         EitherMonad<String> eitherMonad = Either.monad();
+
         //map
         Either<String, Integer> left = newLeft("Test");
         Either<String, Integer> right = newRight(42);
         assertThat(eitherMonad.map(x -> x / 2, left).getLeft()).isEqualTo("Test");
         assertThat(eitherMonad.map(x -> x / 2, right).getRight()).isEqualTo(21);
+
         //ap
         Either<String, Function<Integer, Integer>> leftFn = newLeft("Nope");
         Either<String, Function<Integer, Integer>> rightFn = newRight(x -> x / 2);
@@ -287,8 +287,10 @@ public class EitherTest {
         assertThat(eitherMonad.ap(leftFn, right).getLeft()).isEqualTo("Nope");
         assertThat(eitherMonad.ap(rightFn, left).getLeft()).isEqualTo("Test");
         assertThat(eitherMonad.ap(rightFn, right).getRight()).isEqualTo(21);
+
         //pure
         assertThat(eitherMonad.pure(12).getRight()).isEqualTo(12);
+
         //bind
         Either<String, Integer> rightOdd = newRight(43);
         Function<Integer, _<_<Either.µ, String>, Integer>> halfEven =
@@ -296,6 +298,23 @@ public class EitherTest {
         assertThat(eitherMonad.bind(left, halfEven).getLeft()).isEqualTo("Test");
         assertThat(eitherMonad.bind(right, halfEven).getRight()).isEqualTo(21);
         assertThat(eitherMonad.bind(rightOdd, halfEven).getLeft()).isEqualTo("Odd");
+
+        //tailRec
+        Function<T2<Integer, Integer>, _<_<µ, String>, Either<T2<Integer,Integer>, Integer>>> factorial = pair ->  {
+            int factor = pair._1();
+            int product = pair._2();
+            if (factor < 0) {
+                return Either.newLeft("Can't be negative");
+            } else if (factor == 0) {
+                return Either.newRight(Either.newRight(product));
+            } else {
+                return Either.newRight(Either.newLeft(T2.of(factor - 1, factor * product)));
+            }
+        };
+        Either<String, Integer> validResult = eitherMonad.tailRec(factorial, T2.of(10, 1));
+        assertThat(validResult).isEqualTo(Either.newRight(3628800));
+        Either<String, Integer> invalidResult = eitherMonad.tailRec(factorial, T2.of(-10, 1));
+        assertThat(invalidResult).isEqualTo(Either.newLeft("Can't be negative"));
     }
 
     private void testMonadPlus(EitherMonadPlus<String> eitherMonadPlus, Integer expectedWhenBiased) {
