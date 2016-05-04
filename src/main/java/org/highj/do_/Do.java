@@ -134,7 +134,7 @@ public class Do {
             comp.add(
                 stateMonad.bind(
                     stateMonad.apply4(
-                        (A a) -> (B b) -> (C c) -> f.apply(a, b, c),
+                        (A a) -> (B b) -> (C c) -> (D d) -> f.apply(a, b, c, d),
                         readMValue(refA),
                         readMValue(refB),
                         readMValue(refC),
