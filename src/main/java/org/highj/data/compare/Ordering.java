@@ -49,8 +49,11 @@ public enum Ordering {
     }
 
     public static <T extends Comparable<? super T>> Ordering compare(T x, T y) {
-        int result = x.compareTo(y);
-        return result < 0 ? LT : result > 0 ? GT : EQ;
+        return fromInt(x.compareTo(y));
+    }
+
+    public static Ordering fromInt(int compareResult) {
+        return compare(compareResult, 0);
     }
 
 }
