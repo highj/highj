@@ -1,25 +1,35 @@
 package org.highj.data.tuple.t1;
 
 import org.highj._;
+import org.highj.data.collection.Either;
 import org.highj.data.tuple.T1;
-import org.highj.typeclass1.monad.Monad;
+import org.highj.typeclass1.monad.MonadRec;
 
 import java.util.function.Function;
 
-public class T1Monad implements Monad<T1.µ>, T1Functor {
+public interface T1Monad extends MonadRec<T1.µ>, T1Functor {
 
     @Override
-    public <A> T1<A> pure(A a) {
+    default <A> T1<A> pure(A a) {
         return T1.of(a);
     }
 
     @Override
-    public <A, B> T1<B> ap(_<T1.µ, Function<A, B>> nestedFn, _<T1.µ, A> nestedA) {
-        return T1.of(T1.narrow(nestedFn).get().apply(T1.narrow(nestedA).get()));
+    default <A, B> T1<B> ap(_<T1.µ, Function<A, B>> nestedFn, _<T1.µ, A> nestedA) {
+        return T1.narrow(nestedA).ap(T1.narrow(nestedFn));
     }
 
     @Override
-    public <A, B> T1<B> bind(_<T1.µ, A> nestedA, Function<A, _<T1.µ, B>> fn) {
-        return T1.narrow(fn.apply(T1.narrow(nestedA)._1()));
+    default <A, B> T1<B> bind(_<T1.µ, A> nestedA, Function<A, _<T1.µ, B>> fn) {
+        return T1.narrow(nestedA).bind(a -> T1.narrow(fn.apply(a)));
+    }
+
+    @Override
+    default <A, B> T1<B> tailRec(Function<A, _<T1.µ, Either<A, B>>> function, A startValue) {
+        T1<Either<A, B>> step = T1.of(Either.newLeft(startValue));
+        while(step.get().isLeft()) {
+            step = T1.narrow(function.apply(step.get().getLeft()));
+        }
+        return step.map(Either::getRight);
     }
 }

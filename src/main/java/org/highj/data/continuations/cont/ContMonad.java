@@ -1,7 +1,6 @@
 package org.highj.data.continuations.cont;
 
 import org.highj._;
-import org.highj.__;
 import org.highj.data.continuations.Cont;
 import org.highj.data.functions.Functions;
 import org.highj.typeclass1.monad.Monad;

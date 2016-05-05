@@ -1,9 +1,10 @@
 package org.highj.data.tuple;
 
 import org.highj._;
-import org.highj.__;
-import org.highj.___;
 import org.highj.____;
+import org.highj.data.collection.HList;
+import org.highj.data.collection.HList.HCons;
+import org.highj.data.collection.HList.HNil;
 import org.highj.data.tuple.t4.*;
 import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.compare.Ord;
@@ -270,6 +271,10 @@ public abstract class T4<A, B, C, D> implements ____<T4.µ, A, B, C, D> {
                 return monoidT;
             }
         };
+    }
+
+    public HCons<A, HCons<B, HCons<C, HCons<D, HNil>>>> toHlist() {
+        return HList.cons(_1(), HList.cons(_2(), HList.cons(_3(), HList.cons(_4(), HList.nil))));
     }
 
 }

@@ -1,4 +1,4 @@
-package org.highj.data.hlist;
+package org.highj.data.collection;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;

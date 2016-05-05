@@ -4,11 +4,10 @@ import org.highj._;
 import org.highj.__;
 import org.highj.data.continuations.cont.ContMonad;
 import org.highj.data.functions.Functions;
-import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
 
-public class Cont<R,A> implements __<Cont.µ, R, A> {
+public class Cont<R, A> implements __<Cont.µ, R, A> {
 
     private Function<Function<A,R>,R> fn;
 
@@ -36,7 +35,7 @@ public class Cont<R,A> implements __<Cont.µ, R, A> {
     }
 
     public static <S> ContMonad<S> monad()  {
-        return new ContMonad<>();
+        return new ContMonad<S>(){};
     }
 
 }

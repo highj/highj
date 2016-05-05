@@ -1,8 +1,10 @@
 package org.highj.data.tuple;
 
 import org.highj._;
-import org.highj.__;
 import org.highj.___;
+import org.highj.data.collection.HList;
+import org.highj.data.collection.HList.HCons;
+import org.highj.data.collection.HList.HNil;
 import org.highj.data.tuple.t3.*;
 import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.compare.Ord;
@@ -205,5 +207,10 @@ public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
     public static <S> T3Biapplicative<S> biapplicative(Monoid<S> monoidS) {
         return () -> monoidS;
     }
+
+    public HCons<A, HCons<B, HCons<C, HNil>>> toHlist() {
+        return HList.cons(_1(), HList.cons(_2(), HList.cons(_3(), HList.nil)));
+    }
+
 
 }

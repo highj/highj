@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 public interface T1Functor extends Functor<T1.µ> {
     @Override
-    public default <A, B> T1<B> map(Function<A, B> fn, _<T1.µ, A> nestedA) {
+    default <A, B> T1<B> map(Function<A, B> fn, _<T1.µ, A> nestedA) {
         return T1.narrow(nestedA).map(fn);
     }
 }

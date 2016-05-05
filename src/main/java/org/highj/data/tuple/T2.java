@@ -2,6 +2,9 @@ package org.highj.data.tuple;
 
 import org.highj._;
 import org.highj.__;
+import org.highj.data.collection.HList;
+import org.highj.data.collection.HList.HCons;
+import org.highj.data.collection.HList.HNil;
 import org.highj.data.tuple.t2.T2Biapplicative;
 import org.highj.data.tuple.t2.T2Bind;
 import org.highj.data.tuple.t2.T2Comonad;
@@ -151,6 +154,11 @@ public abstract class T2<A, B> implements __<T2.µ, A, B> {
     @Override
     public String toString() {
         return String.format("(%s,%s)", _1(), _2());
+    }
+
+
+    public HCons<A, HCons<B, HNil>> toHlist() {
+        return HList.cons(_1(), HList.cons(_2(), HList.nil));
     }
 
     public static class µ {

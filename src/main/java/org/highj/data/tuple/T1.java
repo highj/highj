@@ -1,6 +1,7 @@
 package org.highj.data.tuple;
 
 import org.highj._;
+import org.highj.data.collection.HList;
 import org.highj.data.tuple.t1.T1Comonad;
 import org.highj.data.tuple.t1.T1Monad;
 import org.highj.typeclass0.compare.Eq;
@@ -64,6 +65,10 @@ public abstract class T1<A> implements _<T1.µ, A>, Supplier<A> {
         return map(narrow(nestedFn)._1());
     }
 
+    public <B> T1<B> bind(Function<A, T1<B>> fn) {
+        return fn.apply(_1());
+    }
+
     @Override
     public int hashCode() {
         return _1().hashCode();
@@ -95,8 +100,8 @@ public abstract class T1<A> implements _<T1.µ, A>, Supplier<A> {
         return (one, two) -> ordA.cmp(one._1(), two._1());
     }
 
-    public static final T1Monad monad = new T1Monad();
-    public static final T1Comonad comonad = new T1Comonad();
+    public static final T1Monad monad = new T1Monad(){};
+    public static final T1Comonad comonad = new T1Comonad(){};
 
     public static <A> Semigroup<T1<A>> semigroup(BinaryOperator<A> semigroupA) {
         return (x, y) -> T1.of(semigroupA.apply(x._1(), y._1()));
@@ -111,6 +116,10 @@ public abstract class T1<A> implements _<T1.µ, A>, Supplier<A> {
         return Group.create(T1.of(groupA.identity()),
                 (x, y) -> T1.of(groupA.apply(x._1(), y._1())),
                 z -> T1.of(groupA.inverse(z._1())));
+    }
+
+    public HList.HCons<A, HList.HNil> toHlist() {
+        return HList.single(_1());
     }
 
 }
