@@ -16,11 +16,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * A crude, hash-based set implementation.
+ * A crude, hash-based, immutable set implementation.
  * <p>
  * Note that the provided monad instance could be considered a hack, based on the fact that every
  * Java object has a {@link Object#hashCode} and an {@link Object#equals} implementation,
  * which might be rather useless in some cases.
+ * </p>
  *
  * @param <A> The element type.
  */
@@ -44,11 +45,24 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         this.left = left;
     }
 
+    /**
+     * Converts the higher kinded representation of a {@link Set} back to the standard one.
+     *
+     * @param value the {@link Set} in higher kinded representation
+     * @param <A> the element type
+     * @return the {@link Set} converted back to standard form
+     */
     @SuppressWarnings("unchecked")
     public static <A> Set<A> narrow(_<µ, A> value) {
         return (Set) value;
     }
 
+    /**
+     * Checks whether the set contains a given value.
+     *
+     * @param value value to check
+     * @return {@link true} if the set contains the value, {@link false} otherwise
+     */
     @Override
     public boolean test(A value) {
         if (isEmpty()) {
@@ -78,6 +92,14 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         return right == newRight ? this : new Set<>(hc, bucket, left, newRight);
     }
 
+    /**
+     * Contructs a new set which contains all elements of the current set, as well as the given value.
+     *
+     * If the value is already there, a reference of the current set will be returned.
+     *
+     * @param a the value
+     * @return the set
+     */
     public Set<A> plus(A a) {
         if (isEmpty()) {
             return new Set<>(a.hashCode(), List.of(a), Set.empty(), Set.empty());
@@ -95,6 +117,14 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         }
     }
 
+    /**
+     * Contructs a new set which contains all elements of the current set, except the given value.
+     *
+     * If the value isn't there, a reference of the current set will be returned.
+     *
+     * @param a the value
+     * @return the set
+     */
     public Set<A> minus(A a) {
         if (isEmpty()) {
             return this;
@@ -131,19 +161,44 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         }
     }
 
+    /**
+     * Checks whether the set is empty.
+     *
+     * @return {@link true} if the set is empty, {@link false} otherwise
+     */
     public boolean isEmpty() {
         return this == EMPTY;
     }
 
+    /**
+     * Constructs an empty set.
+     *
+     * @param <A> the element type.
+     * @return the set
+     */
     @SuppressWarnings("unchecked")
     public static <A> Set<A> empty() {
         return (Set) EMPTY;
     }
 
+    /**
+     * Contructs a set holding a single element.
+     *
+     * @param a the element
+     * @param <A> the element type
+     * @return the set
+     */
     public static <A> Set<A> of(A a) {
         return Set.<A>empty().plus(a);
     }
 
+    /**
+     * Constructs a set containing the given values.
+     *
+     * @param as the elements
+     * @param <A> the element type
+     * @return the set
+     */
     @SafeVarargs
     public static <A> Set<A> of(A... as) {
         return Set.<A>empty().plus(as);
@@ -181,10 +236,23 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         return Set.of(ArrayUtils.box(as));
     }
 
+    /**
+     * Constructs a set from the given values.
+     *
+     * @param as an {@link Iterable} containing the elements
+     * @param <A> the element type
+     * @return the set
+     */
     public static <A> Set<A> of(Iterable<A> as) {
         return Set.<A>empty().plus(as);
     }
 
+    /**
+     * Constructs a set, which contains the current elements and the given values.
+     *
+     * @param as the values to be included
+     * @return the set
+     */
     @SafeVarargs
     public final Set<A> plus(A... as) {
         Set<A> result = this;
@@ -194,6 +262,12 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         return result;
     }
 
+    /**
+     * Constructs a set containing the current elements, except the given values.
+     *
+     * @param as the values to be excluded
+     * @return the set
+     */
     @SafeVarargs
     public final Set<A> minus(A... as) {
         Set<A> result = this;
@@ -203,6 +277,12 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         return result;
     }
 
+    /**
+     * Constructs a set, which contains the current elements and the given values.
+     *
+     * @param as the {@link Iterable} of the values to be included
+     * @return the set
+     */
     public Set<A> plus(Iterable<A> as) {
         Set<A> result = this;
         for (A a : as) {
@@ -211,6 +291,12 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         return result;
     }
 
+    /**
+     * Constructs a set containing the current elements, except the given values.
+     *
+     * @param as the {@link Iterable} of the values to be excluded
+     * @return the set
+     */
     public Set<A> minus(Iterable<A> as) {
         Set<A> result = this;
         for (A a : as) {
@@ -219,11 +305,26 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         return result;
     }
 
+    /**
+     * Calculates the number of elements.
+     *
+     * Note that the size is calculated and not cached, so for large sets this may be an expensive operation.
+     *
+     * @return the number of elements.
+     */
     public int size() {
         return isEmpty() ? 0 : left.size() + bucket.size() + right.size();
     }
 
     //note that the iteration order depends on the insertion order
+
+    /**
+     * An iterator over the set.
+     *
+     * Note that equal sets may have different iteration orders, depending on their respective insertion order.
+     *
+     * @return the iterator
+     */
     public Iterator<A> iterator() {
         return isEmpty() ? Iterators.emptyIterator() : new Iterator<A>() {
 
@@ -260,11 +361,27 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
     }
 
 
+    /**
+     * Generates a {@link String} representation of the set.
+     *
+     * Note that equal sets may have different representations, depending on their respective insertion order.
+     *
+     * @return the {@link String} representation
+     */
     @Override
     public String toString() {
         return Strings.mkString("Set(", ",", ")", this);
     }
 
+    /**
+     * Transforms the set.
+     *
+     * Note that in contrast to lists the result set may be smaller than the original one.
+     *
+     * @param fn the transformation function
+     * @param <B> the result type
+     * @return the transformed set
+     */
     public <B> Set<B> map(Function<? super A, ? extends B> fn) {
         Set<B> result = empty();
         for (A a : this) {
@@ -273,6 +390,12 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         return result;
     }
 
+    /**
+     * Calculates a set of all elements fulfilling a given condition.
+     *
+     * @param fn the {@link Predicate} used for testing
+     * @return the filtered set
+     */
     public Set<A> filter(Predicate<? super A> fn) {
         Set<A> result = empty();
         for (A a : this) {
@@ -281,6 +404,15 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         return result;
     }
 
+    /**
+     * Calculates the union of all sets contained in a given set.
+     *
+     * Note that in contrast to lists the result set may be smaller than the combined size of the original ones.
+     *
+     * @param set the nested set
+     * @param <A> the element type
+     * @return the "flattened" set
+     */
     public static <A> Set<A> join(Set<Set<A>> set) {
         Set<A> result = empty();
         for (Set<A> innerSet : set) {
@@ -289,6 +421,13 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         return result;
     }
 
+    /**
+     * Calculates a set by applying all the given functions to all elements.
+     *
+     * @param functions a set of functions
+     * @param <B> the result type
+     * @return the set
+     */
     public <B> Set<B> ap(Set<Function<A, B>> functions) {
         Set<B> result = empty();
         for (Function<A, B> fn : functions) {
@@ -297,6 +436,15 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         return result;
     }
 
+    /**
+     * Calculates a new set as union of the results after applying the given function to all elements.
+     *
+     * This operation is also known as "flatMap".
+     *
+     * @param fn the function
+     * @param <B> the result type
+     * @return the set
+     */
     public <B> Set<B> bind(Function<? super A, Set<B>> fn) {
         Set<B> result = empty();
         for (A a : this) {
@@ -305,6 +453,11 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         return result;
     }
 
+    /**
+     * Converts the set to a mutable {@link java.util.Set}.
+     *
+     * @return the {@link java.util.Set}
+     */
     public java.util.Set<A> toJSet() {
         java.util.Set<A> result = new HashSet<>();
         for (A a : this) {
@@ -334,9 +487,23 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
         return result;
     }
 
+    /**
+     * The monad instance of sets, also implementing MonadPlus and MonadRec.
+     *
+     * Note that this is only possible because in Java every Object has a
+     * a {@link Object#hashCode} and an {@link Object#equals} implementation,
+     * which might be rather useless in some cases. Haskell has no direct equivalent.
+     */
     public static SetMonadPlus monadPlus = new SetMonadPlus() {
     };
 
+
+    /**
+     * Constructs the set monoid.
+     *
+     * @param <A> the element type
+     * @return the monoid
+     */
     public static <A> Monoid<Set<A>> monoid() {
         return Monoid.create(Set.empty(), (x, y) -> x.plus(y));
     }
