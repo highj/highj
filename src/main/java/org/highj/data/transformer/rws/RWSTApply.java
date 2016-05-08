@@ -6,11 +6,7 @@
 package org.highj.data.transformer.rws;
 
 import java.util.function.Function;
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
-import org.highj.____;
-import org.highj._____;
+import org.derive4j.hkt.__;
 import org.highj.data.transformer.RWST;
 import org.highj.data.tuple.T3;
 import org.highj.typeclass0.group.Semigroup;
@@ -21,7 +17,7 @@ import org.highj.typeclass1.monad.Bind;
  *
  * @author clintonselke
  */
-public interface RWSTApply<R,W,S,M> extends RWSTFunctor<R,W,S,M>, Apply<_<_<_<_<RWST.µ,R>,W>,S>,M>> {
+public interface RWSTApply<R,W,S,M> extends RWSTFunctor<R,W,S,M>, Apply<__<__<__<__<RWST.µ,R>,W>,S>,M>> {
     
     @Override
     public Bind<M> m();
@@ -29,7 +25,7 @@ public interface RWSTApply<R,W,S,M> extends RWSTFunctor<R,W,S,M>, Apply<_<_<_<_<
     public Semigroup<W> w();
 
     @Override
-    public default <A, B> RWST<R, W, S, M, B> ap(_<_<_<_<_<RWST.µ, R>, W>, S>, M>, Function<A, B>> fn, _<_<_<_<_<RWST.µ, R>, W>, S>, M>, A> nestedA) {
+    public default <A, B> RWST<R, W, S, M, B> ap(__<__<__<__<__<RWST.µ, R>, W>, S>, M>, Function<A, B>> fn, __<__<__<__<__<RWST.µ, R>, W>, S>, M>, A> nestedA) {
         return (R r, S s) -> m().bind(
             RWST.narrow(fn).run(r, s),
             (T3<Function<A,B>,S,W> x) -> m().map(

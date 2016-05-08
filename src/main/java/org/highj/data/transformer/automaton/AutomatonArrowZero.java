@@ -5,8 +5,7 @@
  */
 package org.highj.data.transformer.automaton;
 
-import org.highj._;
-import org.highj.___;
+import org.derive4j.hkt.__;
 import org.highj.data.transformer.Automaton;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.ArrowZero;
@@ -15,7 +14,7 @@ import org.highj.typeclass2.arrow.ArrowZero;
  *
  * @author clintonselke
  */
-public interface AutomatonArrowZero<A> extends AutomatonArrow<A>, ArrowZero<_<Automaton.µ,A>> {
+public interface AutomatonArrowZero<A> extends AutomatonArrow<A>, ArrowZero<__<Automaton.µ,A>> {
     
     public ArrowZero<A> get();
 

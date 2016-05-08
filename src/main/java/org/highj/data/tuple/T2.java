@@ -1,7 +1,7 @@
 package org.highj.data.tuple;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.HList;
 import org.highj.data.collection.HList.HCons;
 import org.highj.data.collection.HList.HNil;
@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 /**
  * A tuple of arity 2, a.k.a. "pair".
  */
-public abstract class T2<A, B> implements __<T2.µ, A, B> {
+public abstract class T2<A, B> implements __2<T2.µ, A, B> {
     public static final T2Biapplicative biapplicative = new T2Biapplicative() {
     };
 
@@ -76,7 +76,7 @@ public abstract class T2<A, B> implements __<T2.µ, A, B> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A, B> T2<A, B> narrow(_<_<µ, A>, B> value) {
+    public static <A, B> T2<A, B> narrow(__<__<µ, A>, B> value) {
         return (T2) value;
     }
 

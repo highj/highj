@@ -5,9 +5,7 @@
  */
 package org.highj.data.transformer.writer_arrow;
 
-import org.highj._;
-import org.highj.___;
-import org.highj.____;
+import org.derive4j.hkt.__;
 import org.highj.data.transformer.WriterArrow;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass0.group.Monoid;
@@ -17,7 +15,7 @@ import org.highj.typeclass2.arrow.Category;
  *
  * @author clintonselke
  */
-public interface WriterArrowCategory<W,A> extends WriterArrowSemigroupoid<W,A>, Category<_<_<WriterArrow.µ,W>,A>> {
+public interface WriterArrowCategory<W,A> extends WriterArrowSemigroupoid<W,A>, Category<__<__<WriterArrow.µ,W>,A>> {
     
     @Override
     public Monoid<W> w();

@@ -1,16 +1,17 @@
 package org.highj.data.functions;
 
-import org.highj.*;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__5;
 
 import java.util.function.Function;
 
-public interface F4<A, B, C, D, E> extends _____<F4.µ, A, B, C, D, E> {
+public interface F4<A, B, C, D, E> extends __5<F4.µ, A, B, C, D, E> {
 
     class µ {
     }
 
     @SuppressWarnings("unchecked")
-    static <A, B, C, D, E> F4<A, B, C, D, E> narrow(_<_<_<_<_<µ, A>, B>, C>, D>, E> function) {
+    static <A, B, C, D, E> F4<A, B, C, D, E> narrow(__<__<__<__<__<µ, A>, B>, C>, D>, E> function) {
         return (F4) function;
     }
 

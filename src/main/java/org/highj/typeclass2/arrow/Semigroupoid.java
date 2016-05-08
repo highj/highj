@@ -1,24 +1,24 @@
 package org.highj.typeclass2.arrow;
 
-import org.highj.__;
+import org.derive4j.hkt.__2;
 
 public interface Semigroupoid<A> {
 
     // apply (Data.Semigroupoid), (.) (Control.Category)
-    <B, C, D> __<A, B, D> dot(__<A, C, D> cd, __<A, B, C> bc);
+    <B, C, D> __2<A, B, D> dot(__2<A, C, D> cd, __2<A, B, C> bc);
 
     // (>>>) (Control.Category, Control.Arrow)
-    public default <B, C, D> __<A, B, D> then(__<A, B, C> bc, __<A, C, D> cd) {
+    public default <B, C, D> __2<A, B, D> then(__2<A, B, C> bc, __2<A, C, D> cd) {
         return dot(cd, bc);
     }
 
     // 2x (>>>)
-    public default <B, C, D, E> __<A, B, E> then(__<A, B, C> bc, __<A, C, D> cd, __<A, D, E> de){
+    public default <B, C, D, E> __2<A, B, E> then(__2<A, B, C> bc, __2<A, C, D> cd, __2<A, D, E> de){
         return then(bc, then(cd, de));
     }
 
     // 3x (>>>)
-    public default <B, C, D, E, F> __<A, B, F> then(__<A, B, C> bc, __<A, C, D> cd, __<A, D, E> de, __<A, E, F> ef) {
+    public default <B, C, D, E, F> __2<A, B, F> then(__2<A, B, C> bc, __2<A, C, D> cd, __2<A, D, E> de, __2<A, E, F> ef) {
         return then(bc, cd, then(de, ef));
     }
 }

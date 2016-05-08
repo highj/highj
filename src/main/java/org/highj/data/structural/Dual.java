@@ -1,39 +1,31 @@
 package org.highj.data.structural;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
+import org.derive4j.hkt.__3;
 import org.highj.data.structural.dual.DualCategory;
 import org.highj.typeclass2.arrow.Category;
 
-public class Dual<M, A, B> implements __<_<Dual.µ, M>, A, B> {
+public class Dual<M, A, B> implements __3<Dual.µ, M, A, B> {
 
     public static class µ {}
 
-    private final __<M, B, A> value;
+    private final __2<M, B, A> value;
 
-    public Dual(__<M, B, A> value) {
+    public Dual(__2<M, B, A> value) {
         this.value = value;
     }
 
     @SuppressWarnings("unchecked")
-    public static <M, A, B> Dual<M, A, B> narrow(__<_<Dual.µ, M>, A, B> dual) {
+    public static <M, A, B> Dual<M, A, B> narrow(__<__<__<µ, M>, A>, B> dual) {
         return (Dual) dual;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <M, A, B> Dual<M, A, B> narrow(_<_<_<Dual.µ, M>, A>, B> dual) {
-        return (Dual) dual;
-    }
-
-    public __<M, B, A> get() {
+    public __2<M, B, A> get() {
         return value;
     }
 
-    public static <M,A,B> __<M, B, A> get(__<_<Dual.µ, M>, A, B> dual) {
-        return narrow(dual).get();
-    }
-
-    public static <M,A,B> __<M, B, A> get(_<_<_<Dual.µ, M>, A>, B> dual) {
+    public static <M,A,B> __2<M, B, A> get(__<__<__<µ, M>, A>, B> dual) {
         return narrow(dual).get();
     }
 

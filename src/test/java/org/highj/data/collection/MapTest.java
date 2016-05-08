@@ -1,7 +1,7 @@
 package org.highj.data.collection;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.tuple.T2;
 import org.highj.data.functions.Integers;
 import org.junit.Test;
@@ -20,10 +20,10 @@ public class MapTest {
 
     @Test
     public void testNarrow() throws Exception {
-        __<Map.µ,String, Integer> map = aMap;
+        __2<Map.µ,String, Integer> map = aMap;
         Map<String, Integer> result = Map.narrow(map);
         assertEquals("Map(x->3,y->5,z->10)", result.toString());
-        _<_<Map.µ,String>, Integer> map1 = aMap;
+        __<__<Map.µ,String>, Integer> map1 = aMap;
         Map<String, Integer> result1 = Map.narrow(map1);
         assertEquals("Map(x->3,y->5,z->10)", result1.toString());
     }

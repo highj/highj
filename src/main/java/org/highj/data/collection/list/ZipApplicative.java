@@ -1,6 +1,6 @@
 package org.highj.data.collection.list;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.List;
 import org.highj.typeclass1.monad.Applicative;
 
@@ -15,7 +15,7 @@ public interface ZipApplicative extends Applicative<µ>, ListFunctor {
     }
 
     @Override
-    default <A, B> List<B> ap(_<µ, Function<A, B>> fn, _<µ, A> nestedA) {
+    default <A, B> List<B> ap(__<µ, Function<A, B>> fn, __<µ, A> nestedA) {
         Function<Function<A,B>, Function<A,B>> zipFn = f -> f;
         return zipWith(narrow(fn), narrow(nestedA), zipFn);
     }

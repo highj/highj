@@ -5,10 +5,10 @@
  */
 package org.highj.data.transformer;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
-import org.highj.____;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
+import org.derive4j.hkt.__3;
+import org.derive4j.hkt.__4;
 import org.highj.data.transformer.reader_arrow.ReaderArrowArrow;
 import org.highj.data.transformer.reader_arrow.ReaderArrowArrowReader;
 import org.highj.data.transformer.reader_arrow.ReaderArrowArrowTransformer;
@@ -21,36 +21,36 @@ import org.highj.typeclass2.arrow.Arrow;
  *
  * @author clintonselke
  */
-public class ReaderArrow<R,A,B,C> implements ____<ReaderArrow.µ,R,A,B,C> {
+public class ReaderArrow<R,A,B,C> implements __4<ReaderArrow.µ,R,A,B,C> {
     public static class µ {}
     
-    private final __<A,T2<B,R>,C> _run;
+    private final __2<A,T2<B,R>,C> _run;
     
-    private ReaderArrow(__<A,T2<B,R>,C> run) {
+    private ReaderArrow(__2<A,T2<B,R>,C> run) {
         this._run = run;
     }
     
-    public static <R,A,B,C> ReaderArrow<R,A,B,C> readerArrow(__<A,T2<B,R>,C> run) {
+    public static <R,A,B,C> ReaderArrow<R,A,B,C> readerArrow(__2<A,T2<B,R>,C> run) {
         return new ReaderArrow<>(run);
     }
     
-    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(____<ReaderArrow.µ,R,A,B,C> a) {
+    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(__4<µ,R,A,B,C> a) {
         return (ReaderArrow<R,A,B,C>)a;
     }
     
-    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(___<_<ReaderArrow.µ,R>,A,B,C> a) {
+    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(__3<__<µ,R>,A,B,C> a) {
         return (ReaderArrow<R,A,B,C>)a;
     }
     
-    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(__<_<_<ReaderArrow.µ,R>,A>,B,C> a) {
+    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(__2<__<__<µ,R>,A>,B,C> a) {
         return (ReaderArrow<R,A,B,C>)a;
     }
     
-    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(_<_<_<_<ReaderArrow.µ,R>,A>,B>,C> a) {
+    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(__<__<__<__<µ,R>,A>,B>,C> a) {
         return (ReaderArrow<R,A,B,C>)a;
     }
     
-    public __<A,T2<B,R>,C> run() {
+    public __2<A,T2<B,R>,C> run() {
         return _run;
     }
     

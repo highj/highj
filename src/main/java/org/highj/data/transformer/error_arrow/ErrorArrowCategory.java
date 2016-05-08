@@ -5,9 +5,7 @@
  */
 package org.highj.data.transformer.error_arrow;
 
-import org.highj._;
-import org.highj.___;
-import org.highj.____;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.data.transformer.ErrorArrow;
 import org.highj.typeclass2.arrow.Category;
@@ -16,7 +14,7 @@ import org.highj.typeclass2.arrow.Category;
  *
  * @author clintonselke
  */
-public interface ErrorArrowCategory<EX,A> extends ErrorArrowSemigroupoid<EX,A>, Category<_<_<ErrorArrow.µ,EX>,A>> {
+public interface ErrorArrowCategory<EX,A> extends ErrorArrowSemigroupoid<EX,A>, Category<__<__<ErrorArrow.µ,EX>,A>> {
 
     @Override
     public default <B> ErrorArrow<EX, A, B, B> identity() {

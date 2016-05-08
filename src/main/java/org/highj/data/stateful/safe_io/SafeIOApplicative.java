@@ -5,7 +5,6 @@
  */
 package org.highj.data.stateful.safe_io;
 
-import org.highj._;
 import org.highj.data.stateful.SafeIO;
 import org.highj.typeclass1.monad.Applicative;
 

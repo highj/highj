@@ -2,13 +2,13 @@ package org.highj.data.optic;
 
 import java.util.function.Function;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.Category;
 
 /** {@link PIso} when S = T and A = B */
-public final class Iso<S, A> extends PIso<S, S, A, A> implements __<Iso.µ, S, A> {
+public final class Iso<S, A> extends PIso<S, S, A, A> implements __2<Iso.µ, S, A> {
 
     public static final class µ {
     }
@@ -118,7 +118,7 @@ public final class Iso<S, A> extends PIso<S, S, A, A> implements __<Iso.µ, S, A
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Iso<S, A> narrow(final _<_<Iso.µ, S>, A> value) {
+    public static <S, A> Iso<S, A> narrow(final __<__<µ, S>, A> value) {
         return (Iso) value;
     }
 
@@ -145,12 +145,12 @@ public final class Iso<S, A> extends PIso<S, S, A, A> implements __<Iso.µ, S, A
     public static final Category<Iso.µ> isoCategory = new Category<Iso.µ>() {
 
         @Override
-        public <B, C, D> __<Iso.µ, B, D> dot(final __<Iso.µ, C, D> cd, final __<Iso.µ, B, C> bc) {
+        public <B, C, D> __2<µ, B, D> dot(final __2<µ, C, D> cd, final __2<µ, B, C> bc) {
             return narrow(bc).composeIso(narrow(cd));
         }
 
         @Override
-        public <B> __<Iso.µ, B, B> identity() {
+        public <B> __2<µ, B, B> identity() {
             return id();
         }
     };

@@ -1,6 +1,6 @@
 package org.highj.data.collection.stream;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Stream;
 import org.highj.typeclass1.monad.Monad;
 
@@ -14,22 +14,22 @@ public class StreamMonad implements Monad<Stream.µ> {
     }
 
     @Override
-    public <A, B> Stream<B> ap(_<Stream.µ, Function<A, B>> fn, _<Stream.µ, A> nestedA) {
+    public <A, B> Stream<B> ap(__<Stream.µ, Function<A, B>> fn, __<Stream.µ, A> nestedA) {
         return Stream.zipWith(f1 -> f1::apply, fn, nestedA);
     }
 
     @Override
-    public <A, B> Stream<B> map(Function<A, B> fn, _<Stream.µ, A> nestedA) {
+    public <A, B> Stream<B> map(Function<A, B> fn, __<Stream.µ, A> nestedA) {
         return Stream.narrow(nestedA).map(fn);
     }
 
     @Override
-    public <A> Stream<A> join(_<Stream.µ, _<Stream.µ, A>> nestedNestedA) {
-        Stream<_<Stream.µ, A>> nestedStream = Stream.narrow(nestedNestedA);
+    public <A> Stream<A> join(__<Stream.µ, __<Stream.µ, A>> nestedNestedA) {
+        Stream<__<Stream.µ, A>> nestedStream = Stream.narrow(nestedNestedA);
         Stream<A> xs = Stream.narrow(nestedStream.head());
-        final Stream<_<Stream.µ, A>> xss = nestedStream.tail();
+        final Stream<__<Stream.µ, A>> xss = nestedStream.tail();
         return Stream.newLazyStream(xs.head(), () -> {
-            Stream<_<Stream.µ, A>> tails = xss.<_<Stream.µ, A>>map(as -> Stream.narrow(as).tail());
+            Stream<__<Stream.µ, A>> tails = xss.<__<Stream.µ, A>>map(as -> Stream.narrow(as).tail());
             return join(tails);
         });
     }

@@ -6,7 +6,7 @@
 package org.highj.data.transformer.error;
 
 import java.util.function.Function;
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.data.transformer.ErrorT;
 import org.highj.typeclass1.monad.MonadRec;
@@ -15,12 +15,12 @@ import org.highj.typeclass1.monad.MonadRec;
  *
  * @author clintonselke
  */
-public interface ErrorTMonadRec<E,M> extends ErrorTMonad<E,M>, MonadRec<_<_<ErrorT.µ,E>,M>> {
+public interface ErrorTMonadRec<E,M> extends ErrorTMonad<E,M>, MonadRec<__<__<ErrorT.µ,E>,M>> {
     
     public MonadRec<M> get();
 
     @Override
-    public default <A, B> ErrorT<E, M, B> tailRec(Function<A, _<_<_<ErrorT.µ, E>, M>, Either<A, B>>> f, A startA) {
+    public default <A, B> ErrorT<E, M, B> tailRec(Function<A, __<__<__<ErrorT.µ, E>, M>, Either<A, B>>> f, A startA) {
         return () -> get().tailRec(
             (A a) -> get().map(
                 (Either<E,Either<A,B>> x) ->

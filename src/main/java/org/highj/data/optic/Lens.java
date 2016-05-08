@@ -2,8 +2,8 @@ package org.highj.data.optic;
 
 import java.util.function.Function;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.Either;
 import org.highj.data.functions.F1;
 import org.highj.typeclass1.monad.Applicative;
@@ -11,7 +11,7 @@ import org.highj.typeclass1.monad.Applicative;
 /**
  * {@link PLens} with a monomorphic set function
  */
-public final class Lens<S, A> extends PLens<S, S, A, A> implements __<Lens.µ, S, A> {
+public final class Lens<S, A> extends PLens<S, S, A, A> implements __2<Lens.µ, S, A> {
 
     public static final class µ {
     }
@@ -33,7 +33,7 @@ public final class Lens<S, A> extends PLens<S, S, A, A> implements __<Lens.µ, S
     }
 
     @Override
-    public <X> F1<S, _<X, S>> modifyF(final Applicative<X> applicative, final Function<A, _<X, A>> f) {
+    public <X> F1<S, __<X, S>> modifyF(final Applicative<X> applicative, final Function<A, __<X, A>> f) {
         return pLens.modifyF(applicative, f);
     }
 
@@ -102,7 +102,7 @@ public final class Lens<S, A> extends PLens<S, S, A, A> implements __<Lens.µ, S
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Lens<S, A> narrow(final _<_<Lens.µ, S>, A> value) {
+    public static <S, A> Lens<S, A> narrow(final __<__<µ, S>, A> value) {
         return (Lens) value;
     }
 

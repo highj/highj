@@ -1,13 +1,13 @@
 package org.highj.data.structural;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.structural.endo.EndoInvariant;
 import org.highj.typeclass0.group.Monoid;
 
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-public class Endo<A> implements _<Endo.µ, A>, UnaryOperator<A> {
+public class Endo<A> implements __<Endo.µ, A>, UnaryOperator<A> {
 
     public static class µ {
     }
@@ -24,7 +24,7 @@ public class Endo<A> implements _<Endo.µ, A>, UnaryOperator<A> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A> Endo<A> narrow(_<Endo.µ, A> nested) {
+    public static <A> Endo<A> narrow(__<µ, A> nested) {
         return (Endo) nested;
     }
 

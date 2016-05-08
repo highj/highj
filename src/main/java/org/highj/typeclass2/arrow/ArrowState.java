@@ -5,7 +5,7 @@
  */
 package org.highj.typeclass2.arrow;
 
-import org.highj.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.tuple.T0;
 
 /**
@@ -14,7 +14,7 @@ import org.highj.data.tuple.T0;
  */
 public interface ArrowState<S,A> extends Arrow<A> {
     
-    public <B> __<A,B,S> fetch();
+    public <B> __2<A,B,S> fetch();
     
-    public __<A,S,T0> store();
+    public __2<A,S,T0> store();
 }

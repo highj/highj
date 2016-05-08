@@ -1,6 +1,6 @@
 package org.highj.data.collection;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.list.ListMonadPlus;
 import org.highj.data.collection.list.ListTraversable;
 import org.highj.data.collection.list.ZipApplicative;
@@ -25,8 +25,7 @@ import java.util.function.Supplier;
  *
  * @param <A> the element type
  */
-public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<Integer, Maybe<A>> {
-
+public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<Integer, Maybe<A>> {
 
     public interface µ {
     }
@@ -72,7 +71,7 @@ public abstract class List<A> implements _<List.µ, A>, Iterable<A>, Function<In
      * @return the {@link List} converted back to standard form
      */
     @SuppressWarnings("unchecked")
-    public static <A> List<A> narrow(_<µ, A> value) {
+    public static <A> List<A> narrow(__<µ, A> value) {
         return (List) value;
     }
 

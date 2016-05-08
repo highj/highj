@@ -1,12 +1,12 @@
 package org.highj.data.stateful;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 
 import java.util.function.Function;
 
 //see http://blog.higher-order.com/blog/2015/06/23/a-scala-comonad-tutorial/
-public class Coreader<R, A> implements __<Coreader.µ, R, A> {
+public class Coreader<R, A> implements __2<Coreader.µ, R, A> {
 
     private final A extract;
     private final R ask;
@@ -19,12 +19,12 @@ public class Coreader<R, A> implements __<Coreader.µ, R, A> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <R,A> Coreader<R,A> narrow(__<µ, R, A> nested) {
+    public static <R,A> Coreader<R,A> narrow(__2<µ, R, A> nested) {
        return (Coreader<R,A>) nested;
     }
 
     @SuppressWarnings("unchecked")
-    public static <R,A> Coreader<R,A> narrow(_<_<µ, R>, A> nested) {
+    public static <R,A> Coreader<R,A> narrow(__<__<µ, R>, A> nested) {
         return (Coreader<R,A>) nested;
     }
 

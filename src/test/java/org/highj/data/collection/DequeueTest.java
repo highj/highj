@@ -1,6 +1,6 @@
 package org.highj.data.collection;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.tuple.T2;
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ public class DequeueTest {
 
     @Test
     public void testNarrow() throws Exception {
-        _<Dequeue.µ, String> dqHKT = Dequeue.of("a","b","c");
+        __<Dequeue.µ, String> dqHKT = Dequeue.of("a","b","c");
         Dequeue<String> dq = Dequeue.narrow(dqHKT);
         assertThat(dq).containsExactly("a","b","c");
     }

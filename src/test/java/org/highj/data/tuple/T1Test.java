@@ -1,6 +1,6 @@
 package org.highj.data.tuple;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.data.functions.Functions;
 import org.highj.data.functions.Integers;
@@ -51,7 +51,7 @@ public class T1Test {
         T1Comonad comonad = T1.comonad;
         assertThat(comonad.duplicate(T1.of(2))).isEqualTo(T1.of(T1.of(2)));
         assertThat(comonad.extract(T1.of(2))).isEqualTo(2);
-        Function<_<T1.µ, String>, Integer> function = nested -> T1.narrow(nested)._1().length();
+        Function<__<T1.µ, String>, Integer> function = nested -> T1.narrow(nested)._1().length();
         assertThat(comonad.extend(function).apply(T1.of("hello"))).isEqualTo(T1.of(5));
     }
 
@@ -105,7 +105,7 @@ public class T1Test {
     @Test
     public void testMonad() {
         Monad<T1.µ> monad = T1.monad;
-        Function<String, _<T1.µ, Integer>> lengthFn = Functions.compose(T1::of, String::length);
+        Function<String, __<T1.µ, Integer>> lengthFn = Functions.compose(T1::of, String::length);
         T1<String> hello = T1.of("hello");
         T1<Integer> five = T1.narrow(monad.bind(hello, lengthFn));
         assertThat(five._1()).isEqualTo(5);
@@ -114,17 +114,17 @@ public class T1Test {
     @Test
     public void testMonadRec() {
         T1Monad monad = T1.monad;
-        Function<Integer, _<T1.µ, Either<Integer,Integer>>> digitSum = i ->
+        Function<Integer, __<T1.µ, Either<Integer,Integer>>> digitSum = i ->
                 T1.of(i < 10 ? Either.newRight(i) : Either.newLeft(i / 10 + i % 10));
         assertThat(monad.tailRec(digitSum, 4711)).isEqualTo(T1.of(4));
     }
 
     @Test
     public void testNarrow() {
-        _<T1.µ, Integer> fortyTwo = T1.of(42);
+        __<T1.µ, Integer> fortyTwo = T1.of(42);
         assertThat(T1.narrow(fortyTwo)._1()).isEqualTo(42);
         //lazy version
-        _<T1.µ, String> hello = T1.ofLazy(() -> "hello");
+        __<T1.µ, String> hello = T1.ofLazy(() -> "hello");
         assertThat(T1.narrow(hello)._1());
     }
 

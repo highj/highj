@@ -5,9 +5,8 @@
  */
 package org.highj.data.transformer.writer_arrow;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.____;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.transformer.WriterArrow;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.ArrowTransformer;
@@ -16,10 +15,10 @@ import org.highj.typeclass2.arrow.ArrowTransformer;
  *
  * @author clintonselke
  */
-public interface WriterArrowArrowTransformer<W,A> extends WriterArrowArrow<W,A>, ArrowTransformer<_<WriterArrow.µ,W>,A> {
+public interface WriterArrowArrowTransformer<W,A> extends WriterArrowArrow<W,A>, ArrowTransformer<__<WriterArrow.µ,W>,A> {
 
     @Override
-    public default <B, C> WriterArrow<W, A, B, C> lift(__<A, B, C> arrow) {
+    public default <B, C> WriterArrow<W, A, B, C> lift(__2<A, B, C> arrow) {
         return WriterArrow.writerArrow(
             a().dot(
                 a().arr((C x) -> T2.of(x, w().identity())),

@@ -1,6 +1,6 @@
 package org.highj.typeclass1.monad;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.data.functions.F3;
 import org.highj.data.tuple.T2;
@@ -20,16 +20,16 @@ import java.util.function.Function;
 public interface MonadRec<M> extends Monad<M> {
 
     //tailRecM :: forall a b. (a -> m (Either a b)) -> a -> m b
-    <A, B> _<M, B> tailRec(Function<A, _<M, Either<A, B>>> function, A startA);
+    <A, B> __<M, B> tailRec(Function<A, __<M, Either<A, B>>> function, A startA);
 
     //tailRecM2 :: forall m a b c. (MonadRec m) => (a -> b -> m (Either { a :: a, b :: b } c)) -> a -> b -> m c
-    default <A, B, C> _<M, C> tailRec2(BiFunction<A, B, _<M, Either<T2<A, B>, C>>> function, A startA, B startB) {
+    default <A, B, C> __<M, C> tailRec2(BiFunction<A, B, __<M, Either<T2<A, B>, C>>> function, A startA, B startB) {
         //tailRecM2 f a b = tailRecM (\o -> f o.a o.b) { a: a, b: b }
         return tailRec(t2 -> function.apply(t2._1(), t2._2()), T2.of(startA, startB));
     }
 
     //tailRecM3 :: forall m a b c d. (MonadRec m) => (a -> b -> c -> m (Either { a :: a, b :: b, c :: c } d)) -> a -> b -> c -> m d
-    default <A, B, C, D> _<M, D> tailRec3(F3<A, B, C, _<M, Either<T3<A, B, C>, D>>> function, A startA, B startB, C startC) {
+    default <A, B, C, D> __<M, D> tailRec3(F3<A, B, C, __<M, Either<T3<A, B, C>, D>>> function, A startA, B startB, C startC) {
         //tailRecM3 f a b c = tailRecM (\o -> f o.a o.b o.c) { a: a, b: b, c: c }
         return tailRec(t3 -> function.apply(t3._1(), t3._2(), t3._3()), T3.of(startA, startB, startC));
     }

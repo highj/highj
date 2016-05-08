@@ -1,6 +1,6 @@
 package org.highj.data.collection;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.stream.StreamMonad;
 import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
@@ -16,13 +16,13 @@ import java.util.function.Supplier;
 /*
  * An infinite list.
  */
-public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Function<Integer, A> {
+public abstract class Stream<A> implements __<Stream.µ, A>, Iterable<A>, Function<Integer, A> {
 
     public static final class µ {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A> Stream<A> narrow(_<µ, A> value) {
+    public static <A> Stream<A> narrow(__<µ, A> value) {
         return (Stream) value;
     }
 
@@ -207,44 +207,44 @@ public abstract class Stream<A> implements _<Stream.µ, A>, Iterable<A>, Functio
         }
     }
 
-    public static <A> Stream<A> append(_<List.µ, A> list, _<µ, A> stream) {
+    public static <A> Stream<A> append(__<List.µ, A> list, __<µ, A> stream) {
         final List<A> listOne = List.narrow(list);
         final Stream<A> streamTwo = narrow(stream);
         return listOne.isEmpty() ? streamTwo : newLazyStream(listOne.head(), () -> append(listOne.tail(), streamTwo));
     }
 
-    public static <A> Stream<A> interleave(_<µ, A> one, _<µ, A> two) {
+    public static <A> Stream<A> interleave(__<µ, A> one, __<µ, A> two) {
        //interleave ~(Cons x xs) ys = Cons x (interleave ys xs)
         return newLazyStream(narrow(one).head(), () -> interleave(two, narrow(one).tail()));
     }
 
 
-    public static <A, B> Stream<T2<A, B>> zip(_<µ, A> streamA, _<µ, B> streamB) {
+    public static <A, B> Stream<T2<A, B>> zip(__<µ, A> streamA, __<µ, B> streamB) {
         return zipWith((A a) -> (B b) -> T2.<A, B>of(a, b), streamA, streamB);
     }
 
-    public static <A, B, C> Stream<T3<A, B, C>> zip(_<µ, A> streamA, _<µ, B> streamB, _<µ, C> streamC) {
+    public static <A, B, C> Stream<T3<A, B, C>> zip(__<µ, A> streamA, __<µ, B> streamB, __<µ, C> streamC) {
         return zipWith((A a) -> (B b) -> (C c) -> T3.<A, B, C>of(a, b, c), streamA, streamB, streamC);
     }
 
-    public static <A, B, C, D> Stream<T4<A, B, C, D>> zip(_<µ, A> streamA, _<µ, B> streamB, _<µ, C> streamC, _<µ, D> streamD) {
+    public static <A, B, C, D> Stream<T4<A, B, C, D>> zip(__<µ, A> streamA, __<µ, B> streamB, __<µ, C> streamC, __<µ, D> streamD) {
         return zipWith((A a) -> (B b) -> (C c) -> (D d) -> T4.<A, B, C, D>of(a, b, c, d), streamA, streamB, streamC, streamD);
     }
 
-    public static <A, B, C> Stream<C> zipWith(Function<A, Function<B, C>> fn, _<µ, A> streamA, _<µ, B> streamB) {
+    public static <A, B, C> Stream<C> zipWith(Function<A, Function<B, C>> fn, __<µ, A> streamA, __<µ, B> streamB) {
         final Stream<A> sA = narrow(streamA);
         final Stream<B> sB = narrow(streamB);
         return newLazyStream(fn.apply(sA.head()).apply(sB.head()), () -> zipWith(fn, sA.tail(), sB.tail()));
     }
 
-    public static <A, B, C, D> Stream<D> zipWith(Function<A, Function<B, Function<C, D>>> fn, _<µ, A> streamA, _<µ, B> streamB, _<µ, C> streamC) {
+    public static <A, B, C, D> Stream<D> zipWith(Function<A, Function<B, Function<C, D>>> fn, __<µ, A> streamA, __<µ, B> streamB, __<µ, C> streamC) {
         final Stream<A> sA = narrow(streamA);
         final Stream<B> sB = narrow(streamB);
         final Stream<C> sC = narrow(streamC);
         return newLazyStream(fn.apply(sA.head()).apply(sB.head()).apply(sC.head()), () -> zipWith(fn, sA.tail(), sB.tail(), sC.tail()));
     }
 
-    public static <A, B, C, D, E> Stream<E> zipWith(Function<A, Function<B, Function<C, Function<D, E>>>> fn, _<µ, A> streamA, _<µ, B> streamB, _<µ, C> streamC, _<µ, D> streamD) {
+    public static <A, B, C, D, E> Stream<E> zipWith(Function<A, Function<B, Function<C, Function<D, E>>>> fn, __<µ, A> streamA, __<µ, B> streamB, __<µ, C> streamC, __<µ, D> streamD) {
         final Stream<A> sA = narrow(streamA);
         final Stream<B> sB = narrow(streamB);
         final Stream<C> sC = narrow(streamC);

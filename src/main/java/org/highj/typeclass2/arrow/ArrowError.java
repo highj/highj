@@ -5,7 +5,7 @@
  */
 package org.highj.typeclass2.arrow;
 
-import org.highj.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.Either;
 import org.highj.data.functions.F1;
 import org.highj.data.tuple.T2;
@@ -16,15 +16,15 @@ import org.highj.data.tuple.T2;
  */
 public interface ArrowError<EX,A> extends Arrow<A> {
     
-    public <B> __<A,EX,B> raise();
+    public <B> __2<A,EX,B> raise();
     
-    public default <B,C> __<A,B,C> handle(__<A,B,C> body, __<A,T2<B,EX>,C> onError) {
+    public default <B,C> __2<A,B,C> handle(__2<A,B,C> body, __2<A,T2<B,EX>,C> onError) {
         return tryInUnless(body, arr(T2::_2), onError);
     }
     
-    public <B,C,D> __<A,B,D> tryInUnless(__<A,B,C> body, __<A,T2<B,C>,D> onSuccess, __<A,T2<B,EX>,D> onError);
+    public <B,C,D> __2<A,B,D> tryInUnless(__2<A,B,C> body, __2<A,T2<B,C>,D> onSuccess, __2<A,T2<B,EX>,D> onError);
     
-    public default <B,C> __<A,B,Either<EX,C>> newError(__<A,B,C> body) {
+    public default <B,C> __2<A,B,Either<EX,C>> newError(__2<A,B,C> body) {
         return handle(dot(arr(Either::newRight), body), arr(F1.compose(Either::newLeft, T2::_2)));
     }
 }

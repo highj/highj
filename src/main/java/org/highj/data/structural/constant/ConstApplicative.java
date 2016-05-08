@@ -1,14 +1,13 @@
 package org.highj.data.structural.constant;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
 import org.highj.data.structural.Const;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.monad.Applicative;
 
 import static org.highj.data.structural.Const.µ;
 
-public interface ConstApplicative<S> extends Applicative<_<µ,S>>, ConstApply<S> {
+public interface ConstApplicative<S> extends Applicative<__<µ,S>>, ConstApply<S> {
 
     public Monoid<S> getS();
 

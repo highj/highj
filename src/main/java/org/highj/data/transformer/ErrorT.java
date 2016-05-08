@@ -5,8 +5,8 @@
  */
 package org.highj.data.transformer;
 
-import org.highj._;
-import org.highj.___;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__3;
 import org.highj.data.collection.Either;
 import org.highj.data.transformer.error.ErrorTApplicative;
 import org.highj.data.transformer.error.ErrorTApply;
@@ -25,18 +25,18 @@ import org.highj.typeclass1.monad.MonadRec;
  *
  * @author clintonselke
  */
-public interface ErrorT<E,M,A> extends ___<ErrorT.µ,E,M,A> {
+public interface ErrorT<E,M,A> extends __3<ErrorT.µ,E,M,A> {
     public static class µ {}
     
-    public static <E,M,A> ErrorT<E,M,A> narrow(___<ErrorT.µ,E,M,A> a) {
+    public static <E,M,A> ErrorT<E,M,A> narrow(__3<µ,E,M,A> a) {
         return (ErrorT<E,M,A>)a;
     }
     
-    public static <E,M,A> ErrorT<E,M,A> narrow(_<_<_<ErrorT.µ, E>, M>, A> a) {
+    public static <E,M,A> ErrorT<E,M,A> narrow(__<__<__<µ, E>, M>, A> a) {
         return (ErrorT<E,M,A>)a;
     }
     
-    public _<M,Either<E,A>> run();
+    public __<M,Either<E,A>> run();
     
     public static <E,M> ErrorTFunctor<E,M> functor(Functor<M> mFunctor) {
         return (ErrorTFunctor<E,M>)() -> mFunctor;

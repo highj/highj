@@ -1,7 +1,7 @@
 package org.highj.typeclass1.monad;
 
 import java.util.function.Function;
-import org.highj._;
+import org.derive4j.hkt.__;
 
 /**
  *
@@ -9,7 +9,7 @@ import org.highj._;
  */
 public interface MonadReader<R,M> extends Monad<M> {
 
-    public _<M,R> ask();
+    public __<M,R> ask();
 
-    public <A> _<M,A> local(Function<R,R> modFn, _<M,A> nestedA);
+    public <A> __<M,A> local(Function<R,R> modFn, __<M,A> nestedA);
 }

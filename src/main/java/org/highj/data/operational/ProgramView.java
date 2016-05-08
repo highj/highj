@@ -5,7 +5,7 @@
  */
 package org.highj.data.operational;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.functions.F1;
 
 /**
@@ -15,7 +15,7 @@ import org.highj.data.functions.F1;
 public abstract class ProgramView<INSTR,A> {
     public interface Reduction<INSTR,A,R> {
         R pure(A a);
-        <B> R bind(_<INSTR,B> mb, F1<B,Program<INSTR,A>> f);
+        <B> R bind(__<INSTR,B> mb, F1<B,Program<INSTR,A>> f);
     }
     
     public abstract <R> R reduce(Reduction<INSTR,A,R> reduction);
@@ -29,7 +29,7 @@ public abstract class ProgramView<INSTR,A> {
         };
     }
     
-    public static <INSTR,A,B> ProgramView<INSTR,B> bind(_<INSTR,A> ma, F1<A,Program<INSTR,B>> f) {
+    public static <INSTR,A,B> ProgramView<INSTR,B> bind(__<INSTR,A> ma, F1<A,Program<INSTR,B>> f) {
         return new ProgramView<INSTR,B>() {
             @Override
             public <R> R reduce(Reduction<INSTR, B, R> reduction) {

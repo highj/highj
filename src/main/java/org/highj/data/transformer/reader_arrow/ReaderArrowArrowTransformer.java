@@ -5,9 +5,8 @@
  */
 package org.highj.data.transformer.reader_arrow;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.____;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.transformer.ReaderArrow;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.ArrowTransformer;
@@ -16,10 +15,10 @@ import org.highj.typeclass2.arrow.ArrowTransformer;
  *
  * @author clintonselke
  */
-public interface ReaderArrowArrowTransformer<R,A> extends ReaderArrowArrow<R,A>, ArrowTransformer<_<ReaderArrow.µ,R>,A> {
+public interface ReaderArrowArrowTransformer<R,A> extends ReaderArrowArrow<R,A>, ArrowTransformer<__<ReaderArrow.µ,R>,A> {
 
     @Override
-    public default <B, C> ReaderArrow<R, A, B, C> lift(__<A, B, C> arrow) {
+    public default <B, C> ReaderArrow<R, A, B, C> lift(__2<A, B, C> arrow) {
         return ReaderArrow.readerArrow(
             a().dot(
                 arrow,

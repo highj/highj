@@ -6,9 +6,7 @@
 package org.highj.data.transformer.error;
 
 import java.util.function.Function;
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.data.transformer.ErrorT;
 import org.highj.typeclass1.monad.Bind;
@@ -18,12 +16,12 @@ import org.highj.typeclass1.monad.Monad;
  *
  * @author clintonselke
  */
-public interface ErrorTBind<E,M> extends ErrorTApply<E,M>, Bind<_<_<ErrorT.µ,E>,M>> {
+public interface ErrorTBind<E,M> extends ErrorTApply<E,M>, Bind<__<__<ErrorT.µ,E>,M>> {
     
     public Monad<M> get();
 
     @Override
-    public default <A, B> ErrorT<E, M, B> bind(_<_<_<ErrorT.µ, E>, M>, A> nestedA, Function<A, _<_<_<ErrorT.µ, E>, M>, B>> fn) {
+    public default <A, B> ErrorT<E, M, B> bind(__<__<__<ErrorT.µ, E>, M>, A> nestedA, Function<A, __<__<__<ErrorT.µ, E>, M>, B>> fn) {
         return () -> get().bind(
             ErrorT.narrow(nestedA).run(),
             (Either<E,A> a) -> a.either(

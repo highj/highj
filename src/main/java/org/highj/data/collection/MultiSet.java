@@ -1,6 +1,6 @@
 package org.highj.data.collection;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.compare.Ordering;
 import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
@@ -20,7 +20,7 @@ import java.util.function.Function;
  *
  * @param <A> The element type.
  */
-public class MultiSet<A> implements _<MultiSet.µ, A>, Iterable<T2<A, Integer>>, Function<A, Integer> {
+public class MultiSet<A> implements __<MultiSet.µ, A>, Iterable<T2<A, Integer>>, Function<A, Integer> {
 
     public static class µ {
     }
@@ -41,7 +41,7 @@ public class MultiSet<A> implements _<MultiSet.µ, A>, Iterable<T2<A, Integer>>,
     }
 
     @SuppressWarnings("unchecked")
-    public static <A> MultiSet<A> narrow(_<µ, A> value) {
+    public static <A> MultiSet<A> narrow(__<µ, A> value) {
         return (MultiSet) value;
     }
 

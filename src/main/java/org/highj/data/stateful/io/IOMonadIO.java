@@ -5,7 +5,6 @@
  */
 package org.highj.data.stateful.io;
 
-import org.highj._;
 import org.highj.data.stateful.IO;
 import org.highj.typeclass1.monad.MonadIO;
 

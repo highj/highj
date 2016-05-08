@@ -6,7 +6,7 @@
 package org.highj.typeclass1.monad;
 
 import java.util.function.Function;
-import org.highj._;
+import org.derive4j.hkt.__;
 
 /**
  *
@@ -14,7 +14,7 @@ import org.highj._;
  */
 public interface MonadError<E,M> extends Monad<M> {
     
-    public <A> _<M,A> throwError(E error);
+    public <A> __<M,A> throwError(E error);
     
-    public <A> _<M,A> catchError(_<M,A> ma, Function<E,_<M,A>> fn);
+    public <A> __<M,A> catchError(__<M,A> ma, Function<E,__<M,A>> fn);
 }

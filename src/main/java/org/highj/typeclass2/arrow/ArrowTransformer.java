@@ -5,15 +5,15 @@
  */
 package org.highj.typeclass2.arrow;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
+import org.derive4j.hkt.__3;
 
 /**
  *
  * @author clintonselke
  */
-public interface ArrowTransformer<F,A> extends Arrow<_<F,A>> {
+public interface ArrowTransformer<F,A> extends Arrow<__<F,A>> {
     
-    public <B,C> ___<F,A,B,C> lift(__<A,B,C> arrow);
+    public <B,C> __3<F,A,B,C> lift(__2<A,B,C> arrow);
 }

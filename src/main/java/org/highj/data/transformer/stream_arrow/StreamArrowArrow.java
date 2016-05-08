@@ -7,9 +7,8 @@ package org.highj.data.transformer.stream_arrow;
 
 import java.util.function.Function;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.Stream;
 import org.highj.data.transformer.StreamArrow;
 import org.highj.data.tuple.T2;
@@ -19,7 +18,7 @@ import org.highj.typeclass2.arrow.Arrow;
  *
  * @author clintonselke
  */
-public interface StreamArrowArrow<A> extends StreamArrowCategory<A>, Arrow<_<StreamArrow.µ,A>> {
+public interface StreamArrowArrow<A> extends StreamArrowCategory<A>, Arrow<__<StreamArrow.µ,A>> {
     
     @Override
     public Arrow<A> a();
@@ -32,7 +31,7 @@ public interface StreamArrowArrow<A> extends StreamArrowCategory<A>, Arrow<_<Str
     }
 
     @Override
-    public default <B, C, D> StreamArrow<A, T2<B, D>, T2<C, D>> first(__<_<StreamArrow.µ, A>, B, C> x) {
+    public default <B, C, D> StreamArrow<A, T2<B, D>, T2<C, D>> first(__2<__<StreamArrow.µ, A>, B, C> x) {
         return StreamArrow.streamArrow(
             a().dot(
                 a().arr((T2<Stream<C>,Stream<D>> x2) -> Stream.zip(x2._1(), x2._2())),

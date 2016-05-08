@@ -1,6 +1,6 @@
 package org.highj.data.collection.set;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.data.collection.Set;
 import org.highj.typeclass1.monad.MonadPlus;
@@ -17,7 +17,7 @@ public interface SetMonadPlus extends SetFunctor, MonadPlus<Set.µ>, MonadRec<Se
     }
 
     @Override
-    default <A, B> Set<B> ap(_<Set.µ, Function<A, B>> fn, _<Set.µ, A> nestedA) {
+    default <A, B> Set<B> ap(__<Set.µ, Function<A, B>> fn, __<Set.µ, A> nestedA) {
         return Set.narrow(nestedA).ap(Set.narrow(fn));
     }
 
@@ -27,22 +27,22 @@ public interface SetMonadPlus extends SetFunctor, MonadPlus<Set.µ>, MonadRec<Se
     }
 
     @Override
-    default <A> Set<A> mplus(_<Set.µ, A> one, _<Set.µ, A> two) {
+    default <A> Set<A> mplus(__<Set.µ, A> one, __<Set.µ, A> two) {
         return Set.narrow(one).plus(Set.narrow(two));
     }
 
     @Override
-    default <A> Set<A> join(_<Set.µ, _<Set.µ, A>> nestedNestedA) {
+    default <A> Set<A> join(__<Set.µ, __<Set.µ, A>> nestedNestedA) {
         return Set.join(Set.narrow(nestedNestedA).map(Set::narrow));
     }
 
     @Override
-    default <A, B> Set<B> bind(_<Set.µ, A> nestedA, Function<A, _<Set.µ, B>> fn) {
+    default <A, B> Set<B> bind(__<Set.µ, A> nestedA, Function<A, __<Set.µ, B>> fn) {
         return Set.narrow(nestedA).bind(fn.andThen(Set::narrow));
     }
 
     @Override
-    default <A, B> Set<B> tailRec(Function<A, _<Set.µ, Either<A, B>>> function, A startA) {
+    default <A, B> Set<B> tailRec(Function<A, __<Set.µ, Either<A, B>>> function, A startA) {
         Set<Either<A, B>> step = Set.of(Either.newLeft(startA));
         Mutable<Boolean> hasChanged = Mutable.newMutable();
         do {

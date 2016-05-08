@@ -7,7 +7,7 @@ package org.highj.data.stateful.io;
 
 import java.io.IOException;
 import java.util.function.Function;
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.stateful.IO;
 import org.highj.typeclass1.monad.MonadError;
 
@@ -23,7 +23,7 @@ public interface IOMonadError extends IOMonad, MonadError<IOException,IO.µ> {
     }
 
     @Override
-    public default <A> IO<A> catchError(_<IO.µ, A> ma, Function<IOException, _<IO.µ, A>> fn) {
+    public default <A> IO<A> catchError(__<IO.µ, A> ma, Function<IOException, __<IO.µ, A>> fn) {
         return () -> {
             try {
                 return IO.narrow(ma).run();

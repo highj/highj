@@ -5,9 +5,7 @@
  */
 package org.highj.data.transformer.error;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.data.transformer.ErrorT;
 import org.highj.typeclass1.monad.Applicative;
@@ -16,7 +14,7 @@ import org.highj.typeclass1.monad.Applicative;
  *
  * @author clintonselke
  */
-public interface ErrorTApplicative<E,M> extends ErrorTApply<E,M>, Applicative<_<_<ErrorT.µ,E>,M>> {
+public interface ErrorTApplicative<E,M> extends ErrorTApply<E,M>, Applicative<__<__<ErrorT.µ,E>,M>> {
     
     public Applicative<M> get();
 

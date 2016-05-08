@@ -1,6 +1,6 @@
 package org.highj.data.collection;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.list.ListMonadPlus;
 import org.highj.data.functions.Integers;
 import org.highj.data.functions.Strings;
@@ -13,7 +13,6 @@ import org.junit.rules.ExpectedException;
 
 import java.util.NoSuchElementException;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -237,13 +236,13 @@ public class ListTest {
     public void testMonadPlus() {
         ListMonadPlus monadPlus = List.monadPlus;
 
-        _<List.µ, Integer> list1 = monadPlus.map(String::length, List.of("ab", "c", "def"));
+        __<List.µ, Integer> list1 = monadPlus.map(String::length, List.of("ab", "c", "def"));
         assertThat(List.narrow(list1)).containsExactly(2, 1, 3);
 
-        _<List.µ, String> list2 = monadPlus.bind(List.of(2, 0, 4), i -> List.replicate(i, "xy"));
+        __<List.µ, String> list2 = monadPlus.bind(List.of(2, 0, 4), i -> List.replicate(i, "xy"));
         assertThat(List.narrow(list2)).containsExactly("xy", "xy", "xy", "xy", "xy", "xy");
 
-        _<List.µ, _<List.µ, Integer>> list3 = List.of(List.of(1, 2), List.of(), List.of(30, 40, 50), List.of(600));
+        __<List.µ, __<List.µ, Integer>> list3 = List.of(List.of(1, 2), List.of(), List.of(30, 40, 50), List.of(600));
         assertThat(List.narrow(monadPlus.join(list3))).containsExactly(1, 2, 30, 40, 50, 600);
 
         List<String> list4 = monadPlus.mplus(List.of("a", "b"), List.of("c", "d", "e"));
@@ -251,7 +250,7 @@ public class ListTest {
 
         assertThat(monadPlus.mzero()).isEmpty();
 
-        Function<String, _<List.µ, Either<String, Character>>> substrings = s -> {
+        Function<String, __<List.µ, Either<String, Character>>> substrings = s -> {
             if (s.length() == 1) {
                 return List.of(Either.newRight(s.charAt(0)));
             }
@@ -273,7 +272,7 @@ public class ListTest {
 
     @Test
     public void testNarrow() {
-        _<List.µ, Integer> list_ = List.of(1, 2, 3);
+        __<List.µ, Integer> list_ = List.of(1, 2, 3);
         List<Integer> list = List.narrow(list_);
         assertThat(list).containsExactly(1, 2, 3);
     }

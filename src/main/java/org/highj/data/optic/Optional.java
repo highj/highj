@@ -2,8 +2,8 @@ package org.highj.data.optic;
 
 import java.util.function.Function;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.Either;
 import org.highj.data.collection.Maybe;
 import org.highj.data.functions.F1;
@@ -11,7 +11,7 @@ import org.highj.data.tuple.T2;
 import org.highj.typeclass1.monad.Applicative;
 
 /** {@link POptional} restricted to monomorphic update */
-public final class Optional<S, A> extends POptional<S, S, A, A> implements __<Optional.µ, S, A> {
+public final class Optional<S, A> extends POptional<S, S, A, A> implements __2<Optional.µ, S, A> {
 
     public static final class µ {
     }
@@ -28,7 +28,7 @@ public final class Optional<S, A> extends POptional<S, S, A, A> implements __<Op
     }
 
     @Override
-    public <X> F1<S, _<X, S>> modifyF(final Applicative<X> applicative, final Function<A, _<X, A>> f) {
+    public <X> F1<S, __<X, S>> modifyF(final Applicative<X> applicative, final Function<A, __<X, A>> f) {
         return pOptional.modifyF(applicative, f);
     }
 
@@ -113,7 +113,7 @@ public final class Optional<S, A> extends POptional<S, S, A, A> implements __<Op
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Optional<S, A> narrow(final _<_<Optional.µ, S>, A> value) {
+    public static <S, A> Optional<S, A> narrow(final __<__<µ, S>, A> value) {
         return (Optional) value;
     }
 
@@ -141,8 +141,8 @@ public final class Optional<S, A> extends POptional<S, S, A, A> implements __<Op
             }
 
             @Override
-            public <X> F1<S, _<X, S>> modifyF(final Applicative<X> applicative, final Function<A, _<X, A>> f) {
-                return s -> getOrModify(s).<_<X, S>> either(
+            public <X> F1<S, __<X, S>> modifyF(final Applicative<X> applicative, final Function<A, __<X, A>> f) {
+                return s -> getOrModify(s).<__<X, S>> either(
                         applicative::pure,
                         a -> applicative.map(b -> set.apply(b).apply(s), f.apply(a))
                         );

@@ -5,10 +5,10 @@
  */
 package org.highj.data.transformer;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
-import org.highj.____;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
+import org.derive4j.hkt.__3;
+import org.derive4j.hkt.__4;
 import org.highj.data.transformer.writer_arrow.WriterArrowArrow;
 import org.highj.data.transformer.writer_arrow.WriterArrowArrowTransformer;
 import org.highj.data.transformer.writer_arrow.WriterArrowArrowWriter;
@@ -23,36 +23,36 @@ import org.highj.typeclass2.arrow.Arrow;
  *
  * @author clintonselke
  */
-public class WriterArrow<W,A,B,C> implements ____<WriterArrow.µ,W,A,B,C> {
+public class WriterArrow<W,A,B,C> implements __4<WriterArrow.µ,W,A,B,C> {
     public static class µ {}
     
-    private final __<A,B,T2<C,W>> _run;
+    private final __2<A,B,T2<C,W>> _run;
     
-    private WriterArrow(__<A,B,T2<C,W>> run) {
+    private WriterArrow(__2<A,B,T2<C,W>> run) {
         this._run = run;
     }
     
-    public static <W,A,B,C> WriterArrow<W,A,B,C> writerArrow(__<A,B,T2<C,W>> run) {
+    public static <W,A,B,C> WriterArrow<W,A,B,C> writerArrow(__2<A,B,T2<C,W>> run) {
         return new WriterArrow<>(run);
     }
     
-    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(____<WriterArrow.µ,W,A,B,C> a) {
+    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(__4<µ,W,A,B,C> a) {
         return (WriterArrow<W,A,B,C>)a;
     }
     
-    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(___<_<WriterArrow.µ,W>,A,B,C> a) {
+    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(__3<__<µ,W>,A,B,C> a) {
         return (WriterArrow<W,A,B,C>)a;
     }
     
-    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(__<_<_<WriterArrow.µ,W>,A>,B,C> a) {
+    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(__2<__<__<µ,W>,A>,B,C> a) {
         return (WriterArrow<W,A,B,C>)a;
     }
     
-    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(_<_<_<_<WriterArrow.µ,W>,A>,B>,C> a) {
+    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(__<__<__<__<µ,W>,A>,B>,C> a) {
         return (WriterArrow<W,A,B,C>)a;
     }
     
-    public __<A,B,T2<C,W>> run() {
+    public __2<A,B,T2<C,W>> run() {
         return _run;
     }
     

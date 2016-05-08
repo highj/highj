@@ -5,9 +5,8 @@
  */
 package org.highj.data.transformer.stream_arrow;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.Stream;
 import org.highj.data.transformer.StreamArrow;
 import org.highj.data.tuple.T2;
@@ -17,13 +16,13 @@ import org.highj.typeclass2.arrow.ArrowLoop;
  *
  * @author clintonselke
  */
-public interface StreamArrowArrowLoop<A> extends StreamArrowArrow<A>, ArrowLoop<_<StreamArrow.µ,A>> {
+public interface StreamArrowArrowLoop<A> extends StreamArrowArrow<A>, ArrowLoop<__<StreamArrow.µ,A>> {
     
     @Override
     public ArrowLoop<A> a();
 
     @Override
-    public default <B, C, D> StreamArrow<A, B, C> loop(__<_<StreamArrow.µ, A>, T2<B, D>, T2<C, D>> x) {
+    public default <B, C, D> StreamArrow<A, B, C> loop(__2<__<StreamArrow.µ, A>, T2<B, D>, T2<C, D>> x) {
         return StreamArrow.streamArrow(
             a().loop(
                 a().dot(

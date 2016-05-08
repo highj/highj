@@ -2,8 +2,8 @@ package org.highj.data.optic;
 
 import java.util.function.Function;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.Either;
 import org.highj.data.functions.F1;
 import org.highj.data.tuple.T2;
@@ -18,7 +18,7 @@ import org.highj.typeclass2.arrow.Arrow;
  * @param <S> the source of a {@link Getter}
  * @param <A> the target of a {@link Getter}
  */
-public abstract class Getter<S, A> implements __<Getter.µ, S, A> {
+public abstract class Getter<S, A> implements __2<Getter.µ, S, A> {
 
     public static final class µ {
     }
@@ -97,7 +97,7 @@ public abstract class Getter<S, A> implements __<Getter.µ, S, A> {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Getter<S, A> narrow(final _<_<Getter.µ, S>, A> value) {
+    public static <S, A> Getter<S, A> narrow(final __<__<µ, S>, A> value) {
         return (Getter) value;
     }
 
@@ -122,33 +122,33 @@ public abstract class Getter<S, A> implements __<Getter.µ, S, A> {
     public static final Arrow<Getter.µ> getterArrow = new Arrow<Getter.µ>() {
 
         @Override
-        public <B, C, D> __<Getter.µ, B, D> dot(final __<Getter.µ, C, D> cd, final __<Getter.µ, B, C> bc) {
+        public <B, C, D> __2<µ, B, D> dot(final __2<µ, C, D> cd, final __2<µ, B, C> bc) {
             return narrow(bc).composeGetter(narrow(cd));
         }
 
         @Override
-        public <B> __<Getter.µ, B, B> identity() {
+        public <B> __2<µ, B, B> identity() {
             return id();
         }
 
         @Override
-        public <B, C, D> __<Getter.µ, T2<B, D>, T2<C, D>> first(final __<Getter.µ, B, C> arrow) {
+        public <B, C, D> __2<µ, T2<B, D>, T2<C, D>> first(final __2<µ, B, C> arrow) {
             return narrow(arrow).first();
         }
 
         @Override
-        public <B, C, D> __<Getter.µ, T2<D, B>, T2<D, C>> second(final __<Getter.µ, B, C> arrow) {
+        public <B, C, D> __2<µ, T2<D, B>, T2<D, C>> second(final __2<µ, B, C> arrow) {
             return narrow(arrow).second();
         }
 
         @Override
-        public <B, C> __<Getter.µ, B, C> arr(final Function<B, C> fn) {
+        public <B, C> __2<µ, B, C> arr(final Function<B, C> fn) {
             return getter(fn);
         }
 
         @Override
-        public <B, C, BB, CC> __<Getter.µ, T2<B, BB>, T2<C, CC>> split(final __<Getter.µ, B, C> arr1,
-                final __<Getter.µ, BB, CC> arr2) {
+        public <B, C, BB, CC> __2<µ, T2<B, BB>, T2<C, CC>> split(final __2<µ, B, C> arr1,
+                final __2<µ, BB, CC> arr2) {
             return narrow(arr1).product(narrow(arr2));
         }
     };

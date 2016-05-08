@@ -3,7 +3,7 @@ package org.highj.data.optic;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.data.collection.Maybe;
 import org.highj.data.functions.F1;
@@ -43,7 +43,7 @@ public abstract class POptional<S, T, A, B> {
     /**
      * modify polymorphically the target of a {@link POptional} with an Applicative function
      */
-    public abstract <X> F1<S, _<X, T>> modifyF(Applicative<X> applicative, Function<A, _<X, B>> f);
+    public abstract <X> F1<S, __<X, T>> modifyF(Applicative<X> applicative, Function<A, __<X, B>> f);
 
     /** modify polymorphically the target of a {@link POptional} with a function */
     public abstract F1<S, T> modify(final Function<A, B> f);
@@ -135,7 +135,7 @@ public abstract class POptional<S, T, A, B> {
             }
 
             @Override
-            public <X> F1<S, _<X, T>> modifyF(final Applicative<X> applicative, final Function<C, _<X, D>> f) {
+            public <X> F1<S, __<X, T>> modifyF(final Applicative<X> applicative, final Function<C, __<X, D>> f) {
                 return self.modifyF(applicative, other.modifyF(applicative, f));
             }
 
@@ -196,7 +196,7 @@ public abstract class POptional<S, T, A, B> {
         return new PTraversal<S, T, A, B>() {
 
             @Override
-            public <X> F1<S, _<X, T>> modifyF(final Applicative<X> applicative, final Function<A, _<X, B>> f) {
+            public <X> F1<S, __<X, T>> modifyF(final Applicative<X> applicative, final Function<A, __<X, B>> f) {
                 return POptional.this.modifyF(applicative, f);
             }
 
@@ -227,8 +227,8 @@ public abstract class POptional<S, T, A, B> {
             }
 
             @Override
-            public <X> F1<S, _<X, T>> modifyF(final Applicative<X> applicative, final Function<A, _<X, B>> f) {
-                return s -> getOrModify(s).<_<X, T>> either(
+            public <X> F1<S, __<X, T>> modifyF(final Applicative<X> applicative, final Function<A, __<X, B>> f) {
+                return s -> getOrModify(s).<__<X, T>> either(
                         applicative::pure,
                         a -> applicative.map(b -> set.apply(b).apply(s), f.apply(a))
                         );

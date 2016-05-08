@@ -1,8 +1,7 @@
 package org.highj.data.transformer;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__3;
 import org.highj.data.transformer.writer.*;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass0.group.Monoid;
@@ -13,26 +12,20 @@ import org.highj.typeclass1.monad.Apply;
 import org.highj.typeclass1.monad.Bind;
 import org.highj.typeclass1.monad.Monad;
 
-import static org.highj.HigherKinded.uncurry3;
-
 /**
  * @author Clinton Selke
  */
-public interface WriterT<W, M, A> extends ___<WriterT.µ, W, M, A> {
+public interface WriterT<W, M, A> extends __3<WriterT.µ, W, M, A> {
     public static class µ {
     }
 
-    public static <W, M, A> WriterT<W, M, A> narrow(___<WriterT.µ, W, M, A> a) {
+    public static <W, M, A> WriterT<W, M, A> narrow(__<__<__<µ, W>, M>, A> a) {
         return (WriterT<W, M, A>) a;
     }
 
-    public static <W, M, A> WriterT<W, M, A> narrow(_<_<_<WriterT.µ, W>, M>, A> a) {
-        return narrow(uncurry3(a));
-    }
+    public __<M, T2<A, W>> run();
 
-    public _<M, T2<A, W>> run();
-
-    public default _<M, W> exec(Functor<M> mFunctor) {
+    public default __<M, W> exec(Functor<M> mFunctor) {
         return mFunctor.map(T2::_2, run());
     }
 

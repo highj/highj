@@ -5,8 +5,7 @@
  */
 package org.highj.data.operational.program;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
 import org.highj.data.operational.Program;
 import org.highj.typeclass1.monad.Monad;
 
@@ -14,4 +13,4 @@ import org.highj.typeclass1.monad.Monad;
  *
  * @author clintonselke
  */
-public interface ProgramMonad<INSTR> extends ProgramApplicative<INSTR>, ProgramBind<INSTR>, Monad<_<Program.µ,INSTR>> {}
+public interface ProgramMonad<INSTR> extends ProgramApplicative<INSTR>, ProgramBind<INSTR>, Monad<__<Program.µ,INSTR>> {}

@@ -1,18 +1,18 @@
 package org.highj.typeclass1.monad;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.List;
 import org.highj.typeclass1.alternative.Alternative;
 
 public interface MonadPlus<M> extends MonadZero<M>, Alternative<M> {
 
     //MonadPlus.(++) (Control.Monad)
-    public <A> _<M, A> mplus(_<M, A> one, _<M, A> two);
+    public <A> __<M, A> mplus(__<M, A> one, __<M, A> two);
 
 
     //msum (Control.Monad)
-    public default <A> _<M, A> msum(_<List.µ, _<M, A>> list) {
-        return List.narrow(list).foldr((_<M, A> one) -> (_<M, A> two) -> mplus(one, two), this.<A>mzero());
+    public default <A> __<M, A> msum(__<List.µ, __<M, A>> list) {
+        return List.narrow(list).foldr((__<M, A> one) -> (__<M, A> two) -> mplus(one, two), this.<A>mzero());
     }
 
     enum Bias {

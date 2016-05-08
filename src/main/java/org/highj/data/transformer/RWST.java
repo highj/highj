@@ -5,8 +5,8 @@
  */
 package org.highj.data.transformer;
 
-import org.highj._;
-import org.highj._____;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__5;
 import org.highj.data.transformer.rws.RWSTApplicative;
 import org.highj.data.transformer.rws.RWSTApply;
 import org.highj.data.transformer.rws.RWSTBind;
@@ -30,18 +30,18 @@ import org.highj.typeclass1.monad.MonadRec;
  *
  * @author clintonselke
  */
-public interface RWST<R,W,S,M,A> extends _____<RWST.µ,R,W,S,M,A> {
+public interface RWST<R,W,S,M,A> extends __5<RWST.µ,R,W,S,M,A> {
     public static class µ {}
 
-    public static <R,W,S,M,A> RWST<R,W,S,M,A> narrow(_____<RWST.µ,R,W,S,M,A> a) {
+    public static <R,W,S,M,A> RWST<R,W,S,M,A> narrow(__5<µ,R,W,S,M,A> a) {
         return (RWST<R,W,S,M,A>)a;
     }
 
-    public static <R,W,S,M,A> RWST<R,W,S,M,A> narrow(_<_<_<_<_<RWST.µ, R>, W>, S>, M>, A> a) {
+    public static <R,W,S,M,A> RWST<R,W,S,M,A> narrow(__<__<__<__<__<µ, R>, W>, S>, M>, A> a) {
         return (RWST<R,W,S,M,A>)a;
     }
 
-    public _<M,T3<A,S,W>> run(R r, S s);
+    public __<M,T3<A,S,W>> run(R r, S s);
 
     public static <R,W,S,M> RWSTFunctor<R,W,S,M> functor(Functor<M> mFunctor) {
         return (RWSTFunctor<R,W,S,M>)() -> mFunctor;

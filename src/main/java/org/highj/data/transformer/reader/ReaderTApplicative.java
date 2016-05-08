@@ -1,15 +1,13 @@
 package org.highj.data.transformer.reader;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
 import org.highj.data.transformer.ReaderT;
 import org.highj.typeclass1.monad.Applicative;
 
 /**
  * @author Clinton Selke
  */
-public interface ReaderTApplicative<R, M> extends ReaderTApply<R, M>, Applicative<_<_<ReaderT.µ, R>, M>> {
+public interface ReaderTApplicative<R, M> extends ReaderTApply<R, M>, Applicative<__<__<ReaderT.µ, R>, M>> {
 
     public Applicative<M> get();
 

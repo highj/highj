@@ -7,10 +7,8 @@ package org.highj.data.transformer.reader_arrow;
 
 import java.util.function.Function;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
-import org.highj.____;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.functions.F1;
 import org.highj.data.transformer.ReaderArrow;
 import org.highj.data.tuple.T2;
@@ -20,7 +18,7 @@ import org.highj.typeclass2.arrow.Arrow;
  *
  * @author clintonselke
  */
-public interface ReaderArrowArrow<R,A> extends ReaderArrowCategory<R,A>, Arrow<_<_<ReaderArrow.µ,R>,A>> {
+public interface ReaderArrowArrow<R,A> extends ReaderArrowCategory<R,A>, Arrow<__<__<ReaderArrow.µ,R>,A>> {
 
     @Override
     public default <B, C> ReaderArrow<R, A, B, C> arr(Function<B, C> fn) {
@@ -28,7 +26,7 @@ public interface ReaderArrowArrow<R,A> extends ReaderArrowCategory<R,A>, Arrow<_
     }
 
     @Override
-    public default <B, C, D> ReaderArrow<R, A, T2<B, D>, T2<C, D>> first(__<_<_<ReaderArrow.µ, R>, A>, B, C> arrow) {
+    public default <B, C, D> ReaderArrow<R, A, T2<B, D>, T2<C, D>> first(__2<__<__<ReaderArrow.µ, R>, A>, B, C> arrow) {
         return ReaderArrow.readerArrow(
             a().dot(
                 a().first(ReaderArrow.narrow(arrow).run()),

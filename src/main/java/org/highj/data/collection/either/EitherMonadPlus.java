@@ -1,20 +1,17 @@
 package org.highj.data.collection.either;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.monad.MonadPlus;
 
-import java.util.function.Function;
-
-public interface EitherMonadPlus<S> extends EitherMonad<S>, MonadPlus<_<Either.µ,S>> {
+public interface EitherMonadPlus<S> extends EitherMonad<S>, MonadPlus<__<Either.µ,S>> {
 
     Monoid<S> monoid();
     Bias bias();
 
     @Override
-    default <A> Either<S, A> mplus(_<_<Either.µ, S>, A> one, _<_<Either.µ, S>, A> two) {
+    default <A> Either<S, A> mplus(__<__<Either.µ, S>, A> one, __<__<Either.µ, S>, A> two) {
         Either<S,A> first = Either.narrow(one);
         Either<S,A> second = Either.narrow(two);
         if (first.isLeft()) {

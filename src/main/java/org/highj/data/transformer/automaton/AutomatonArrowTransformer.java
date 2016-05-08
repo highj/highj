@@ -5,7 +5,7 @@
  */
 package org.highj.data.transformer.automaton;
 
-import org.highj.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.transformer.Automaton;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.Arrow;
@@ -20,7 +20,7 @@ public interface AutomatonArrowTransformer<A> extends AutomatonArrow<A>, ArrowTr
     public Arrow<A> get();
     
     @Override
-    public default <B, C> Automaton<A,B,C> lift(__<A, B, C> arrow) {
+    public default <B, C> Automaton<A,B,C> lift(__2<A, B, C> arrow) {
         return () -> get().dot(
             get().arr((C c) -> T2.of(c, lift(arrow))),
             arrow
