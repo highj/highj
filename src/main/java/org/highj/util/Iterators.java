@@ -83,4 +83,11 @@ public enum Iterators {
             };
         }
     }
+
+    public static <A> Iterator<A> drop(int n, Iterator<A> it) {
+        for(int i = 0; i < n && it.hasNext(); i++) {
+            it.next();
+        }
+        return it;
+    }
 }

@@ -67,4 +67,8 @@ public class Iterables {
             }
         };
     }
+
+    public static <A> Iterable<A> drop(int n, Iterable<A> it) {
+        return () -> Iterators.drop(n, it.iterator());
+    }
 }

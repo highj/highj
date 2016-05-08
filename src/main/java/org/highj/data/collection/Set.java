@@ -13,22 +13,24 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
- * A crude, hash-based Set implementation.
+ * A crude, hash-based set implementation.
  * <p>
- * Note that the provided monadTrans instance could be considered a hack, based on the fact that every
- * Java Object has a hashCode and an equals implementation, which might be rather useless in some cases.
+ * Note that the provided monad instance could be considered a hack, based on the fact that every
+ * Java object has a {@link Object#hashCode} and an {@link Object#equals} implementation,
+ * which might be rather useless in some cases.
  *
  * @param <A> The element type.
  */
-public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
+public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
 
-    public static class µ {
+    public interface µ {
     }
 
     @SuppressWarnings("unchecked")
-    private final static Set<Object> EMPTY = new Set<Object>(Integer.MIN_VALUE, List.nil(), null, null);
+    private final static Set<?> EMPTY = new Set<>(Integer.MIN_VALUE, List.nil(), null, null);
 
     private final Set<A> left;
     private final Set<A> right;
@@ -48,7 +50,7 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
     }
 
     @Override
-    public Boolean apply(A value) {
+    public boolean test(A value) {
         if (isEmpty()) {
             return false;
         }
@@ -56,9 +58,9 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
         int vhc = value.hashCode();
         switch (Ordering.compare(vhc, hc)) {
             case LT:
-                return left.apply(value);
+                return left.test(value);
             case GT:
-                return right.apply(value);
+                return right.test(value);
             case EQ:
                 return bucket.contains(value);
             default:
@@ -66,20 +68,28 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
         }
     }
 
+    private Set<A> withBucket(List<A> newBucket) {
+        return bucket == newBucket ? this : new Set<>(hc, newBucket, left, right);
+    }
+    private Set<A> withLeft(Set<A> newLeft) {
+        return left == newLeft ? this : new Set<>(hc, bucket, newLeft, right);
+    }
+    private Set<A> withRight(Set<A> newRight) {
+        return right == newRight ? this : new Set<>(hc, bucket, left, newRight);
+    }
+
     public Set<A> plus(A a) {
         if (isEmpty()) {
-            return new Set<>(a.hashCode(), List.of(a), Set.<A>empty(), Set.<A>empty());
+            return new Set<>(a.hashCode(), List.of(a), Set.empty(), Set.empty());
         }
         int ahc = a.hashCode();
         switch (Ordering.compare(ahc, hc)) {
             case EQ:
-                return bucket.contains(a) ? this : new Set<>(hc, bucket.plus(a), left, right);
+                return bucket.contains(a) ? this : withBucket(bucket.plus(a));
             case LT:
-                Set<A> newLeft = left.plus(a);
-                return left == newLeft ? this : new Set<>(hc, bucket, newLeft, right);
+                return withLeft(left.plus(a));
             case GT:
-                Set<A> newRight = right.plus(a);
-                return right == newRight ? this : new Set<>(hc, bucket, left, newRight);
+                return withRight(right.plus(a));
             default:
                 throw new AssertionError();
         }
@@ -93,10 +103,8 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
         switch (Ordering.compare(ahc, hc)) {
             case EQ:
                 List<A> newBucket = bucket.minus(a);
-                if (bucket == newBucket) {
-                    return this;
-                } else if (!newBucket.isEmpty()) {
-                    return new Set<>(hc, newBucket, left, right);
+                if (!newBucket.isEmpty()) {
+                    return withBucket(newBucket);
                 } else if (left.isEmpty()) {
                     return right;
                 } else if (right.isEmpty()) {
@@ -106,11 +114,9 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
                     return new Set<>(pair._1().hc, pair._1().bucket, left, pair._2());
                 }
             case LT:
-                Set<A> newLeft = left.minus(a);
-                return left == newLeft ? this : new Set<>(hc, bucket, newLeft, right);
+                return withLeft(left.minus(a));
             case GT:
-                Set<A> newRight = right.minus(a);
-                return right == newRight ? this : new Set<>(hc, bucket, left, newRight);
+                return withRight(right.minus(a));
             default:
                 throw new AssertionError();
         }
@@ -121,7 +127,7 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
             return T2.of(this, right);
         } else {
             T2<Set<A>, Set<A>> pair = left.removeMin();
-            return T2.of(pair._1(), new Set<>(hc, bucket, pair._2(), right));
+            return T2.of(pair._1(), withLeft(pair._2()));
         }
     }
 
@@ -217,48 +223,42 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
         return isEmpty() ? 0 : left.size() + bucket.size() + right.size();
     }
 
-    //we need to output the hashCodes in order, else different insertion orders would lead to different iteration orders
+    //note that the iteration order depends on the insertion order
     public Iterator<A> iterator() {
-        return (isEmpty()) ? Iterators.emptyIterator() :
-                new Iterator<A>() {
+        return isEmpty() ? Iterators.emptyIterator() : new Iterator<A>() {
 
-                    private List<A> list = List.empty();
-                    private List<Either<Set<A>, List<A>>> todo = List.of(Either.<Set<A>, List<A>>newLeft(Set.this));
+            private List<A> bucket = Set.this.bucket;
+            private List<Set<A>> todo = addSubSets(List.nil(), Set.this);
 
-                    @Override
-                    public boolean hasNext() {
-                        return !list.isEmpty() || !todo.isEmpty();
+            @Override
+            public boolean hasNext() {
+                return !bucket.isEmpty() || !todo.isEmpty();
+            }
+
+            @Override
+            public A next() {
+                if (bucket.isEmpty()) {
+                    if (todo.isEmpty()) {
+                        throw new NoSuchElementException();
                     }
+                    Set<A> set = todo.head();
+                    todo = addSubSets(todo.tail(), set);
+                    bucket = set.bucket;
+                }
+                A result = bucket.head();
+                bucket = bucket.tail();
+                return result;
+            }
 
-                    @Override
-                    public A next() {
-                        if (!hasNext()) {
-                            throw new NoSuchElementException();
-                        }
-                        while (list.isEmpty()) {
-                            Either<Set<A>, List<A>> current = todo.head();
-                            todo = todo.tail();
-                            if (current.isRight()) {
-                                list = current.getRight();
-                            } else {
-                                Set<A> set = current.getLeft();
-                                addIfNotEmpty(set.right);
-                                todo = todo.plus(Either.newRight(set.bucket));
-                                addIfNotEmpty(set.left);
-                            }
-                        }
-                        A result = list.head();
-                        list = list.tail();
-                        return result;
-                    }
-
-                    private void addIfNotEmpty(Set<A> set) {
-                        if (!set.isEmpty()) {
-                            todo = todo.plus(Either.newLeft(set));
-                        }
-                    }
-                };
+            private List<Set<A>> addSubSets(List<Set<A>> list, Set<A> set) {
+                List<Set<A>> result = list;
+                result = set.left.isEmpty() ? result : result.plus(set.left);
+                result = set.right.isEmpty() ? result : result.plus(set.right);
+                return result;
+            }
+        };
     }
+
 
     @Override
     public String toString() {
@@ -273,6 +273,14 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
         return result;
     }
 
+    public Set<A> filter(Predicate<? super A> fn) {
+        Set<A> result = empty();
+        for (A a : this) {
+            result = fn.test(a) ? result.plus(a) : result;
+        }
+        return result;
+    }
+
     public static <A> Set<A> join(Set<Set<A>> set) {
         Set<A> result = empty();
         for (Set<A> innerSet : set) {
@@ -281,21 +289,28 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
         return result;
     }
 
-    //avoids using the expensive iterator
-    public java.util.Set<A> toJSet() {
-        java.util.Set<A> result = new HashSet<>();
-        toJSetHelper(result);
+    public <B> Set<B> ap(Set<Function<A, B>> functions) {
+        Set<B> result = empty();
+        for (Function<A, B> fn : functions) {
+            result = result.plus(map(fn));
+        }
         return result;
     }
 
-    private void toJSetHelper(java.util.Set<A> jSet) {
-        if (!isEmpty()) {
-            left.toJSetHelper(jSet);
-            for (A a : bucket) {
-                jSet.add(a);
-            }
-            right.toJSetHelper(jSet);
+    public <B> Set<B> bind(Function<? super A, Set<B>> fn) {
+        Set<B> result = empty();
+        for (A a : this) {
+            result = result.plus(fn.apply(a));
         }
+        return result;
+    }
+
+    public java.util.Set<A> toJSet() {
+        java.util.Set<A> result = new HashSet<>();
+        for (A a : this) {
+            result.add(a);
+        }
+        return result;
     }
 
     @Override
@@ -312,12 +327,15 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Function<A, Boolean> {
     public int hashCode() {
         int result = 19;
         for (A a : this) {
+            //we can't multiply by a prime here, as this would result in different hash codes
+            //depending on the insertion (and hence iteration) order
             result += a.hashCode();
         }
         return result;
     }
 
-    public static SetMonadPlus monadPlus = new SetMonadPlus();
+    public static SetMonadPlus monadPlus = new SetMonadPlus() {
+    };
 
     public static <A> Monoid<Set<A>> monoid() {
         return Monoid.create(Set.empty(), (x, y) -> x.plus(y));
