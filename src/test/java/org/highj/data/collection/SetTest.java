@@ -20,6 +20,14 @@ public class SetTest {
     }
 
     @Test
+    public void testCount() {
+        Predicate<Integer> even = i -> i % 2 == 0;
+        assertThat(Set.<Integer>empty().count(even)).isEqualTo(0);
+        assertThat(Set.of(7, 9, 11).count(even)).isEqualTo(0);
+        assertThat(Set.of(2, 5, 6, 8).count(even)).isEqualTo(3);
+    }
+
+    @Test
     public void testBind() {
         Function<Integer, Set<Integer>> fn = i -> Set.of(i + 10, i + 20, i + 30);
         assertThat(Set.<Integer>empty().bind(fn)).isEmpty();

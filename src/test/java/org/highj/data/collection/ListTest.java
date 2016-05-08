@@ -28,6 +28,9 @@ public class ListTest {
         assertThat(List.append(List.of(2, 5), List.of())).containsExactly(2, 5);
         assertThat(List.append(List.of(), List.of(3, 8, 9))).containsExactly(3, 8, 9);
         assertThat(List.append(List.of(), List.of())).isEmpty();
+        //ensure laziness
+        assertThat(List.append(List.of(3), List.cycle(1,2))).startsWith(3,1,2,1,2,1);
+        assertThat(List.append(List.cycle(1,2), List.of(3))).startsWith(1,2,1,2,1,2);
     }
 
     @Test
@@ -302,12 +305,6 @@ public class ListTest {
         assertThat(List.range(20, 10, 43)).containsExactly(20, 30, 40);
         assertThat(List.range(20, -2, 14)).containsExactly(20, 18, 16, 14);
         assertThat(List.range(20, -2, 13)).containsExactly(20, 18, 16, 14);
-    }
-
-
-    @Test
-    public void testRepeat() {
-        assertThat(List.repeat(2).take(5)).containsExactly(2, 2, 2, 2, 2);
     }
 
     @Test

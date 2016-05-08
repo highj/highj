@@ -11,7 +11,7 @@ import static org.highj.data.collection.List.*;
 public interface ZipApplicative extends Applicative<µ>, ListFunctor {
     @Override
     default <A> List<A> pure(A a) {
-        return repeat(a);
+        return cycle(a);
     }
 
     @Override

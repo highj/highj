@@ -391,15 +391,30 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
     }
 
     /**
-     * Calculates a set of all elements fulfilling a given condition.
+     * Calculates a set of all elements satisfying a given condition.
      *
-     * @param fn the {@link Predicate} used for testing
+     * @param predicate the {@link Predicate} used for testing
      * @return the filtered set
      */
-    public Set<A> filter(Predicate<? super A> fn) {
+    public Set<A> filter(Predicate<? super A> predicate) {
         Set<A> result = empty();
         for (A a : this) {
-            result = fn.test(a) ? result.plus(a) : result;
+            result = predicate.test(a) ? result.plus(a) : result;
+        }
+        return result;
+    }
+
+    /**
+     * Counts the number of elements satisfying a predicate.
+     * @param predicate
+     * @return
+     */
+    public int count(Predicate<? super A> predicate) {
+        int result = 0;
+        for (A a : this) {
+            if (predicate.test(a)) {
+                result++;
+            }
         }
         return result;
     }
