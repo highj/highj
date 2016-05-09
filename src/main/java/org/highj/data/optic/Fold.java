@@ -45,7 +45,7 @@ public abstract class Fold<S, A> implements __2<Fold.µ, S, A> {
      * get all the targets of a {@link Fold} TODO: Shall it return a Stream as there might be an infinite number of targets?
      */
     public final List<A> getAll(final S s) {
-        return foldMap(List.monoid(), List.monadPlus::pure).apply(s);
+        return foldMap(List.group(), List.monadPlus::pure).apply(s);
     }
 
     /** find the first target of a {@link Fold} matching the predicate */

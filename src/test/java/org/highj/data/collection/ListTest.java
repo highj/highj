@@ -2,15 +2,19 @@ package org.highj.data.collection;
 
 import org.derive4j.hkt.__;
 import org.highj.data.collection.list.ListMonadPlus;
+import org.highj.data.collection.list.ListTraversable;
+import org.highj.data.collection.list.ZipApplicative;
 import org.highj.data.functions.Integers;
 import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
+import org.highj.typeclass0.group.Group;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
@@ -327,6 +331,12 @@ public class ListTest {
     }
 
     @Test
+    public void testSort() {
+        assertThat(List.<Integer>of().sort(Comparator.naturalOrder())).isEmpty();
+        assertThat(List.of(5,7,3,1,3,2).sort(Comparator.naturalOrder())).containsExactly(1,2,3,3,5,7);
+    }
+
+    @Test
     public void testTail() {
         assertThat(List.of(42).tail()).isEmpty();
         assertThat(List.of(42, 5, 7).tail()).containsExactly(5, 7);
@@ -389,6 +399,42 @@ public class ListTest {
         assertThat(emptyT2._2()).isEmpty();
     }
 
+    @Test
+    public void testUnzip3() {
+        List<T3<Integer, String, Boolean>> list = List.of(T3.of(1, "one", true), T3.of(5, "five", false), T3.of(7, "seven", true), T3.of(3, "three", true));
+        T3<List<Integer>, List<String>, List<Boolean>> t3 = List.unzip3(list);
+        assertThat(t3._1()).containsExactly(1, 5, 7, 3);
+        assertThat(t3._2()).containsExactly("one", "five", "seven", "three");
+        assertThat(t3._3()).containsExactly(true, false, true, true);
+
+        List<T3<Integer, String, Boolean>> emptyList = List.of();
+        T3<List<Integer>, List<String>, List<Boolean>> emptyT3 = List.unzip3(emptyList);
+        assertThat(emptyT3._1()).isEmpty();
+        assertThat(emptyT3._2()).isEmpty();
+        assertThat(emptyT3._3()).isEmpty();
+    }
+
+    @Test
+    public void testUnzip4() {
+        List<T4<Integer, String, Boolean, Long>> list = List.of(
+                T4.of(1, "one", true, 100L),
+                T4.of(5, "five", false, 200L),
+                T4.of(7, "seven", true, 300L),
+                T4.of(3, "three", true, 400L));
+        T4<List<Integer>, List<String>, List<Boolean>, List<Long>> t4 = List.unzip4(list);
+        assertThat(t4._1()).containsExactly(1, 5, 7, 3);
+        assertThat(t4._2()).containsExactly("one", "five", "seven", "three");
+        assertThat(t4._3()).containsExactly(true, false, true, true);
+        assertThat(t4._4()).containsExactly(100L, 200L, 300L, 300L);
+
+        List<T4<Integer, String, Boolean, Long>> emptyList = List.of();
+        T4<List<Integer>, List<String>, List<Boolean>, List<Long>> emptyT4 = List.unzip4(emptyList);
+        assertThat(emptyT4._1()).isEmpty();
+        assertThat(emptyT4._2()).isEmpty();
+        assertThat(emptyT4._3()).isEmpty();
+        assertThat(emptyT4._4()).isEmpty();
+    }
+
 
     @Test
     public void testZip() {
@@ -424,5 +470,36 @@ public class ListTest {
 
         assertThat(List.zipWith(List.empty(), intList, Strings.repeat)).isEmpty();
         assertThat(List.zipWith(stringList, List.empty(), Strings.repeat)).isEmpty();
+    }
+
+    @Test
+    public void testTraversable() {
+        ListTraversable traversable = List.traversable;
+        List<__<Maybe.µ,Integer>> list = List.of(0,8,15).map(Maybe::newJust);
+        assertThat(traversable.sequenceA(Maybe.monad, list)).isEqualTo(Maybe.newJust(List.of(0,8,15)));
+        assertThat(traversable.sequenceA(Maybe.monad, list.plus(Maybe.newNothing()))).isEqualTo(Maybe.newNothing());
+    }
+
+    @Test
+    public void testZipApplicative() {
+        ZipApplicative zipAp = List.zipApplicative;
+        assertThat(zipAp.pure(13)).startsWith(13,13,13,13);
+        assertThat(zipAp.ap(List.of(x -> x + 10, x -> x + 20, x -> x + 30), List.of(1,2,3))).containsExactly(11,22,33);
+        assertThat(zipAp.ap(List.of(x -> x + 10, x -> x + 20, x -> x + 30), List.<Integer>empty())).isEmpty();
+        assertThat(zipAp.ap(List.empty(), List.of(1,2,3))).isEmpty();
+        assertThat(zipAp.ap(zipAp.pure(x -> x + 10), List.of(1,2,3))).containsExactly(11,12,13);
+        assertThat(zipAp.ap(List.of(x -> x + 10, x -> x + 20, x -> x + 30), zipAp.pure(1))).containsExactly(11,21,31);
+    }
+
+    @Test
+    public void testGroup() {
+        Group<List<Integer>> group = List.group();
+        assertThat(group.identity()).isEmpty();
+        assertThat(group.apply(group.identity(), group.identity())).isEmpty();
+        assertThat(group.apply(List.of(1,2,3), group.identity())).containsExactly(1,2,3);
+        assertThat(group.apply(group.identity(), List.of(1,2,3))).containsExactly(1,2,3);
+        assertThat(group.apply(List.of(1,2,3), List.of(4,5,6))).containsExactly(1,2,3,4,5,6);
+        assertThat(group.inverse(group.identity())).isEmpty();
+        assertThat(group.inverse(List.of(1,2,3))).containsExactly(3,2,1);
     }
 }

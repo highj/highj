@@ -29,26 +29,15 @@ public enum Strings {
         return a -> String.format(formatString, a);
     }
 
+    public static String concat(String one, String two) {
+        return one + two;
+    }
+
     public static final Eq<String> eq = new Eq.JavaEq<>();
 
     public static final Eq<String> eqIgnoreCase = (one, two) -> one == null ? two == null : one.equalsIgnoreCase(two);
 
-    public static final Group<String> group = new Group<String>(){
-        @Override
-        public String inverse(String s) {
-            return Strings.reverse(s);
-        }
-
-        @Override
-        public String identity() {
-            return "";
-        }
-
-        @Override
-        public String apply(String x, String y) {
-            return x + y;
-        }
-    };
+    public static final Group<String> group = Group.create("", Strings::concat, Strings::reverse);
 
     public static String mkString(String sep, Object... values) {
         return mkString(sep, Arrays.asList(values));

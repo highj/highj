@@ -57,8 +57,8 @@ public enum Functions {
         return a -> f.apply(g.apply(h.apply(a)));
     }
 
-    public static <A, B> Function<Function<A, B>, B> flip(final A a) {
-        return fn -> fn.apply(a);
+    public static <A, B, C> Function<B, Function<A, C>> flip(Function<A, Function<B,C>> fn) {
+        return b -> a -> fn.apply(a).apply(b);
     }
 
     public static <A, B, C, D> Function<A, Function<B, D>> compose2(final Function<? super C, ? extends D> f, final Function<? super A, Function<? super B, ? extends C>> g) {

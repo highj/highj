@@ -10,9 +10,9 @@ import java.util.function.UnaryOperator;
  */
 public interface Group<A> extends Monoid<A> {
 
-    public A inverse(A a);
+    A inverse(A a);
 
-    public static <A> Group<A> create(A identity, BinaryOperator<A> fn, UnaryOperator<A> inv) {
+    static <A> Group<A> create(A identity, BinaryOperator<A> fn, UnaryOperator<A> inv) {
         return new Group<A>() {
             @Override
             public A inverse(A a) {

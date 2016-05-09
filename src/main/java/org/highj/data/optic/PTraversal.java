@@ -46,7 +46,7 @@ public abstract class PTraversal<S, T, A, B> {
 
     /** get all the targets of a {@link PTraversal} */
     public final List<A> getAll(final S s) {
-        return foldMap(List.monoid(), List.monadPlus::pure).apply(s);
+        return foldMap(List.group(), List.monadPlus::pure).apply(s);
     }
 
     /** find the first target of a {@link PTraversal} matching the predicate */

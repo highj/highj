@@ -4,11 +4,12 @@ import org.derive4j.hkt.__;
 import org.highj.data.collection.list.ListMonadPlus;
 import org.highj.data.collection.list.ListTraversable;
 import org.highj.data.collection.list.ZipApplicative;
+import org.highj.data.functions.Functions;
 import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
-import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass0.group.Group;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Iterables;
 import org.highj.util.Lazy;
@@ -861,57 +862,199 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
         return result;
     }
 
-    public <B> B foldr(final Function<A, Function<B, B>> fn, final B b) {
-        return isEmpty() ? b : fn.apply(head()).apply(tail().foldr(fn, b));
+    /**
+     * Performs a right fold over the list.
+     *
+     * That means the last value of the list is combined with the starting value using the given function,
+     * then the result is combined with the second to last value etc, until the whole list is consumed that way.
+     *
+     * @param fn combination function
+     * @param startValue starting value
+     * @param <B> result type
+     * @return result of the folding operation
+     */
+    public <B> B foldr(final Function<A, Function<B, B>> fn, final B startValue) {
+        return reverse().foldl(startValue, Functions.flip(fn));
     }
 
-    public <B> B foldl(final B b, final Function<B, Function<A, B>> fn) {
-        B result = b;
+    /**
+     * Performs a left fold over the list.
+     *
+     * That means the starting value is combined with the first value of the list using the given function,
+     * then the result is combined with the second list value etc, until the whole list is consumed that way.
+     *
+     * @param startValue starting value
+     * @param fn combination function
+     * @param <B> result type
+     * @return result of the folding operation
+     */
+    public <B> B foldl(final B startValue, final Function<B, Function<A, B>> fn) {
+        B result = startValue;
         for (A a : this) {
             result = fn.apply(result).apply(a);
         }
         return result;
     }
 
+    /**
+     * Combines two lists to a list of pairs.
+     *
+     * Trailing elements of the longer list are discarded.
+     *
+     * @param listA the first list
+     * @param listB the second list
+     * @param <A> the element type of the first list
+     * @param <B>  the element type of the second list
+     * @return the combined list
+     */
     public static <A, B> List<T2<A, B>> zip(List<A> listA, List<B> listB) {
         return zipWith(listA, listB, a -> b -> T2.of(a, b));
     }
 
+    /**
+     * Combines three lists to a list of triples.
+     *
+     * Trailing elements of the longer lists are discarded.
+     *
+     * @param listA the first list
+     * @param listB the second list
+     * @param listC the third list
+     * @param <A> the element type of the first list
+     * @param <B>  the element type of the second list
+     * @param <C>  the element type of the third list
+     * @return the combined list
+     */
     public static <A, B, C> List<T3<A, B, C>> zip(List<A> listA, List<B> listB, List<C> listC) {
         return zipWith(listA, listB, listC, a -> b -> c -> T3.of(a, b, c));
     }
 
+    /**
+     * Combines four lists to a list of quadruples.
+     *
+     * Trailing elements of the longer lists are discarded.
+     *
+     * @param listA the first list
+     * @param listB the second list
+     * @param listC the third list
+     * @param listD the fourth list
+     * @param <A> the element type of the first list
+     * @param <B>  the element type of the second list
+     * @param <C>  the element type of the third list
+     * @param <D>  the element type of the fourth list
+     * @return the combined list
+     */
     public static <A, B, C, D> List<T4<A, B, C, D>> zip(List<A> listA, List<B> listB, List<C> listC, List<D> listD) {
         return zipWith(listA, listB, listC, listD, a -> b -> c -> d -> T4.of(a, b, c, d));
     }
 
+    /**
+     * Combines two lists using a combination function.
+     *
+     * Trailing elements of the longer list are discarded.
+     *
+     * @param listA the first list
+     * @param listB the second list
+     * @param fn the combination function
+     * @param <A> the element type of the first list
+     * @param <B>  the element type of the second list
+     * @param <C>  the result type
+     * @return the combined list
+     */
     public static <A, B, C> List<C> zipWith(final List<A> listA, final List<B> listB, final Function<A, Function<B, C>> fn) {
         return listA.isEmpty() || listB.isEmpty() ? nil() :
-                List.<C>newLazyList(fn.apply(listA.head()).apply(listB.head()), () -> zipWith(listA.tail(), listB.tail(), fn));
+                List.newLazyList(fn.apply(listA.head()).apply(listB.head()), () -> zipWith(listA.tail(), listB.tail(), fn));
     }
 
+    /**
+     * Combines three lists using a combination function.
+     *
+     * Trailing elements of the longer list are discarded.
+     *
+     * @param listA the first list
+     * @param listB the second list
+     * @param listC the third list
+     * @param fn the combination function
+     * @param <A> the element type of the first list
+     * @param <B>  the element type of the second list
+     * @param <C>  the element type of the third list
+     * @param <D>  the result type
+     * @return the combined list
+     */
     public static <A, B, C, D> List<D> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final Function<A, Function<B, Function<C, D>>> fn) {
         return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() ? nil() :
-                List.<D>newLazyList(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), fn));
+                List.newLazyList(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), fn));
     }
 
+    /**
+     * Combines four lists using a combination function.
+     *
+     * Trailing elements of the longer list are discarded.
+     *
+     * @param listA the first list
+     * @param listB the second list
+     * @param listC the third list
+     * @param listD the fourth list
+     * @param fn the combination function
+     * @param <A> the element type of the first list
+     * @param <B>  the element type of the second list
+     * @param <C>  the element type of the third list
+     * @param <D>  the element type of the fourth list
+     * @param <E>  the result type
+     * @return the combined list
+     */
     public static <A, B, C, D, E> List<E> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final List<D> listD, final Function<A, Function<B, Function<C, Function<D, E>>>> fn) {
         return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() || listD.isEmpty() ? nil() :
-                List.<E>newLazyList(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()).apply(listD.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), listD.tail(), fn));
+                List.newLazyList(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()).apply(listD.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), listD.tail(), fn));
     }
 
+    /**
+     * Splits a list of pairs in two lists.
+     *
+     * @param listAB the list of pairs
+     * @param <A> element type of the first value of the pair
+     * @param <B> element type of the second value of the pair
+     * @return a pair containing the resulting lists
+     */
     public static <A, B> T2<List<A>, List<B>> unzip(List<T2<A, B>> listAB) {
-        return T2.of(listAB.map(t -> t._1()), listAB.map(t -> t._2()));
+        return T2.of(listAB.map(T2::_1), listAB.map(T2::_2));
     }
 
+    /**
+     * Splits a list of triples in three lists.
+     *
+     * @param listABC the list of triples
+     * @param <A> element type of the first value of the triple
+     * @param <B> element type of the second value of the triple
+     * @param <C> element type of the third value of the triple
+     * @return a triple containing the resulting lists
+     */
     public static <A, B, C> T3<List<A>, List<B>, List<C>> unzip3(List<T3<A, B, C>> listABC) {
-        return T3.of(listABC.map(t -> t._1()), listABC.map(t -> t._2()), listABC.map(t -> t._3()));
+        return T3.of(listABC.map(T3::_1), listABC.map(T3::_2), listABC.map(T3::_3));
     }
 
+    /**
+     * Splits a list of quadruples in four lists.
+     *
+     * @param listABCD the list of quadruples
+     * @param <A> element type of the first value of the quadruple
+     * @param <B> element type of the second value of the quadruple
+     * @param <C> element type of the third value of the quadruple
+     * @param <D> element type of the fourth value of the quadruple
+     * @return a quadruple containing the resulting lists
+     */
     public static <A, B, C, D> T4<List<A>, List<B>, List<C>, List<D>> unzip4(List<T4<A, B, C, D>> listABCD) {
-        return T4.of(listABCD.map(t -> t._1()), listABCD.map(t -> t._2()), listABCD.map(t -> t._3()), listABCD.map(t -> t._4()));
+        return T4.of(listABCD.map(T4::_1), listABCD.map(T4::_2), listABCD.map(T4::_3), listABCD.map(T4::_4));
     }
 
+    /**
+     * Concatenates all elements contained in a list of lists.
+     *
+     * A.k.a. "flatten".
+     *
+     * @param list the list of lists
+     * @param <A> the element type
+     * @return the list of elements
+     */
     public static <A> List<A> join(List<List<A>> list) {
         Stack<A> stack = new Stack<>();
         for (List<A> innerList : list) {
@@ -922,27 +1065,56 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
         return buildFromStack(stack);
     }
 
+    /**
+     * Sorts the list.
+     *
+     * @param comparator the {@link Comparator} used for sorting
+     * @return the sorted list
+     */
     public List<A> sort(Comparator<A> comparator) {
         java.util.List<A> jList = toJList();
         Collections.sort(jList, comparator);
         return List.of(jList);
     }
 
+    /**
+     * Puts a given element between every two elements of the original list.
+     *
+     * E.g. <code>List.of("a","b","c").intersperse("x").equals(List.of("a","x","b","x","c"))</code>
+     *
+     * @param a the interspersing value
+     * @return the list
+     */
     public List<A> intersperse(final A a) {
         return isEmpty() || tail().isEmpty() ? this : newLazyList(this.head(), () -> newList(a, tail().intersperse(a)));
     }
 
+    /**
+     * The {@link org.highj.typeclass1.foldable.Traversable} instance of lists.
+     */
     public static final ListTraversable traversable = new ListTraversable() {
     };
 
+    /**
+     * The {@link org.highj.typeclass1.monad.Applicative} instance of lists using {@link List#zip}
+     * as combining operation.
+     */
     public static final ZipApplicative zipApplicative = new ZipApplicative() {
     };
 
+    /**
+     * The {@link org.highj.typeclass1.monad.MonadPlus} instance of lists.
+     */
     public static final ListMonadPlus monadPlus = new ListMonadPlus() {
     };
 
-    public static <A> Monoid<List<A>> monoid() {
-        return Monoid.create(List.empty(), List::append);
+    /**
+     * The list {@link org.highj.typeclass0.group.Group} using  {@link List#append} as combining operation.
+     * @param <A> the element type of the group
+     * @return the group
+     */
+    public static <A> Group<List<A>> group() {
+        return Group.create(List.empty(), List::append, List::reverse);
     }
 
 }
