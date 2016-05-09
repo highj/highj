@@ -1,6 +1,6 @@
 package org.highj.data.collection;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.set.SetMonadPlus;
 import org.highj.data.compare.Ordering;
 import org.highj.data.functions.Strings;
@@ -25,7 +25,7 @@ import java.util.function.Predicate;
  *
  * @param <A> The element type.
  */
-public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
+public class Set<A> implements __<Set.µ, A>, Iterable<A>, Predicate<A> {
 
     public interface µ {
     }
@@ -53,7 +53,7 @@ public class Set<A> implements _<Set.µ, A>, Iterable<A>, Predicate<A> {
      * @return the {@link Set} converted back to standard form
      */
     @SuppressWarnings("unchecked")
-    public static <A> Set<A> narrow(_<µ, A> value) {
+    public static <A> Set<A> narrow(__<µ, A> value) {
         return (Set) value;
     }
 

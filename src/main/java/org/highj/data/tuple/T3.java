@@ -1,7 +1,7 @@
 package org.highj.data.tuple;
 
-import org.highj._;
-import org.highj.___;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__3;
 import org.highj.data.collection.HList;
 import org.highj.data.collection.HList.HCons;
 import org.highj.data.collection.HList.HNil;
@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 /**
  * A tuple of arity 3, a.k.a. "triple".
  */
-public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
+public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
     public static class µ {
 
     }
@@ -72,7 +72,7 @@ public abstract class T3<A, B, C> implements ___<T3.µ, A, B, C> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A, B, C> T3<A, B, C> narrow(_<_<_<µ, A>, B>, C> value) {
+    public static <A, B, C> T3<A, B, C> narrow(__<__<__<µ, A>, B>, C> value) {
         return (T3) value;
     }
 

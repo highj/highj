@@ -1,7 +1,7 @@
 package org.highj.typeclass1.contravariant;
 
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.typeclass1.invariant.Invariant;
 
 import java.util.function.Function;
@@ -14,9 +14,9 @@ import java.util.function.Function;
 public interface Contravariant<F> extends Invariant<F> {
 
     // contramap (Data.Functor.Contravariant)
-    <A, B> _<F, A> contramap(Function<A, B> fn, _<F, B> nestedB);
+    <A, B> __<F, A> contramap(Function<A, B> fn, __<F, B> nestedB);
 
-    default <A, B> _<F, B> invmap(Function<A, B> fn, Function<B,A> nf, _<F, A> nestedA) {
+    default <A, B> __<F, B> invmap(Function<A, B> fn, Function<B,A> nf, __<F, A> nestedA) {
         return contramap(nf, nestedA);
     }
 }

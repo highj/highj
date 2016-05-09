@@ -5,9 +5,8 @@
  */
 package org.highj.data.transformer.automaton;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.transformer.Automaton;
 import org.highj.typeclass2.arrow.ArrowPlus;
 
@@ -15,12 +14,12 @@ import org.highj.typeclass2.arrow.ArrowPlus;
  *
  * @author clintonselke
  */
-public interface AutomatonArrowPlus<A> extends AutomatonArrowZero<A>, ArrowPlus<_<Automaton.µ,A>> {
+public interface AutomatonArrowPlus<A> extends AutomatonArrowZero<A>, ArrowPlus<__<Automaton.µ,A>> {
     
     public ArrowPlus<A> get();
 
     @Override
-    public default <B, C> Automaton<A,B,C> plus(__<_<Automaton.µ, A>, B, C> arrow1, __<_<Automaton.µ, A>, B, C> arrow2) {
+    public default <B, C> Automaton<A,B,C> plus(__2<__<Automaton.µ, A>, B, C> arrow1, __2<__<Automaton.µ, A>, B, C> arrow2) {
         return () -> get().plus(
             Automaton.narrow(arrow1).unAutomaton(),
             Automaton.narrow(arrow2).unAutomaton()

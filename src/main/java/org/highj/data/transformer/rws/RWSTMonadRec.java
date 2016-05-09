@@ -6,7 +6,7 @@
 package org.highj.data.transformer.rws;
 
 import java.util.function.Function;
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.data.transformer.RWST;
 import org.highj.data.tuple.T3;
@@ -16,13 +16,13 @@ import org.highj.typeclass1.monad.MonadRec;
  *
  * @author clintonselke
  */
-public interface RWSTMonadRec<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadRec<_<_<_<_<RWST.µ,R>,W>,S>,M>> {
+public interface RWSTMonadRec<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadRec<__<__<__<__<RWST.µ,R>,W>,S>,M>> {
 
     @Override
     public MonadRec<M> m();
     
     @Override
-    public default <A, B> RWST<R, W, S, M, B> tailRec(Function<A, _<_<_<_<_<RWST.µ, R>, W>, S>, M>, Either<A, B>>> f, A startA) {
+    public default <A, B> RWST<R, W, S, M, B> tailRec(Function<A, __<__<__<__<__<RWST.µ, R>, W>, S>, M>, Either<A, B>>> f, A startA) {
         return (R r, S s0) -> m().tailRec(
             (T3<A,S,W> x) -> m().map(
                 (T3<Either<A,B>,S,W> x2) -> {

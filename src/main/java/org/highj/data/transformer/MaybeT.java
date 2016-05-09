@@ -1,7 +1,7 @@
 package org.highj.data.transformer;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.Maybe;
 import org.highj.data.transformer.maybe.*;
 import org.highj.typeclass1.functor.Functor;
@@ -16,23 +16,23 @@ import org.highj.typeclass1.monad.MonadRec;
  * @author Daniel Gronau
  * @author Clinton Selke
  */
-public class MaybeT<M, A> implements __<MaybeT.µ, M, A> {
+public class MaybeT<M, A> implements __2<MaybeT.µ, M, A> {
 
     public static class µ {
     }
 
-    private final _<M, Maybe<A>> value;
+    private final __<M, Maybe<A>> value;
 
-    public MaybeT(_<M, Maybe<A>> value) {
+    public MaybeT(__<M, Maybe<A>> value) {
         this.value = value;
     }
 
-    public _<M, Maybe<A>> get() {
+    public __<M, Maybe<A>> get() {
         return value;
     }
 
     @SuppressWarnings("unchecked")
-    public static <M, A> MaybeT<M, A> narrow(_<_<µ, M>, A> value) {
+    public static <M, A> MaybeT<M, A> narrow(__<__<µ, M>, A> value) {
         return (MaybeT) value;
     }
 
@@ -90,7 +90,7 @@ instance (Functor m, Monad m) => Alternative (MaybeT m) where
     (<|>) = mplus
 
 instance (Monad m) => Monad (MaybeT m) where
-    fail _ = MaybeT (return Nothing)
+    fail __ = MaybeT (return Nothing)
     return = lift . return
     x >>= f = MaybeT $ do
         v <- runMaybeT x
@@ -104,7 +104,7 @@ instance (Monad m) => MonadPlus (MaybeT m) where
         v <- runMaybeT x
         case v of
             Nothing -> runMaybeT y
-            JustLazy _  -> return v
+            JustLazy __  -> return v
 
 instance (MonadFix m) => MonadFix (MaybeT m) where
     mfix f = MaybeT (mfix (runMaybeT . f . unJust))

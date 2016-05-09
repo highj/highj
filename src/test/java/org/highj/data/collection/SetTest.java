@@ -1,6 +1,6 @@
 package org.highj.data.collection;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.set.SetMonadPlus;
 import org.highj.typeclass0.group.Monoid;
 import org.junit.Test;
@@ -130,7 +130,7 @@ public class SetTest {
         assertThat(monadPlus.mzero()).isEmpty();
         assertThat(monadPlus.mplus(Set.of(1, 2, 3), Set.of(3, 4, 5))).containsExactlyInAnyOrder(1, 2, 3, 4, 5);
 
-        Function<String, _<Set.µ, Either<String, String>>> substrings = s -> s.length() == 1
+        Function<String, __<Set.µ, Either<String, String>>> substrings = s -> s.length() == 1
                 ? Set.of(Either.newRight(s))
                 : Set.of(Either.newRight(s), Either.newLeft(s.substring(1)), Either.newLeft(s.substring(0, s.length() - 1)));
         Set<String> set = monadPlus.tailRec(substrings, "abc");

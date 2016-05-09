@@ -2,7 +2,7 @@ package org.highj.data.optic;
 
 import java.util.function.Function;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.data.functions.F1;
 import org.highj.typeclass1.functor.Functor;
@@ -105,7 +105,7 @@ public abstract class PSetter<S, T, A, B> {
     }
 
     /** create a {@link PSetter} from a {@link Functor} */
-    public static <X, A, B> PSetter<_<X, A>, _<X, B>, A, B> fromFunctor(final Functor<X> functor) {
+    public static <X, A, B> PSetter<__<X, A>, __<X, B>, A, B> fromFunctor(final Functor<X> functor) {
         return pSetter(f -> x -> functor.map(f, x));
     }
 

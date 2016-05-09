@@ -6,11 +6,7 @@
 package org.highj.data.transformer.rws;
 
 import java.util.function.Function;
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
-import org.highj.____;
-import org.highj._____;
+import org.derive4j.hkt.__;
 import org.highj.data.transformer.RWST;
 import org.highj.data.tuple.T3;
 import org.highj.typeclass1.monad.Bind;
@@ -19,10 +15,10 @@ import org.highj.typeclass1.monad.Bind;
  *
  * @author clintonselke
  */
-public interface RWSTBind<R,W,S,M> extends RWSTApply<R,W,S,M>, Bind<_<_<_<_<RWST.µ,R>,W>,S>,M>> {
+public interface RWSTBind<R,W,S,M> extends RWSTApply<R,W,S,M>, Bind<__<__<__<__<RWST.µ,R>,W>,S>,M>> {
 
     @Override
-    public default <A, B> RWST<R, W, S, M, B> bind(_<_<_<_<_<RWST.µ, R>, W>, S>, M>, A> nestedA, Function<A, _<_<_<_<_<RWST.µ, R>, W>, S>, M>, B>> fn) {
+    public default <A, B> RWST<R, W, S, M, B> bind(__<__<__<__<__<RWST.µ, R>, W>, S>, M>, A> nestedA, Function<A, __<__<__<__<__<RWST.µ, R>, W>, S>, M>, B>> fn) {
         return (R r, S s) -> m().bind(
             RWST.narrow(nestedA).run(r, s),
             (T3<A,S,W> x) -> m().map(

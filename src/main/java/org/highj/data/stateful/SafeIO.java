@@ -5,7 +5,7 @@
  */
 package org.highj.data.stateful;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.stateful.safe_io.SafeIOApplicative;
 import org.highj.data.stateful.safe_io.SafeIOApply;
 import org.highj.data.stateful.safe_io.SafeIOBind;
@@ -16,10 +16,10 @@ import org.highj.data.stateful.safe_io.SafeIOMonad;
  *
  * @author clintonselke
  */
-public interface SafeIO<A> extends _<SafeIO.µ,A> {
+public interface SafeIO<A> extends __<SafeIO.µ,A> {
     public static class µ {}
     
-    public static <A> SafeIO<A> narrow(_<SafeIO.µ,A> a) {
+    public static <A> SafeIO<A> narrow(__<µ,A> a) {
         return (SafeIO<A>)a;
     }
     

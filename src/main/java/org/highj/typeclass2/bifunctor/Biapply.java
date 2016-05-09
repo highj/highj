@@ -1,7 +1,7 @@
 package org.highj.typeclass2.bifunctor;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.functions.Functions;
 import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass1.monad.Apply;
@@ -11,10 +11,10 @@ import java.util.function.Function;
 public interface Biapply<F> extends Bifunctor<F> {
 
     // (<<.>>)
-    public <A, B, C, D> __<F, B, D> biapply(__<F, Function<A, B>, Function<C, D>> fn, __<F, A, C> ac);
+    public <A, B, C, D> __2<F, B, D> biapply(__2<F, Function<A, B>, Function<C, D>> fn, __2<F, A, C> ac);
 
     // (.>>)
-    public default <A, B, C, D> __<F, C, D> rightShift(__<F, A, B> a, __<F, C, D> b) {
+    public default <A, B, C, D> __2<F, C, D> rightShift(__2<F, A, B> a, __2<F, C, D> b) {
         // a .>> b = bimap (const id) (const id) <<$>> a <<.>> b
         return biapply(bimap(
                 Functions.<A, Function<C, C>>constant(Function.<C>identity()),
@@ -22,28 +22,28 @@ public interface Biapply<F> extends Bifunctor<F> {
     }
 
     // (<<.)
-    public default <A, B, C, D> __<F, A, B> leftShift(__<F, A, B> a, __<F, C, D> b) {
+    public default <A, B, C, D> __2<F, A, B> leftShift(__2<F, A, B> a, __2<F, C, D> b) {
         // a <<. b = bimap const const <<$>> a <<.>> b
         return biapply(bimap(Functions.<A, C>constant(), Functions.<B, D>constant(), a), b);
     }
 
-    public default <A, B, C, AA, BB, CC> __<F, C, CC> bilift2(
+    public default <A, B, C, AA, BB, CC> __2<F, C, CC> bilift2(
             Function<A, Function<B, C>> f,
             Function<AA, Function<BB, CC>> g,
-            __<F, A, AA> a, __<F, B, BB> b) {
+            __2<F, A, AA> a, __2<F, B, BB> b) {
         // bilift2 f g a b = bimap f g <<$>> a <<.>> b
         return biapply(bimap(f, g, a), b);
     }
 
-    public default <A, B, C, D, AA, BB, CC, DD> __<F, D, DD> bilift3(
+    public default <A, B, C, D, AA, BB, CC, DD> __2<F, D, DD> bilift3(
             Function<A, Function<B, Function<C, D>>> f,
             Function<AA, Function<BB, Function<CC, DD>>> g,
-            __<F, A, AA> a, __<F, B, BB> b, __<F, C, CC> c) {
+            __2<F, A, AA> a, __2<F, B, BB> b, __2<F, C, CC> c) {
         // bilift3 f g a b c = bimap f g <<$>> a <<.>> b <<.>> c
         return biapply(biapply(bimap(f, g, a), b), c);
     }
 
-    public default <X> Apply<_<F, X>> getApply(Semigroup<X> semigroup) {
+    public default <X> Apply<__<F, X>> getApply(Semigroup<X> semigroup) {
         return new CurriedApply<>(this, semigroup);
     }
 

@@ -5,10 +5,10 @@
  */
 package org.highj.data.transformer;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
-import org.highj.____;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
+import org.derive4j.hkt.__3;
+import org.derive4j.hkt.__4;
 import org.highj.data.transformer.state_arrow.StateArrowArrow;
 import org.highj.data.transformer.state_arrow.StateArrowArrowState;
 import org.highj.data.transformer.state_arrow.StateArrowArrowTransformer;
@@ -23,36 +23,36 @@ import org.highj.typeclass2.arrow.Semigroupoid;
  *
  * @author clintonselke
  */
-public class StateArrow<S,A,B,C> implements ____<StateArrow.µ,S,A,B,C> {
+public class StateArrow<S,A,B,C> implements __4<StateArrow.µ,S,A,B,C> {
     public static class µ {}
     
-    private final __<A,T2<B,S>,T2<C,S>> _run;
+    private final __2<A,T2<B,S>,T2<C,S>> _run;
     
-    private StateArrow(__<A,T2<B,S>,T2<C,S>> run) {
+    private StateArrow(__2<A,T2<B,S>,T2<C,S>> run) {
         this._run = run;
     }
     
-    public static <S,A,B,C> StateArrow<S,A,B,C> stateArrow(__<A,T2<B,S>,T2<C,S>> run) {
+    public static <S,A,B,C> StateArrow<S,A,B,C> stateArrow(__2<A,T2<B,S>,T2<C,S>> run) {
         return new StateArrow<>(run);
     }
     
-    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(____<StateArrow.µ,S,A,B,C> a) {
+    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(__4<µ,S,A,B,C> a) {
         return (StateArrow<S,A,B,C>)a;
     }
     
-    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(___<_<StateArrow.µ,S>,A,B,C> a) {
+    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(__3<__<µ,S>,A,B,C> a) {
         return (StateArrow<S,A,B,C>)a;
     }
     
-    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(__<_<_<StateArrow.µ,S>,A>,B,C> a) {
+    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(__2<__<__<µ,S>,A>,B,C> a) {
         return (StateArrow<S,A,B,C>)a;
     }
     
-    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(_<_<_<_<StateArrow.µ,S>,A>,B>,C> a) {
+    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(__<__<__<__<µ,S>,A>,B>,C> a) {
         return (StateArrow<S,A,B,C>)a;
     }
     
-    public __<A,T2<B,S>,T2<C,S>> run() {
+    public __2<A,T2<B,S>,T2<C,S>> run() {
         return _run;
     }
     

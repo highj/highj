@@ -5,10 +5,10 @@
  */
 package org.highj.data.transformer;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
-import org.highj.____;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
+import org.derive4j.hkt.__3;
+import org.derive4j.hkt.__4;
 import org.highj.data.collection.Either;
 import org.highj.data.transformer.error_arrow.ErrorArrowArrow;
 import org.highj.data.transformer.error_arrow.ErrorArrowArrowChoice;
@@ -22,36 +22,36 @@ import org.highj.typeclass2.arrow.ArrowChoice;
  *
  * @author clintonselke
  */
-public class ErrorArrow<EX,A,B,C> implements ____<ErrorArrow.µ,EX,A,B,C> {
+public class ErrorArrow<EX,A,B,C> implements __4<ErrorArrow.µ,EX,A,B,C> {
     public static class µ {}
     
-    private final __<A,B,Either<EX,C>> _run;
+    private final __2<A,B,Either<EX,C>> _run;
     
-    private ErrorArrow(__<A,B,Either<EX,C>> run) {
+    private ErrorArrow(__2<A,B,Either<EX,C>> run) {
         this._run = run;
     }
     
-    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> errorArrow(__<A,B,Either<EX,C>> run) {
+    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> errorArrow(__2<A,B,Either<EX,C>> run) {
         return new ErrorArrow<>(run);
     }
     
-    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(____<ErrorArrow.µ,EX,A,B,C> a) {
+    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(__4<µ,EX,A,B,C> a) {
         return (ErrorArrow<EX,A,B,C>)a;
     }
     
-    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(___<_<ErrorArrow.µ,EX>,A,B,C> a) {
+    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(__3<__<µ,EX>,A,B,C> a) {
         return (ErrorArrow<EX,A,B,C>)a;
     }
     
-    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(__<_<_<ErrorArrow.µ,EX>,A>,B,C> a) {
+    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(__2<__<__<µ,EX>,A>,B,C> a) {
         return (ErrorArrow<EX,A,B,C>)a;
     }
     
-    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(_<_<_<_<ErrorArrow.µ,EX>,A>,B>,C> a) {
+    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(__<__<__<__<µ,EX>,A>,B>,C> a) {
         return (ErrorArrow<EX,A,B,C>)a;
     }
     
-    public __<A,B,Either<EX,C>> run() {
+    public __2<A,B,Either<EX,C>> run() {
         return _run;
     }
     

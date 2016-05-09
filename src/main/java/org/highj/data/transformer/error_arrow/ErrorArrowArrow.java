@@ -7,10 +7,8 @@ package org.highj.data.transformer.error_arrow;
 
 import java.util.function.Function;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
-import org.highj.____;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.Either;
 import org.highj.data.functions.F1;
 import org.highj.data.transformer.ErrorArrow;
@@ -21,7 +19,7 @@ import org.highj.typeclass2.arrow.Arrow;
  *
  * @author clintonselke
  */
-public interface ErrorArrowArrow<EX,A> extends ErrorArrowCategory<EX,A>, Arrow<_<_<ErrorArrow.µ,EX>,A>> {
+public interface ErrorArrowArrow<EX,A> extends ErrorArrowCategory<EX,A>, Arrow<__<__<ErrorArrow.µ,EX>,A>> {
 
     @Override
     public default <B, C> ErrorArrow<EX, A, B, C> arr(Function<B, C> fn) {
@@ -29,7 +27,7 @@ public interface ErrorArrowArrow<EX,A> extends ErrorArrowCategory<EX,A>, Arrow<_
     }
 
     @Override
-    public default <B, C, D> ErrorArrow<EX, A, T2<B, D>, T2<C, D>> first(__<_<_<ErrorArrow.µ, EX>, A>, B, C> arrow) {
+    public default <B, C, D> ErrorArrow<EX, A, T2<B, D>, T2<C, D>> first(__2<__<__<ErrorArrow.µ, EX>, A>, B, C> arrow) {
         class Util {
             <X,Y> Either<EX,T2<X,Y>> rstrength(T2<Either<EX,X>,Y> x) {
                 return x._1().either(

@@ -1,11 +1,10 @@
 package org.highj.data.functions;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.Maybe;
 import org.highj.data.functions.f1.F1Arrow;
 import org.highj.data.functions.f1.F1Monad;
-import org.highj.data.optic.Optional;
 import org.highj.data.tuple.T0;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
@@ -20,7 +19,7 @@ import java.util.function.Supplier;
  * A class representing an unary function.
  */
 @FunctionalInterface
-public interface F1<A, B> extends __<F1.µ, A, B>, Function<A, B> {
+public interface F1<A, B> extends __2<F1.µ, A, B>, Function<A, B> {
 
     class µ {
     }
@@ -30,7 +29,7 @@ public interface F1<A, B> extends __<F1.µ, A, B>, Function<A, B> {
     }
 
     @SuppressWarnings("unchecked")
-    static <A, B> F1<A, B> narrow(_<_<µ, A>, B> function) {
+    static <A, B> F1<A, B> narrow(__<__<µ, A>, B> function) {
         return (F1) function;
     }
 
@@ -88,20 +87,20 @@ public interface F1<A, B> extends __<F1.µ, A, B>, Function<A, B> {
         return new F1Monad<>();
     }
 
-    static <A, B, C> F1<A, T2<B, C>> fanout(_<_<µ, A>, B> fab, _<_<µ, A>, C> fac) {
+    static <A, B, C> F1<A, T2<B, C>> fanout(__<__<µ, A>, B> fab, __<__<µ, A>, C> fac) {
         final F1<A, B> fnab = narrow(fab);
         final F1<A, C> fnac = narrow(fac);
         return a -> T2.of(fnab.apply(a), fnac.apply(a));
     }
 
-    static <A, B, C, D> F1<A, T3<B, C, D>> fanout(_<_<µ, A>, B> fab, _<_<µ, A>, C> fac, _<_<µ, A>, D> fad) {
+    static <A, B, C, D> F1<A, T3<B, C, D>> fanout(__<__<µ, A>, B> fab, __<__<µ, A>, C> fac, __<__<µ, A>, D> fad) {
         final F1<A, B> fnab = narrow(fab);
         final F1<A, C> fnac = narrow(fac);
         final F1<A, D> fnad = narrow(fad);
         return a -> T3.of(fnab.apply(a), fnac.apply(a), fnad.apply(a));
     }
 
-    static <A, B, C, D, E> F1<A, T4<B, C, D, E>> fanout(_<_<µ, A>, B> fab, _<_<µ, A>, C> fac, _<_<µ, A>, D> fad, _<_<µ, A>, E> fae) {
+    static <A, B, C, D, E> F1<A, T4<B, C, D, E>> fanout(__<__<µ, A>, B> fab, __<__<µ, A>, C> fac, __<__<µ, A>, D> fad, __<__<µ, A>, E> fae) {
         final F1<A, B> fnab = narrow(fab);
         final F1<A, C> fnac = narrow(fac);
         final F1<A, D> fnad = narrow(fad);
@@ -123,7 +122,7 @@ public interface F1<A, B> extends __<F1.µ, A, B>, Function<A, B> {
     }
 
     //avoid name clash with Function.andThen()
-    default <C> F1<A, C> then(_<_<µ, B>, C> that) {
+    default <C> F1<A, C> then(__<__<µ, B>, C> that) {
         return compose(narrow(that), this);
     }
 

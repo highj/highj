@@ -1,6 +1,6 @@
 package org.highj.data.collection;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.functions.F3;
 import org.highj.data.functions.Functions;
 import org.highj.data.functions.Integers;
@@ -131,11 +131,11 @@ public class MaybeTest {
         assertThat(Maybe.narrow(monadPlus.mplus(foo, bar)).get()).isEqualTo("foo");
 
         //msum
-        List<_<Maybe.µ, String>> fooBarBaz = List.<_<Maybe.µ, String>, Maybe<String>>contravariant(List.of(foo, bar, baz));
+        List<__<µ, String>> fooBarBaz = List.<__<µ, String>, Maybe<String>>contravariant(List.of(foo, bar, baz));
         assertThat(Maybe.narrow(monadPlus.msum(fooBarBaz)).get()).isEqualTo("foo");
-        List<_<Maybe.µ, String>> fooBarNothing = List.<_<Maybe.µ, String>, Maybe<String>>contravariant(List.of(foo, bar, nothing));
+        List<__<µ, String>> fooBarNothing = List.<__<µ, String>, Maybe<String>>contravariant(List.of(foo, bar, nothing));
         assertThat(Maybe.narrow(monadPlus.msum(fooBarNothing)).get()).isEqualTo("foo");
-        List<_<Maybe.µ, String>> fooNothingBaz = List.<_<Maybe.µ, String>, Maybe<String>>contravariant(List.of(foo, nothing, baz));
+        List<__<µ, String>> fooNothingBaz = List.<__<µ, String>, Maybe<String>>contravariant(List.of(foo, nothing, baz));
         assertThat(Maybe.narrow(monadPlus.msum(fooNothingBaz)).get()).isEqualTo("foo");
     }
 
@@ -287,11 +287,11 @@ public class MaybeTest {
         assertThat(Maybe.narrow(monadPlus.mplus(foo, bar)).get()).isEqualTo("bar");
 
         //msum
-        List<_<Maybe.µ, String>> fooBarBaz = List.contravariant(List.of(foo, bar, baz));
+        List<__<µ, String>> fooBarBaz = List.contravariant(List.of(foo, bar, baz));
         assertThat(Maybe.narrow(monadPlus.msum(fooBarBaz)).get()).isEqualTo("baz");
-        List<_<Maybe.µ, String>> fooBarNothing = List.contravariant(List.of(foo, bar, nothing));
+        List<__<µ, String>> fooBarNothing = List.contravariant(List.of(foo, bar, nothing));
         assertThat(Maybe.narrow(monadPlus.msum(fooBarNothing)).get()).isEqualTo("bar");
-        List<_<Maybe.µ, String>> fooNothingBaz = List.contravariant(List.of(foo, nothing, baz));
+        List<__<µ, String>> fooNothingBaz = List.contravariant(List.of(foo, nothing, baz));
         assertThat(Maybe.narrow(monadPlus.msum(fooNothingBaz)).get()).isEqualTo("baz");
     }
 
@@ -394,7 +394,7 @@ public class MaybeTest {
 
         //bind
         Maybe<String> fool = newJust("fool");
-        Function<String, _<Maybe.µ, Integer>> lenIfEven =
+        Function<String, __<µ, Integer>> lenIfEven =
                 s -> s.length() % 2 == 0 ? newJust(s.length()) : Maybe.newNothing();
         assertThat(Maybe.narrow(monad.bind(nothing, lenIfEven)).isNothing()).isTrue();
         assertThat(Maybe.narrow(monad.bind(foo, lenIfEven)).isNothing()).isTrue();
@@ -433,13 +433,13 @@ public class MaybeTest {
         assertThat(Maybe.narrow(monadPlus.mfilter(Integers.even::test, one)).isNothing()).isTrue();
 
         //msum
-        List<_<Maybe.µ, String>> fooNothingNothing = List.contravariant(List.of(foo, nothing, nothing));
+        List<__<µ, String>> fooNothingNothing = List.contravariant(List.of(foo, nothing, nothing));
         assertThat(Maybe.narrow(monadPlus.msum(fooNothingNothing)).get()).isEqualTo("foo");
-        List<_<Maybe.µ, String>> nothingBarNothing = List.contravariant(List.of(nothing, bar, nothing));
+        List<__<µ, String>> nothingBarNothing = List.contravariant(List.of(nothing, bar, nothing));
         assertThat(Maybe.narrow(monadPlus.msum(nothingBarNothing)).get()).isEqualTo("bar");
-        List<_<Maybe.µ, String>> nothingNothingBaz = List.contravariant(List.of(nothing, nothing, baz));
+        List<__<µ, String>> nothingNothingBaz = List.contravariant(List.of(nothing, nothing, baz));
         assertThat(Maybe.narrow(monadPlus.msum(nothingNothingBaz)).get()).isEqualTo("baz");
-        List<_<Maybe.µ, String>> nothingNothingNothing = List.contravariant(List.of(nothing, nothing, nothing));
+        List<__<µ, String>> nothingNothingNothing = List.contravariant(List.of(nothing, nothing, nothing));
         assertThat(Maybe.narrow(monadPlus.msum(nothingNothingNothing)).isNothing()).isTrue();
     }
 
@@ -447,7 +447,7 @@ public class MaybeTest {
     public void testMonadRec() {
         MonadRec<µ> monadRec = Maybe.monad;
 
-        Function<Integer, _<µ, Either<Integer, String>>> divisibleBy3 = i -> {
+        Function<Integer, __<µ, Either<Integer, String>>> divisibleBy3 = i -> {
             if (i < 10) {
                 return i == 0 || i == 3 || i == 6 || i == 9
                         ? Maybe.newJust(Either.newRight("divisible"))
@@ -468,8 +468,8 @@ public class MaybeTest {
         assertThat(narrow(narrow(extend.duplicate(newJust("foo"))).get()).get()).isEqualTo("foo");
 
 
-        Function<_<µ, String>, _<µ, Integer>> fun = extend.extend(
-                (_<µ, String> maybe) -> narrow(maybe).map(String::length).getOrElse(-1));
+        Function<__<µ, String>, __<µ, Integer>> fun = extend.extend(
+                (__<µ, String> maybe) -> narrow(maybe).map(String::length).getOrElse(-1));
         assertThat(narrow(fun.apply(newJust("foo"))).get()).isEqualTo(3);
         assertThat(narrow(fun.apply(newNothing())).isNothing()).isTrue();
     }
@@ -495,9 +495,9 @@ public class MaybeTest {
 
     @Test
     public void testNarrow() {
-        _<Maybe.µ, String> foo = newJust("foo");
+        __<µ, String> foo = newJust("foo");
         assertThat(narrow(foo).get()).isEqualTo("foo");
-        _<Maybe.µ, String> nothing = newNothing();
+        __<µ, String> nothing = newNothing();
         assertThat(narrow(nothing).isNothing()).isTrue();
     }
 
@@ -534,8 +534,8 @@ public class MaybeTest {
     @Test
     public void testTraversable() {
         Traversable<Maybe.µ> traversable = Maybe.traversable;
-        Maybe<_<List.µ,String>> maybeList = newJust(List.of("foo","bar"));
-        List<_<Maybe.µ, String>> sequenced = List.narrow(traversable.sequenceA(List.monadPlus, maybeList));
+        Maybe<__<List.µ,String>> maybeList = newJust(List.of("foo","bar"));
+        List<__<µ, String>> sequenced = List.narrow(traversable.sequenceA(List.monadPlus, maybeList));
         assertThat(sequenced).hasSize(2);
         assertThat(narrow(sequenced.head()).get()).isEqualTo("foo");
         assertThat(narrow(sequenced.tail().head()).get()).isEqualTo("bar");

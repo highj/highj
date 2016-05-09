@@ -1,13 +1,13 @@
 package org.highj.typeclass0.compare;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.compare.Ordering;
 
 import java.util.Comparator;
 import java.util.function.Function;
 
 @FunctionalInterface
-public interface Ord<T> extends Comparator<T>, Eq<T>, Function<T,Function<T,Ordering>>, _<Ord.µ,T> {
+public interface Ord<T> extends Comparator<T>, Eq<T>, Function<T,Function<T,Ordering>>, __<Ord.µ,T> {
 
     interface µ {}
 
@@ -17,7 +17,7 @@ public interface Ord<T> extends Comparator<T>, Eq<T>, Function<T,Function<T,Orde
     }
 
     @SuppressWarnings("unchecked")
-    static <A> Ord<A> narrow(_<µ,A> nestedA) {
+    static <A> Ord<A> narrow(__<µ,A> nestedA) {
         return (Ord) nestedA;
     }
 

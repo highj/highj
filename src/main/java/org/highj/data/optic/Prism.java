@@ -2,8 +2,8 @@ package org.highj.data.optic;
 
 import java.util.function.Function;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.Either;
 import org.highj.data.collection.Maybe;
 import org.highj.typeclass2.arrow.Category;
@@ -11,7 +11,7 @@ import org.highj.typeclass2.arrow.Category;
 /**
  * {@link PPrism} restricted to monomorphic update
  */
-public final class Prism<S, A> extends PPrism<S, S, A, A> implements __<Prism.µ, S, A> {
+public final class Prism<S, A> extends PPrism<S, S, A, A> implements __2<Prism.µ, S, A> {
 
     public static final class µ {
     }
@@ -94,7 +94,7 @@ public final class Prism<S, A> extends PPrism<S, S, A, A> implements __<Prism.µ
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Prism<S, A> narrow(final _<_<Prism.µ, S>, A> value) {
+    public static <S, A> Prism<S, A> narrow(final __<__<µ, S>, A> value) {
         return (Prism) value;
     }
 
@@ -125,12 +125,12 @@ public final class Prism<S, A> extends PPrism<S, S, A, A> implements __<Prism.µ
     public static final Category<Prism.µ> prismCategory = new Category<Prism.µ>() {
 
         @Override
-        public <B, C, D> __<Prism.µ, B, D> dot(final __<Prism.µ, C, D> cd, final __<Prism.µ, B, C> bc) {
+        public <B, C, D> __2<µ, B, D> dot(final __2<µ, C, D> cd, final __2<µ, B, C> bc) {
             return narrow(bc).composePrism(narrow(cd));
         }
 
         @Override
-        public <B> __<Prism.µ, B, B> identity() {
+        public <B> __2<µ, B, B> identity() {
             return id();
         }
     };

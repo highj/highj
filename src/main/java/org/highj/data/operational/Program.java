@@ -5,8 +5,8 @@
  */
 package org.highj.data.operational;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.functions.F1;
 import org.highj.data.operational.program.ProgramApplicative;
 import org.highj.data.operational.program.ProgramApply;
@@ -18,22 +18,22 @@ import org.highj.data.operational.program.ProgramMonad;
  * https://hackage.haskell.org/package/operational
  * @author clintonselke
  */
-public abstract class Program<INSTR,A> implements __<Program.µ,INSTR,A> {
+public abstract class Program<INSTR,A> implements __2<Program.µ,INSTR,A> {
     public static class µ {}
     
     public interface Reduction<INSTR,A,R> {
         R pure(A a);
         <B> R bind(Program<INSTR,B> mb, F1<B,Program<INSTR,A>> f);
-        R instr(_<INSTR,A> instr);
+        R instr(__<INSTR,A> instr);
     }
     
     public abstract <R> R reduce(Reduction<INSTR,A,R> reduction);
     
-    public static <INSTR,A> Program<INSTR,A> narrow(__<Program.µ,INSTR,A> a) {
+    public static <INSTR,A> Program<INSTR,A> narrow(__2<µ,INSTR,A> a) {
         return (Program<INSTR,A>)a;
     }
     
-    public static <INSTR,A> Program<INSTR,A> narrow(_<_<Program.µ,INSTR>,A> a) {
+    public static <INSTR,A> Program<INSTR,A> narrow(__<__<µ,INSTR>,A> a) {
         return (Program<INSTR,A>)a;
     }
     
@@ -55,7 +55,7 @@ public abstract class Program<INSTR,A> implements __<Program.µ,INSTR,A> {
         };
     }
     
-    public static <INSTR,A> Program<INSTR,A> instr(_<INSTR,A> instr) {
+    public static <INSTR,A> Program<INSTR,A> instr(__<INSTR,A> instr) {
         return new Program<INSTR,A>() {
             @Override
             public <R> R reduce(Reduction<INSTR, A, R> reduction) {
@@ -82,13 +82,13 @@ public abstract class Program<INSTR,A> implements __<Program.µ,INSTR,A> {
                         return Program.bind(mc, (C c) -> Program.bind(f2.apply(c), f)).view();
                     }
                     @Override
-                    public ProgramView<INSTR, A> instr(_<INSTR, B> instr) {
+                    public ProgramView<INSTR, A> instr(__<INSTR, B> instr) {
                         return ProgramView.bind(instr, f);
                     }
                 });
             }
             @Override
-            public ProgramView<INSTR, A> instr(_<INSTR, A> instr) {
+            public ProgramView<INSTR, A> instr(__<INSTR, A> instr) {
                 return ProgramView.bind(instr, (A x) -> Program.pure(x));
             }
         });

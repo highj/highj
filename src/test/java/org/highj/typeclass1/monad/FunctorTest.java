@@ -1,7 +1,7 @@
 package org.highj.typeclass1.monad;
 
 import org.highj.data.tuple.T0;
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Maybe;
 import org.highj.typeclass1.functor.Functor;
 import org.junit.Test;
@@ -62,7 +62,7 @@ public class FunctorTest {
     
     @Test
     public void testLift() {
-        Function<_<µ,String>,_<µ,Integer>> liftedFn = functor.lift(String::length);
+        Function<__<µ,String>,__<µ,Integer>> liftedFn = functor.lift(String::length);
 
         //liftM length $ Just "foo"
         //-- Just 3

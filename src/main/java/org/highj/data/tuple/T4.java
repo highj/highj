@@ -1,7 +1,7 @@
 package org.highj.data.tuple;
 
-import org.highj._;
-import org.highj.____;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__4;
 import org.highj.data.collection.HList;
 import org.highj.data.collection.HList.HCons;
 import org.highj.data.collection.HList.HNil;
@@ -16,7 +16,7 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public abstract class T4<A, B, C, D> implements ____<T4.µ, A, B, C, D> {
+public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
     public static class µ {
 
     }
@@ -81,7 +81,7 @@ public abstract class T4<A, B, C, D> implements ____<T4.µ, A, B, C, D> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A, B, C, D> T4<A, B, C, D> narrow(_<_<_<_<µ, A>, B>, C>, D> value) {
+    public static <A, B, C, D> T4<A, B, C, D> narrow(__<__<__<__<µ, A>, B>, C>, D> value) {
         return (T4) value;
     }
 

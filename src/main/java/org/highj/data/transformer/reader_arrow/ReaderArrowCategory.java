@@ -5,9 +5,7 @@
  */
 package org.highj.data.transformer.reader_arrow;
 
-import org.highj._;
-import org.highj.___;
-import org.highj.____;
+import org.derive4j.hkt.__;
 import org.highj.data.transformer.ReaderArrow;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.Category;
@@ -16,7 +14,7 @@ import org.highj.typeclass2.arrow.Category;
  *
  * @author clintonselke
  */
-public interface ReaderArrowCategory<R,A> extends ReaderArrowSemigroupoid<R,A>, Category<_<_<ReaderArrow.µ,R>,A>> {
+public interface ReaderArrowCategory<R,A> extends ReaderArrowSemigroupoid<R,A>, Category<__<__<ReaderArrow.µ,R>,A>> {
 
     @Override
     public default <B> ReaderArrow<R, A, B, B> identity() {

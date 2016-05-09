@@ -5,9 +5,9 @@
  */
 package org.highj.data.transformer;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
+import org.derive4j.hkt.__3;
 import org.highj.data.collection.Stream;
 import org.highj.data.transformer.automaton.AutomatonArrow;
 import org.highj.data.transformer.automaton.AutomatonArrowChoice;
@@ -28,20 +28,20 @@ import org.highj.typeclass2.arrow.ArrowZero;
  * @author clintonselke
  */
 // https://hackage.haskell.org/package/arrows-0.4.4.1/docs/src/Control-Arrow-Transformer-Automaton.html#Automaton
-public interface Automaton<A,B,C> extends ___<Automaton.µ, A, B, C> {
+public interface Automaton<A,B,C> extends __3<Automaton.µ, A, B, C> {
     public static class µ {}
     
-    public static <A,B,C> Automaton<A,B,C> narrow(___<µ, A, B, C> a) {
+    public static <A,B,C> Automaton<A,B,C> narrow(__3<µ, A, B, C> a) {
         return (Automaton<A,B,C>)a;
     }
     
-    public static <A,B,C> Automaton<A,B,C> narrow(__<_<µ, A>, B, C> a) {
+    public static <A,B,C> Automaton<A,B,C> narrow(__2<__<µ, A>, B, C> a) {
         return (Automaton<A,B,C>)a;
     }
     
-    public __<A,B,T2<C,Automaton<A,B,C>>> unAutomaton();
+    public __2<A,B,T2<C,Automaton<A,B,C>>> unAutomaton();
     
-    public static <A,E,B,C> __<A,T2<E,Stream<B>>,Stream<C>> run(ArrowLoop<A> aArrowLoop, ArrowApply<A> aArrowApply, Automaton<A,T2<E,B>,C> x) {
+    public static <A,E,B,C> __2<A,T2<E,Stream<B>>,Stream<C>> run(ArrowLoop<A> aArrowLoop, ArrowApply<A> aArrowApply, Automaton<A,T2<E,B>,C> x) {
         Arrow<A> a = aArrowApply;
         return a.dot(
             a.arr((T2<C,Stream<C>> x2) -> Stream.newStream(x2._1(), x2._2())),

@@ -1,8 +1,6 @@
 package org.highj.data.transformer.writer;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
 import org.highj.data.transformer.WriterT;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass1.monad.Bind;
@@ -12,12 +10,12 @@ import java.util.function.Function;
 /**
  * @author Clinton Selke
  */
-public interface WriterTBind<W, M> extends WriterTApply<W, M>, Bind<_<_<WriterT.µ, W>, M>> {
+public interface WriterTBind<W, M> extends WriterTApply<W, M>, Bind<__<__<WriterT.µ, W>, M>> {
 
     public Bind<M> get();
 
     @Override
-    public default <A, B> WriterT<W, M, B> bind(_<_<_<WriterT.µ, W>, M>, A> nestedA, Function<A, _<_<_<WriterT.µ, W>, M>, B>> fn) {
+    public default <A, B> WriterT<W, M, B> bind(__<__<__<WriterT.µ, W>, M>, A> nestedA, Function<A, __<__<__<WriterT.µ, W>, M>, B>> fn) {
         return () -> get().bind(
                 WriterT.narrow(nestedA).run(),
                 (T2<A, W> x1) -> get().map(

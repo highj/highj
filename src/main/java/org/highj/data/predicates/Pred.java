@@ -1,23 +1,22 @@
 package org.highj.data.predicates;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.predicates.pred.AndGroup;
 import org.highj.data.predicates.pred.OrGroup;
 import org.highj.data.predicates.pred.PredContravariant;
 import org.highj.typeclass0.group.Group;
-import org.highj.typeclass1.contravariant.Contravariant;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 @FunctionalInterface
-public interface Pred<A> extends _<Pred.µ, A>, Predicate<A> {
+public interface Pred<A> extends __<Pred.µ, A>, Predicate<A> {
 
     public static class µ {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A> Pred<A> narrow(_<Pred.µ, A> nestedA) {
+    public static <A> Pred<A> narrow(__<µ, A> nestedA) {
         return (Pred) nestedA;
     }
 

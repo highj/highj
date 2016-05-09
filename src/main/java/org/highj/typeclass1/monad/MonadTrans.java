@@ -1,9 +1,9 @@
 package org.highj.typeclass1.monad;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 
-public interface MonadTrans<T, M> extends Monad<_<T, M>> {
+public interface MonadTrans<T, M> extends Monad<__<T, M>> {
 
-    public <A> __<T, M, A> lift(_<M, A> nestedA);
+    public <A> __2<T, M, A> lift(__<M, A> nestedA);
 }

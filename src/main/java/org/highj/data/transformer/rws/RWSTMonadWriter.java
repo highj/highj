@@ -6,11 +6,7 @@
 package org.highj.data.transformer.rws;
 
 import java.util.function.Function;
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
-import org.highj.____;
-import org.highj._____;
+import org.derive4j.hkt.__;
 import org.highj.data.transformer.RWST;
 import org.highj.data.tuple.T0;
 import org.highj.data.tuple.T2;
@@ -22,7 +18,7 @@ import org.highj.typeclass1.monad.MonadWriter;
  *
  * @author clintonselke
  */
-public interface RWSTMonadWriter<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadWriter<W,_<_<_<_<RWST.µ,R>,W>,S>,M>> {
+public interface RWSTMonadWriter<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadWriter<W,__<__<__<__<RWST.µ,R>,W>,S>,M>> {
 
     @Override
     public default Monoid<W> wMonoid() {
@@ -35,7 +31,7 @@ public interface RWSTMonadWriter<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadWrite
     }
 
     @Override
-    public default <A> RWST<R, W, S, M, T2<A, W>> listen(_<_<_<_<_<RWST.µ, R>, W>, S>, M>, A> nestedA) {
+    public default <A> RWST<R, W, S, M, T2<A, W>> listen(__<__<__<__<__<RWST.µ, R>, W>, S>, M>, A> nestedA) {
         return (R r, S s) -> m().map(
             (T3<A,S,W> x) -> T3.of(T2.of(x._1(),x._3()), x._2(), x._3()),
             RWST.narrow(nestedA).run(r, s)
@@ -43,7 +39,7 @@ public interface RWSTMonadWriter<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadWrite
     }
 
     @Override
-    public default <A> RWST<R, W, S, M, A> pass(_<_<_<_<_<RWST.µ, R>, W>, S>, M>, T2<A, Function<W, W>>> m) {
+    public default <A> RWST<R, W, S, M, A> pass(__<__<__<__<__<RWST.µ, R>, W>, S>, M>, T2<A, Function<W, W>>> m) {
         return (R r, S s) -> m().map(
             (T3<T2<A,Function<W,W>>,S,W> x) -> T3.of(x._1()._1(), s, x._1()._2().apply(x._3())),
             RWST.narrow(m).run(r, s)

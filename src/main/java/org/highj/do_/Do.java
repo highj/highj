@@ -7,7 +7,7 @@ package org.highj.do_;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.functions.F1;
 import org.highj.data.functions.F2;
 import org.highj.data.functions.F3;
@@ -38,7 +38,7 @@ public class Do {
         private final StateTMonadTrans<Object[],M> stateMonadTrans;
         private final StateTMonad<Object[],M> stateMonad;
         private int nextIdent = 0;
-        private final ArrayList<_<_<_<StateT.µ,Object[]>,M>,T0>> comp = new ArrayList<>();
+        private final ArrayList<__<__<__<StateT.µ,Object[]>,M>,T0>> comp = new ArrayList<>();
         
         private MContext(Monad<M> monad) {
             this.monad = monad;
@@ -47,7 +47,7 @@ public class Do {
             stateMonad = stateMonadState;
         }
         
-        public <A> void seq(_<M,A> m) {
+        public <A> void seq(__<M,A> m) {
             comp.add(
                 stateMonad.rightSeq(
                     stateMonadTrans.lift(m),
@@ -56,7 +56,7 @@ public class Do {
             );
         }
         
-        public <A> MValue<H,A> assign(_<M,A> m) {
+        public <A> MValue<H,A> assign(__<M,A> m) {
             MValue<H,A> r = newMValue();
             comp.add(
                 stateMonad.bind(
@@ -70,11 +70,11 @@ public class Do {
             return r;
         }
         
-        public _<M,T0> done() {
+        public __<M,T0> done() {
             return StateT.narrow(done_()).eval(monad, new Object[] {});
         }
         
-        public <A> _<M,A> doneRes(MValue<H,A> ref) {
+        public <A> __<M,A> doneRes(MValue<H,A> ref) {
             return StateT.narrow(stateMonad.rightSeq(done_(), readMValue(ref))).eval(monad, new Object[] {});
         }
         
@@ -146,7 +146,7 @@ public class Do {
             return r;
         }
         
-        public <A,B> MValue<H,B> assignBind1(MValue<H,A> refA, F1<A,_<M,B>> f) {
+        public <A,B> MValue<H,B> assignBind1(MValue<H,A> refA, F1<A,__<M,B>> f) {
             MValue<H,B> r = newMValue();
             comp.add(
                 stateMonad.bind(
@@ -160,7 +160,7 @@ public class Do {
             return r;
         }
         
-        public <A,B,C> MValue<H,C> assignBind2(MValue<H,A> refA, MValue<H,B> refB, F2<A,B,_<M,C>> f) {
+        public <A,B,C> MValue<H,C> assignBind2(MValue<H,A> refA, MValue<H,B> refB, F2<A,B,__<M,C>> f) {
             MValue<H,C> r = newMValue();
             comp.add(
                 stateMonad.join(stateMonad.apply2(
@@ -175,7 +175,7 @@ public class Do {
             return r;
         }
         
-        public <A,B,C,D> MValue<H,D> assignBind3(MValue<H,A> refA, MValue<H,B> refB, MValue<H,C> refC, F3<A,B,C,_<M,D>> f) {
+        public <A,B,C,D> MValue<H,D> assignBind3(MValue<H,A> refA, MValue<H,B> refB, MValue<H,C> refC, F3<A,B,C,__<M,D>> f) {
             MValue<H,D> r = newMValue();
             comp.add(
                 stateMonad.join(stateMonad.apply3(
@@ -191,7 +191,7 @@ public class Do {
             return r;
         }
         
-        public <A,B,C,D,E> MValue<H,E> assignBind4(MValue<H,A> refA, MValue<H,B> refB, MValue<H,C> refC, MValue<H,D> refD, F4<A,B,C,D,_<M,E>> f) {
+        public <A,B,C,D,E> MValue<H,E> assignBind4(MValue<H,A> refA, MValue<H,B> refB, MValue<H,C> refC, MValue<H,D> refD, F4<A,B,C,D,__<M,E>> f) {
             MValue<H,E> r = newMValue();
             comp.add(
                 stateMonad.join(stateMonad.apply4(
@@ -208,8 +208,8 @@ public class Do {
             return r;
         }
         
-        private _<_<_<StateT.µ,Object[]>,M>,T0> done_() {
-            _<_<_<StateT.µ,Object[]>,M>,T0> r = stateMonad.pure(T0.of());
+        private __<__<__<StateT.µ,Object[]>,M>,T0> done_() {
+            __<__<__<StateT.µ,Object[]>,M>,T0> r = stateMonad.pure(T0.of());
             for (int i = comp.size()-1; i >= 0; --i) {
                 r = stateMonad.rightSeq(comp.get(i), r);
             }
@@ -220,7 +220,7 @@ public class Do {
             return new MValue<>(nextIdent++);
         }
         
-        private <A> _<_<_<StateT.µ,Object[]>,M>,T0> writeMValue(MValue<H,A> ref, A a) {
+        private <A> __<__<__<StateT.µ,Object[]>,M>,T0> writeMValue(MValue<H,A> ref, A a) {
             return stateMonadState.modify((Object[] x) -> {
                 Object[] x2 = Arrays.copyOf(x, nextIdent);
                 x2[ref.ident] = a;
@@ -228,7 +228,7 @@ public class Do {
             });
         }
         
-        private <A> _<_<_<StateT.µ,Object[]>,M>,A> readMValue(MValue<H,A> ref) {
+        private <A> __<__<__<StateT.µ,Object[]>,M>,A> readMValue(MValue<H,A> ref) {
             return stateMonad.map(
                 (Object[] x) -> (A)x[ref.ident],
                 stateMonadState.get()
@@ -237,10 +237,10 @@ public class Do {
     }
     
     public static abstract class DoBlock<M,A> {
-        public abstract <H> _<M,A> run(MContext<H,M> ctx);
+        public abstract <H> __<M,A> run(MContext<H,M> ctx);
     }
     
-    public static <M,A> _<M,A> do_(Monad<M> monad, DoBlock<M,A> doBlock) {
+    public static <M,A> __<M,A> do_(Monad<M> monad, DoBlock<M,A> doBlock) {
         MContext<?,M> ctx = new MContext<>(monad);
         return doBlock.run(ctx);
     }

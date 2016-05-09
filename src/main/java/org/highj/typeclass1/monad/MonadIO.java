@@ -5,7 +5,7 @@
  */
 package org.highj.typeclass1.monad;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.stateful.IO;
 
 /**
@@ -14,5 +14,5 @@ import org.highj.data.stateful.IO;
  */
 public interface MonadIO<M> extends Monad<M> {
     
-    public <A> _<M,A> liftIO(IO<A> a);
+    public <A> __<M,A> liftIO(IO<A> a);
 }

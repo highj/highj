@@ -1,6 +1,6 @@
 package org.highj.data.transformer.maybe;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Maybe;
 import org.highj.data.transformer.MaybeT;
 import org.highj.typeclass1.monad.Monad;
@@ -14,7 +14,7 @@ public interface MaybeTMonadTrans<M> extends MaybeTMonad<M>, MonadTrans<MaybeT.Â
     Monad<M> get();
 
     @Override
-    default <A> MaybeT<M, A> lift(_<M, A> nestedA) {
+    default <A> MaybeT<M, A> lift(__<M, A> nestedA) {
         return new MaybeT<>(get().map(Maybe::newJust, nestedA));
     }
 }

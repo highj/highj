@@ -1,6 +1,6 @@
 package org.highj.typeclass1.monad;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.functions.Functions;
 
 import java.util.function.Function;
@@ -9,22 +9,22 @@ import java.util.function.Function;
 public interface Bind<M> extends Apply<M> {
 
     // (>>=) (Control.Monad)
-    public default <A, B> _<M, B> bind(_<M, A> nestedA, Function<A, _<M, B>> fn) {
+    public default <A, B> __<M, B> bind(__<M, A> nestedA, Function<A, __<M, B>> fn) {
         return join(map(fn, nestedA));
     }
 
     // join (Control.Monad)
-    public default <A> _<M, A> join(_<M, _<M, A>> nestedNestedA) {
-        return bind(nestedNestedA, Function.<_<M, A>>identity());
+    public default <A> __<M, A> join(__<M, __<M, A>> nestedNestedA) {
+        return bind(nestedNestedA, Function.<__<M, A>>identity());
     }
 
     // (>>) (Control.Monad)
-    public default <A, B> _<M, B> semicolon(_<M, A> nestedA, _<M, B> nestedB) {
-        return bind(nestedA, Functions.<A, _<M, B>>constant(nestedB));
+    public default <A, B> __<M, B> semicolon(__<M, A> nestedA, __<M, B> nestedB) {
+        return bind(nestedA, Functions.<A, __<M, B>>constant(nestedB));
     }
 
     // (>=>) (Control.Monad) left-to-right Kleisli composition of monads
-    public default <A, B, C> Function<A, _<M, C>> kleisli(final Function<A, _<M, B>> f, final Function<B, _<M, C>> g) {
+    public default <A, B, C> Function<A, __<M, C>> kleisli(final Function<A, __<M, B>> f, final Function<B, __<M, C>> g) {
         return a -> bind(f.apply(a), g);
     }
 }

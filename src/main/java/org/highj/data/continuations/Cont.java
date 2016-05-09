@@ -1,13 +1,13 @@
 package org.highj.data.continuations;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.continuations.cont.ContMonad;
 import org.highj.data.functions.Functions;
 
 import java.util.function.Function;
 
-public class Cont<R, A> implements __<Cont.µ, R, A> {
+public class Cont<R, A> implements __2<Cont.µ, R, A> {
 
     private Function<Function<A,R>,R> fn;
 
@@ -18,7 +18,7 @@ public class Cont<R, A> implements __<Cont.µ, R, A> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <R,A>  Cont<R,A> narrow(_<_<µ, R>, A> cont) {
+    public static <R,A>  Cont<R,A> narrow(__<__<µ, R>, A> cont) {
         return (Cont) cont;
     }
 
@@ -51,7 +51,7 @@ instance Monad (Cont r) where
     m >>= k  = Cont $ \c -> runCont m $ \a -> runCont (k a) c
 
 instance MonadCont (Cont r) where
-    callCC f = Cont $ \c -> runCont (f (\a -> Cont $ \_ -> c a)) c
+    callCC f = Cont $ \c -> runCont (f (\a -> Cont $ \__ -> c a)) c
 
 {- |
 The continuation monadTrans transformer.
@@ -73,7 +73,7 @@ instance (Monad m) => Monad (ContT r m) where
     m >>= k  = ContT $ \c -> runContT m (\a -> runContT (k a) c)
 
 instance (Monad m) => MonadCont (ContT r m) where
-    callCC f = ContT $ \c -> runContT (f (\a -> ContT $ \_ -> c a)) c
+    callCC f = ContT $ \c -> runContT (f (\a -> ContT $ \__ -> c a)) c
 
 -- ---------------------------------------------------------------------------
 -- Instances for other mtl transformers

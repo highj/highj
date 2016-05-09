@@ -1,9 +1,8 @@
 package org.highj.data.functions;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.Maybe;
-import org.highj.data.functions.f1.F1Arrow;
 import org.highj.data.functions.f1.F1Monad;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
@@ -28,9 +27,9 @@ public class F1Test {
     @Test
     public void testNarrow() throws Exception {
         F1<String, Integer> fn = String::length;
-        _<_<F1.µ,String>, Integer> fnMy1 = fn;
+        __<__<F1.µ,String>, Integer> fnMy1 = fn;
         assertThat(F1.narrow(fnMy1).apply("abcd")).isEqualTo(4);
-        __<F1.µ,String, Integer> fnMy2 = fn;
+        __2<F1.µ,String, Integer> fnMy2 = fn;
         assertThat(F1.narrow(fnMy2).apply("abcd")).isEqualTo(4);
     }
 

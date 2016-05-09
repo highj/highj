@@ -2,8 +2,8 @@ package org.highj.data.optic;
 
 import java.util.function.Function;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.Either;
 import org.highj.data.collection.List;
 import org.highj.data.collection.Maybe;
@@ -25,7 +25,7 @@ import org.highj.typeclass2.arrow.ArrowChoice;
  * @param <S> the source of a {@link Fold}
  * @param <A> the target of a {@link Fold}
  */
-public abstract class Fold<S, A> implements __<Fold.µ, S, A> {
+public abstract class Fold<S, A> implements __2<Fold.µ, S, A> {
 
     public static final class µ {
     }
@@ -161,7 +161,7 @@ public abstract class Fold<S, A> implements __<Fold.µ, S, A> {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Fold<S, A> narrow(final _<_<Fold.µ, S>, A> value) {
+    public static <S, A> Fold<S, A> narrow(final __<__<µ, S>, A> value) {
         return (Fold) value;
     }
 
@@ -178,10 +178,10 @@ public abstract class Fold<S, A> implements __<Fold.µ, S, A> {
         };
     }
 
-    public static <F, A> Fold<_<F, A>, A> fromFoldable(final Foldable<F> foldable) {
-        return new Fold<_<F, A>, A>() {
+    public static <F, A> Fold<__<F, A>, A> fromFoldable(final Foldable<F> foldable) {
+        return new Fold<__<F, A>, A>() {
             @Override
-            public <M> F1<_<F, A>, M> foldMap(final Monoid<M> m, final Function<A, M> f) {
+            public <M> F1<__<F, A>, M> foldMap(final Monoid<M> m, final Function<A, M> f) {
                 return fa -> foldable.foldMap(m, f, fa);
             }
         };
@@ -190,43 +190,43 @@ public abstract class Fold<S, A> implements __<Fold.µ, S, A> {
     public static final ArrowChoice<Fold.µ> foldChoice = new ArrowChoice<Fold.µ>() {
 
         @Override
-        public <B, C, D> __<Fold.µ, Either<B, C>, D> fanin(final __<Fold.µ, B, D> f,
-                final __<Fold.µ, C, D> g) {
+        public <B, C, D> __2<µ, Either<B, C>, D> fanin(final __2<µ, B, D> f,
+                final __2<µ, C, D> g) {
             return narrow(f).sum(narrow(g));
         }
 
         @Override
-        public <B, C, D> __<Fold.µ, B, D> dot(final __<Fold.µ, C, D> cd, final __<Fold.µ, B, C> bc) {
+        public <B, C, D> __2<µ, B, D> dot(final __2<µ, C, D> cd, final __2<µ, B, C> bc) {
             return narrow(bc).composeFold(narrow(cd));
         }
 
         @Override
-        public <B> __<Fold.µ, B, B> identity() {
+        public <B> __2<µ, B, B> identity() {
             return Fold.id();
         }
 
         @Override
-        public <B, C, D> __<Fold.µ, T2<B, D>, T2<C, D>> first(final __<Fold.µ, B, C> arrow) {
+        public <B, C, D> __2<µ, T2<B, D>, T2<C, D>> first(final __2<µ, B, C> arrow) {
             return narrow(arrow).first();
         }
 
         @Override
-        public <B, C, D> __<Fold.µ, T2<D, B>, T2<D, C>> second(final __<Fold.µ, B, C> arrow) {
+        public <B, C, D> __2<µ, T2<D, B>, T2<D, C>> second(final __2<µ, B, C> arrow) {
             return narrow(arrow).second();
         }
 
         @Override
-        public <B, C> __<Fold.µ, B, C> arr(final Function<B, C> fn) {
+        public <B, C> __2<µ, B, C> arr(final Function<B, C> fn) {
             return Getter.getter(fn).asFold();
         }
 
         @Override
-        public <B, C, D> __<Fold.µ, Either<B, D>, Either<C, D>> left(final __<Fold.µ, B, C> arrow) {
+        public <B, C, D> __2<µ, Either<B, D>, Either<C, D>> left(final __2<µ, B, C> arrow) {
             return narrow(arrow).left();
         }
 
         @Override
-        public <B, C, D> __<Fold.µ, Either<D, B>, Either<D, C>> right(final __<Fold.µ, B, C> arrow) {
+        public <B, C, D> __2<µ, Either<D, B>, Either<D, C>> right(final __2<µ, B, C> arrow) {
             return narrow(arrow).right();
         }
     };

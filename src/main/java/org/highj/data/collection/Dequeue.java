@@ -1,6 +1,6 @@
 package org.highj.data.collection;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.dequeue.DequeueTraversable;
 import org.highj.data.collection.dequeue.DequeueFunctor;
 import org.highj.data.functions.Strings;
@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 //BankersQueue implementation of Haskell package dequeue-0.1.5
 //... as described in Chris Okasaki's Purely Functional Data Structures.
-public class Dequeue<A> implements _<Dequeue.µ, A>, Iterable<A> {
+public class Dequeue<A> implements __<Dequeue.µ, A>, Iterable<A> {
 
     public static final class µ {
     }
@@ -62,7 +62,7 @@ public class Dequeue<A> implements _<Dequeue.µ, A>, Iterable<A> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A> Dequeue<A> narrow(_<µ, A> value) {
+    public static <A> Dequeue<A> narrow(__<µ, A> value) {
         return (Dequeue) value;
     }
 
@@ -90,30 +90,30 @@ public class Dequeue<A> implements _<Dequeue.µ, A>, Iterable<A> {
     }
 
     public int size() {
-        //length (BankersDequeue sizeF _ sizeR _) = sizeF + sizeR
+        //length (BankersDequeue sizeF __ sizeR __) = sizeF + sizeR
         return sizeFront + sizeRear;
     }
 
     public Maybe<A> getFirst() {
-        //first (BankersDequeue _ [] _ [x]) = Just x
-        //first (BankersDequeue _ front _ _) =  headMay front
+        //first (BankersDequeue __ [] __ [x]) = Just x
+        //first (BankersDequeue __ front __ __) =  headMay front
         return sizeFront == 0 && sizeRear == 1 ? rear.maybeHead() : front.maybeHead();
     }
 
     public Maybe<A> getLast() {
-        //last (BankersDequeue _ [x] _ []) = Just x
-        //last (BankersDequeue _ _ _ rear) = headMay rear
+        //last (BankersDequeue __ [x] __ []) = Just x
+        //last (BankersDequeue __ __ __ rear) = headMay rear
         return sizeFront == 1 && sizeRear == 0 ? front.maybeHead() : rear.maybeHead();
     }
 
     public List<A> takeFront(int i) {
-        //takeFront i (BankersDequeue sizeF front _ rear) =
+        //takeFront i (BankersDequeue sizeF front __ rear) =
         //take i front ++ take (i - sizeF) (reverse rear)
         return i <= sizeFront ? front.take(i) : List.append(front.take(i), rear.reverse().take(i - sizeFront));
     }
 
     public List<A> takeBack(int i) {
-        //takeBack i (BankersDequeue _ front sizeR rear) =
+        //takeBack i (BankersDequeue __ front sizeR rear) =
         //  take i rear ++ take (i - sizeR) (reverse front)
         return i <= sizeRear ? rear.take(i) : List.append(rear.take(i), front.reverse().take(i - sizeRear));
     }
@@ -125,9 +125,9 @@ public class Dequeue<A> implements _<Dequeue.µ, A>, Iterable<A> {
     }
 
     public T2<Maybe<A>, Dequeue<A>> popFront() {
-        //popFront (BankersDequeue _ [] _ []) = (Nothing, empty)
-        //popFront (BankersDequeue _ [] _ [x]) = (Just x, empty)
-        //popFront (BankersDequeue _ [] _ _) = error "Queue is too far unbalanced."
+        //popFront (BankersDequeue __ [] __ []) = (Nothing, empty)
+        //popFront (BankersDequeue __ [] __ [x]) = (Just x, empty)
+        //popFront (BankersDequeue __ [] __ __) = error "Queue is too far unbalanced."
         //popFront (BankersDequeue sizeF (f : fs) sizeR rear) =
         //  (Just f, check $ BankersDequeue (sizeF - 1) fs sizeR rear)
         if (sizeFront == 0) {
@@ -148,9 +148,9 @@ public class Dequeue<A> implements _<Dequeue.µ, A>, Iterable<A> {
     }
 
     public T2<Maybe<A>, Dequeue<A>> popBack() {
-        //popBack (BankersDequeue _ [] _ []) = (Nothing, empty)
-        //popBack (BankersDequeue _ [x] _ []) = (Just x, empty)
-        //popBack (BankersDequeue _ _ _ []) = error "Queue is too far unbalanced."
+        //popBack (BankersDequeue __ [] __ []) = (Nothing, empty)
+        //popBack (BankersDequeue __ [x] __ []) = (Just x, empty)
+        //popBack (BankersDequeue __ __ __ []) = error "Queue is too far unbalanced."
         //popBack (BankersDequeue sizeF front sizeR (r : rs)) =
         //  (Just r, check $ BankersDequeue sizeF front (sizeR - 1) rs)
         if (sizeRear == 0) {

@@ -6,7 +6,7 @@
 package org.highj.data.stateful.io;
 
 import java.util.function.Function;
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.data.stateful.IO;
 import org.highj.typeclass1.monad.MonadRec;
@@ -18,7 +18,7 @@ import org.highj.typeclass1.monad.MonadRec;
 public interface IOMonadRec extends IOMonad, MonadRec<IO.µ> {
 
     @Override
-    public default <A, B> IO<B> tailRec(Function<A, _<IO.µ, Either<A, B>>> f, A startA) {
+    public default <A, B> IO<B> tailRec(Function<A, __<IO.µ, Either<A, B>>> f, A startA) {
         return () -> {
             A a = startA;
             while (true) {

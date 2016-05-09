@@ -1,7 +1,7 @@
 package org.highj.data.collection;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.map.MapApply;
 import org.highj.data.compare.Ordering;
 import org.highj.data.tuple.T2;
@@ -19,7 +19,7 @@ import java.util.function.Function;
  *
  * @param <A> The element type.
  */
-public class Map<A, B> implements __<Map.µ, A, B>, Iterable<T2<A, B>>, Function<A, Maybe<B>> {
+public class Map<A, B> implements __2<Map.µ, A, B>, Iterable<T2<A, B>>, Function<A, Maybe<B>> {
 
     public static class µ {
     }
@@ -41,7 +41,7 @@ public class Map<A, B> implements __<Map.µ, A, B>, Iterable<T2<A, B>>, Function
     }
 
     @SuppressWarnings("unchecked")
-    public static <A, B> Map<A, B> narrow(_<_<Map.µ, A>, B> value) {
+    public static <A, B> Map<A, B> narrow(__<__<µ, A>, B> value) {
         return (Map) value;
     }
 

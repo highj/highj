@@ -1,6 +1,6 @@
 package org.highj.data.collection.tree;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.List;
 import org.highj.data.collection.Tree;
 import org.highj.typeclass1.monad.Monad;
@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public class TreeMonad implements Monad<Tree.µ> {
     @Override
-    public <A, B> Tree<B> bind(_<Tree.µ, A> nestedA, Function<A, _<Tree.µ, B>> fn) {
+    public <A, B> Tree<B> bind(__<Tree.µ, A> nestedA, Function<A, __<Tree.µ, B>> fn) {
         //Node x ts >>= f = Node x' (ts' ++ map (>>= f) ts)
         //  where Node x' ts' = f x
         Tree<A> treeA = Tree.narrow(nestedA);
@@ -25,13 +25,13 @@ public class TreeMonad implements Monad<Tree.µ> {
     }
 
     @Override
-    public <A, B> Tree<B> map(Function<A, B> fn, _<Tree.µ, A> nestedA) {
+    public <A, B> Tree<B> map(Function<A, B> fn, __<Tree.µ, A> nestedA) {
         Tree<A> tree = Tree.narrow(nestedA);
         return Tree.newLazyTree(fn.apply(tree.rootLabel), () -> tree.subForest().map(t -> Tree.narrow(map(fn, t))));
     }
 
     @Override
-    public <A, B> Tree<B> ap(_<Tree.µ, Function<A, B>> fn, _<Tree.µ, A> nestedA) {
+    public <A, B> Tree<B> ap(__<Tree.µ, Function<A, B>> fn, __<Tree.µ, A> nestedA) {
         //Node f tfs <*> tx@(Node x txs) =
         //  Node (f x) (map (f <$>) txs ++ map (<*> tx) tfs)
         Tree<Function<A, B>> treeFn = Tree.narrow(fn);

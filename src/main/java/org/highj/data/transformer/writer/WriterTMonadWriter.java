@@ -1,8 +1,6 @@
 package org.highj.data.transformer.writer;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
 import org.highj.data.transformer.WriterT;
 import org.highj.data.tuple.T0;
 import org.highj.data.tuple.T2;
@@ -14,7 +12,7 @@ import java.util.function.Function;
 /**
  * @author Clinton Selke
  */
-public interface WriterTMonadWriter<W, M> extends WriterTMonad<W, M>, MonadWriter<W, _<_<WriterT.µ, W>, M>> {
+public interface WriterTMonadWriter<W, M> extends WriterTMonad<W, M>, MonadWriter<W, __<__<WriterT.µ, W>, M>> {
 
     @Override
     public Monad<M> get();
@@ -25,7 +23,7 @@ public interface WriterTMonadWriter<W, M> extends WriterTMonad<W, M>, MonadWrite
     }
 
     @Override
-    public default <A> WriterT<W, M, T2<A, W>> listen(_<_<_<WriterT.µ, W>, M>, A> nestedA) {
+    public default <A> WriterT<W, M, T2<A, W>> listen(__<__<__<WriterT.µ, W>, M>, A> nestedA) {
         return () -> get().map(
                 (T2<A, W> x) -> T2.of(x, x._2()),
                 WriterT.narrow(nestedA).run()
@@ -33,7 +31,7 @@ public interface WriterTMonadWriter<W, M> extends WriterTMonad<W, M>, MonadWrite
     }
 
     @Override
-    public default <A> WriterT<W, M, A> pass(_<_<_<WriterT.µ, W>, M>, T2<A, Function<W, W>>> m) {
+    public default <A> WriterT<W, M, A> pass(__<__<__<WriterT.µ, W>, M>, T2<A, Function<W, W>>> m) {
         return () -> get().map(
                 (T2<T2<A, Function<W, W>>, W> x) -> T2.of(x._1()._1(), x._1()._2().apply(x._2())),
                 WriterT.narrow(m).run()

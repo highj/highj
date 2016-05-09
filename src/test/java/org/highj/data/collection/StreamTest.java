@@ -1,6 +1,6 @@
 package org.highj.data.collection;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.functions.Integers;
 import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
@@ -15,7 +15,7 @@ import static org.highj.data.collection.Stream.*;
 public class StreamTest {
     @Test
     public void testNarrow() throws Exception {
-        _<Stream.µ, String> foo = cycle("foo");
+        __<µ, String> foo = cycle("foo");
         Stream<String> stream = narrow(foo);
         assertEquals("foo", stream.head());
     }

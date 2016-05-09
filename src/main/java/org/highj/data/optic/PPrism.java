@@ -2,7 +2,7 @@ package org.highj.data.optic;
 
 import java.util.function.Function;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.data.collection.Maybe;
 import org.highj.data.functions.F1;
@@ -44,7 +44,7 @@ public abstract class PPrism<S, T, A, B> {
     public abstract Maybe<A> getMaybe(final S s);
 
     /** modify polymorphically the target of a {@link PPrism} with an Applicative function */
-    public final <X> F1<S, _<X, T>> modifyF(final Applicative<X> applicative, final Function<A, _<X, B>> f) {
+    public final <X> F1<S, __<X, T>> modifyF(final Applicative<X> applicative, final Function<A, __<X, B>> f) {
         return s -> getOrModify(s).either(
                 applicative::pure,
                 a -> applicative.map(this::reverseGet, f.apply(a))
@@ -181,7 +181,7 @@ public abstract class PPrism<S, T, A, B> {
         return new PTraversal<S, T, A, B>() {
 
             @Override
-            public <X> F1<S, _<X, T>> modifyF(final Applicative<X> applicative, final Function<A, _<X, B>> f) {
+            public <X> F1<S, __<X, T>> modifyF(final Applicative<X> applicative, final Function<A, __<X, B>> f) {
                 return self.modifyF(applicative, f);
             }
 
@@ -199,7 +199,7 @@ public abstract class PPrism<S, T, A, B> {
             }
 
             @Override
-            public <X> F1<S, _<X, T>> modifyF(final Applicative<X> applicative, final Function<A, _<X, B>> f) {
+            public <X> F1<S, __<X, T>> modifyF(final Applicative<X> applicative, final Function<A, __<X, B>> f) {
                 return self.modifyF(applicative, f);
             }
 

@@ -5,9 +5,9 @@
  */
 package org.highj.data.transformer;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
+import org.derive4j.hkt.__3;
 import org.highj.data.collection.Stream;
 import org.highj.data.transformer.stream_arrow.StreamArrowArrow;
 import org.highj.data.transformer.stream_arrow.StreamArrowArrowCircuit;
@@ -24,36 +24,36 @@ import org.highj.typeclass2.arrow.Semigroupoid;
  *
  * @author clintonselke
  */
-public class StreamArrow<A,B,C> implements ___<StreamArrow.µ,A,B,C> {
+public class StreamArrow<A,B,C> implements __3<StreamArrow.µ,A,B,C> {
     public static class µ {}
     
-    private final __<A,Stream<B>,Stream<C>> _unstreamArrow;
+    private final __2<A,Stream<B>,Stream<C>> _unstreamArrow;
     
-    private StreamArrow(__<A,Stream<B>,Stream<C>> unstreamArrow) {
+    private StreamArrow(__2<A,Stream<B>,Stream<C>> unstreamArrow) {
         this._unstreamArrow = unstreamArrow;
     }
     
-    public static <A,B,C> StreamArrow<A,B,C> streamArrow(__<A,Stream<B>,Stream<C>> unstreamArrow) {
+    public static <A,B,C> StreamArrow<A,B,C> streamArrow(__2<A,Stream<B>,Stream<C>> unstreamArrow) {
         return new StreamArrow<>(unstreamArrow);
     }
     
-    public static <A,B,C> StreamArrow<A,B,C> narrow(___<StreamArrow.µ,A,B,C> a) {
+    public static <A,B,C> StreamArrow<A,B,C> narrow(__3<µ,A,B,C> a) {
         return (StreamArrow<A,B,C>)a;
     }
     
-    public static <A,B,C> StreamArrow<A,B,C> narrow(__<_<StreamArrow.µ,A>,B,C> a) {
+    public static <A,B,C> StreamArrow<A,B,C> narrow(__2<__<µ,A>,B,C> a) {
         return (StreamArrow<A,B,C>)a;
     }
     
-    public static <A,B,C> StreamArrow<A,B,C> narrow(_<_<_<StreamArrow.µ,A>,B>,C> a) {
+    public static <A,B,C> StreamArrow<A,B,C> narrow(__<__<__<µ,A>,B>,C> a) {
         return (StreamArrow<A,B,C>)a;
     }
     
-    public __<A,Stream<B>,Stream<C>> unstreamArrow() {
+    public __2<A,Stream<B>,Stream<C>> unstreamArrow() {
         return _unstreamArrow;
     }
     
-    public static <A,E,B,C> __<A,T2<E,Stream<B>>,Stream<C>> run(ArrowLoop<A> aArrowLoop, StreamArrow<A,T2<E,B>,C> x) {
+    public static <A,E,B,C> __2<A,T2<E,Stream<B>>,Stream<C>> run(ArrowLoop<A> aArrowLoop, StreamArrow<A,T2<E,B>,C> x) {
         Arrow<A> a = aArrowLoop;
         return a.dot(
             x.unstreamArrow(),

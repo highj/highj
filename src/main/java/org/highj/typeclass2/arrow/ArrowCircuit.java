@@ -5,7 +5,7 @@
  */
 package org.highj.typeclass2.arrow;
 
-import org.highj.__;
+import org.derive4j.hkt.__2;
 
 /**
  *
@@ -13,5 +13,5 @@ import org.highj.__;
  */
 public interface ArrowCircuit<A> extends ArrowLoop<A> {
     
-    public <B> __<A,B,B> delay(B b);
+    public <B> __2<A,B,B> delay(B b);
 }

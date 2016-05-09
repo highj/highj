@@ -1,8 +1,6 @@
 package org.highj.data.transformer.reader;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
 import org.highj.data.transformer.ReaderT;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadReader;
@@ -12,7 +10,7 @@ import java.util.function.Function;
 /**
  * @author Clinton Selke
  */
-public interface ReaderTMonadReader<R, M> extends ReaderTMonad<R, M>, MonadReader<R, _<_<ReaderT.µ, R>, M>> {
+public interface ReaderTMonadReader<R, M> extends ReaderTMonad<R, M>, MonadReader<R, __<__<ReaderT.µ, R>, M>> {
 
     @Override
     public Monad<M> get();
@@ -23,7 +21,7 @@ public interface ReaderTMonadReader<R, M> extends ReaderTMonad<R, M>, MonadReade
     }
 
     @Override
-    public default <A> ReaderT<R, M, A> local(Function<R, R> modFn, _<_<_<ReaderT.µ, R>, M>, A> nestedA) {
+    public default <A> ReaderT<R, M, A> local(Function<R, R> modFn, __<__<__<ReaderT.µ, R>, M>, A> nestedA) {
         return (R r) -> ReaderT.narrow(nestedA).run(modFn.apply(r));
     }
 }

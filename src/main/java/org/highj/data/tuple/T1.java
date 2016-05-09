@@ -1,6 +1,6 @@
 package org.highj.data.tuple;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.HList;
 import org.highj.data.tuple.t1.T1Comonad;
 import org.highj.data.tuple.t1.T1Monad;
@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 /**
  * A tuple of arity 1, a.k.a. "cell" or "Id".
  */
-public abstract class T1<A> implements _<T1.µ, A>, Supplier<A> {
+public abstract class T1<A> implements __<T1.µ, A>, Supplier<A> {
     public static class µ {
 
     }
@@ -48,7 +48,7 @@ public abstract class T1<A> implements _<T1.µ, A>, Supplier<A> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A> T1<A> narrow(_<µ, A> value) {
+    public static <A> T1<A> narrow(__<µ, A> value) {
         return (T1) value;
     }
 

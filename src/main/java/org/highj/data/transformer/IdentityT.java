@@ -1,7 +1,7 @@
 package org.highj.data.transformer;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.transformer.identity.*;
 import org.highj.typeclass1.foldable.Foldable;
 import org.highj.typeclass1.foldable.Traversable;
@@ -11,32 +11,32 @@ import org.highj.typeclass1.monad.*;
 
 import java.util.function.Function;
 
-public class IdentityT<M, A> implements __<IdentityT.µ, M, A> {
+public class IdentityT<M, A> implements __2<IdentityT.µ, M, A> {
 
     public static class µ {
     }
 
-    private final _<M, A> value;
+    private final __<M, A> value;
 
-    public IdentityT(_<M, A> value) {
+    public IdentityT(__<M, A> value) {
         this.value = value;
     }
 
     @SuppressWarnings("unchecked")
-    public static <M, A> IdentityT<M, A> narrow(_<_<µ, M>, A> value) {
+    public static <M, A> IdentityT<M, A> narrow(__<__<µ, M>, A> value) {
         return (IdentityT) value;
     }
 
-    public _<M, A> get() {
+    public __<M, A> get() {
         return value;
     }
 
-    public static <M, A, N, B> Function<IdentityT<M, A>, IdentityT<N, B>> mapIdentityT(final Function<_<M, A>, _<N, B>> fn) {
+    public static <M, A, N, B> Function<IdentityT<M, A>, IdentityT<N, B>> mapIdentityT(final Function<__<M, A>, __<N, B>> fn) {
         return ma -> new IdentityT<>(fn.apply(ma.get()));
     }
 
     public static <M, A, N, B, P, C> Function<IdentityT<M, A>, Function<IdentityT<N, B>, IdentityT<P, C>>> lift2IdentityT(
-            final Function<_<M, A>, Function<_<N, B>, _<P, C>>> fn
+            final Function<__<M, A>, Function<__<N, B>, __<P, C>>> fn
     ) {
         return nestedA -> nestedB -> {
             IdentityT<M, A> aId = IdentityT.narrow(nestedA);

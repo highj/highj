@@ -1,7 +1,7 @@
 package org.highj.data.collection;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.either.EitherExtend;
 import org.highj.data.collection.either.EitherMonad;
 import org.highj.data.collection.either.EitherMonadPlus;
@@ -109,7 +109,7 @@ public class EitherTest {
         assertThat(Either.narrow(extend.duplicate(left)).getLeft()).isEqualTo("Test");
         assertThat(Either.narrow(Either.narrow(extend.duplicate(right)).getRight()).getRight()).isEqualTo(42);
 
-        Function<_<_<Either.µ, String>,Integer>, _<_<Either.µ, String>,Integer>> fun = extend.extend(
+        Function<__<__<µ, String>,Integer>, __<__<µ, String>,Integer>> fun = extend.extend(
                 either -> Either.narrow(either).rightMap(x -> x / 2).rightOrElse(-1));
         assertThat(Either.narrow(fun.apply(left)).getLeft()).isEqualTo("Test");
         assertThat(Either.narrow(fun.apply(right)).getRight()).isEqualTo(21);
@@ -293,14 +293,14 @@ public class EitherTest {
 
         //bind
         Either<String, Integer> rightOdd = newRight(43);
-        Function<Integer, _<_<Either.µ, String>, Integer>> halfEven =
+        Function<Integer, __<__<µ, String>, Integer>> halfEven =
                 x -> x % 2 == 0 ? newRight(x / 2) : newLeft("Odd");
         assertThat(eitherMonad.bind(left, halfEven).getLeft()).isEqualTo("Test");
         assertThat(eitherMonad.bind(right, halfEven).getRight()).isEqualTo(21);
         assertThat(eitherMonad.bind(rightOdd, halfEven).getLeft()).isEqualTo("Odd");
 
         //tailRec
-        Function<T2<Integer, Integer>, _<_<µ, String>, Either<T2<Integer,Integer>, Integer>>> factorial = pair ->  {
+        Function<T2<Integer, Integer>, __<__<µ, String>, Either<T2<Integer,Integer>, Integer>>> factorial = pair ->  {
             int factor = pair._1();
             int product = pair._2();
             if (factor < 0) {
@@ -333,10 +333,10 @@ public class EitherTest {
 
     @Test
     public void testNarrow() {
-        __<Either.µ, String, Integer> wideLeft = newLeft("Test");
+        __2<µ, String, Integer> wideLeft = newLeft("Test");
         Either<String, Integer> left = narrow(wideLeft);
         assertThat(left).isEqualTo(wideLeft);
-        __<Either.µ, String, Integer> wideRight = newRight(42);
+        __2<µ, String, Integer> wideRight = newRight(42);
         Either<String, Integer> right = narrow(wideRight);
         assertThat(right).isEqualTo(wideRight);
     }

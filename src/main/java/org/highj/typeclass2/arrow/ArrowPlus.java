@@ -5,7 +5,7 @@
  */
 package org.highj.typeclass2.arrow;
 
-import org.highj.__;
+import org.derive4j.hkt.__2;
 
 /**
  *
@@ -13,5 +13,5 @@ import org.highj.__;
  */
 public interface ArrowPlus<A> extends ArrowZero<A> {
     
-    public <B,C> __<A,B,C> plus(__<A,B,C> arrow1, __<A,B,C> arrow2);
+    public <B,C> __2<A,B,C> plus(__2<A,B,C> arrow1, __2<A,B,C> arrow2);
 }

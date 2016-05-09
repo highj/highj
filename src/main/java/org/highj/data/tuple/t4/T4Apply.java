@@ -1,16 +1,13 @@
 package org.highj.data.tuple.t4;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
-import org.highj.____;
+import org.derive4j.hkt.__;
 import org.highj.data.tuple.T4;
 import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass1.monad.Apply;
 
 import java.util.function.Function;
 
-public interface  T4Apply<S,T,U> extends T4Functor<S,T,U>, Apply<_<_<_<T4.µ,S>, T>, U>> {
+public interface  T4Apply<S,T,U> extends T4Functor<S,T,U>, Apply<__<__<__<T4.µ,S>, T>, U>> {
 
     public Semigroup<S> getS();
 
@@ -19,7 +16,7 @@ public interface  T4Apply<S,T,U> extends T4Functor<S,T,U>, Apply<_<_<_<T4.µ,S>,
     public Semigroup<U> getU();
 
     @Override
-    public default <A, B> T4<S, T, U, B> ap(_<_<_<_<T4.µ, S>, T>, U>, Function<A, B>> fn, _<_<_<_<T4.µ, S>, T>, U>, A> nestedA) {
+    public default <A, B> T4<S, T, U, B> ap(__<__<__<__<T4.µ, S>, T>, U>, Function<A, B>> fn, __<__<__<__<T4.µ, S>, T>, U>, A> nestedA) {
         T4<S, T, U, Function<A, B>> fnQuadruple = T4.narrow(fn);
         T4<S, T, U, A> aQuadruple = T4.narrow(nestedA);
         return T4.of(getS().apply(fnQuadruple._1(), aQuadruple._1()),

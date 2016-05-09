@@ -5,7 +5,7 @@
  */
 package org.highj.data.stateful;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.stateful.effect1.Effect1Contravariant;
 import org.highj.data.stateful.effect1.Effect1Monoid;
 import org.highj.data.stateful.effect1.Effect1Semigroup;
@@ -14,10 +14,10 @@ import org.highj.data.stateful.effect1.Effect1Semigroup;
  *
  * @author clintonselke
  */
-public interface Effect1<A> extends _<Effect1.µ,A> {
+public interface Effect1<A> extends __<Effect1.µ,A> {
     public static class µ {}
     
-    public static <A> Effect1<A> narrow(_<Effect1.µ,A> a) {
+    public static <A> Effect1<A> narrow(__<µ,A> a) {
         return (Effect1<A>)a;
     }
     

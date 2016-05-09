@@ -1,11 +1,9 @@
 package org.highj.data.collection;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.maybe.*;
 import org.highj.data.functions.F3;
 import org.highj.data.functions.Functions;
-import org.highj.data.tuple.T0;
-import org.highj.do_.Do;
 import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.comonad.Extend;
@@ -23,7 +21,7 @@ import java.util.function.*;
  *
  * A.k.a. "Option", "Optional" or "Box".
  */
-public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
+public abstract class Maybe<A> implements __<Maybe.µ, A>, Iterable<A> {
     private static final String SHOW_NOTHING = "Nothing";
     private static final String SHOW_JUST = "Just(%s)";
 
@@ -358,7 +356,7 @@ public abstract class Maybe<A> implements _<Maybe.µ, A>, Iterable<A> {
      * @return the {@link Maybe} converted back to standard form
      */
     @SuppressWarnings("unchecked")
-    public static <A> Maybe<A> narrow(_<µ, A> value) {
+    public static <A> Maybe<A> narrow(__<µ, A> value) {
         return (Maybe) value;
     }
 

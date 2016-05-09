@@ -6,7 +6,7 @@
 package org.highj.data.stateful.safe_io;
 
 import java.util.function.Function;
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.stateful.SafeIO;
 import org.highj.typeclass1.monad.Bind;
 
@@ -17,7 +17,7 @@ import org.highj.typeclass1.monad.Bind;
 public interface SafeIOBind extends SafeIOApply, Bind<SafeIO.µ> {
 
     @Override
-    public default <A, B> SafeIO<B> bind(_<SafeIO.µ, A> nestedA, Function<A, _<SafeIO.µ, B>> fn) {
+    public default <A, B> SafeIO<B> bind(__<SafeIO.µ, A> nestedA, Function<A, __<SafeIO.µ, B>> fn) {
         return () -> SafeIO.narrow(fn.apply(SafeIO.narrow(nestedA).run())).run();
     }
 }

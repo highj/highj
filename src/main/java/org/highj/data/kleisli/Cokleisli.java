@@ -1,31 +1,30 @@
 package org.highj.data.kleisli;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__3;
 import org.highj.data.kleisli.cokleisli.CokleisliArrow;
 import org.highj.data.kleisli.cokleisli.CokleisliFunctor;
 import org.highj.typeclass1.comonad.Comonad;
 
 import java.util.function.Function;
 
-public class Cokleisli<W, A, B> implements ___<Cokleisli.µ, W, A, B>, Function<_<W, A>, B> {
+public class Cokleisli<W, A, B> implements __3<Cokleisli.µ, W, A, B>, Function<__<W, A>, B> {
     public static interface µ {
     }
 
-    private final Function<_<W, A>, B> fun;
+    private final Function<__<W, A>, B> fun;
 
-    public Cokleisli(Function<_<W, A>, B> fun) {
+    public Cokleisli(Function<__<W, A>, B> fun) {
         this.fun = fun;
     }
 
     @Override
-    public B apply(_<W, A> a) {
+    public B apply(__<W, A> a) {
         return fun.apply(a);
     }
 
     @SuppressWarnings("unchecked")
-    public static <W, A, B> Cokleisli<W, A, B> narrow(_<_<_<µ, W>, A>, B> nested) {
+    public static <W, A, B> Cokleisli<W, A, B> narrow(__<__<__<µ, W>, A>, B> nested) {
         return (Cokleisli) nested;
     }
 

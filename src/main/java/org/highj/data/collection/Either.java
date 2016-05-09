@@ -1,7 +1,7 @@
 package org.highj.data.collection;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.either.EitherBifunctor;
 import org.highj.data.collection.either.EitherExtend;
 import org.highj.data.collection.either.EitherMonad;
@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public abstract class Either<A, B> implements __<Either.µ, A, B> {
+public abstract class Either<A, B> implements __2<Either.µ, A, B> {
 
     private static final String SHOW_LEFT = "Left(%s)";
     private static final String SHOW_RIGHT = "Right(%s)";
@@ -43,7 +43,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return the standard representation
      */
     @SuppressWarnings("unchecked")
-    public static <A, B> Either<A, B> narrow(_<_<µ, A>, B> value) {
+    public static <A, B> Either<A, B> narrow(__<__<µ, A>, B> value) {
         return (Either) value;
     }
 
@@ -56,7 +56,7 @@ public abstract class Either<A, B> implements __<Either.µ, A, B> {
      * @return the standard representation
      */
     @SuppressWarnings("unchecked")
-    public static <A, B> Either<A, B> narrow(__<µ, A, B> value) {
+    public static <A, B> Either<A, B> narrow(__2<µ, A, B> value) {
         return (Either) value;
     }
 

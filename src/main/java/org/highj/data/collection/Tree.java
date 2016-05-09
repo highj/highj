@@ -1,6 +1,6 @@
 package org.highj.data.collection;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.tree.TreeMonad;
 import org.highj.data.functions.Functions;
 import org.highj.data.functions.Strings;
@@ -9,7 +9,7 @@ import org.highj.data.tuple.T2;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public abstract class Tree<A> implements _<Tree.µ, A> {
+public abstract class Tree<A> implements __<Tree.µ, A> {
     public static class µ {
     }
 
@@ -22,7 +22,7 @@ public abstract class Tree<A> implements _<Tree.µ, A> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A> Tree<A> narrow(_<µ, A> nestedA) {
+    public static <A> Tree<A> narrow(__<µ, A> nestedA) {
         return (Tree) nestedA;
     }
 

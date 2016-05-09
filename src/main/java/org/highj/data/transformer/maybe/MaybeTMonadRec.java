@@ -6,7 +6,7 @@
 package org.highj.data.transformer.maybe;
 
 import java.util.function.Function;
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.data.collection.Maybe;
 import org.highj.data.transformer.MaybeT;
@@ -16,13 +16,13 @@ import org.highj.typeclass1.monad.MonadRec;
  *
  * @author clintonselke
  */
-public interface MaybeTMonadRec<M> extends MaybeTMonad<M>, MonadRec<_<MaybeT.µ, M>> {
+public interface MaybeTMonadRec<M> extends MaybeTMonad<M>, MonadRec<__<MaybeT.µ, M>> {
     
     @Override
     public MonadRec<M> get();
 
     @Override
-    public default <A, B> MaybeT<M, B> tailRec(Function<A, _<_<MaybeT.µ, M>, Either<A, B>>> f, A startA) {
+    public default <A, B> MaybeT<M, B> tailRec(Function<A, __<__<MaybeT.µ, M>, Either<A, B>>> f, A startA) {
         return new MaybeT<>(get().tailRec(
             (A a) -> get().map(
                 (Maybe<Either<A,B>> x) ->

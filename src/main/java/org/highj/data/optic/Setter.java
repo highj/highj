@@ -2,13 +2,13 @@ package org.highj.data.optic;
 
 import java.util.function.Function;
 
-import org.highj._;
-import org.highj.__;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.collection.Either;
 import org.highj.data.functions.F1;
 
 /** {@link PSetter} with a monomorphic modify function */
-public final class Setter<S, A> extends PSetter<S, S, A, A> implements __<Setter.µ, S, A> {
+public final class Setter<S, A> extends PSetter<S, S, A, A> implements __2<Setter.µ, S, A> {
 
     public static final class µ {
     }
@@ -54,7 +54,7 @@ public final class Setter<S, A> extends PSetter<S, S, A, A> implements __<Setter
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static <S, A> Setter<S, A> narrow(final _<_<Setter.µ, S>, A> value) {
+    public static <S, A> Setter<S, A> narrow(final __<__<µ, S>, A> value) {
         return (Setter) value;
     }
 

@@ -5,7 +5,7 @@
  */
 package org.highj.typeclass2.arrow;
 
-import org.highj.__;
+import org.derive4j.hkt.__2;
 import org.highj.data.tuple.T2;
 
 /**
@@ -14,7 +14,7 @@ import org.highj.data.tuple.T2;
  */
 public interface ArrowReader<R,A> extends Arrow<A> {
     
-    public <B> __<A,B,R> readState();
+    public <B> __2<A,B,R> readState();
     
-    public <B,C> __<A,T2<B,R>,C> newReader(__<A,B,C> a);
+    public <B,C> __2<A,T2<B,R>,C> newReader(__2<A,B,C> a);
 }

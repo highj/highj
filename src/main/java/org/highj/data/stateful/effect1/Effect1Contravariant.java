@@ -6,7 +6,7 @@
 package org.highj.data.stateful.effect1;
 
 import java.util.function.Function;
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.stateful.Effect1;
 import org.highj.typeclass1.contravariant.Contravariant;
 
@@ -17,7 +17,7 @@ import org.highj.typeclass1.contravariant.Contravariant;
 public interface Effect1Contravariant extends Contravariant<Effect1.µ> {
 
     @Override
-    public default <A, B> Effect1<A> contramap(Function<A, B> fn, _<Effect1.µ, B> nestedB) {
+    public default <A, B> Effect1<A> contramap(Function<A, B> fn, __<Effect1.µ, B> nestedB) {
         return (A a) -> Effect1.narrow(nestedB).run(fn.apply(a));
     }
 }

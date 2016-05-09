@@ -1,6 +1,6 @@
 package org.highj.data.transformer.state;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.transformer.StateT;
 import org.highj.data.tuple.T0;
 import org.highj.data.tuple.T2;
@@ -10,7 +10,7 @@ import org.highj.typeclass1.monad.MonadState;
 /**
  * @author Clinton Selke
  */
-public interface StateTMonadState<S, M> extends StateTMonad<S, M>, MonadState<S, _<_<StateT.µ, S>, M>> {
+public interface StateTMonadState<S, M> extends StateTMonad<S, M>, MonadState<S, __<__<StateT.µ, S>, M>> {
 
     public Monad<M> m();
 

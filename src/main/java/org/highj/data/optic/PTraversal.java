@@ -2,7 +2,7 @@ package org.highj.data.optic;
 
 import java.util.function.Function;
 
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.collection.Either;
 import org.highj.data.collection.List;
 import org.highj.data.collection.Maybe;
@@ -32,7 +32,7 @@ public abstract class PTraversal<S, T, A, B> {
     /**
      * modify polymorphically the target of a {@link PTraversal} with an Applicative function
      */
-    public abstract <X> F1<S, _<X, T>> modifyF(Applicative<X> applicative, Function<A, _<X, B>> f);
+    public abstract <X> F1<S, __<X, T>> modifyF(Applicative<X> applicative, Function<A, __<X, B>> f);
 
     /** map each target to a {@link Monoid} and combine the results */
     public final <M> F1<S, M> foldMap(final Monoid<M> monoid, final Function<A, M> f) {
@@ -84,8 +84,8 @@ public abstract class PTraversal<S, T, A, B> {
         final PTraversal<S, T, A, B> self = this;
         return new PTraversal<Either<S, S1>, Either<T, T1>, A, B>() {
             @Override
-            public <X> F1<Either<S, S1>, _<X, Either<T, T1>>> modifyF(final Applicative<X> applicative,
-                    final Function<A, _<X, B>> f) {
+            public <X> F1<Either<S, S1>, __<X, Either<T, T1>>> modifyF(final Applicative<X> applicative,
+                    final Function<A, __<X, B>> f) {
                 return ss1 -> ss1.either(
                         s -> applicative.map(Either::<T,T1>newLeft, self.modifyF(applicative, f).apply(s)),
                         s1 -> applicative.map(Either::<T,T1>newRight, other.modifyF(applicative, f).apply(s1))
@@ -120,7 +120,7 @@ public abstract class PTraversal<S, T, A, B> {
         final PTraversal<S, T, A, B> self = this;
         return new PTraversal<S, T, C, D>() {
             @Override
-            public <X> F1<S, _<X, T>> modifyF(final Applicative<X> applicative, final Function<C, _<X, D>> f) {
+            public <X> F1<S, __<X, T>> modifyF(final Applicative<X> applicative, final Function<C, __<X, D>> f) {
                 return self.modifyF(applicative, other.modifyF(applicative, f));
             }
 
@@ -174,8 +174,8 @@ public abstract class PTraversal<S, T, A, B> {
         return new PTraversal<Either<S, S>, Either<T, T>, S, T>() {
 
             @Override
-            public <X> F1<Either<S, S>, _<X, Either<T, T>>> modifyF(final Applicative<X> applicative,
-                    final Function<S, _<X, T>> f) {
+            public <X> F1<Either<S, S>, __<X, Either<T, T>>> modifyF(final Applicative<X> applicative,
+                    final Function<S, __<X, T>> f) {
                 return s -> s.bimap(f, f).either(
                         e -> applicative.map(Either::<T,T>newLeft, e),
                         e -> applicative.map(Either::<T,T>newRight, e)
@@ -186,10 +186,10 @@ public abstract class PTraversal<S, T, A, B> {
     }
 
     /** create a {@link PTraversal} from a {@link Traversable} */
-    public static <T, A, B> PTraversal<_<T, A>, _<T, B>, A, B> fromTraversable(final Traversable<T> traverse) {
-        return new PTraversal<_<T, A>, _<T, B>, A, B>() {
+    public static <T, A, B> PTraversal<__<T, A>, __<T, B>, A, B> fromTraversable(final Traversable<T> traverse) {
+        return new PTraversal<__<T, A>, __<T, B>, A, B>() {
             @Override
-            public <X> F1<_<T, A>, _<X, _<T, B>>> modifyF(final Applicative<X> applicative, final Function<A, _<X, B>> f) {
+            public <X> F1<__<T, A>, __<X, __<T, B>>> modifyF(final Applicative<X> applicative, final Function<A, __<X, B>> f) {
                 return traversable -> traverse.traverse(applicative, f, traversable);
             }
         };
@@ -200,7 +200,7 @@ public abstract class PTraversal<S, T, A, B> {
         return new PTraversal<S, T, A, B>() {
 
             @Override
-            public <X> F1<S, _<X, T>> modifyF(final Applicative<X> applicative, final Function<A, _<X, B>> f) {
+            public <X> F1<S, __<X, T>> modifyF(final Applicative<X> applicative, final Function<A, __<X, B>> f) {
                 return s -> applicative.apply2(b1 -> b2 -> set.apply(b1, b2, s),
                         f.apply(get1.apply(s)), f.apply(get2.apply(s)));
             }
@@ -212,7 +212,7 @@ public abstract class PTraversal<S, T, A, B> {
             final F4<B, B, B, S, T> set) {
         return new PTraversal<S, T, A, B>() {
             @Override
-            public <X> F1<S, _<X, T>> modifyF(final Applicative<X> applicative, final Function<A, _<X, B>> f) {
+            public <X> F1<S, __<X, T>> modifyF(final Applicative<X> applicative, final Function<A, __<X, B>> f) {
                 return s -> applicative.apply3(b1 -> b2 -> b3 -> set.apply(b1, b2, b3, s),
                         f.apply(get1.apply(s)), f.apply(get2.apply(s)), f.apply(get3.apply(s)));
             }

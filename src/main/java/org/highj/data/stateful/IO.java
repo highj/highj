@@ -1,7 +1,7 @@
 package org.highj.data.stateful;
 
 import java.io.IOException;
-import org.highj._;
+import org.derive4j.hkt.__;
 import org.highj.data.stateful.io.IOMonad;
 
 import java.util.function.Function;
@@ -14,11 +14,11 @@ import org.highj.data.stateful.io.IOMonadError;
 import org.highj.data.stateful.io.IOMonadIO;
 import org.highj.data.stateful.io.IOMonadRec;
 
-public interface IO<A> extends _<IO.µ, A> {
+public interface IO<A> extends __<IO.µ, A> {
 
     public static final class µ {}
 
-    public static <A> IO<A> narrow(_<µ, A> value) {
+    public static <A> IO<A> narrow(__<µ, A> value) {
         return (IO<A>)value;
     }
     
@@ -42,7 +42,7 @@ public interface IO<A> extends _<IO.µ, A> {
         return apply.ap(fn, this);
     }
 
-    public default <B> IO<B> bind(Function<A, _<µ, B>> fn) {
+    public default <B> IO<B> bind(Function<A, __<µ, B>> fn) {
         return bind.bind(this, fn);
     }
 

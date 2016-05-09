@@ -1,8 +1,7 @@
 package org.highj.data.transformer;
 
-import org.highj._;
-import org.highj.__;
-import org.highj.___;
+import org.derive4j.hkt.__;
+import org.derive4j.hkt.__3;
 import org.highj.data.transformer.reader.*;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Applicative;
@@ -10,24 +9,18 @@ import org.highj.typeclass1.monad.Apply;
 import org.highj.typeclass1.monad.Bind;
 import org.highj.typeclass1.monad.Monad;
 
-import static org.highj.HigherKinded.uncurry3;
-
 /**
  * @author Clinton Selke
  */
-public interface ReaderT<R, M, A> extends ___<ReaderT.µ, R, M, A> {
+public interface ReaderT<R, M, A> extends __3<ReaderT.µ, R, M, A> {
     public static class µ {
     }
 
-    public static <R, M, A> ReaderT<R, M, A> narrow(___<ReaderT.µ, R, M, A> a) {
+    public static <R, M, A> ReaderT<R, M, A> narrow(__<__<__<µ, R>, M>, A> a) {
         return (ReaderT<R, M, A>) a;
     }
 
-    public static <R, M, A> ReaderT<R, M, A> narrow(_<_<_<ReaderT.µ, R>, M>, A> a) {
-        return narrow(uncurry3(a));
-    }
-
-    public _<M, A> run(R r);
+    public __<M, A> run(R r);
 
     public static <R, M> ReaderTFunctor<R, M> functor(Functor<M> mFunctor) {
         return (ReaderTFunctor<R, M>) () -> mFunctor;
