@@ -425,7 +425,7 @@ public class ListTest {
         assertThat(t4._1()).containsExactly(1, 5, 7, 3);
         assertThat(t4._2()).containsExactly("one", "five", "seven", "three");
         assertThat(t4._3()).containsExactly(true, false, true, true);
-        assertThat(t4._4()).containsExactly(100L, 200L, 300L, 300L);
+        assertThat(t4._4()).containsExactly(100L, 200L, 300L, 400L);
 
         List<T4<Integer, String, Boolean, Long>> emptyList = List.of();
         T4<List<Integer>, List<String>, List<Boolean>, List<Long>> emptyT4 = List.unzip4(emptyList);
