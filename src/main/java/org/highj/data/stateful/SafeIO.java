@@ -11,6 +11,7 @@ import org.highj.data.stateful.safe_io.SafeIOApply;
 import org.highj.data.stateful.safe_io.SafeIOBind;
 import org.highj.data.stateful.safe_io.SafeIOFunctor;
 import org.highj.data.stateful.safe_io.SafeIOMonad;
+import org.highj.data.stateful.safe_io.SafeIOMonadRec;
 
 /**
  *
@@ -38,4 +39,6 @@ public interface SafeIO<A> extends __<SafeIO.µ,A> {
     public static final SafeIOBind bind = new SafeIOBind() {};
     
     public static final SafeIOMonad monad = new SafeIOMonad() {};
+
+    public static final SafeIOMonadRec monadRec = new SafeIOMonadRec() {};
 }
