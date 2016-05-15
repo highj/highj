@@ -93,7 +93,7 @@ public class IntMap<A> {
             if (key2 == 0) {
                 nodes2[idx] = new Leaf<>(idx, value);
             } else {
-                nodes2[idx] = (nodes[idx] == null) ? Empty.<A>empty().insert(key2, value) : nodes[idx].insert(key, value);
+                nodes2[idx] = (nodes[idx] == null) ? Empty.<A>empty().insert(key2, value) : nodes[idx].insert(key2, value);
             }
             return new Branch<>(nodes2);
         }
