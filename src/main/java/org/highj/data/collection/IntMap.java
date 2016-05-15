@@ -13,7 +13,7 @@ import java.util.Arrays;
  */
 public class IntMap<A> {
     private static final int NUM_BRANCHING_BITS = 5;
-    private static final int NUM_BRACHES = 1 << NUM_BRANCHING_BITS;
+    private static final int NUM_BRANCHES = 1 << NUM_BRANCHING_BITS;
     private static final int MASK = (1 << NUM_BRANCHING_BITS) - 1;
     
     private final Node<A> root;
@@ -22,56 +22,59 @@ public class IntMap<A> {
         this.root = root;
     }
     
-    private static final IntMap<?> EMPTY = new IntMap<>(Empty.EMPTY);
+    private static final IntMap<?> EMPTY = new IntMap<>(Empty.empty());
     
     public static <A> IntMap<A> empty() {
         return (IntMap<A>)EMPTY;
     }
     
+    public IntMap<A> insert(int key, A value) {
+        return new IntMap<>(root.insert(key, value));
+    }
+    
     private static abstract class Node<A> {
-        public interface Cases<R,A> {
-            R empty();
-            R leaf(A value);
-            R branch(Node<A>[] nodes);
-        }
-        
-        public abstract boolean isEmpty();
-        public abstract <R> R match(Cases<R,A> cases);
+        public abstract Node<A> insert(int key, A value);
     }
     
     private static class Empty<A> extends Node<A> {
         private static final Empty<?> EMPTY = new Empty<>();
         
-        public <A> Empty<A> empty() {
+        public static <A> Empty<A> empty() {
             return (Empty<A>)EMPTY;
         }
         
         @Override
-        public boolean isEmpty() {
-            return true;
-        }
-        
-        @Override
-        public <R> R match(Cases<R, A> cases) {
-            return cases.empty();
+        public Node<A> insert(int key, A value) {
+            return new Leaf<>(key, value);
         }
     }
     
     private static class Leaf<A> extends Node<A> {
+        private final int idx;
         private final A value;
         
-        public Leaf(A value) {
+        public Leaf(int idx, A value) {
+            this.idx = idx;
             this.value = value;
         }
 
         @Override
-        public boolean isEmpty() {
-            return false;
-        }
-        
-        @Override
-        public <R> R match(Cases<R, A> cases) {
-            return cases.leaf(value);
+        public Node<A> insert(int key, A value2) {
+            int key2 = key >>> NUM_BRANCHING_BITS;
+            int idx2 = key & MASK;
+            Node<A>[] nodes = new Node[NUM_BRANCHES];
+            if (key2 == 0) {
+                nodes[idx] = this;
+                nodes[idx2] = new Leaf<>(idx2, value2);
+            } else {
+                if (idx == idx2) {
+                    nodes[idx2] = Empty.<A>empty().insert(0, value).insert(key2, value2);
+                } else {
+                    nodes[idx] = this;
+                    nodes[idx2] = Empty.<A>empty().insert(key2, value2);
+                }
+            }
+            return new Branch<>(nodes);
         }
     }
     
@@ -83,13 +86,16 @@ public class IntMap<A> {
         }
 
         @Override
-        public boolean isEmpty() {
-            return false;
-        }
-
-        @Override
-        public <R> R match(Cases<R, A> cases) {
-            return cases.branch(nodes);
+        public Node<A> insert(int key, A value) {
+            int key2 = key >>> NUM_BRANCHING_BITS;
+            int idx = key & MASK;
+            Node<A>[] nodes2 = Arrays.copyOf(nodes, nodes.length);
+            if (key2 == 0) {
+                nodes2[idx] = new Leaf<>(idx, value);
+            } else {
+                nodes2[idx] = (nodes[idx] == null) ? Empty.<A>empty().insert(key2, value) : nodes[idx].insert(key, value);
+            }
+            return new Branch<>(nodes2);
         }
         
         public Branch<A> set(int idx, Node<A> node) {
