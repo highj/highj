@@ -35,6 +35,11 @@ public class IntMap<A> {
     public Maybe<A> lookup(int key) {
         return root.lookup(key);
     }
+    
+    public IntMap<A> delete(int key) {
+        Node<A> root2 = root.delete(key);
+        return root2 == root ? this : new IntMap<>(root2);
+    }
 
     @Override
     public String toString() {
@@ -43,9 +48,13 @@ public class IntMap<A> {
     
     private static abstract class Node<A> {
         
+        public abstract boolean isEmpty();
+        
         public abstract Node<A> insert(int key, A value);
         
         public abstract Maybe<A> lookup(int key);
+        
+        public abstract Node<A> delete(int key);
     }
     
     private static class Empty<A> extends Node<A> {
@@ -53,6 +62,11 @@ public class IntMap<A> {
         
         public static <A> Empty<A> empty() {
             return (Empty<A>)EMPTY;
+        }
+        
+        @Override
+        public boolean isEmpty() {
+            return true;
         }
         
         @Override
@@ -81,6 +95,11 @@ public class IntMap<A> {
         public String toString() {
             return "Empty";
         }
+
+        @Override
+        public Node<A> delete(int key) {
+            return this;
+        }
     }
     
     private static class Leaf<A> extends Node<A> {
@@ -90,6 +109,11 @@ public class IntMap<A> {
             this.value = value;
         }
 
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+        
         @Override
         public Node<A> insert(int key, A value2) {
             if (key == 0) {
@@ -122,6 +146,11 @@ public class IntMap<A> {
         public String toString() {
             return "(Leaf " + value.toString() + ")";
         }
+
+        @Override
+        public Node<A> delete(int key) {
+            return key == 0 ? Empty.empty() : this;
+        }
     }
     
     private static class Branch<A> extends Node<A> {
@@ -131,6 +160,16 @@ public class IntMap<A> {
             this.nodes = nodes;
         }
 
+        @Override
+        public boolean isEmpty() {
+            for (int i = 0; i < NUM_BRANCHES; ++i) {
+                Node<A> node = nodes[i];
+                if (node == null) { continue; }
+                if (!node.isEmpty()) { return false; }
+            }
+            return true;
+        }
+        
         @Override
         public Node<A> insert(int key, A value) {
             int key2 = key >>> NUM_BRANCHING_BITS;
@@ -159,9 +198,30 @@ public class IntMap<A> {
         }
 
         @Override
+        public Node<A> delete(int key) {
+            int key2 = key >>> NUM_BRANCHING_BITS;
+            int idx = key & MASK;
+            Node<A> node = nodes[idx];
+            if (node == null) {
+                return this;
+            } else {
+                Node<A> node2 = node.delete(key2);
+                if (node2 == node) {
+                    return this;
+                } else {
+                    Node<A>[] nodes2 = Arrays.copyOf(nodes, nodes.length);
+                    nodes2[idx] = node2;
+                    Node<A> r = new Branch<>(nodes2);
+                    return r.isEmpty() ? Empty.<A>empty() : r;
+                }
+            }
+        }
+        
+        @Override
         public String toString() {
-            StringBuilder sb = new StringBuilder("(Branch ");
+            StringBuilder sb = new StringBuilder("(Branch");
             for (int i = 0; i < nodes.length; ++i) {
+                sb.append(" ");
                 Node node = nodes[i];
                 sb.append((node == null ? Empty.<A>empty() : node).toString());
             }
