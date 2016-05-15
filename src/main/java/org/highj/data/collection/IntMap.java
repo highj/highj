@@ -35,6 +35,11 @@ public class IntMap<A> {
     public Maybe<A> lookup(int key) {
         return root.lookup(key);
     }
+
+    @Override
+    public String toString() {
+        return root.toString();
+    }
     
     private static abstract class Node<A> {
         
@@ -52,7 +57,19 @@ public class IntMap<A> {
         
         @Override
         public Node<A> insert(int key, A value) {
-            return new Leaf<>(key, value);
+            if (key == 0) {
+                return new Leaf<>(value);
+            } else {
+                int key2 = key >>> NUM_BRANCHING_BITS;
+                int idx = key & MASK;
+                Node<A>[] nodes = new Node[NUM_BRANCHES];
+                if (key2 == 0) {
+                    nodes[idx] = new Leaf<>(value);
+                } else {
+                    nodes[idx] = Empty.<A>empty().insert(key2, value);
+                }
+                return new Branch<>(nodes);
+            }
         }
 
         @Override
@@ -67,36 +84,38 @@ public class IntMap<A> {
     }
     
     private static class Leaf<A> extends Node<A> {
-        private final int idx;
         private final A value;
         
-        public Leaf(int idx, A value) {
-            this.idx = idx;
+        public Leaf(A value) {
             this.value = value;
         }
 
         @Override
         public Node<A> insert(int key, A value2) {
-            int key2 = key >>> NUM_BRANCHING_BITS;
-            int idx2 = key & MASK;
-            Node<A>[] nodes = new Node[NUM_BRANCHES];
-            if (key2 == 0) {
-                nodes[idx] = this;
-                nodes[idx2] = new Leaf<>(idx2, value2);
+            if (key == 0) {
+                return new Leaf<>(value2);
             } else {
-                if (idx == idx2) {
-                    nodes[idx2] = Empty.<A>empty().insert(0, value).insert(key2, value2);
+                int key2 = key >>> NUM_BRANCHING_BITS;
+                int idx = key & MASK;
+                Node<A>[] nodes = new Node[NUM_BRANCHES];
+                if (key2 == 0) {
+                    nodes[0] = this;
+                    nodes[idx] = new Leaf<>(value2);
                 } else {
-                    nodes[idx] = this;
-                    nodes[idx2] = Empty.<A>empty().insert(key2, value2);
+                    if (idx == 0) {
+                        nodes[0] = Empty.<A>empty().insert(0, value).insert(key2, value2);
+                    } else {
+                        nodes[0] = this;
+                        nodes[idx] = Empty.<A>empty().insert(key2, value2);
+                    }
                 }
+                return new Branch<>(nodes);
             }
-            return new Branch<>(nodes);
         }
 
         @Override
         public Maybe<A> lookup(int key) {
-            return key == idx ? Maybe.newJust(value) : Maybe.newNothing();
+            return key == 0 ? Maybe.newJust(value) : Maybe.newNothing();
         }
 
         @Override
@@ -118,7 +137,7 @@ public class IntMap<A> {
             int idx = key & MASK;
             Node<A>[] nodes2 = Arrays.copyOf(nodes, nodes.length);
             if (key2 == 0) {
-                nodes2[idx] = new Leaf<>(idx, value);
+                nodes2[idx] = new Leaf<>(value);
             } else {
                 nodes2[idx] = (nodes[idx] == null) ? Empty.<A>empty().insert(key2, value) : nodes[idx].insert(key2, value);
             }
@@ -136,7 +155,7 @@ public class IntMap<A> {
             int key2 = key >>> NUM_BRANCHING_BITS;
             int idx = key & MASK;
             Node node = nodes[idx];
-            return node == null ? Maybe.newNothing() : node.lookup(key);
+            return node == null ? Maybe.newNothing() : node.lookup(key2);
         }
 
         @Override
