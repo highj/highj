@@ -32,8 +32,15 @@ public class IntMap<A> {
         return new IntMap<>(root.insert(key, value));
     }
     
+    public Maybe<A> lookup(int key) {
+        return root.lookup(key);
+    }
+    
     private static abstract class Node<A> {
+        
         public abstract Node<A> insert(int key, A value);
+        
+        public abstract Maybe<A> lookup(int key);
     }
     
     private static class Empty<A> extends Node<A> {
@@ -46,6 +53,16 @@ public class IntMap<A> {
         @Override
         public Node<A> insert(int key, A value) {
             return new Leaf<>(key, value);
+        }
+
+        @Override
+        public Maybe<A> lookup(int key) {
+            return Maybe.newNothing();
+        }
+
+        @Override
+        public String toString() {
+            return "Empty";
         }
     }
     
@@ -76,6 +93,16 @@ public class IntMap<A> {
             }
             return new Branch<>(nodes);
         }
+
+        @Override
+        public Maybe<A> lookup(int key) {
+            return key == idx ? Maybe.newJust(value) : Maybe.newNothing();
+        }
+
+        @Override
+        public String toString() {
+            return "(Leaf " + value.toString() + ")";
+        }
     }
     
     private static class Branch<A> extends Node<A> {
@@ -102,6 +129,25 @@ public class IntMap<A> {
             Node<A>[] nodes2 = Arrays.copyOf(nodes, nodes.length);
             nodes2[idx] = node;
             return new Branch<>(nodes2);
+        }
+
+        @Override
+        public Maybe<A> lookup(int key) {
+            int key2 = key >>> NUM_BRANCHING_BITS;
+            int idx = key & MASK;
+            Node node = nodes[idx];
+            return node == null ? Maybe.newNothing() : node.lookup(key);
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder("(Branch ");
+            for (int i = 0; i < nodes.length; ++i) {
+                Node node = nodes[i];
+                sb.append((node == null ? Empty.<A>empty() : node).toString());
+            }
+            sb.append(")");
+            return sb.toString();
         }
     }
 }
