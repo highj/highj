@@ -1,7 +1,10 @@
 package org.highj.util;
 
 
+import java.lang.reflect.Array;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public enum ArrayUtils {
     ;
@@ -350,6 +353,22 @@ public enum ArrayUtils {
             as[i] = as[j];
             as[j] = tmp;
         }
+    }
+
+    public static <A> void mapInPlace(A[] as, UnaryOperator<A> op) {
+        for(int i = 0; i < as.length; i++) {
+           as[i] = op.apply(as[i]);
+        }
+    }
+
+    public static <A,B> B[] map(A[] as, Function<A,B> fn, B[] bs) {
+        @SuppressWarnings("unchecked")
+        B[] result = bs.length >= as.length ? bs
+                : (B[]) Array.newInstance(bs.getClass().getComponentType(), as.length);
+        for(int i = 0; i < as.length; i++) {
+            bs[i] = fn.apply(as[i]);
+        }
+        return result;
     }
 
 }
