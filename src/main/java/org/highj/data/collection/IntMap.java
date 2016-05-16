@@ -176,19 +176,13 @@ public class IntMap<A> {
             int idx = key & MASK;
             Node<A>[] nodes2 = Arrays.copyOf(nodes, nodes.length);
             if (key2 == 0) {
-                nodes2[idx] = new Leaf<>(value);
+                nodes2[idx] = (nodes[idx] == null) ? new Leaf<>(value) : nodes[idx].insert(key2, value);
             } else {
                 nodes2[idx] = (nodes[idx] == null) ? Empty.<A>empty().insert(key2, value) : nodes[idx].insert(key2, value);
             }
             return new Branch<>(nodes2);
         }
         
-        public Branch<A> set(int idx, Node<A> node) {
-            Node<A>[] nodes2 = Arrays.copyOf(nodes, nodes.length);
-            nodes2[idx] = node;
-            return new Branch<>(nodes2);
-        }
-
         @Override
         public Maybe<A> lookup(int key) {
             int key2 = key >>> NUM_BRANCHING_BITS;
