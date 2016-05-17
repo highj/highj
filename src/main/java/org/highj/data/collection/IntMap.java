@@ -5,37 +5,88 @@
  */
 package org.highj.data.collection;
 
+import org.highj.data.functions.Strings;
+import org.highj.data.tuple.T2;
+
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
- *
  * @author clintonselke
  */
-public class IntMap<A> {
+public class IntMap<A> implements Iterable<T2<Integer,A>>{
     private static final int NUM_BRANCHING_BITS = 5;
     private static final int NUM_BRANCHES = 1 << NUM_BRANCHING_BITS;
     private static final int MASK = (1 << NUM_BRANCHING_BITS) - 1;
-    
+    private static final Node<?>[] EMPTY_ARRAY = new Node<?>[NUM_BRANCHES];
+
+    static {
+        Arrays.fill(EMPTY_ARRAY, Empty.empty());
+    }
+
     private final Node<A> root;
-    
+
     private IntMap(Node<A> root) {
         this.root = root;
     }
-    
+
     private static final IntMap<?> EMPTY = new IntMap<>(Empty.empty());
-    
+
+    @SuppressWarnings("unchecked")
     public static <A> IntMap<A> empty() {
-        return (IntMap<A>)EMPTY;
+        return (IntMap<A>) EMPTY;
     }
-    
+
+    public boolean isEmpty() {
+        return root.isEmpty();
+    }
+
+    @Override
+    public Iterator<T2<Integer, A>> iterator() {
+        return new Iterator<T2<Integer,A>>(){
+            private List<Node<A>> todo = root.isEmpty() ? List.empty() : List.of(root);
+
+            @Override
+            public boolean hasNext() {
+                return ! todo.isEmpty();
+            }
+
+            @Override
+            public T2<Integer, A> next() {
+                if (! hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                while(todo.head() instanceof Branch) {
+                    @SuppressWarnings("unchecked")
+                    Node<A>[] nodes = ((Branch) todo.head()).nodes;
+                    todo = todo.tail();
+                    for(Node<A> node : nodes) {
+                        if (! node.isEmpty()) {
+                            todo = todo.plus(node);
+                        }
+                    }
+                }
+                Node<A> result = todo.head();
+                todo = todo.tail();
+                //TODO how to get the key?
+                return T2.of(0, ((Leaf<A>)result).value);
+            }
+        };
+    }
+
+    public int size() {
+        return root.size();
+    }
+
     public IntMap<A> insert(int key, A value) {
         return new IntMap<>(root.insert(key, value));
     }
-    
+
     public Maybe<A> lookup(int key) {
         return root.lookup(key);
     }
-    
+
     public IntMap<A> delete(int key) {
         Node<A> root2 = root.delete(key);
         return root2 == root ? this : new IntMap<>(root2);
@@ -45,30 +96,38 @@ public class IntMap<A> {
     public String toString() {
         return root.toString();
     }
-    
+
     private static abstract class Node<A> {
-        
+
         public abstract boolean isEmpty();
-        
+
+        public abstract int size();
+
         public abstract Node<A> insert(int key, A value);
-        
+
         public abstract Maybe<A> lookup(int key);
-        
+
         public abstract Node<A> delete(int key);
     }
-    
+
     private static class Empty<A> extends Node<A> {
         private static final Empty<?> EMPTY = new Empty<>();
-        
+
+        @SuppressWarnings("unchecked")
         public static <A> Empty<A> empty() {
-            return (Empty<A>)EMPTY;
+            return (Empty<A>) EMPTY;
         }
-        
+
         @Override
         public boolean isEmpty() {
             return true;
         }
-        
+
+        @Override
+        public int size() {
+            return 0;
+        }
+
         @Override
         public Node<A> insert(int key, A value) {
             if (key == 0) {
@@ -76,12 +135,8 @@ public class IntMap<A> {
             } else {
                 int key2 = key >>> NUM_BRANCHING_BITS;
                 int idx = key & MASK;
-                Node<A>[] nodes = new Node[NUM_BRANCHES];
-                if (key2 == 0) {
-                    nodes[idx] = new Leaf<>(value);
-                } else {
-                    nodes[idx] = Empty.<A>empty().insert(key2, value);
-                }
+                Node<A>[] nodes = emptyArray();
+                nodes[idx] = (key2 == 0) ? new Leaf<>(value) : insert(key2, value);
                 return new Branch<>(nodes);
             }
         }
@@ -101,11 +156,11 @@ public class IntMap<A> {
             return this;
         }
     }
-    
+
     private static class Leaf<A> extends Node<A> {
         private final A value;
-        
-        public Leaf(A value) {
+
+        private Leaf(A value) {
             this.value = value;
         }
 
@@ -113,25 +168,26 @@ public class IntMap<A> {
         public boolean isEmpty() {
             return false;
         }
-        
+
+        @Override
+        public int size() {
+            return 1;
+        }
+
         @Override
         public Node<A> insert(int key, A value2) {
             if (key == 0) {
-                return new Leaf<>(value2);
+                return value == value2 ? this : new Leaf<>(value2);
             } else {
                 int key2 = key >>> NUM_BRANCHING_BITS;
                 int idx = key & MASK;
-                Node<A>[] nodes = new Node[NUM_BRANCHES];
+                Node<A>[] nodes = emptyArray();
                 if (key2 == 0) {
                     nodes[0] = this;
                     nodes[idx] = new Leaf<>(value2);
                 } else {
-                    if (idx == 0) {
-                        nodes[0] = Empty.<A>empty().insert(0, value).insert(key2, value2);
-                    } else {
-                        nodes[0] = this;
-                        nodes[idx] = Empty.<A>empty().insert(key2, value2);
-                    }
+                    nodes[idx] = Empty.<A>empty().insert(key2, value2);
+                    nodes[0] = idx == 0 ? nodes[0].insert(0, value) : this;
                 }
                 return new Branch<>(nodes);
             }
@@ -139,7 +195,7 @@ public class IntMap<A> {
 
         @Override
         public Maybe<A> lookup(int key) {
-            return key == 0 ? Maybe.newJust(value) : Maybe.newNothing();
+            return Maybe.justWhenTrue(key == 0, () -> value);
         }
 
         @Override
@@ -152,43 +208,47 @@ public class IntMap<A> {
             return key == 0 ? Empty.empty() : this;
         }
     }
-    
+
     private static class Branch<A> extends Node<A> {
         private final Node<A>[] nodes;
-        
-        public Branch(Node<A>[] nodes) {
+
+        private Branch(Node<A>[] nodes) {
             this.nodes = nodes;
         }
 
         @Override
         public boolean isEmpty() {
-            for (int i = 0; i < NUM_BRANCHES; ++i) {
-                Node<A> node = nodes[i];
-                if (node == null) { continue; }
-                if (!node.isEmpty()) { return false; }
+            for (Node<A> node : nodes) {
+                if (!node.isEmpty()) {
+                    return false;
+                }
             }
             return true;
         }
-        
+
+        @Override
+        public int size() {
+            int size = 0;
+            for (Node<A> node : nodes) {
+                size += node.size();
+            }
+            return size;
+        }
+
         @Override
         public Node<A> insert(int key, A value) {
             int key2 = key >>> NUM_BRANCHING_BITS;
             int idx = key & MASK;
             Node<A>[] nodes2 = Arrays.copyOf(nodes, nodes.length);
-            if (key2 == 0) {
-                nodes2[idx] = (nodes[idx] == null) ? new Leaf<>(value) : nodes[idx].insert(key2, value);
-            } else {
-                nodes2[idx] = (nodes[idx] == null) ? Empty.<A>empty().insert(key2, value) : nodes[idx].insert(key2, value);
-            }
+            nodes2[idx] = nodes[idx].insert(key2, value);
             return new Branch<>(nodes2);
         }
-        
+
         @Override
         public Maybe<A> lookup(int key) {
             int key2 = key >>> NUM_BRANCHING_BITS;
             int idx = key & MASK;
-            Node node = nodes[idx];
-            return node == null ? Maybe.newNothing() : node.lookup(key2);
+            return nodes[idx].lookup(key2);
         }
 
         @Override
@@ -196,7 +256,7 @@ public class IntMap<A> {
             int key2 = key >>> NUM_BRANCHING_BITS;
             int idx = key & MASK;
             Node<A> node = nodes[idx];
-            if (node == null) {
+            if (node.isEmpty()) {
                 return this;
             } else {
                 Node<A> node2 = node.delete(key2);
@@ -210,17 +270,15 @@ public class IntMap<A> {
                 }
             }
         }
-        
+
         @Override
         public String toString() {
-            StringBuilder sb = new StringBuilder("(Branch");
-            for (int i = 0; i < nodes.length; ++i) {
-                sb.append(" ");
-                Node node = nodes[i];
-                sb.append((node == null ? Empty.<A>empty() : node).toString());
-            }
-            sb.append(")");
-            return sb.toString();
+            return Strings.mkString("(Branch ", " ", ")", nodes);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <A> Node<A>[] emptyArray() {
+        return Arrays.copyOf((Node<A>[]) EMPTY_ARRAY, NUM_BRANCHES);
     }
 }
