@@ -23,6 +23,7 @@ import org.highj.data.transformer.generator.GeneratorTApply;
 import org.highj.data.transformer.generator.GeneratorTBind;
 import org.highj.data.transformer.generator.GeneratorTFunctor;
 import org.highj.data.transformer.generator.GeneratorTMonad;
+import org.highj.data.transformer.generator.GeneratorTMonadRec;
 import org.highj.data.transformer.generator.GeneratorTMonadTrans;
 
 @Data(@Derive(inClass = "GeneratorTImpl", withVisibility = Visibility.Package))
@@ -185,5 +186,9 @@ public abstract class GeneratorT<E,M,A> implements __3<GeneratorT.µ,E,M,A> {
 
     public static <E,M> GeneratorTMonadTrans<E,M> monadTrans() {
         return new GeneratorTMonadTrans<E,M>() {};
+    }
+    
+    public static <E,M> GeneratorTMonadRec<E,M> monadRec() {
+        return new GeneratorTMonadRec<E,M>() {};
     }
 }
