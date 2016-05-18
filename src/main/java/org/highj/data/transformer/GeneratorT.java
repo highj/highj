@@ -18,6 +18,12 @@ import org.highj.typeclass1.monad.MonadRec;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
+import org.highj.data.transformer.generator.GeneratorTApplicative;
+import org.highj.data.transformer.generator.GeneratorTApply;
+import org.highj.data.transformer.generator.GeneratorTBind;
+import org.highj.data.transformer.generator.GeneratorTFunctor;
+import org.highj.data.transformer.generator.GeneratorTMonad;
+import org.highj.data.transformer.generator.GeneratorTMonadTrans;
 
 @Data(@Derive(inClass = "GeneratorTImpl", withVisibility = Visibility.Package))
 public abstract class GeneratorT<E,M,A> implements __3<GeneratorT.µ,E,M,A> {
@@ -157,7 +163,6 @@ public abstract class GeneratorT<E,M,A> implements __3<GeneratorT.µ,E,M,A> {
         return GeneratorTImpl.lift(ma);
     }
 
-    /*
     public static <E,M> GeneratorTFunctor<E,M> functor() {
         return new GeneratorTFunctor<E,M>() {};
     }
@@ -181,5 +186,4 @@ public abstract class GeneratorT<E,M,A> implements __3<GeneratorT.µ,E,M,A> {
     public static <E,M> GeneratorTMonadTrans<E,M> monadTrans() {
         return new GeneratorTMonadTrans<E,M>() {};
     }
-    */
 }
