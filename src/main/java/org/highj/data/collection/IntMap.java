@@ -5,7 +5,11 @@
  */
 package org.highj.data.collection;
 
+import org.derive4j.hkt.__;
 import org.highj.data.functions.Strings;
+import org.highj.data.transformer.GeneratorT;
+import org.highj.data.tuple.T0;
+import org.highj.data.tuple.T1;
 import org.highj.data.tuple.T2;
 
 import java.util.Arrays;
@@ -44,35 +48,7 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
 
     @Override
     public Iterator<T2<Integer, A>> iterator() {
-        return new Iterator<T2<Integer,A>>(){
-            private List<Node<A>> todo = root.isEmpty() ? List.empty() : List.of(root);
-
-            @Override
-            public boolean hasNext() {
-                return ! todo.isEmpty();
-            }
-
-            @Override
-            public T2<Integer, A> next() {
-                if (! hasNext()) {
-                    throw new NoSuchElementException();
-                }
-                while(todo.head() instanceof Branch) {
-                    @SuppressWarnings("unchecked")
-                    Node<A>[] nodes = ((Branch) todo.head()).nodes;
-                    todo = todo.tail();
-                    for(Node<A> node : nodes) {
-                        if (! node.isEmpty()) {
-                            todo = todo.plus(node);
-                        }
-                    }
-                }
-                Node<A> result = todo.head();
-                todo = todo.tail();
-                //TODO how to get the key?
-                return T2.of(0, ((Leaf<A>)result).value);
-            }
-        };
+        return GeneratorT.toIterator(GeneratorT.narrow(root.generator(0, 0)));
     }
 
     public int size() {
@@ -108,6 +84,8 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
         public abstract Maybe<A> lookup(int key);
 
         public abstract Node<A> delete(int key);
+
+        public abstract __<__<__<GeneratorT.µ,T2<Integer,A>>,T1.µ>,T0> generator(int shift, int key);
     }
 
     private static class Empty<A> extends Node<A> {
@@ -154,6 +132,11 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
         @Override
         public Node<A> delete(int key) {
             return this;
+        }
+
+        @Override
+        public __<__<__<GeneratorT.µ,T2<Integer,A>>,T1.µ>,T0> generator(int shift, int key) {
+            return GeneratorT.<T2<Integer,A>,T1.µ>applicative().pure(T0.of());
         }
     }
 
@@ -206,6 +189,11 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
         @Override
         public Node<A> delete(int key) {
             return key == 0 ? Empty.empty() : this;
+        }
+
+        @Override
+        public __<__<__<GeneratorT.µ, T2<Integer, A>>, T1.µ>, T0> generator(int shift, int key) {
+            return GeneratorT.emit(T2.of(key, value));
         }
     }
 
@@ -274,6 +262,20 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
         @Override
         public String toString() {
             return Strings.mkString("(Branch ", " ", ")", nodes);
+        }
+
+        @Override
+        public __<__<__<GeneratorT.µ, T2<Integer, A>>, T1.µ>, T0> generator(int shift, int key) {
+            return GeneratorT.<T2<Integer,A>,T1.µ>monad().sequence_(
+                List.zip(
+                    List.of(nodes),
+                    List.range(0)
+                ).map((T2<Node<A>,Integer> x) -> {
+                    int shift2 = shift + NUM_BRANCHING_BITS;
+                    int key2 = key | (x._2() << shift);
+                    return x._1().generator(shift2, key2);
+                })
+            );
         }
     }
 
