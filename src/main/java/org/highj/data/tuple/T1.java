@@ -9,6 +9,7 @@ import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
+import org.highj.typeclass1.monad.MonadRec;
 
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -102,6 +103,7 @@ public abstract class T1<A> implements __<T1.µ, A>, Supplier<A> {
 
     public static final T1Monad monad = new T1Monad(){};
     public static final T1Comonad comonad = new T1Comonad(){};
+    public static final MonadRec<µ> monadRec = monad;
 
     public static <A> Semigroup<T1<A>> semigroup(BinaryOperator<A> semigroupA) {
         return (x, y) -> T1.of(semigroupA.apply(x._1(), y._1()));

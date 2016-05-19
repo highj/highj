@@ -1,16 +1,15 @@
 package org.highj.data.transformer;
 
-
 import org.derive4j.Data;
 import org.derive4j.Derive;
 import org.derive4j.Visibility;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__3;
 import org.highj.data.collection.Either;
-import org.highj.data.collection.Identity;
 import org.highj.data.collection.Maybe;
 import org.highj.data.functions.F1;
 import org.highj.data.tuple.T0;
+import org.highj.data.tuple.T1;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadRec;
@@ -83,10 +82,10 @@ public abstract class GeneratorT<E,M,A> implements __3<GeneratorT.µ,E,M,A> {
         );
     }
 
-    public static <E> Iterator<E> toIterator(GeneratorT<E,Identity.µ,T0> generator) {
-        final Maybe<T2<E,GeneratorT<E,Identity.µ,T0>>> initState = Identity.narrow(generator.run(Identity.monadRec)).run().maybeRight();
+    public static <E> Iterator<E> toIterator(GeneratorT<E,T1.µ,T0> generator) {
+        final Maybe<T2<E,GeneratorT<E,T1.µ,T0>>> initState = T1.narrow(generator.run(T1.monadRec))._1().maybeRight();
         return new Iterator<E>() {
-            private Maybe<T2<E,GeneratorT<E,Identity.µ,T0>>> state = initState;
+            private Maybe<T2<E,GeneratorT<E,T1.µ,T0>>> state = initState;
             @Override
             public boolean hasNext() {
                 return state.isJust();
@@ -96,9 +95,9 @@ public abstract class GeneratorT<E,M,A> implements __3<GeneratorT.µ,E,M,A> {
                 if (state.isNothing()) {
                     throw new NoSuchElementException();
                 }
-                T2<E,GeneratorT<E,Identity.µ,T0>> x = state.get();
+                T2<E,GeneratorT<E,T1.µ,T0>> x = state.get();
                 E element = x._1();
-                state = Identity.narrow(x._2().run(Identity.monadRec)).run().maybeRight();
+                state = T1.narrow(x._2().run(T1.monadRec))._1().maybeRight();
                 return element;
             }
         };
