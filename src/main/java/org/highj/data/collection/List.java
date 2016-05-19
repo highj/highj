@@ -4,6 +4,7 @@ import org.derive4j.hkt.__;
 import org.highj.data.collection.list.ListMonadPlus;
 import org.highj.data.collection.list.ListTraversable;
 import org.highj.data.collection.list.ZipApplicative;
+import org.highj.data.collection.list.Zipper;
 import org.highj.data.functions.Functions;
 import org.highj.data.functions.Strings;
 import org.highj.data.tuple.T2;
@@ -1088,6 +1089,16 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
     public List<A> intersperse(final A a) {
         return isEmpty() || tail().isEmpty() ? this : newLazyList(this.head(), () -> newList(a, tail().intersperse(a)));
     }
+
+    /**
+     * Constructs a {@link Zipper} focused at the start position.
+     *
+     * @return the zipper
+     */
+    public Zipper<A> toZipper() {
+        return Zipper.fromList(this);
+    }
+
 
     /**
      * The {@link org.highj.typeclass1.foldable.Traversable} instance of lists.
