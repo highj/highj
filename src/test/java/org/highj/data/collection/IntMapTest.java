@@ -5,10 +5,13 @@
  */
 package org.highj.data.collection;
 
+import org.highj.data.tuple.T2;
+import org.highj.util.Iterables;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,6 +31,21 @@ public class IntMapTest {
         }
         for (int i = 0; i < 1000; ++i) {
             assertThat(m.lookup(i).toString()).isEqualTo("Just(" + Integer.toHexString(i) + ")");
+        }
+    }
+
+    @Test
+    public void testIterator() {
+        IntMap<String> m = IntMap.empty();
+        java.util.List<Integer> ints = List.range(0,1,999).toJList();
+        Collections.shuffle(ints, new Random(123));
+        for (int i : ints) {
+            m = m.insert(i, Integer.toHexString(i));
+        }
+        Iterator<T2<Integer,String>> iterator = m.iterator();
+        while (iterator.hasNext()) {
+            T2<Integer,String> x = iterator.next();
+            assertThat(Integer.toHexString(x._1())).isEqualTo(x._2());
         }
     }
 
