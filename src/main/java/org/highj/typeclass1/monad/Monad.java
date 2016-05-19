@@ -73,8 +73,7 @@ public interface Monad<M> extends Applicative<M>, Bind<M> {
 
     //sequence_ (Control.Monad)
     public default <A> __<M, T0> sequence_(List<__<M, A>> list) {
-        sequence(list);
-        return pure(T0.unit);
+        return list.foldr((__<M,A> a) -> (__<M,T0> b) -> rightSeq(a, b), pure(T0.of()));
     }
 
 }
