@@ -7,7 +7,7 @@ package org.highj.data.transformer.generator;
 
 import java.util.function.Function;
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.transformer.GeneratorT;
 import org.highj.typeclass1.monad.MonadRec;
 

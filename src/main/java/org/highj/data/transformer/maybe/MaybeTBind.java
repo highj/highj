@@ -1,7 +1,7 @@
 package org.highj.data.transformer.maybe;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Maybe;
+import org.highj.data.Maybe;
 import org.highj.data.transformer.MaybeT;
 import org.highj.typeclass1.monad.Bind;
 import org.highj.typeclass1.monad.Monad;
@@ -20,7 +20,7 @@ public interface MaybeTBind<M> extends MaybeTApply<M>, Bind<__<MaybeT.µ, M>> {
         __<M, Maybe<B>> m_maybeB = get().bind(
                 MaybeT.narrow(nestedA).get(),
                 maybeA -> maybeA.cata(
-                        get().pure(Maybe.<B>newNothing()),
+                        get().pure(Maybe.<B>Nothing()),
                         (A a) -> MaybeT.narrow(fn.apply(a)).get()
                 )
         );

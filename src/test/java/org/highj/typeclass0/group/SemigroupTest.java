@@ -1,6 +1,6 @@
 package org.highj.typeclass0.group;
 
-import org.highj.data.collection.List;
+import org.highj.data.List;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;

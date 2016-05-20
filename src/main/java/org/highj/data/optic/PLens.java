@@ -3,9 +3,9 @@ package org.highj.data.optic;
 import java.util.function.Function;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
-import org.highj.data.collection.Maybe;
-import org.highj.data.functions.F1;
+import org.highj.data.Either;
+import org.highj.data.Maybe;
+import org.highj.function.F1;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.monad.Applicative;
 
@@ -181,7 +181,7 @@ public abstract class PLens<S, T, A, B> {
         return new POptional<S, T, A, B>() {
             @Override
             public Either<T, A> getOrModify(final S s) {
-                return Either.newRight(self.get(s));
+                return Either.Right(self.get(s));
             }
 
             @Override
@@ -191,7 +191,7 @@ public abstract class PLens<S, T, A, B> {
 
             @Override
             public Maybe<A> getMaybe(final S s) {
-                return Maybe.newJust(self.get(s));
+                return Maybe.Just(self.get(s));
             }
 
             @Override

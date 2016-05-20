@@ -5,8 +5,8 @@
  */
 package org.highj.typeclass0.num;
 
-import org.highj.data.collection.List;
-import org.highj.data.collection.Stream;
+import org.highj.data.List;
+import org.highj.data.Stream;
 
 /**
  *

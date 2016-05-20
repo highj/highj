@@ -2,7 +2,7 @@ package org.highj.data.kleisli.kleisli;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.kleisli.Kleisli;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass1.monad.Monad;
@@ -70,9 +70,9 @@ public class KleisliArrow<M> implements ArrowChoice<__<Kleisli.µ, M>>, ArrowApp
 
     @Override
     public <B, C, BB, CC> Kleisli<M, Either<B, BB>, Either<C, CC>> merge(__2<__<Kleisli.µ, M>, B, C> f, __2<__<Kleisli.µ, M>, BB, CC> g) {
-        //f +++ g = (f >>> arr lazyLeft) ||| (g >>> arr lazyRight)
-        __2<__<Kleisli.µ, M>, B, Either<C, CC>> kleisliF = then(f, this.<C, Either<C, CC>>arr(Either::newLeft));
-        __2<__<Kleisli.µ, M>, BB, Either<C, CC>> kleisliG = then(g, this.<CC, Either<C, CC>>arr(Either::newRight));
+        //f +++ g = (f >>> arr Left$) ||| (g >>> arr Right$)
+        __2<__<Kleisli.µ, M>, B, Either<C, CC>> kleisliF = then(f, this.<C, Either<C, CC>>arr(Either::Left));
+        __2<__<Kleisli.µ, M>, BB, Either<C, CC>> kleisliG = then(g, this.<CC, Either<C, CC>>arr(Either::Right));
         return fanin(kleisliF, kleisliG);
     }
 

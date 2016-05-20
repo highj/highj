@@ -1,7 +1,7 @@
 package org.highj.data.tuple;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.HList;
+import org.highj.data.HList;
 import org.highj.data.tuple.t1.T1Comonad;
 import org.highj.data.tuple.t1.T1Monad;
 import org.highj.typeclass0.compare.Eq;

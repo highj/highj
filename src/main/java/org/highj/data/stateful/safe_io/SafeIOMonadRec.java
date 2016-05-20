@@ -1,7 +1,7 @@
 package org.highj.data.stateful.safe_io;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.stateful.SafeIO;
 import org.highj.typeclass1.monad.MonadRec;
 

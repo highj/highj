@@ -1,7 +1,7 @@
 package org.highj.util;
 
-import org.highj.data.collection.List;
-import org.highj.data.collection.Set;
+import org.highj.data.List;
+import org.highj.data.Set;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,9 +29,9 @@ public class IterablesTest {
     @Test
     public void testConcat() throws Exception {
         assertThat(Iterables.concat()).isEmpty();
-        assertThat(Iterables.concat(List.nil())).isEmpty();
+        assertThat(Iterables.concat(List.Nil())).isEmpty();
         assertThat(Iterables.concat(List.of(0,8,15))).containsExactly(0,8,15);
-        assertThat(Iterables.concat(List.of(0,8,15), List.nil(), Set.of(4), List.nil())).containsExactly(0,8,15,4);
+        assertThat(Iterables.concat(List.of(0,8,15), List.Nil(), Set.of(4), List.Nil())).containsExactly(0,8,15,4);
     }
 
     @Test

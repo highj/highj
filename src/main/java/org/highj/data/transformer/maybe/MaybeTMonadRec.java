@@ -7,8 +7,8 @@ package org.highj.data.transformer.maybe;
 
 import java.util.function.Function;
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
-import org.highj.data.collection.Maybe;
+import org.highj.data.Either;
+import org.highj.data.Maybe;
 import org.highj.data.transformer.MaybeT;
 import org.highj.typeclass1.monad.MonadRec;
 
@@ -26,9 +26,9 @@ public interface MaybeTMonadRec<M> extends MaybeTMonad<M>, MonadRec<__<MaybeT.µ
         return new MaybeT<>(get().tailRec(
             (A a) -> get().map(
                 (Maybe<Either<A,B>> x) ->
-                    x.lazyCata(
-                        () -> Either.<A,Maybe<B>>newRight(Maybe.newNothing()),
-                        (Either<A,B> x2) -> x2.rightMap((B x3) -> Maybe.newJust(x3))
+                    x.cata$(
+                        () -> Either.<A,Maybe<B>>Right(Maybe.Nothing()),
+                        (Either<A,B> x2) -> x2.rightMap((B x3) -> Maybe.Just(x3))
                     ),
                 MaybeT.narrow(f.apply(a)).get()
             ),

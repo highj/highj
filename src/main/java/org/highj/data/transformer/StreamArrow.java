@@ -8,7 +8,7 @@ package org.highj.data.transformer;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.derive4j.hkt.__3;
-import org.highj.data.collection.Stream;
+import org.highj.data.Stream;
 import org.highj.data.transformer.stream_arrow.StreamArrowArrow;
 import org.highj.data.transformer.stream_arrow.StreamArrowArrowCircuit;
 import org.highj.data.transformer.stream_arrow.StreamArrowArrowLoop;

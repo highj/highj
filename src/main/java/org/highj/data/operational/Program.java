@@ -7,7 +7,7 @@ package org.highj.data.operational;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.functions.F1;
+import org.highj.function.F1;
 import org.highj.data.operational.program.ProgramApplicative;
 import org.highj.data.operational.program.ProgramApply;
 import org.highj.data.operational.program.ProgramBind;

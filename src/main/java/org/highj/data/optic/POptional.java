@@ -4,9 +4,9 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
-import org.highj.data.collection.Maybe;
-import org.highj.data.functions.F1;
+import org.highj.data.Either;
+import org.highj.data.Maybe;
+import org.highj.function.F1;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.monad.Applicative;
@@ -72,8 +72,8 @@ public abstract class POptional<S, T, A, B> {
     /** join two {@link POptional} with the same target */
     public final <S1, T1> POptional<Either<S, S1>, Either<T, T1>, A, B> sum(final POptional<S1, T1, A, B> other) {
         return pOptional(
-                e -> e.either(s -> getOrModify(s).leftMap(Either::newLeft),
-                        s1 -> other.getOrModify(s1).leftMap(Either::newRight)),
+                e -> e.either(s -> getOrModify(s).leftMap(Either::Left),
+                        s1 -> other.getOrModify(s1).leftMap(Either::Right)),
                 b -> e -> e.bimap(set(b), other.set(b)));
     }
 

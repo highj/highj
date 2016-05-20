@@ -1,7 +1,7 @@
 package org.highj.do_;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Maybe;
+import org.highj.data.Maybe;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -9,8 +9,8 @@ import static junit.framework.Assert.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import org.highj.data.collection.Either;
-import org.highj.data.collection.List;
+import org.highj.data.Either;
+import org.highj.data.List;
 import org.highj.do_.Do.DoBlock;
 import org.highj.do_.Do.MValue;
 import static org.highj.do_.Do.do_;
@@ -45,8 +45,8 @@ public class DoTest {
         Maybe<String> onetwo = Maybe.narrow(do_(Maybe.monad, new DoBlock<Maybe.µ,String>() {
             @Override
             public <H> __<Maybe.µ, String> run(Do.MContext<H, Maybe.µ> ctx) {
-                MValue<H,String> va = ctx.assign(Maybe.newJust("one"));
-                MValue<H,String> vb = ctx.assign(Maybe.newJust("two"));
+                MValue<H,String> va = ctx.assign(Maybe.Just("one"));
+                MValue<H,String> vb = ctx.assign(Maybe.Just("two"));
                 MValue<H,String> vr = ctx.let2(va, vb, (String a, String b) -> a + b);
                 return ctx.doneRes(vr);
             }
@@ -56,8 +56,8 @@ public class DoTest {
         Maybe<String> empty = Maybe.narrow(do_(Maybe.monad, new DoBlock<Maybe.µ,String>() {
             @Override
             public <H> __<Maybe.µ, String> run(Do.MContext<H, Maybe.µ> ctx) {
-                MValue<H,String> va = ctx.assign(Maybe.newJust("one"));
-                MValue<H,String> vb = ctx.assign(Maybe.newNothing());
+                MValue<H,String> va = ctx.assign(Maybe.Just("one"));
+                MValue<H,String> vb = ctx.assign(Maybe.Nothing());
                 MValue<H,String> vr = ctx.let2(va, vb, (String a, String b) -> a + b);
                 return ctx.doneRes(vr);
             }
@@ -70,14 +70,14 @@ public class DoTest {
         Either<String, Integer> handSum = Either.narrow(do_(Either.<String>monad(), new DoBlock<__<Either.µ,String>,Integer>() {
             @Override
             public <H> __<__<Either.µ, String>, Integer> run(Do.MContext<H, __<Either.µ, String>> ctx) {
-                MValue<H,Integer> va = ctx.assign(Either.newRight(6));
-                MValue<H,Integer> vb = ctx.assign(Either.newRight(7));
+                MValue<H,Integer> va = ctx.assign(Either.Right(6));
+                MValue<H,Integer> vb = ctx.assign(Either.Right(7));
                 return ctx.doneRes(ctx.assignBind2(va, vb, (Integer a, Integer b) -> {
                     int r = a + b;
                     if (r > 10) {
-                        return Either.<String, Integer>newLeft("Not enough fingers!");
+                        return Either.<String, Integer>Left("Not enough fingers!");
                     } else {
-                        return Either.<String, Integer>newRight(r);
+                        return Either.<String, Integer>Right(r);
                     }
                 }));
             }

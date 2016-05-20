@@ -2,13 +2,11 @@ package org.highj.typeclass2.arrow;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.functions.Functions;
+import org.highj.function.Functions;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass1.monad.Applicative;
 
 import java.util.function.Function;
-
-import static org.derive4j.hkt.__2.coerce;
 
 @FunctionalInterface
 public interface ApplicativeFromArrow<Arr,X> extends Applicative<__<Arr, X>> {

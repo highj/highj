@@ -3,9 +3,9 @@ package org.highj.data.tuple;
 import org.derive4j.hkt.__;
 import org.highj.data.tuple.t2.T2Monad;
 import org.highj.typeclass0.compare.Eq;
-import org.highj.data.functions.F1;
-import org.highj.data.functions.Integers;
-import org.highj.data.functions.Strings;
+import org.highj.function.F1;
+import org.highj.function.Integers;
+import org.highj.function.Strings;
 import org.junit.Test;
 
 import java.util.function.Supplier;

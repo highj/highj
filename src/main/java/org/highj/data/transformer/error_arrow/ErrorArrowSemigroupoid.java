@@ -7,7 +7,7 @@ package org.highj.data.transformer.error_arrow;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.transformer.ErrorArrow;
 import org.highj.typeclass2.arrow.ArrowChoice;
 import org.highj.typeclass2.arrow.Semigroupoid;
@@ -24,7 +24,7 @@ public interface ErrorArrowSemigroupoid<EX,A> extends Semigroupoid<__<__<ErrorAr
     public default <B, C, D> ErrorArrow<EX, A, B, D> dot(__2<__<__<ErrorArrow.µ, EX>, A>, C, D> cd, __2<__<__<ErrorArrow.µ, EX>, A>, B, C> bc) {
         return ErrorArrow.errorArrow(a().dot(
             a().fanin(
-                a().arr(Either::newLeft),
+                a().arr(Either::Left),
                 ErrorArrow.narrow(cd).run()
             ),
             ErrorArrow.narrow(bc).run()

@@ -1,7 +1,7 @@
 package org.highj.typeclass1.monad;
 
 import org.derive4j.hkt.__;
-import org.highj.data.functions.Functions;
+import org.highj.function.Functions;
 
 import java.util.function.Function;
 

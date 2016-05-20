@@ -7,7 +7,7 @@ package org.highj.data.transformer.error;
 
 import java.util.function.Function;
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.transformer.ErrorT;
 import org.highj.typeclass1.monad.Apply;
 
@@ -23,10 +23,10 @@ public interface ErrorTApply<E,M> extends ErrorTFunctor<E,M>, Apply<__<__<ErrorT
     public default <A, B> ErrorT<E, M, B> ap(__<__<__<ErrorT.µ, E>, M>, Function<A, B>> fn, __<__<__<ErrorT.µ, E>, M>, A> nestedA) {
         return () -> get().apply2(
             (Either<E,Function<A,B>> fn2) -> (Either<E,A> a) -> fn2.either(
-                Either::<E,B>newLeft,
+                Either::<E,B>Left,
                 (Function<A,B> fn3) -> a.either(
-                    Either::<E,B>newLeft,
-                    (A a2) -> Either.<E,B>newRight(fn3.apply(a2))
+                    Either::<E,B>Left,
+                    (A a2) -> Either.<E,B>Right(fn3.apply(a2))
                 )
             ),
             ErrorT.narrow(fn).run(),

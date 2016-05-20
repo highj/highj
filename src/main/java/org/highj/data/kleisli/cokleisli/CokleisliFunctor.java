@@ -1,7 +1,7 @@
 package org.highj.data.kleisli.cokleisli;
 
 import org.derive4j.hkt.__;
-import org.highj.data.functions.Functions;
+import org.highj.function.Functions;
 import org.highj.data.kleisli.Cokleisli;
 import org.highj.typeclass1.functor.Functor;
 

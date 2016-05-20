@@ -1,7 +1,7 @@
 package org.highj.typeclass2.arrow;
 
 import org.derive4j.hkt.__2;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 
 public interface ArrowChoice<A> extends Arrow<A> {
     public <B, C, D> __2<A, Either<B, D>, Either<C, D>> left(__2<A, B, C> arrow);

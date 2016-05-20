@@ -5,9 +5,9 @@ import java.util.function.Function;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.collection.Either;
-import org.highj.data.functions.F1;
-import org.highj.data.functions.F3;
+import org.highj.data.Either;
+import org.highj.function.F1;
+import org.highj.function.F3;
 import org.highj.typeclass1.monad.Applicative;
 
 public final class Traversal<S, A> extends PTraversal<S, S, A, A> implements __2<Traversal.µ, S, A> {

@@ -7,7 +7,7 @@ package org.highj.data.transformer.error;
 
 import java.util.function.Function;
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.transformer.ErrorT;
 import org.highj.typeclass1.monad.MonadError;
 
@@ -19,7 +19,7 @@ public interface ErrorTMonadError<E,M> extends ErrorTMonad<E,M>, MonadError<E,__
     
     @Override
     public default <A> ErrorT<E, M, A> throwError(E error) {
-        return () -> get().pure(Either.<E,A>newLeft(error));
+        return () -> get().pure(Either.<E,A>Left(error));
     }
 
     @Override
@@ -28,7 +28,7 @@ public interface ErrorTMonadError<E,M> extends ErrorTMonad<E,M>, MonadError<E,__
             ErrorT.narrow(ma).run(),
             (Either<E,A> a) -> a.either(
                 (E e) -> ErrorT.narrow(fn.apply(e)).run(),
-                (A a2) -> get().pure(Either.<E,A>newRight(a2))
+                (A a2) -> get().pure(Either.<E,A>Right(a2))
             )
         );
     }

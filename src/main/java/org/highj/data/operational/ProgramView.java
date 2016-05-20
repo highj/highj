@@ -6,7 +6,7 @@
 package org.highj.data.operational;
 
 import org.derive4j.hkt.__;
-import org.highj.data.functions.F1;
+import org.highj.function.F1;
 
 /**
  *

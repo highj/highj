@@ -1,7 +1,7 @@
 package org.highj.typeclass1.comonad;
 
 import org.derive4j.hkt.__;
-import org.highj.data.functions.Functions;
+import org.highj.function.Functions;
 import org.highj.typeclass1.functor.Functor;
 
 import java.util.function.Function;

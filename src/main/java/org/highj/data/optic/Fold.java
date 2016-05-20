@@ -4,12 +4,12 @@ import java.util.function.Function;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.collection.Either;
-import org.highj.data.collection.List;
-import org.highj.data.collection.Maybe;
-import org.highj.data.functions.Booleans;
-import org.highj.data.functions.F1;
-import org.highj.data.functions.Functions;
+import org.highj.data.Either;
+import org.highj.data.List;
+import org.highj.data.Maybe;
+import org.highj.function.Booleans;
+import org.highj.function.F1;
+import org.highj.function.Functions;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.foldable.Foldable;
@@ -50,7 +50,7 @@ public abstract class Fold<S, A> implements __2<Fold.µ, S, A> {
 
     /** find the first target of a {@link Fold} matching the predicate */
     public final F1<S, Maybe<A>> find(final F1<A, Boolean> p) {
-        return foldMap(Maybe.firstMonoid(), a -> Maybe.justWhenTrue(p.apply(a), () -> a));
+        return foldMap(Maybe.firstMonoid(), a -> Maybe.JustWhenTrue(p.apply(a), () -> a));
     }
 
     /** get the first target of a {@link Fold} */
@@ -101,7 +101,7 @@ public abstract class Fold<S, A> implements __2<Fold.µ, S, A> {
             @Override
             public <M> F1<Either<S, B>, M> foldMap(final Monoid<M> m, final Function<Either<A, B>, M> f) {
                 return e -> e.either(
-                        s -> Fold.this.foldMap(m, a -> f.apply(Either.newLeft(a))).apply(s),
+                        s -> Fold.this.foldMap(m, a -> f.apply(Either.Left(a))).apply(s),
                         Functions.constant(m.identity())
                         );
 
@@ -115,7 +115,7 @@ public abstract class Fold<S, A> implements __2<Fold.µ, S, A> {
             public <M> F1<Either<B, S>, M> foldMap(final Monoid<M> m, final Function<Either<B, A>, M> f) {
                 return e -> e.either(
                         Functions.constant(m.identity()),
-                        s -> Fold.this.foldMap(m, b -> f.apply(Either.newRight(b))).apply(s)
+                        s -> Fold.this.foldMap(m, b -> f.apply(Either.Right(b))).apply(s)
                         );
             }
         };

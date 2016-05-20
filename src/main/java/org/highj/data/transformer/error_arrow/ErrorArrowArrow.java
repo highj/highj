@@ -9,8 +9,8 @@ import java.util.function.Function;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.collection.Either;
-import org.highj.data.functions.F1;
+import org.highj.data.Either;
+import org.highj.function.F1;
 import org.highj.data.transformer.ErrorArrow;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.Arrow;
@@ -23,7 +23,7 @@ public interface ErrorArrowArrow<EX,A> extends ErrorArrowCategory<EX,A>, Arrow<_
 
     @Override
     public default <B, C> ErrorArrow<EX, A, B, C> arr(Function<B, C> fn) {
-        return ErrorArrow.errorArrow(a().arr(F1.compose(Either::newRight, fn)));
+        return ErrorArrow.errorArrow(a().arr(F1.compose(Either::Right, fn)));
     }
 
     @Override
@@ -31,8 +31,8 @@ public interface ErrorArrowArrow<EX,A> extends ErrorArrowCategory<EX,A>, Arrow<_
         class Util {
             <X,Y> Either<EX,T2<X,Y>> rstrength(T2<Either<EX,X>,Y> x) {
                 return x._1().either(
-                    Either::<EX,T2<X,Y>>newLeft,
-                    (X x2) -> Either.<EX,T2<X,Y>>newRight(T2.of(x2, x._2()))
+                    Either::<EX,T2<X,Y>>Left,
+                    (X x2) -> Either.<EX,T2<X,Y>>Right(T2.of(x2, x._2()))
                 );
             }
         }
