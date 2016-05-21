@@ -61,7 +61,7 @@ public class Set<A> implements __<Set.µ, A>, Iterable<A>, Predicate<A> {
      * Checks whether the set contains a given value.
      *
      * @param value value to check
-     * @return {@link true} if the set contains the value, {@link false} otherwise
+     * @return true if the set contains the value
      */
     @Override
     public boolean test(A value) {
@@ -164,7 +164,7 @@ public class Set<A> implements __<Set.µ, A>, Iterable<A>, Predicate<A> {
     /**
      * Checks whether the set is empty.
      *
-     * @return {@link true} if the set is empty, {@link false} otherwise
+     * @return true if the set is empty, false otherwise
      */
     public boolean isEmpty() {
         return this == EMPTY;
@@ -182,7 +182,7 @@ public class Set<A> implements __<Set.µ, A>, Iterable<A>, Predicate<A> {
     }
 
     /**
-     * Contructs a set holding a single element.
+     * Constructs a set holding a single element.
      *
      * @param a the element
      * @param <A> the element type
@@ -406,8 +406,8 @@ public class Set<A> implements __<Set.µ, A>, Iterable<A>, Predicate<A> {
 
     /**
      * Counts the number of elements satisfying a predicate.
-     * @param predicate
-     * @return
+     * @param predicate the Predicate to test
+     * @return the number of occurrences
      */
     public int count(Predicate<? super A> predicate) {
         int result = 0;

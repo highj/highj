@@ -298,7 +298,7 @@ public abstract class Either<A, B> implements __2<Either.µ, A, B> {
      * Extracts the Left value.
      *
      * @return the Left value
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException when called on a Right
      */
     public A getLeft() throws NoSuchElementException {
         return either(Function.identity(), Functions.constant(
@@ -309,7 +309,7 @@ public abstract class Either<A, B> implements __2<Either.µ, A, B> {
      * Extracts the Right value.
      *
      * @return the Right value
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException when called on a Left
      */
     public B getRight() throws NoSuchElementException {
         return either(Functions.constant(

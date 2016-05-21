@@ -15,9 +15,9 @@ import org.highj.typeclass1.monad.Applicative;
  *
  * <pre>
  *              get                           reverse.get
- *     -------------------->             -------------------->
+ *     --------------------&gt;             --------------------&gt;
  *   S                       A         T                       B
- *     <--------------------             <--------------------
+ *     &lt;--------------------             &lt;--------------------
  *       reverse.reverseGet                   reverseGet
  * </pre>
  *
@@ -31,7 +31,7 @@ import org.highj.typeclass1.monad.Applicative;
  * get |           | reverseGet     reverse.reverseGet |           | reverse.get
  *     |           |                                   |           |
  *     ↓     f     |                                   |     g     ↓
- *     A --------> B                                   A <-------- B
+ *     A --------&gt; B                                   A &lt;-------- B
  * </pre>
  *
  * A {@link PIso} is also a valid {@link Getter}, {@link Fold}, {@link PLens}, {@link PPrism}, {@link POptional},
@@ -48,17 +48,25 @@ public abstract class PIso<S, T, A, B> {
         super();
     }
 
-    /** get the target of a {@link PIso} */
+    /** Get the target of a {@link PIso}
+     * @return the target value
+     */
     public abstract A get(S s);
 
-    /** get the modified source of a {@link PIso} */
+    /** Get the modified source of a {@link PIso}
+     * @param b the modified target
+     * @return the modified source
+     */
     public abstract T reverseGet(B b);
 
-    /** reverse a {@link PIso}: the source becomes the target and the target becomes the source */
+    /** Reverse a {@link PIso}: the source becomes the target and the target becomes the source
+     * @return the reversed {@link PIso}
+     */
     public abstract PIso<B, A, T, S> reverse();
 
     /**
-     * modify polymorphically the target of a {@link PIso} with an Applicative function
+     * Modify polymorphically the target of a {@link PIso} with an Applicative function
+     *
      */
     public final <X> F1<S, __<X, T>> modifyF(final Applicative<X> applicative, final Function<A, __<X, B>> f) {
         return s -> applicative.map(this::reverseGet, f.apply(get(s)));
