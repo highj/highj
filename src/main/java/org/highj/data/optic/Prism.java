@@ -4,8 +4,8 @@ import java.util.function.Function;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.collection.Either;
-import org.highj.data.collection.Maybe;
+import org.highj.data.Either;
+import org.highj.data.Maybe;
 import org.highj.typeclass2.arrow.Category;
 
 /**
@@ -107,7 +107,7 @@ public final class Prism<S, A> extends PPrism<S, S, A, A> implements __2<Prism.Â
 
             @Override
             public Either<S, A> getOrModify(final S s) {
-                return getMaybe.apply(s).cata(Either.<S, A>newLeft(s), Either::<S, A>newRight);
+                return getMaybe.apply(s).cata(Either.<S, A>Left(s), Either::<S, A>Right);
             }
 
             @Override

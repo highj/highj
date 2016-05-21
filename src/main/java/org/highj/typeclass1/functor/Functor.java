@@ -2,7 +2,7 @@ package org.highj.typeclass1.functor;
 
 import org.derive4j.hkt.__;
 import org.highj.data.tuple.T0;
-import org.highj.data.functions.Functions;
+import org.highj.function.Functions;
 import org.highj.typeclass1.invariant.Invariant;
 
 import java.util.function.Function;

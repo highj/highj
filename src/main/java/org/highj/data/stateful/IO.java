@@ -5,7 +5,7 @@ import org.derive4j.hkt.__;
 import org.highj.data.stateful.io.IOMonad;
 
 import java.util.function.Function;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.stateful.io.IOApplicative;
 import org.highj.data.stateful.io.IOApply;
 import org.highj.data.stateful.io.IOBind;
@@ -27,9 +27,9 @@ public interface IO<A> extends __<IO.µ, A> {
     public default SafeIO<Either<IOException,A>> toSafeIO() {
         return () -> {
             try {
-                return Either.<IOException,A>newRight(run());
+                return Either.<IOException,A>Right(run());
             } catch (IOException ex) {
-                return Either.<IOException,A>newLeft(ex);
+                return Either.<IOException,A>Left(ex);
             }
         };
     }

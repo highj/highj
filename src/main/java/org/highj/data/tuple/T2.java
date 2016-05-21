@@ -2,9 +2,9 @@ package org.highj.data.tuple;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.collection.HList;
-import org.highj.data.collection.HList.HCons;
-import org.highj.data.collection.HList.HNil;
+import org.highj.data.HList;
+import org.highj.data.HList.HCons;
+import org.highj.data.HList.HNil;
 import org.highj.data.tuple.t2.T2Biapplicative;
 import org.highj.data.tuple.t2.T2Bind;
 import org.highj.data.tuple.t2.T2Comonad;

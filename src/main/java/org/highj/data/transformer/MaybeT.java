@@ -2,7 +2,7 @@ package org.highj.data.transformer;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.collection.Maybe;
+import org.highj.data.Maybe;
 import org.highj.data.transformer.maybe.*;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Applicative;

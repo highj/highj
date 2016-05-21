@@ -4,8 +4,8 @@ import java.util.function.Function;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.collection.Either;
-import org.highj.data.functions.F1;
+import org.highj.data.Either;
+import org.highj.function.F1;
 import org.highj.typeclass1.monad.Applicative;
 
 /**

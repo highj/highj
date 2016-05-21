@@ -1,10 +1,10 @@
 package org.highj.typeclass1.comonad;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.List;
-import org.highj.data.collection.Stream;
+import org.highj.data.List;
+import org.highj.data.Stream;
 import org.highj.data.tuple.T2;
-import org.highj.data.functions.Functions;
+import org.highj.function.Functions;
 
 import java.util.function.Function;
 
@@ -28,7 +28,7 @@ public interface Comonad<W> extends Extend<W> {
 
     public default <A, B> Function<__<W, List<A>>, List<B>> mapW(final Function<__<W, A>, B> fn) {
         return a -> {
-            List<B> listB = List.nil();
+            List<B> listB = List.Nil();
             __<W, List<A>> listA = a;
             while(! extract(listA).isEmpty()) {
                 listB = listB.plus(fn.apply(this.<List<A>, A>map(List::head, listA)));
@@ -50,7 +50,7 @@ public interface Comonad<W> extends Extend<W> {
     }
 
    public default <A, B> List<B> sequenceW(List<Function<__<W, A>, B>> fnList, __<W, A> nestedA) {
-        List<B> listB = List.nil();
+        List<B> listB = List.Nil();
         List<Function<__<W, A>, B>> fns = fnList;
         while(! fns.isEmpty()){
             listB = listB.plus(fns.head().apply(nestedA));

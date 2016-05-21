@@ -9,7 +9,7 @@ import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.derive4j.hkt.__3;
 import org.derive4j.hkt.__4;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.transformer.error_arrow.ErrorArrowArrow;
 import org.highj.data.transformer.error_arrow.ErrorArrowArrowChoice;
 import org.highj.data.transformer.error_arrow.ErrorArrowArrowError;

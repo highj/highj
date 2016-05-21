@@ -21,7 +21,7 @@ class Bifoldable p where
 
 
 import org.derive4j.hkt.__2;
-import org.highj.data.functions.Functions;
+import org.highj.function.Functions;
 import org.highj.typeclass0.group.Monoid;
 
 import java.util.function.Function;

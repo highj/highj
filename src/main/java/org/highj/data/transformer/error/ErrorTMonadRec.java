@@ -7,7 +7,7 @@ package org.highj.data.transformer.error;
 
 import java.util.function.Function;
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.transformer.ErrorT;
 import org.highj.typeclass1.monad.MonadRec;
 
@@ -25,8 +25,8 @@ public interface ErrorTMonadRec<E,M> extends ErrorTMonad<E,M>, MonadRec<__<__<Er
             (A a) -> get().map(
                 (Either<E,Either<A,B>> x) ->
                     x.either(
-                        (E err) -> Either.<A,Either<E,B>>newRight(Either.newLeft(err)),
-                        (Either<A,B> x2) -> x2.rightMap((B x3) -> Either.<E,B>newRight(x3))
+                        (E err) -> Either.<A,Either<E,B>>Right(Either.Left(err)),
+                        (Either<A,B> x2) -> x2.rightMap((B x3) -> Either.<E,B>Right(x3))
                     ),
                 ErrorT.narrow(f.apply(a)).run()
             ),

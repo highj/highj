@@ -3,8 +3,8 @@ package org.highj.data.optic;
 import java.util.function.Function;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
-import org.highj.data.functions.F1;
+import org.highj.data.Either;
+import org.highj.function.F1;
 import org.highj.typeclass1.functor.Functor;
 
 /**

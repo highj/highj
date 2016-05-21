@@ -7,7 +7,7 @@ package org.highj.data.transformer.error;
 
 import java.util.function.Function;
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.transformer.ErrorT;
 import org.highj.typeclass1.functor.Functor;
 

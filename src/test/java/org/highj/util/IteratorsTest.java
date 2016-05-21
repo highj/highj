@@ -2,7 +2,7 @@ package org.highj.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.highj.data.collection.List;
+import org.highj.data.List;
 import org.junit.Test;
 
 import java.util.Iterator;

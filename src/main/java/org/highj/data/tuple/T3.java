@@ -2,9 +2,9 @@ package org.highj.data.tuple;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__3;
-import org.highj.data.collection.HList;
-import org.highj.data.collection.HList.HCons;
-import org.highj.data.collection.HList.HNil;
+import org.highj.data.HList;
+import org.highj.data.HList.HCons;
+import org.highj.data.HList.HNil;
 import org.highj.data.tuple.t3.*;
 import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.compare.Ord;

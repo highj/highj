@@ -6,7 +6,7 @@
 package org.highj.data.transformer.stream_arrow;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Stream;
+import org.highj.data.Stream;
 import org.highj.data.transformer.StreamArrow;
 import org.highj.typeclass2.arrow.ArrowCircuit;
 

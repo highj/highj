@@ -7,7 +7,7 @@ package org.highj.data.transformer.error_arrow;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.transformer.ErrorArrow;
 import org.highj.typeclass2.arrow.ArrowChoice;
 
@@ -23,10 +23,10 @@ public interface ErrorArrowArrowChoice<EX,A> extends ErrorArrowArrow<EX,A>, Arro
             <X,Y,Z> Either<X,Either<Y,Z>> assocsum(Either<Either<X,Y>,Z> x) {
                 return x.either(
                     (Either<X,Y> x2) -> x2.either(
-                        (X x3) -> Either.<X,Either<Y,Z>>newLeft(x3),
-                        (Y x3) -> Either.<X,Either<Y,Z>>newRight(Either.<Y,Z>newLeft(x3))
+                        (X x3) -> Either.<X,Either<Y,Z>>Left(x3),
+                        (Y x3) -> Either.<X,Either<Y,Z>>Right(Either.<Y,Z>Left(x3))
                     ),
-                    (Z x2) -> Either.<X,Either<Y,Z>>newRight(Either.<Y,Z>newRight(x2))
+                    (Z x2) -> Either.<X,Either<Y,Z>>Right(Either.<Y,Z>Right(x2))
                 );
             }
         }

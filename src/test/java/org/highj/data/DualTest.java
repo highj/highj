@@ -1,7 +1,7 @@
 package org.highj.data;
 
 import org.derive4j.hkt.__;
-import org.highj.data.functions.F1;
+import org.highj.function.F1;
 import org.highj.data.structural.Dual;
 import org.highj.typeclass2.arrow.Category;
 import org.junit.Test;

@@ -4,8 +4,8 @@ import java.util.function.Function;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.collection.Either;
-import org.highj.data.functions.F1;
+import org.highj.data.Either;
+import org.highj.function.F1;
 
 /** {@link PSetter} with a monomorphic modify function */
 public final class Setter<S, A> extends PSetter<S, S, A, A> implements __2<Setter.µ, S, A> {

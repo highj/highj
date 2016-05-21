@@ -7,7 +7,7 @@ package org.highj.data.transformer.error_arrow;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.transformer.ErrorArrow;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.ArrowError;
@@ -20,7 +20,7 @@ public interface ErrorArrowArrowError<EX,A> extends ErrorArrowArrow<EX,A>, Arrow
 
     @Override
     public default <B> ErrorArrow<EX, A, EX, B> raise() {
-        return ErrorArrow.errorArrow(a().arr(Either::newLeft));
+        return ErrorArrow.errorArrow(a().arr(Either::Left));
     }
 
     @Override
@@ -28,8 +28,8 @@ public interface ErrorArrowArrowError<EX,A> extends ErrorArrowArrow<EX,A>, Arrow
         class Util {
             <X,Y> Either<T2<X,EX>,T2<X,Y>> distr(T2<X,Either<EX,Y>> x) {
                 return x._2().either(
-                    (EX ex) -> Either.<T2<X,EX>,T2<X,Y>>newLeft(T2.of(x._1(), ex)),
-                    (Y x2) -> Either.<T2<X,EX>,T2<X,Y>>newRight(T2.of(x._1(), x2))
+                    (EX ex) -> Either.<T2<X,EX>,T2<X,Y>>Left(T2.of(x._1(), ex)),
+                    (Y x2) -> Either.<T2<X,EX>,T2<X,Y>>Right(T2.of(x._1(), x2))
                 );
             }
         }

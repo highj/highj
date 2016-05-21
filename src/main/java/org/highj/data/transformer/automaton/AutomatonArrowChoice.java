@@ -7,7 +7,7 @@ package org.highj.data.transformer.automaton;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.transformer.Automaton;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.ArrowChoice;
@@ -25,8 +25,8 @@ public interface AutomatonArrowChoice<A> extends AutomatonArrow<A>, ArrowChoice<
         return () -> get().dot(
             get().arr((Either<T2<C,Automaton<A,B,C>>,D> x1) ->
                 x1.either(
-                    (T2<C,Automaton<A,B,C>> x2) -> T2.of(Either.newLeft(x2._1()), left(x2._2())),
-                    (D x2) -> T2.of(Either.newRight(x2), left(arrow))
+                    (T2<C,Automaton<A,B,C>> x2) -> T2.of(Either.Left(x2._1()), left(x2._2())),
+                    (D x2) -> T2.of(Either.Right(x2), left(arrow))
                 )
             ),
             get().left(Automaton.narrow(arrow).unAutomaton())

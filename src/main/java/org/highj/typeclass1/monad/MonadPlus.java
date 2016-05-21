@@ -1,7 +1,7 @@
 package org.highj.typeclass1.monad;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.List;
+import org.highj.data.List;
 import org.highj.typeclass1.alternative.Alternative;
 
 public interface MonadPlus<M> extends MonadZero<M>, Alternative<M> {

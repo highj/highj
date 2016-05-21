@@ -1,8 +1,8 @@
 package org.highj.typeclass1.monad;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
-import org.highj.data.functions.F3;
+import org.highj.data.Either;
+import org.highj.function.F3;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 

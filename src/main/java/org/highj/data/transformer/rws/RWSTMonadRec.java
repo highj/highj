@@ -7,7 +7,7 @@ package org.highj.data.transformer.rws;
 
 import java.util.function.Function;
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.transformer.RWST;
 import org.highj.data.tuple.T3;
 import org.highj.typeclass1.monad.MonadRec;
@@ -29,8 +29,8 @@ public interface RWSTMonadRec<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadRec<__<_
                     S nextS = x2._2();
                     W nextW = w().apply(x._3(), x2._3());
                     return x2._1().either(
-                        (A x3) -> Either.<T3<A,S,W>,T3<B,S,W>>newLeft(T3.of(x3, nextS, nextW)),
-                        (B x3) -> Either.<T3<A,S,W>,T3<B,S,W>>newRight(T3.of(x3, nextS, nextW))
+                        (A x3) -> Either.<T3<A,S,W>,T3<B,S,W>>Left(T3.of(x3, nextS, nextW)),
+                        (B x3) -> Either.<T3<A,S,W>,T3<B,S,W>>Right(T3.of(x3, nextS, nextW))
                     );
                 },
                 RWST.narrow(f.apply(x._1())).run(r, x._2())

@@ -7,7 +7,7 @@ package org.highj.data.transformer;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__3;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.transformer.error.ErrorTApplicative;
 import org.highj.data.transformer.error.ErrorTApply;
 import org.highj.data.transformer.error.ErrorTBind;

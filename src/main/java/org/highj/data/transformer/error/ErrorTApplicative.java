@@ -6,7 +6,7 @@
 package org.highj.data.transformer.error;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
+import org.highj.data.Either;
 import org.highj.data.transformer.ErrorT;
 import org.highj.typeclass1.monad.Applicative;
 
@@ -20,6 +20,6 @@ public interface ErrorTApplicative<E,M> extends ErrorTApply<E,M>, Applicative<__
 
     @Override
     public default <A> ErrorT<E, M, A> pure(A a) {
-        return () -> get().pure(Either.newRight(a));
+        return () -> get().pure(Either.Right(a));
     }
 }

@@ -3,13 +3,13 @@ package org.highj.data.optic;
 import java.util.function.Function;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
-import org.highj.data.collection.List;
-import org.highj.data.collection.Maybe;
-import org.highj.data.functions.Booleans;
-import org.highj.data.functions.F1;
-import org.highj.data.functions.F3;
-import org.highj.data.functions.F4;
+import org.highj.data.Either;
+import org.highj.data.List;
+import org.highj.data.Maybe;
+import org.highj.function.Booleans;
+import org.highj.function.F1;
+import org.highj.function.F3;
+import org.highj.function.F4;
 import org.highj.data.structural.Const;
 import org.highj.data.tuple.T1;
 import org.highj.typeclass0.group.Monoid;
@@ -51,7 +51,7 @@ public abstract class PTraversal<S, T, A, B> {
 
     /** find the first target of a {@link PTraversal} matching the predicate */
     public final F1<S, Maybe<A>> find(final Function<A, Boolean> p) {
-        return foldMap(Maybe.firstMonoid(), a -> Maybe.justWhenTrue(p.apply(a),() -> a));
+        return foldMap(Maybe.firstMonoid(), a -> Maybe.JustWhenTrue(p.apply(a),() -> a));
     }
 
     /** get the first target of a {@link PTraversal} */
@@ -87,8 +87,8 @@ public abstract class PTraversal<S, T, A, B> {
             public <X> F1<Either<S, S1>, __<X, Either<T, T1>>> modifyF(final Applicative<X> applicative,
                     final Function<A, __<X, B>> f) {
                 return ss1 -> ss1.either(
-                        s -> applicative.map(Either::<T,T1>newLeft, self.modifyF(applicative, f).apply(s)),
-                        s1 -> applicative.map(Either::<T,T1>newRight, other.modifyF(applicative, f).apply(s1))
+                        s -> applicative.map(Either::<T,T1>Left, self.modifyF(applicative, f).apply(s)),
+                        s1 -> applicative.map(Either::<T,T1>Right, other.modifyF(applicative, f).apply(s1))
                         );
             }
 
@@ -177,8 +177,8 @@ public abstract class PTraversal<S, T, A, B> {
             public <X> F1<Either<S, S>, __<X, Either<T, T>>> modifyF(final Applicative<X> applicative,
                     final Function<S, __<X, T>> f) {
                 return s -> s.bimap(f, f).either(
-                        e -> applicative.map(Either::<T,T>newLeft, e),
-                        e -> applicative.map(Either::<T,T>newRight, e)
+                        e -> applicative.map(Either::<T,T>Left, e),
+                        e -> applicative.map(Either::<T,T>Right, e)
                         );
             }
 

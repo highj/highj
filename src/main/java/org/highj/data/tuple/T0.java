@@ -1,7 +1,7 @@
 package org.highj.data.tuple;
 
 import org.highj.data.compare.Ordering;
-import org.highj.data.collection.HList;
+import org.highj.data.HList;
 import org.highj.data.tuple.t0.T0Group;
 import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.compare.Ord;

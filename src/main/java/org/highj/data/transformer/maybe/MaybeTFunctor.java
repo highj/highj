@@ -1,7 +1,7 @@
 package org.highj.data.transformer.maybe;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Maybe;
+import org.highj.data.Maybe;
 import org.highj.data.transformer.MaybeT;
 import org.highj.typeclass1.functor.Functor;
 

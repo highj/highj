@@ -5,9 +5,9 @@ import org.derive4j.Derive;
 import org.derive4j.Visibility;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__3;
-import org.highj.data.collection.Either;
-import org.highj.data.collection.Maybe;
-import org.highj.data.functions.F1;
+import org.highj.data.Either;
+import org.highj.data.Maybe;
+import org.highj.function.F1;
 import org.highj.data.tuple.T0;
 import org.highj.data.tuple.T1;
 import org.highj.data.tuple.T2;
@@ -70,12 +70,12 @@ public abstract class GeneratorT<E,M,A> implements __3<GeneratorT.µ,E,M,A> {
         return mMonadRec.tailRec(
                 GeneratorTImpl
                         .<E,M,A>cases()
-                        .done((A result) -> mMonadRec.pure(Either.<GeneratorT<E,M,A>,Either<A, T2<E,GeneratorT<E,M,A>>>>newRight(Either.<A,T2<E,GeneratorT<E,M,A>>>newLeft(result))))
-                        .emit((E emitValue, GeneratorT<E, M, A> rest) -> mMonadRec.pure(Either.<GeneratorT<E,M,A>,Either<A, T2<E,GeneratorT<E,M,A>>>>newRight(Either.<A,T2<E,GeneratorT<E,M,A>>>newRight(T2.of(emitValue, rest)))))
+                        .done((A result) -> mMonadRec.pure(Either.<GeneratorT<E,M,A>,Either<A, T2<E,GeneratorT<E,M,A>>>>Right(Either.<A,T2<E,GeneratorT<E,M,A>>>Left(result))))
+                        .emit((E emitValue, GeneratorT<E, M, A> rest) -> mMonadRec.pure(Either.<GeneratorT<E,M,A>,Either<A, T2<E,GeneratorT<E,M,A>>>>Right(Either.<A,T2<E,GeneratorT<E,M,A>>>Right(T2.of(emitValue, rest)))))
                         .bind((Bound<E,M,?,A> bound) -> runBound(mMonadRec, bound))
-                        .suspend((Supplier<GeneratorT<E,M,A>> suspend) -> mMonadRec.pure(Either.<GeneratorT<E,M,A>,Either<A, T2<E,GeneratorT<E,M,A>>>>newLeft(suspend.get())))
+                        .suspend((Supplier<GeneratorT<E,M,A>> suspend) -> mMonadRec.pure(Either.<GeneratorT<E,M,A>,Either<A, T2<E,GeneratorT<E,M,A>>>>Left(suspend.get())))
                         .lift((__<M,A> ma) -> mMonadRec.map(
-                                (A a) -> Either.<GeneratorT<E,M,A>,Either<A, T2<E,GeneratorT<E,M,A>>>>newRight(Either.<A,T2<E,GeneratorT<E,M,A>>>newLeft(a)),
+                                (A a) -> Either.<GeneratorT<E,M,A>,Either<A, T2<E,GeneratorT<E,M,A>>>>Right(Either.<A,T2<E,GeneratorT<E,M,A>>>Left(a)),
                                 ma
                         )),
                 this
@@ -106,27 +106,27 @@ public abstract class GeneratorT<E,M,A> implements __3<GeneratorT.µ,E,M,A> {
     public static <E,M,A,B> __<M,Either<GeneratorT<E,M,A>,Either<A,T2<E,GeneratorT<E,M,A>>>>> runBound(Monad<M> mMonad, Bound<E,M,B,A> bound) {
         return GeneratorTImpl
                 .<E,M,B>cases()
-                .done((B b) -> mMonad.pure(Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>newLeft(bound.f().apply(b))))
-                .emit((E e, GeneratorT<E, M, B> rest) -> mMonad.pure(Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>newRight(Either.<A, T2<E, GeneratorT<E, M, A>>>newRight(T2.of(e, GeneratorT.bind(rest, bound.f()))))))
+                .done((B b) -> mMonad.pure(Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>Left(bound.f().apply(b))))
+                .emit((E e, GeneratorT<E, M, B> rest) -> mMonad.pure(Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>Right(Either.<A, T2<E, GeneratorT<E, M, A>>>Right(T2.of(e, GeneratorT.bind(rest, bound.f()))))))
                 .bind((Bound<E, M, ?, B> bound2) ->
                         mMonad.map(
                                 (Either<GeneratorT<E, M, B>, Either<B, T2<E, GeneratorT<E, M, B>>>> x) ->
                                         x.<Either<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>>either(
                                                 (GeneratorT<E, M, B> genB) ->
-                                                        Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>newLeft(GeneratorT.bind(genB, bound.f())),
+                                                        Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>Left(GeneratorT.bind(genB, bound.f())),
                                                 (Either<B, T2<E, GeneratorT<E, M, B>>> x2) ->
                                                         x2.either(
                                                                 (B b) ->
-                                                                        Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>newLeft(bound.f().apply(b)),
+                                                                        Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>Left(bound.f().apply(b)),
                                                                 (T2<E, GeneratorT<E, M, B>> x3) ->
-                                                                        Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>newRight(Either.<A, T2<E, GeneratorT<E, M, A>>>newRight(T2.of(x3._1(), GeneratorT.bind(x3._2(), bound.f()))))
+                                                                        Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>Right(Either.<A, T2<E, GeneratorT<E, M, A>>>Right(T2.of(x3._1(), GeneratorT.bind(x3._2(), bound.f()))))
                                                         )
                                         ),
                                 runBound(mMonad, bound2)
                         )
                 )
-                .suspend((Supplier<GeneratorT<E,M,B>> suspend) -> mMonad.pure(Either.newLeft(GeneratorT.bind(suspend.get(), bound.f()))))
-                .lift((__<M, B> mb) -> mMonad.map((B b) -> Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>newLeft(bound.f().apply(b)), mb))
+                .suspend((Supplier<GeneratorT<E,M,B>> suspend) -> mMonad.pure(Either.Left(GeneratorT.bind(suspend.get(), bound.f()))))
+                .lift((__<M, B> mb) -> mMonad.map((B b) -> Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>Left(bound.f().apply(b)), mb))
                 .apply(bound.m());
     }
 

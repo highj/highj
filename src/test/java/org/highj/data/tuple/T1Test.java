@@ -1,10 +1,10 @@
 package org.highj.data.tuple;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.Either;
-import org.highj.data.functions.Functions;
-import org.highj.data.functions.Integers;
-import org.highj.data.collection.HList;
+import org.highj.data.Either;
+import org.highj.function.Functions;
+import org.highj.function.Integers;
+import org.highj.data.HList;
 import org.highj.data.tuple.t1.T1Comonad;
 import org.highj.data.tuple.t1.T1Monad;
 import org.highj.typeclass0.compare.Eq;
@@ -115,7 +115,7 @@ public class T1Test {
     public void testMonadRec() {
         T1Monad monad = T1.monad;
         Function<Integer, __<T1.µ, Either<Integer,Integer>>> digitSum = i ->
-                T1.of(i < 10 ? Either.newRight(i) : Either.newLeft(i / 10 + i % 10));
+                T1.of(i < 10 ? Either.Right(i) : Either.Left(i / 10 + i % 10));
         assertThat(monad.tailRec(digitSum, 4711)).isEqualTo(T1.of(4));
     }
 

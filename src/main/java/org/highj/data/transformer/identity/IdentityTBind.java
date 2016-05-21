@@ -1,7 +1,7 @@
 package org.highj.data.transformer.identity;
 
 import org.derive4j.hkt.__;
-import org.highj.data.functions.Functions;
+import org.highj.function.Functions;
 import org.highj.data.transformer.IdentityT;
 import org.highj.typeclass1.monad.Bind;
 

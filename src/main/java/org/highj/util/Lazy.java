@@ -1,7 +1,7 @@
 package org.highj.util;
 
 
-import org.highj.data.collection.Maybe;
+import org.highj.data.Maybe;
 
 import java.util.function.Supplier;
 
@@ -10,7 +10,7 @@ import java.util.function.Supplier;
  */
 public class Lazy<A> implements Supplier<A> {
 
-    private Maybe<A> value = Maybe.newNothing();
+    private Maybe<A> value = Maybe.Nothing();
 
     public static <A> Lazy<A> newLazy() {
         return new Lazy<>();
@@ -18,7 +18,7 @@ public class Lazy<A> implements Supplier<A> {
 
     public void set(A a) {
         Contracts.require(value.isNothing(), "Lazy already initialized");
-        value = Maybe.newJust(a);
+        value = Maybe.Just(a);
     }
 
     public A get() {

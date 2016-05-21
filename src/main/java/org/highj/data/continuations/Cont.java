@@ -3,7 +3,7 @@ package org.highj.data.continuations;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.highj.data.continuations.cont.ContMonad;
-import org.highj.data.functions.Functions;
+import org.highj.function.Functions;
 
 import java.util.function.Function;
 

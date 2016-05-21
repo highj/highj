@@ -1,7 +1,7 @@
 package org.highj.typeclass1.monad;
 
 import org.derive4j.hkt.__;
-import org.highj.data.collection.List;
+import org.highj.data.List;
 import org.highj.data.tuple.T0;
 import org.highj.util.Mutable;
 
@@ -67,8 +67,8 @@ public interface Monad<M> extends Applicative<M>, Bind<M> {
     //sequence (Control.Monad)
     public default <A> __<M, List<A>> sequence(List<__<M, A>> list) {
         //  sequence ms = foldr (liftM2 (:)) (return []) ms
-        Function<__<M, A>, Function<__<M, List<A>>, __<M, List<A>>>> f2 = lift2((A a) -> (List<A> as) -> List.<A>newList(a, as));
-        return list.foldr(x -> y -> f2.apply(x).apply(y), pure(List.<A>nil()));
+        Function<__<M, A>, Function<__<M, List<A>>, __<M, List<A>>>> f2 = lift2((A a) -> (List<A> as) -> List.<A>Cons(a, as));
+        return list.foldr(x -> y -> f2.apply(x).apply(y), pure(List.<A>Nil()));
     }
 
     //sequence_ (Control.Monad)
