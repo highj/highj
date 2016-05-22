@@ -26,30 +26,44 @@ public final class Traversal<S, A> extends PTraversal<S, S, A, A> implements __2
         return pTraversal.modifyF(applicative, f);
     }
 
-    /** join two {@link Traversal} with the same target */
+    /** Joins two {@link Traversal} with the same target
+     * @param other the second {@link Traversal}
+     * @param <S1> the source type of the second {@link Traversal}
+     * @return the combined {@link Traversal}
+     */
     public final <S1> Traversal<Either<S, S1>, A> sum(final Traversal<S1, A> other) {
         return new Traversal<>(pTraversal.sum(other.pTraversal));
     }
 
-    /***************************************************************/
-    /** Compose methods between a {@link Traversal} and another Optics */
-    /***************************************************************/
+    /* ******************************************************************/
+    /* * Compose methods between a {@link Traversal} and another Optics */
+    /* ******************************************************************/
 
-    /** compose a {@link Traversal} with a {@link Setter} */
+    /** Compose a {@link Traversal} with a {@link Setter}
+     * @param other the {@link Setter}
+     * @param <C> the target type of the {@link Setter}
+     * @return the composed {@link Setter}
+     */
     public final <C> Setter<S, C> composeSetter(final Setter<A, C> other) {
         return new Setter<>(pTraversal.composeSetter(other.pSetter));
     }
 
-    /** compose a {@link Traversal} with a {@link Traversal} */
+    /** Compose a {@link Traversal} with a {@link Traversal}
+     * @param other the second {@link Traversal}
+     * @param <C> the target type of the second {@link Traversal}
+     * @return the composed {@link Traversal}
+     */
     public final <C> Traversal<S, C> composeTraversal(final Traversal<A, C> other) {
         return new Traversal<>(pTraversal.composeTraversal(other.pTraversal));
     }
 
-    /*********************************************************************/
-    /** Transformation methods to view a {@link Traversal} as another Optics */
-    /*********************************************************************/
+    /* ************************************************************************/
+    /* * Transformation methods to view a {@link Traversal} as another Optics */
+    /* ************************************************************************/
 
-    /** view a {@link Traversal} as a {@link Setter} */
+    /** View a {@link Traversal} as a {@link Setter}
+     * @return the {@link Setter}
+     */
     @Override
     public final Setter<S, A> asSetter() {
         return new Setter<>(pTraversal.asSetter());

@@ -25,22 +25,38 @@ public abstract class PSetter<S, T, A, B> {
         super();
     }
 
-    /** modify polymorphically the target of a {@link PSetter} with a function */
+    /** Modify polymorphically the target of a {@link PSetter} with a function
+     * @param f the target modifying function
+     * @return the function returning the modified source
+     */
     public abstract F1<S, T> modify(Function<A, B> f);
 
-    /** set polymorphically the target of a {@link PSetter} with a value */
+    /** Set polymorphically the target of a {@link PSetter} with a value
+     * @param b the modified target value
+     * @return the function returning the modified source
+     */
     public abstract F1<S, T> set(final B b);
 
-    /** join two {@link PSetter} with the same target */
+    /** Join two {@link PSetter} with the same target
+     * @param other the second {@link PSetter}
+     * @param <S1> the source type of the second {@link PSetter}
+     * @param <T1> the modified source type of the second {@link PSetter}
+     * @return the combined {@link PSetter}
+     */
     public final <S1, T1> PSetter<Either<S, S1>, Either<T, T1>, A, B> sum(final PSetter<S1, T1, A, B> other) {
         return pSetter(f -> e -> e.bimap(modify(f), other.modify(f)));
     }
 
-    /*************************************************************/
-    /** Compose methods between a {@link PSetter} and another Optics */
-    /*************************************************************/
+    /* ****************************************************************/
+    /* * Compose methods between a {@link PSetter} and another Optics */
+    /* ****************************************************************/
 
-    /** compose a {@link PSetter} with a {@link PSetter} */
+    /** Compose a {@link PSetter} with a {@link PSetter}
+     * @param other the second {@link PSetter}
+     * @param <C> the target type of the second {@link PSetter}
+     * @param <D> the modified target type of the second {@link PSetter}
+     * @return the composed {@link PSetter}
+     */
     public final <C, D> PSetter<S, T, C, D> composeSetter(final PSetter<A, B, C, D> other) {
         final PSetter<S, T, A, B> self = this;
         return new PSetter<S, T, C, D>() {
@@ -57,27 +73,52 @@ public abstract class PSetter<S, T, A, B> {
         };
     }
 
-    /** compose a {@link PSetter} with a {@link PTraversal} */
+    /** Compose a {@link PSetter} with a {@link PTraversal}
+     * @param other the {@link PTraversal}
+     * @param <C> the target type of the {@link PTraversal}
+     * @param <D> the modified target type of the {@link PTraversal}
+     * @return the composed {@link PSetter}
+     */
     public final <C, D> PSetter<S, T, C, D> composeTraversal(final PTraversal<A, B, C, D> other) {
         return composeSetter(other.asSetter());
     }
 
-    /** compose a {@link PSetter} with a {@link POptional} */
+    /** compose a {@link PSetter} with a {@link POptional}
+     * @param other the {@link POptional}
+     * @param <C> the target type of the {@link POptional}
+     * @param <D> the modified target type of the {@link POptional}
+     * @return the composed {@link PSetter}
+     */
     public final <C, D> PSetter<S, T, C, D> composeOptional(final POptional<A, B, C, D> other) {
         return composeSetter(other.asSetter());
     }
 
-    /** compose a {@link PSetter} with a {@link PPrism} */
+    /** Compose a {@link PSetter} with a {@link PPrism}
+     * @param other the {@link PPrism}
+     * @param <C> the target type of the {@link PPrism}
+     * @param <D> the modified target type of the {@link PPrism}
+     * @return the composed {@link PSetter}
+     */
     public final <C, D> PSetter<S, T, C, D> composePrism(final PPrism<A, B, C, D> other) {
         return composeSetter(other.asSetter());
     }
 
-    /** compose a {@link PSetter} with a {@link PLens} */
+    /** Compose a {@link PSetter} with a {@link PLens}
+     * @param other the {@link PLens}
+     * @param <C> the target type of the {@link PLens}
+     * @param <D> the modified target type of the {@link PLens}
+     * @return the composed {@link PSetter}
+     */
     public final <C, D> PSetter<S, T, C, D> composeLens(final PLens<A, B, C, D> other) {
         return composeSetter(other.asSetter());
     }
 
-    /** compose a {@link PSetter} with a {@link PIso} */
+    /** Compose a {@link PSetter} with a {@link PIso}
+     * @param other the {@link PIso}
+     * @param <C> the target type of the {@link PIso}
+     * @param <D> the modified target type of the {@link PIso}
+     * @return the composed {@link PSetter}
+     */
     public final <C, D> PSetter<S, T, C, D> composeIso(final PIso<A, B, C, D> other) {
         return composeSetter(other.asSetter());
     }
@@ -104,7 +145,13 @@ public abstract class PSetter<S, T, A, B> {
         };
     }
 
-    /** create a {@link PSetter} from a {@link Functor} */
+    /** Create a {@link PSetter} from a {@link Functor}
+     * @param functor the functor
+     * @param <X> the functor type
+     * @param <A> the target type and parameter type of the source
+     * @param <B> the modified target type and parameter type of the modified source
+     * @return the {@link PSetter}
+     */
     public static <X, A, B> PSetter<__<X, A>, __<X, B>, A, B> fromFunctor(final Functor<X> functor) {
         return pSetter(f -> x -> functor.map(f, x));
     }
