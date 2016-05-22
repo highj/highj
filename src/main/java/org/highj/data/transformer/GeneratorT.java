@@ -43,7 +43,7 @@ public abstract class GeneratorT<E,M,A> implements __3<GeneratorT.µ,E,M,A> {
 
     public interface Cases<R,E,M,A> {
         R done(A result);
-        R emit(E emitValue, GeneratorT<E,M,A> rest);
+        R yield(E emitValue, GeneratorT<E,M,A> rest);
         R bind(Bound<E,M,?,A> bound);
         R suspend(Supplier<GeneratorT<E,M,A>> suspend);
         R lift(__<M,A> ma);
@@ -85,7 +85,7 @@ public abstract class GeneratorT<E,M,A> implements __3<GeneratorT.µ,E,M,A> {
             GeneratorTImpl
                 .<E,M,A>cases()
                 .done((A result) -> mMonadRec.pure(Either.<GeneratorT<E,M,A>,Either<A, T2<E,GeneratorT<E,M,A>>>>Right(Either.<A,T2<E,GeneratorT<E,M,A>>>Left(result))))
-                .emit((E emitValue, GeneratorT<E, M, A> rest) -> mMonadRec.pure(Either.<GeneratorT<E,M,A>,Either<A, T2<E,GeneratorT<E,M,A>>>>Right(Either.<A,T2<E,GeneratorT<E,M,A>>>Right(T2.of(emitValue, rest)))))
+                .yield((E emitValue, GeneratorT<E, M, A> rest) -> mMonadRec.pure(Either.<GeneratorT<E,M,A>,Either<A, T2<E,GeneratorT<E,M,A>>>>Right(Either.<A,T2<E,GeneratorT<E,M,A>>>Right(T2.of(emitValue, rest)))))
                 .bind((Bound<E,M,?,A> bound) -> runBound(mMonadRec, bound))
                 .suspend((Supplier<GeneratorT<E,M,A>> suspend) -> mMonadRec.pure(Either.<GeneratorT<E,M,A>,Either<A, T2<E,GeneratorT<E,M,A>>>>Left(suspend.get())))
                 .lift((__<M,A> ma) -> mMonadRec.map(
@@ -128,7 +128,7 @@ public abstract class GeneratorT<E,M,A> implements __3<GeneratorT.µ,E,M,A> {
         return GeneratorTImpl
             .<E,M,B>cases()
             .done((B b) -> mMonad.pure(Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>Left(bound.f().apply(b))))
-            .emit((E e, GeneratorT<E, M, B> rest) -> mMonad.pure(Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>Right(Either.<A, T2<E, GeneratorT<E, M, A>>>Right(T2.of(e, GeneratorT.bind(rest, bound.f()))))))
+            .yield((E e, GeneratorT<E, M, B> rest) -> mMonad.pure(Either.<GeneratorT<E, M, A>, Either<A, T2<E, GeneratorT<E, M, A>>>>Right(Either.<A, T2<E, GeneratorT<E, M, A>>>Right(T2.of(e, GeneratorT.bind(rest, bound.f()))))))
             .bind((Bound<E, M, ?, B> bound2) ->
                 mMonad.map(
                     (Either<GeneratorT<E, M, B>, Either<B, T2<E, GeneratorT<E, M, B>>>> x) ->
@@ -165,7 +165,7 @@ public abstract class GeneratorT<E,M,A> implements __3<GeneratorT.µ,E,M,A> {
     }
 
     public static <E,M,A> GeneratorT<E,M,A> yield(E a, GeneratorT<E,M,A> rest) {
-        return GeneratorTImpl.emit(a, rest);
+        return GeneratorTImpl.yield(a, rest);
     }
 
     /**
