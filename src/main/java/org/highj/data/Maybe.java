@@ -67,7 +67,7 @@ public abstract class Maybe<A> implements __<Maybe.µ, A>, Iterable<A> {
      * @param value the value to be stored in the Maybe
      * @param <A>  the element type
      * @return a Maybe holding the value
-     * @throws NullPointerException
+     * @throws NullPointerException when the value is null
      */
     public static <A> Maybe<A> Just(final A value) throws NullPointerException {
         Objects.requireNonNull("Just() can't take null argument");
@@ -197,7 +197,7 @@ public abstract class Maybe<A> implements __<Maybe.µ, A>, Iterable<A> {
      *
      * @param exClass the Class of the Exception to be thrown if the {@link Maybe} is empty
      * @return the wrapped value
-     * @throws RuntimeException
+     * @throws RuntimeException when called on Nothing
      */
     public A getOrException(Class<? extends RuntimeException> exClass) {
         return getOrElse(Functions.<A>error(exClass));
@@ -211,7 +211,7 @@ public abstract class Maybe<A> implements __<Maybe.µ, A>, Iterable<A> {
      * @param exClass the Class of the Exception to be thrown if the {@link Maybe} is empty
      * @param message the error message
      * @return the wrapped value
-     * @throws RuntimeException
+     * @throws RuntimeException of type exClass when called on Nothing
      */
     public A getOrException(Class<? extends RuntimeException> exClass, String message) {
         return getOrElse(Functions.<A>error(exClass, message));
@@ -222,7 +222,7 @@ public abstract class Maybe<A> implements __<Maybe.µ, A>, Iterable<A> {
      *
      * @param message the message of the {@link RuntimeException}
      * @return the wrapped value
-     * @throws RuntimeException
+     * @throws RuntimeException when called on Nothing
      */
     public A getOrException(String message) {
         return getOrElse(Functions.<A>error(message));
@@ -232,7 +232,7 @@ public abstract class Maybe<A> implements __<Maybe.µ, A>, Iterable<A> {
      * Returns the value stored in the {@link Maybe}, or throws a {@link NoSuchElementException} if it is empty.
      *
      * @return the wrapped value
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException when called on Nothing
      */
     public A get() throws NoSuchElementException {
         return getOrException(NoSuchElementException.class);
@@ -459,6 +459,7 @@ public abstract class Maybe<A> implements __<Maybe.µ, A>, Iterable<A> {
 
     /**
      * Returns the {@link Monoid} for {@link Maybe} given a {@link Monoid} for the element type.
+     * @param semigroup the semigroup of the element type
      * @param <A> the element type
      * @return the {@link Monoid} instance
      */

@@ -12,7 +12,7 @@ import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.monad.Applicative;
 
 /**
- * A {@link POptional} can be seen as a pair of functions: - `getOrModify: S => T \/ A` - `set : (B, S) => T`
+ * A {@link POptional} can be seen as a pair of functions: - `getOrModify: S =&gt; T \/ A` - `set : (B, S) =&gt; T`
  *
  * A {@link POptional} could also be defined as a weaker {@link PLens} and weaker {@link PPrism}
  *
@@ -31,45 +31,70 @@ public abstract class POptional<S, T, A, B> {
         super();
     }
 
-    /** get the target of a {@link POptional} or modify the source in case there is no target */
+    /** Get the target of a {@link POptional} or modify the source in case there is no target
+     * @param s the source value
+     * @return the {@link Either} value
+     */
     public abstract Either<T, A> getOrModify(S s);
 
-    /** get the modified source of a {@link POptional} */
+    /** Get the modified source of a {@link POptional}
+     * @param b the modified target value
+     * @return the modification function
+     */
     public abstract F1<S, T> set(final B b);
 
-    /** get the target of a {@link POptional} or nothing if there is no target */
+    /** Get the target of a {@link POptional} or nothing if there is no target
+     * @param s the source value
+     * @return the {@link Maybe} value
+     */
     public abstract Maybe<A> getMaybe(final S s);
 
-    /**
-     * modify polymorphically the target of a {@link POptional} with an Applicative function
+    /** Modify polymorphically the target of a {@link POptional} with an Applicative function
+     * @param applicative the applicative functor
+     * @param f target modification function
+     * @param <X> applicative type
+     * @return result function
      */
     public abstract <X> F1<S, __<X, T>> modifyF(Applicative<X> applicative, Function<A, __<X, B>> f);
 
-    /** modify polymorphically the target of a {@link POptional} with a function */
-    public abstract F1<S, T> modify(final Function<A, B> f);
+    /** modify polymorphically the target of a {@link POptional} with a function
+     * @param f target modification function
+     * @return source modifying function
+     */
+     public abstract F1<S, T> modify(final Function<A, B> f);
 
-    /**
-     * modify polymorphically the target of a {@link POptional} with a function. return empty if the {@link POptional} is not
-     * matching
+    /** Modify polymorphically the target of a {@link POptional} with a function. Return empty if the {@link POptional} is not
+     * matching.
+     * @param f the target modifying function
+     * @return the partial source modification function
      */
     public final F1<S, Maybe<T>> modifyMaybe(final F1<A, B> f) {
         return s -> getMaybe(s).map(__ -> modify(f).apply(s));
     }
 
-    /**
-     * set polymorphically the target of a {@link POptional} with a value. return empty if the {@link POptional} is not matching
+    /** Set polymorphically the target of a {@link POptional} with a value. Return empty if the {@link POptional} is not matching
+     * @param b the modified target value
+     * @return the partial source modification funcion
      */
     public final F1<S, Maybe<T>> setMaybe(final B b) {
         return modifyMaybe(__ -> b);
     }
 
-    /** check if a {@link POptional} has a target */
+    /** Check if a {@link POptional} has a target
+     * @param s the source value
+     * @return true if matching
+     */
     public final boolean isMatching(final S s) {
         return getMaybe(s).isJust();
 
     }
 
-    /** join two {@link POptional} with the same target */
+    /** Join two {@link POptional} with the same target
+     * @param other the second {@link POptional}
+     * @param <S1> the source type of the second {@link POptional}
+     * @param <T1> the modified source type of the second {@link POptional}
+     * @return the combined {@link POptional}
+     */
     public final <S1, T1> POptional<Either<S, S1>, Either<T, T1>, A, B> sum(final POptional<S1, T1, A, B> other) {
         return pOptional(
                 e -> e.either(s -> getOrModify(s).leftMap(Either::Left),
@@ -89,31 +114,54 @@ public abstract class POptional<S, T, A, B> {
                 cb -> _s -> T2.of(cb._1(), set(cb._2()).apply(_s._2())));
     }
 
-    /***************************************************************/
-    /** Compose methods between a {@link POptional} and another Optics */
-    /***************************************************************/
+    /* ******************************************************************/
+    /* * Compose methods between a {@link POptional} and another Optics */
+    /* ******************************************************************/
 
-    /** compose a {@link POptional} with a {@link Fold} */
+    /** Compose a {@link POptional} with a {@link Fold}
+     * @param other the {@link Fold}
+     * @param <C> the target type of the {@link Fold}
+     * @return the composed {@link Fold}
+     */
     public final <C> Fold<S, C> composeFold(final Fold<A, C> other) {
         return asFold().composeFold(other);
     }
 
-    /** compose a {@link POptional} with a {@link Getter} */
+    /** Compose a {@link POptional} with a {@link Getter}
+     * @param other the {@link Getter}
+     * @param <C> the target type of the {@link Getter}
+     * @return the composed {@link Fold}
+     */
     public final <C> Fold<S, C> composeGetter(final Getter<A, C> other) {
         return asFold().composeGetter(other);
     }
 
-    /** compose a {@link POptional} with a {@link PSetter} */
+    /** Compose a {@link POptional} with a {@link PSetter}
+     * @param other the {@link PSetter}
+     * @param <C> the target type of the {@link PSetter}
+     * @param <D> the modified target type of the {@link PSetter}
+     * @return the composed {@link PSetter}
+     */
     public final <C, D> PSetter<S, T, C, D> composeSetter(final PSetter<A, B, C, D> other) {
         return asSetter().composeSetter(other);
     }
 
-    /** compose a {@link POptional} with a {@link PTraversal} */
+    /** Compose a {@link POptional} with a {@link PTraversal}
+     * @param other the {@link PTraversal}
+     * @param <C> the target type of the {@link PTraversal}
+     * @param <D> the modified target type of the {@link PTraversal}
+     * @return the composed {@link PTraversal}
+     */
     public final <C, D> PTraversal<S, T, C, D> composeTraversal(final PTraversal<A, B, C, D> other) {
         return asTraversal().composeTraversal(other);
     }
 
-    /** compose a {@link POptional} with a {@link POptional} */
+    /** Compose a {@link POptional} with a {@link POptional}
+     * @param other the {@link POptional}
+     * @param <C> the target type of the {@link POptional}
+     * @param <D> the modified target type of the {@link POptional}
+     * @return the composed {@link POptional}
+     */
     public final <C, D> POptional<S, T, C, D> composeOptional(final POptional<A, B, C, D> other) {
         final POptional<S, T, A, B> self = this;
         return new POptional<S, T, C, D>() {
@@ -147,26 +195,43 @@ public abstract class POptional<S, T, A, B> {
         };
     }
 
-    /** compose a {@link POptional} with a {@link PPrism} */
+    /** Compose a {@link POptional} with a {@link PPrism}
+     * @param other the {@link PPrism}
+     * @param <C> the target type of the {@link PPrism}
+     * @param <D> the modified target type of the {@link PPrism}
+     * @return the composed {@link POptional}
+     */
     public final <C, D> POptional<S, T, C, D> composePrism(final PPrism<A, B, C, D> other) {
         return composeOptional(other.asOptional());
     }
 
-    /** compose a {@link POptional} with a {@link PLens} */
+    /** Compose a {@link POptional} with a {@link PLens}
+     * @param other the {@link PLens}
+     * @param <C> the target type of the {@link PLens}
+     * @param <D> the modified target type of the {@link PLens}
+     * @return the composed {@link POptional}
+     */
     public final <C, D> POptional<S, T, C, D> composeLens(final PLens<A, B, C, D> other) {
         return composeOptional(other.asOptional());
     }
 
-    /** compose a {@link POptional} with a {@link PIso} */
+    /** compose a {@link POptional} with a {@link PIso}
+     * @param other the {@link PIso}
+     * @param <C> the target type of the {@link PIso}
+     * @param <D> the modified target type of the {@link PIso}
+     * @return the composed {@link POptional}
+     */
     public final <C, D> POptional<S, T, C, D> composeIso(final PIso<A, B, C, D> other) {
         return composeOptional(other.asOptional());
     }
 
-    /*********************************************************************/
-    /** Transformation methods to view a {@link POptional} as another Optics */
-    /*********************************************************************/
+    /* ************************************************************************/
+    /* * Transformation methods to view a {@link POptional} as another Optics */
+    /* ************************************************************************/
 
-    /** view a {@link POptional} as a {@link Fold} */
+    /** View a {@link POptional} as a {@link Fold}
+     * @return the {@link Fold}
+     */
     public final Fold<S, A> asFold() {
         return new Fold<S, A>() {
             @Override
@@ -176,7 +241,9 @@ public abstract class POptional<S, T, A, B> {
         };
     }
 
-    /** view a {@link POptional} as a {@link PSetter} */
+    /** View a {@link POptional} as a {@link PSetter}
+     * @return the {@link PSetter}
+     */
     public PSetter<S, T, A, B> asSetter() {
         return new PSetter<S, T, A, B>() {
             @Override
@@ -191,7 +258,9 @@ public abstract class POptional<S, T, A, B> {
         };
     }
 
-    /** view a {@link POptional} as a {@link PTraversal} */
+    /** View a {@link POptional} as a {@link PTraversal}
+     * @return the {@link PTraversal}
+     */
     public PTraversal<S, T, A, B> asTraversal() {
         return new PTraversal<S, T, A, B>() {
 
@@ -207,7 +276,15 @@ public abstract class POptional<S, T, A, B> {
         return PIso.<S, T> pId().asOptional();
     }
 
-    /** create a {@link POptional} using the canonical functions: getOrModify and set */
+    /** Create a {@link POptional} using the canonical functions: getOrModify and set
+     * @param getOrModify the getModify function
+     * @param set the set function
+     * @param <S> the source type
+     * @param <T> the modified source type
+     * @param <A> the target type
+     * @param <B> the modified target type
+     * @return the {@link POptional}
+     */
     public static final <S, T, A, B> POptional<S, T, A, B> pOptional(final Function<S, Either<T, A>> getOrModify,
             final Function<B, F1<S, T>> set) {
         return new POptional<S, T, A, B>() {

@@ -15,7 +15,7 @@ public enum Contracts {
      * @param condition precondition that should hold before an operation takes place
      * @param message   error message
      * @param varargs   optional arguments that should be included
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException when condition is not met
      */
     //@SafeVarargs
     public static void require(boolean condition, String message, Object... varargs) {
@@ -31,7 +31,7 @@ public enum Contracts {
      * @param exClass   class of the exception to be thrown
      * @param message   error message
      * @param varargs   optional arguments that should be included
-     * @throws RuntimeException of type exClass
+     * @throws RuntimeException of type exClass when condition is not met
      */
     //@SafeVarargs
     public static void require(boolean condition, Class<? extends RuntimeException> exClass, String message, Object... varargs) {
@@ -51,7 +51,7 @@ public enum Contracts {
      * @param condition postcondition that should hold after an operation took place
      * @param message   error message
      * @param varargs   optional arguments that should be included
-     * @throws AssertionError
+     * @throws AssertionError when condition is not met
      */
     //@SafeVarargs
     public static void ensure(boolean condition, String message, Object... varargs) {
@@ -67,7 +67,7 @@ public enum Contracts {
      * @param exClass   class of the exception to be thrown
      * @param message   error message
      * @param varargs   optional arguments that should be included
-     * @throws RuntimeException of type exClass
+     * @throws RuntimeException of type exClass when condition is not met
      */
     //@SafeVarargs
     public static void ensure(boolean condition, Class<? extends RuntimeException> exClass, String message, Object... varargs) {
@@ -79,7 +79,7 @@ public enum Contracts {
      *
      * @param message error message
      * @param varargs optional arguments that should be included
-     * @throws AssertionError
+     * @throws AssertionError when condition is not met
      */
     //@SafeVarargs
     public static void fail(String message, Object... varargs) {

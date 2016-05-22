@@ -15,9 +15,9 @@ import org.highj.typeclass1.monad.Applicative;
  *
  * <pre>
  *              get                           reverse.get
- *     -------------------->             -------------------->
+ *     --------------------&gt;             --------------------&gt;
  *   S                       A         T                       B
- *     <--------------------             <--------------------
+ *     &lt;--------------------             &lt;--------------------
  *       reverse.reverseGet                   reverseGet
  * </pre>
  *
@@ -31,7 +31,7 @@ import org.highj.typeclass1.monad.Applicative;
  * get |           | reverseGet     reverse.reverseGet |           | reverse.get
  *     |           |                                   |           |
  *     ↓     f     |                                   |     g     ↓
- *     A --------> B                                   A <-------- B
+ *     A --------&gt; B                                   A &lt;-------- B
  * </pre>
  *
  * A {@link PIso} is also a valid {@link Getter}, {@link Fold}, {@link PLens}, {@link PPrism}, {@link POptional},
@@ -48,33 +48,58 @@ public abstract class PIso<S, T, A, B> {
         super();
     }
 
-    /** get the target of a {@link PIso} */
+    /** Get the target of a {@link PIso}
+     * @param s the source value
+     * @return the target value
+     */
     public abstract A get(S s);
 
-    /** get the modified source of a {@link PIso} */
+    /** Get the modified source of a {@link PIso}
+     * @param b the modified target
+     * @return the modified source
+     */
     public abstract T reverseGet(B b);
 
-    /** reverse a {@link PIso}: the source becomes the target and the target becomes the source */
+    /** Reverse a {@link PIso}: the source becomes the target and the target becomes the source
+     * @return the reversed {@link PIso}
+     */
     public abstract PIso<B, A, T, S> reverse();
 
     /**
-     * modify polymorphically the target of a {@link PIso} with an Applicative function
+     * Modify polymorphically the target of a {@link PIso} with an Applicative function
+     * @param applicative the applicative functor
+     * @param f target modification function
+     * @param <X> applicative type
+     * @return result function
      */
     public final <X> F1<S, __<X, T>> modifyF(final Applicative<X> applicative, final Function<A, __<X, B>> f) {
         return s -> applicative.map(this::reverseGet, f.apply(get(s)));
     }
 
-    /** modify polymorphically the target of a {@link PIso} with a function */
+    /** Modify polymorphically the target of a {@link PIso} with a function
+     * @param f target modification function
+     * @return source modifying function
+     */
     public final F1<S, T> modify(final Function<A, B> f) {
         return s -> reverseGet(f.apply(get(s)));
     }
 
-    /** set polymorphically the target of a {@link PIso} with a value */
+    /** Set polymorphically the target of a {@link PIso} with a value
+     * @param b modified target value
+     * @return source modifying function
+     */
     public final F1<S, T> set(final B b) {
         return __ -> reverseGet(b);
     }
 
-    /** pair two disjoint {@link PIso} */
+    /** Pair two disjoint {@link PIso}
+     * @param other the second {@link PIso}
+     * @param <S1> the source type of the second {@link PIso}
+     * @param <T1> the modified source type of the second {@link PIso}
+     * @param <A1> the target type of the second {@link PIso}
+     * @param <B1> the modified target type of the second {@link PIso}
+     * @return the combined {@link PIso}
+     */
     public <S1, T1, A1, B1> PIso<T2<S, S1>, T2<T, T1>, T2<A, A1>, T2<B, B1>> product(final PIso<S1, T1, A1, B1> other) {
         return pIso(
                 ss1 -> T2.of(get(ss1._1()), other.get(ss1._2())),
@@ -93,46 +118,84 @@ public abstract class PIso<S, T, A, B> {
                 cb -> T2.of(cb._1(), reverseGet(cb._2())));
     }
 
-    /**********************************************************/
-    /** Compose methods between a {@link PIso} and another Optics */
-    /**********************************************************/
+    /* *************************************************************/
+    /* * Compose methods between a {@link PIso} and another Optics */
+    /* *************************************************************/
 
-    /** compose a {@link PIso} with a {@link Fold} */
+    /** Compose a {@link PIso} with a {@link Fold}
+     * @param other the {@link Fold}
+     * @param <C> the target type of the {@link Fold}
+     * @return the composed {@link Fold}
+     */
     public final <C> Fold<S, C> composeFold(final Fold<A, C> other) {
         return asFold().composeFold(other);
     }
 
-    /** compose a {@link PIso} with a {@link Getter} */
+    /** Compose a {@link PIso} with a {@link Getter}
+    * @param other the {@link Getter}
+    * @param <C> the target type of the {@link Getter}
+    * @return the composed {@link Getter}
+    */
     public final <C> Getter<S, C> composeGetter(final Getter<A, C> other) {
         return asGetter().composeGetter(other);
     }
 
-    /** compose a {@link PIso} with a {@link PSetter} */
+    /** Compose a {@link PIso} with a {@link PSetter}
+     * @param other the {@link PSetter}
+     * @param <C> the target type of the {@link PSetter}
+     * @param <D> the modified target type of the {@link PSetter}
+     * @return the composed {@link PSetter}
+     */
     public final <C, D> PSetter<S, T, C, D> composeSetter(final PSetter<A, B, C, D> other) {
         return asSetter().composeSetter(other);
     }
 
-    /** compose a {@link PIso} with a {@link PTraversal} */
+    /** Compose a {@link PIso} with a {@link PTraversal}
+     * @param other the {@link PTraversal}
+     * @param <C> the target type of the {@link PTraversal}
+     * @param <D> the modified target type of the {@link PTraversal}
+     * @return the composed {@link PTraversal}
+     */
     public final <C, D> PTraversal<S, T, C, D> composeTraversal(final PTraversal<A, B, C, D> other) {
         return asTraversal().composeTraversal(other);
     }
 
-    /** compose a {@link PIso} with a {@link POptional} */
+    /** Compose a {@link PIso} with a {@link POptional}
+     * @param other the {@link POptional}
+     * @param <C> the target type of the {@link POptional}
+     * @param <D> the modified target type of the {@link POptional}
+     * @return the composed {@link POptional}
+     */
     public final <C, D> POptional<S, T, C, D> composeOptional(final POptional<A, B, C, D> other) {
         return asOptional().composeOptional(other);
     }
 
-    /** compose a {@link PIso} with a {@link PPrism} */
+    /** Compose a {@link PIso} with a {@link PPrism}
+     * @param other the {@link PPrism}
+     * @param <C> the target type of the {@link PPrism}
+     * @param <D> the modified target type of the {@link PPrism}
+     * @return the composed {@link PPrism}
+     */
     public final <C, D> PPrism<S, T, C, D> composePrism(final PPrism<A, B, C, D> other) {
         return asPrism().composePrism(other);
     }
 
-    /** compose a {@link PIso} with a {@link PLens} */
+    /** Compose a {@link PIso} with a {@link PLens}
+     * @param other the {@link PLens}
+     * @param <C> the target type of the {@link PLens}
+     * @param <D> the modified target type of the {@link PLens}
+     * @return the composed {@link PLens}
+     */
     public final <C, D> PLens<S, T, C, D> composeLens(final PLens<A, B, C, D> other) {
         return asLens().composeLens(other);
     }
 
-    /** compose a {@link PIso} with a {@link PIso} */
+    /** compose a {@link PIso} with a {@link PIso}
+     * @param other the second {@link PIso}
+     * @param <C> the target type of the second {@link PIso}
+     * @param <D> the modified target type of the second {@link PIso}
+     * @return the composed {@link PIso}
+     */
     public final <C, D> PIso<S, T, C, D> composeIso(final PIso<A, B, C, D> other) {
         final PIso<S, T, A, B> self = this;
         return new PIso<S, T, C, D>() {
@@ -169,11 +232,13 @@ public abstract class PIso<S, T, A, B> {
         };
     }
 
-    /****************************************************************/
-    /** Transformation methods to view a {@link PIso} as another Optics */
-    /****************************************************************/
+    /* *******************************************************************/
+    /* * Transformation methods to view a {@link PIso} as another Optics */
+    /* *******************************************************************/
 
-    /** view a {@link PIso} as a {@link Fold} */
+    /** View a {@link PIso} as a {@link Fold}
+     * @return the {@link Fold}
+     */
     public final Fold<S, A> asFold() {
         return new Fold<S, A>() {
             @Override
@@ -183,7 +248,9 @@ public abstract class PIso<S, T, A, B> {
         };
     }
 
-    /** view a {@link PIso} as a {@link Getter} */
+    /** View a {@link PIso} as a {@link Getter}
+     * @return the {@link Getter}
+     */
     public final Getter<S, A> asGetter() {
         return new Getter<S, A>() {
             @Override
@@ -193,7 +260,9 @@ public abstract class PIso<S, T, A, B> {
         };
     }
 
-    /** view a {@link PIso} as a {@link Setter} */
+    /** View a {@link PIso} as a {@link Setter}
+     * @return the {@link Setter}
+     */
     public PSetter<S, T, A, B> asSetter() {
         return new PSetter<S, T, A, B>() {
             @Override
@@ -208,7 +277,9 @@ public abstract class PIso<S, T, A, B> {
         };
     }
 
-    /** view a {@link PIso} as a {@link PTraversal} */
+    /** View a {@link PIso} as a {@link PTraversal}
+     * @return the {@link PTraversal}
+     */
     public PTraversal<S, T, A, B> asTraversal() {
         return new PTraversal<S, T, A, B>() {
 
@@ -220,7 +291,9 @@ public abstract class PIso<S, T, A, B> {
         };
     }
 
-    /** view a {@link PIso} as a {@link POptional} */
+    /** View a {@link PIso} as a {@link POptional}
+     * @return the {@link POptional}
+     */
     public POptional<S, T, A, B> asOptional() {
         final PIso<S, T, A, B> self = this;
         return new POptional<S, T, A, B>() {
@@ -252,7 +325,9 @@ public abstract class PIso<S, T, A, B> {
         };
     }
 
-    /** view a {@link PIso} as a {@link PPrism} */
+    /** View a {@link PIso} as a {@link PPrism}
+     * @return the {@link PPrism}
+     */
     public PPrism<S, T, A, B> asPrism() {
         final PIso<S, T, A, B> self = this;
         return new PPrism<S, T, A, B>() {
@@ -273,7 +348,9 @@ public abstract class PIso<S, T, A, B> {
         };
     }
 
-    /** view a {@link PIso} as a {@link PLens} */
+    /** View a {@link PIso} as a {@link PLens}
+     * @return the {@link PLens}
+     */
     public PLens<S, T, A, B> asLens() {
         final PIso<S, T, A, B> self = this;
         return new PLens<S, T, A, B>() {
@@ -299,7 +376,15 @@ public abstract class PIso<S, T, A, B> {
         };
     }
 
-    /** create a {@link PIso} using a pair of functions: one to get the target and one to get the source. */
+    /** Create a {@link PIso} using a pair of functions: one to get the target and one to get the source.
+     * @param get the get function
+     * @param reverseGet the reverse get function
+     * @param <S> the source type
+     * @param <T> the modified source type
+     * @param <A> the target type
+     * @param <B> the modified target type
+     * @return the  {@link PIso}
+     */
     public static final <S, T, A, B> PIso<S, T, A, B> pIso(final Function<S, A> get, final Function<B, T> reverseGet) {
         return new PIso<S, T, A, B>() {
 
@@ -347,6 +432,10 @@ public abstract class PIso<S, T, A, B> {
      * </pre>
      *
      * (replace composeO by composeLens, composeIso, composePrism, ...)
+     *
+     * @param <S> the source and target type
+     * @param <T> the modified source and target type
+     * @return the identity {@link PIso}
      */
     public static <S, T> PIso<S, T, S, T> pId() {
         return new PIso<S, T, S, T>() {

@@ -31,44 +31,74 @@ public abstract class Fold<S, A> implements __2<Fold.µ, S, A> {
     }
 
     /**
-     * map each target to a {@link Monoid} and combine the results underlying representation of {@link Fold}, all {@link Fold}
-     * methods are defined in terms of foldMap
+     * Map each target to a {@link Monoid} and combine the results underlying representation of {@link Fold}, all {@link Fold}
+     * methods are defined in terms of foldMap.
+     *
+     * @param m the {@link Monoid}
+     * @param f mapping function
+     * @param <M> element type of the monoid
+     * @return the resulting {@link F1}
      */
     public abstract <M> F1<S, M> foldMap(Monoid<M> m, Function<A, M> f);
 
-    /** combine all targets using a target's {@link Monoid} */
+    /** Combine all targets using a target's {@link Monoid}.
+     * @param m the {@link Monoid}
+     * @return the resulting {@link F1}
+     */
     public final F1<S, A> fold(final Monoid<A> m) {
         return foldMap(m, F1.id());
     }
 
     /**
-     * get all the targets of a {@link Fold} TODO: Shall it return a Stream as there might be an infinite number of targets?
+     * Get all the targets of a {@link Fold} TODO: Shall it return a Stream as there might be an infinite number of targets?
+     *
+     * @param s the source value
+     * @return the list
      */
     public final List<A> getAll(final S s) {
         return foldMap(List.group(), List.monadPlus::pure).apply(s);
     }
 
-    /** find the first target of a {@link Fold} matching the predicate */
+    /** Find the first target of a {@link Fold} matching the predicate
+     *
+     * @param p the predicate
+     * @return the function returning the first occurrence, if there is any
+     */
     public final F1<S, Maybe<A>> find(final F1<A, Boolean> p) {
         return foldMap(Maybe.firstMonoid(), a -> Maybe.JustWhenTrue(p.apply(a), () -> a));
     }
 
-    /** get the first target of a {@link Fold} */
+    /** Get the first target of a {@link Fold}
+     *
+     * @param s the source value
+     * @return the first target, if there is any
+     */
     public final Maybe<A> headOption(final S s) {
         return find(__ -> true).apply(s);
     }
 
-    /** check if at least one target satisfies the predicate */
+    /** Check if at least one target satisfies the predicate
+     * @param p the predicate
+     * @return the result function
+     */
     public final F1<S, Boolean> exist(final Function<A, Boolean> p) {
         return foldMap(Booleans.orGroup, p);
     }
 
-    /** check if all targets satisfy the predicate */
+    /** Check if all targets satisfy the predicate
+     * @param p the predicate
+     * @return the result function
+     */
     public final F1<S, Boolean> all(final Function<A, Boolean> p) {
         return foldMap(Booleans.andGroup, p);
     }
 
-    /** join two {@link Fold} with the same target */
+    /** Join two {@link Fold} with the same target
+     *
+     * @param other the second {@link Fold}
+     * @param <S1> the source type of the second {@link Fold}
+     * @return the combined {@link Fold}
+     */
     public final <S1> Fold<Either<S, S1>, A> sum(final Fold<S1, A> other) {
         return new Fold<Either<S, S1>, A>() {
             @Override
@@ -121,11 +151,15 @@ public abstract class Fold<S, A> implements __2<Fold.µ, S, A> {
         };
     }
 
-    /**********************************************************/
-    /** Compose methods between a {@link Fold} and another Optics */
-    /**********************************************************/
+    /* *************************************************************/
+    /* * Compose methods between a {@link Fold} and another Optics */
+    /* *************************************************************/
 
-    /** compose a {@link Fold} with a {@link Fold} */
+    /** compose a {@link Fold} with a {@link Fold}
+     * @param other the second {@link Fold}
+     * @param <B> the target type of the second {@link Fold}
+     * @return the composed {@link Fold}
+     */
     public final <B> Fold<S, B> composeFold(final Fold<A, B> other) {
         return new Fold<S, B>() {
             @Override
@@ -135,27 +169,55 @@ public abstract class Fold<S, A> implements __2<Fold.µ, S, A> {
         };
     }
 
-    /** compose a {@link Fold} with a {@link Getter} */
+    /** compose a {@link Fold} with a {@link Getter}
+     * @param other the  {@link Getter}
+     * @param <C> the target type of the {@link Getter}
+     * @return the composed {@link Fold}
+     */
     public final <C> Fold<S, C> composeGetter(final Getter<A, C> other) {
         return composeFold(other.asFold());
     }
 
-    /** compose a {@link Fold} with a {@link POptional} */
+    /** compose a {@link Fold} with a {@link POptional}
+     *  @param other the {@link POptional}
+     *  @param <B> the modified source type of the {@link POptional}
+     *  @param <C> the target type of the {@link POptional}
+     *  @param <D> the modified target type of the {@link POptional}
+     *  @return the composed {@link Fold}
+     */
     public final <B, C, D> Fold<S, C> composeOptional(final POptional<A, B, C, D> other) {
         return composeFold(other.asFold());
     }
 
-    /** compose a {@link Fold} with a {@link PPrism} */
+    /** compose a {@link Fold} with a {@link PPrism}
+     *  @param other the {@link PPrism}
+     *  @param <B> the modified source type of the{@link PPrism}
+     *  @param <C> the target type of the{@link PPrism}
+     *  @param <D> the modified target type of the {@link PPrism}
+     *  @return the composed {@link Fold}
+     */
     public final <B, C, D> Fold<S, C> composePrism(final PPrism<A, B, C, D> other) {
         return composeFold(other.asFold());
     }
 
-    /** compose a {@link Fold} with a {@link PLens} */
+    /** compose a {@link Fold} with a {@link PLens}
+     *  @param other the {@link PLens}
+     *  @param <B> the modified source type of the{@link PLens}
+     *  @param <C> the target type of the{@link PLens}
+     *  @param <D> the modified target type of the {@link PLens}
+     *  @return the composed {@link Fold}
+     */
     public final <B, C, D> Fold<S, C> composeLens(final PLens<A, B, C, D> other) {
         return composeFold(other.asFold());
     }
 
-    /** compose a {@link Fold} with a {@link PIso} */
+    /** compose a {@link Fold} with a {@link PIso}
+     *  @param other the {@link PLens}
+     *  @param <B> the modified source type of the{@link PIso}
+     *  @param <C> the target type of the{@link PIso}
+     *  @param <D> the modified target type of the {@link PIso}
+     *  @return the composed {@link Fold}
+     */
     public final <B, C, D> Fold<S, C> composeIso(final PIso<A, B, C, D> other) {
         return composeFold(other.asFold());
     }

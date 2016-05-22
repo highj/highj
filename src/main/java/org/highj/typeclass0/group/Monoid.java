@@ -5,7 +5,7 @@ import org.highj.data.List;
 import java.util.function.BinaryOperator;
 
 /**
- * A <code>Semigroup<code/> with an identity element: apply(x,identity) == apply(identity,x) == x
+ * A <code>Semigroup</code> with an identity element: apply(x,identity) == apply(identity,x) == x
  */
 public interface Monoid<A> extends Semigroup<A> {
 

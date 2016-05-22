@@ -47,7 +47,11 @@ public final class Optional<S, A> extends POptional<S, S, A, A> implements __2<O
         return pOptional.getMaybe(s);
     }
 
-    /** join two {@link Optional} with the same target */
+    /** Join two {@link Optional} with the same target
+     * @param other the second {@link Optional}
+     * @param <S1> the source type of the second {@link Optional}
+     * @return the combined {@link Optional}
+     */
     public final <S1> Optional<Either<S, S1>, A> sum(final Optional<S1, A> other) {
         return new Optional<>(pOptional.sum(other.pOptional));
     }
@@ -62,51 +66,79 @@ public final class Optional<S, A> extends POptional<S, S, A, A> implements __2<O
         return new Optional<>(pOptional.second());
     }
 
-    /**************************************************************/
-    /** Compose methods between a {@link Optional} and another Optics */
-    /**************************************************************/
+    /* *****************************************************************/
+    /* * Compose methods between a {@link Optional} and another Optics */
+    /* *****************************************************************/
 
-    /** compose a {@link Optional} with a {@link Setter} */
+    /** Compose a {@link Optional} with a {@link Setter}
+     * @param other the {@link Setter}
+     * @param <C> the target type of the {@link Setter}
+     * @return the composed {@link Setter}
+     */
     public final <C> Setter<S, C> composeSetter(final Setter<A, C> other) {
         return new Setter<>(pOptional.composeSetter(other.pSetter));
     }
 
-    /** compose a {@link Optional} with a {@link Traversal} */
+    /** Compose a {@link Optional} with a {@link Traversal}
+     * @param other the {@link Traversal}
+     * @param <C> the target type of the {@link Traversal}
+     * @return the composed {@link Traversal}
+     */
     public final <C> Traversal<S, C> composeTraversal(final Traversal<A, C> other) {
         return new Traversal<>(pOptional.composeTraversal(other.pTraversal));
     }
 
-    /** compose a {@link Optional} with a {@link Optional} */
+    /** Compose a {@link Optional} with a {@link Optional}
+     * @param other the second {@link Optional}
+     * @param <C> the target type of the second {@link Optional}
+     * @return the composed {@link Optional}
+     */
     public final <C> Optional<S, C> composeOptional(final Optional<A, C> other) {
         return new Optional<>(pOptional.composeOptional(other.pOptional));
     }
 
-    /** compose a {@link Optional} with a {@link Prism} */
+    /** Compose a {@link Optional} with a {@link Prism}
+     * @param other the {@link Prism}
+     * @param <C> the target type of the {@link Prism}
+     * @return the composed {@link Optional}
+     */
     public final <C> Optional<S, C> composePrism(final Prism<A, C> other) {
         return new Optional<>(pOptional.composePrism(other.pPrism));
     }
 
-    /** compose a {@link Optional} with a {@link Lens} */
+    /** Compose a {@link Optional} with a {@link Lens}
+     * @param other the {@link Lens}
+     * @param <C> the target type of the {@link Lens}
+     * @return the composed {@link Optional}
+     */
     public final <C> Optional<S, C> composeLens(final Lens<A, C> other) {
         return new Optional<>(pOptional.composeLens(other.pLens));
     }
 
-    /** compose a {@link Optional} with an {@link Iso} */
+    /** Compose a {@link Optional} with an {@link Iso}
+     * @param other the {@link Iso}
+     * @param <C> the target type of the {@link Iso}
+     * @return the composed {@link Optional}
+     */
     public final <C> Optional<S, C> composeIso(final Iso<A, C> other) {
         return new Optional<>(pOptional.composeIso(other.pIso));
     }
 
-    /********************************************************************/
-    /** Transformation methods to view a {@link Optional} as another Optics */
-    /********************************************************************/
+    /* ***********************************************************************/
+    /* * Transformation methods to view a {@link Optional} as another Optics */
+    /* ***********************************************************************/
 
-    /** view a {@link Optional} as a {@link Setter} */
+    /** View a {@link Optional} as a {@link Setter}
+     * @return the {@link Setter}
+     */
     @Override
     public final Setter<S, A> asSetter() {
         return new Setter<>(pOptional.asSetter());
     }
 
-    /** view a {@link Optional} as a {@link Traversal} */
+    /** View a {@link Optional} as a {@link Traversal}
+     * @return the {@link Traversal}
+     */
     @Override
     public final Traversal<S, A> asTraversal() {
         return new Traversal<>(pOptional.asTraversal());

@@ -13,10 +13,10 @@ import java.util.function.Function;
 
 /**
  * A crude, hash-based Map implementation.
- * <p/>
+ * <p>
  * Note that the provided monadTrans instance could be considered a hack, based on the fact that every
  * Java Object has a hashCode and an equals implementation, which might be rather useless in some cases.
- *
+ * </p>
  * @param <A> The element type.
  */
 public class Map<A, B> implements __2<Map.µ, A, B>, Iterable<T2<A, B>>, Function<A, Maybe<B>> {

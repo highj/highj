@@ -10,7 +10,7 @@ import org.highj.data.tuple.T2;
 /**
  * Translation of https://github.com/functionaljava/functionaljava/blob/master/core/src/main/java/fj/data/hlist/HList.java
  *
- * @param <A>
+ * @param <A> the element type
  */
 
 public interface HList<A extends HList<A>> {

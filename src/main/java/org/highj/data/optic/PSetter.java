@@ -8,7 +8,7 @@ import org.highj.function.F1;
 import org.highj.typeclass1.functor.Functor;
 
 /**
- * A {@link PSetter} is a generalisation of Functor map: - `map: (A => B) => F[A] => F[B]` - `modify: (A => B) => S => T`
+ * A {@link PSetter} is a generalisation of Functor map: - `map: (A =&gt; B) =&gt; F[A] =&gt; F[B]` - `modify: (A =&gt; B) =&gt; S =&gt; T`
  *
  * {@link PSetter} stands for Polymorphic Setter as it set and modify methods change a type `A` to `B` and `S` to `T`.
  *

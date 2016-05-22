@@ -27,15 +27,27 @@ public abstract class Getter<S, A> implements __2<Getter.µ, S, A> {
         super();
     }
 
-    /** get the target of a {@link Getter} */
+    /** Get the target of a {@link Getter}
+     * @param s the source value
+     * @return the target value
+     */
     public abstract A get(S s);
 
-    /** join two {@link Getter} with the same target */
+    /** Join two {@link Getter} with the same target
+     *  @param other the second {@link Getter}
+     *  @param <S1> the source type of the second {@link Getter}
+     *  @return the combined {@link Getter}
+     */
     public final <S1> Getter<Either<S, S1>, A> sum(final Getter<S1, A> other) {
         return getter(e -> e.either(this::get, other::get));
     }
 
-    /** pair two disjoint {@link Getter} */
+    /** Pair two disjoint {@link Getter}s
+     *  @param other the second {@link Getter}
+     *  @param <S1> the source type of the second {@link Getter}
+     *  @param <A1> the target type of the second {@link Getter}
+     *  @return the combined {@link Getter}
+     */
     public final <S1, A1> Getter<T2<S, S1>, T2<A, A1>> product(final Getter<S1, A1> other) {
         return getter(t2 -> T2.of(this.get(t2._1()), other.get(t2._2())));
     }
@@ -48,45 +60,79 @@ public abstract class Getter<S, A> implements __2<Getter.µ, S, A> {
         return getter(p -> T2.of(p._1(), this.get(p._2())));
     }
 
-    /*************************************************************/
-    /** Compose methods between a {@link Getter} and another Optics */
-    /*************************************************************/
+    /* ************************************************************/
+    /* * Compose methods between a {@link Getter} and another Optics */
+    /* ************************************************************/
 
-    /** compose a {@link Getter} with a {@link Fold} */
+    /** Compose a {@link Getter} with a {@link Fold}
+     * @param other the {@link Fold}
+     * @param <B> the target type of the {@link Fold}
+     * @return the composed {@link Getter}
+     */
     public final <B> Fold<S, B> composeFold(final Fold<A, B> other) {
         return asFold().composeFold(other);
     }
 
-    /** compose a {@link Getter} with a {@link Getter} */
+    /** Compose a {@link Getter} with another {@link Getter}
+     * @param other the second {@link Getter}
+     * @param <B> the target type of the second {@link Getter}
+     * @return the composed {@link Getter}
+     */
     public final <B> Getter<S, B> composeGetter(final Getter<A, B> other) {
         return getter(s -> other.get(get(s)));
     }
 
-    /** compose a {@link Getter} with a {@link POptional} */
+    /** Compose a {@link Getter} with a {@link POptional}
+     * @param other the {@link POptional}
+     * @param <B> the modified source type of the {@link POptional}
+     * @param <C> the target type of the {@link POptional}
+     * @param <D> the modified target type of the {@link POptional}
+     * @return the composed {@link Getter}
+     */
     public final <B, C, D> Fold<S, C> composeOptional(final POptional<A, B, C, D> other) {
         return asFold().composeOptional(other);
     }
 
-    /** compose a {@link Getter} with a {@link PPrism} */
+    /** Compose a {@link Getter} with a {@link PPrism}
+     * @param other the {@link PPrism}
+     * @param <B> the modified source type of the {@link PPrism}
+     * @param <C> the target type of the {@link PPrism}
+     * @param <D> the modified target type of the {@link PPrism}
+     * @return the composed {@link Getter}
+     */
     public final <B, C, D> Fold<S, C> composePrism(final PPrism<A, B, C, D> other) {
         return asFold().composePrism(other);
     }
 
-    /** compose a {@link Getter} with a {@link PLens} */
+    /** Compose a {@link Getter} with a {@link PLens}
+     * @param other the {@link PLens}
+     * @param <B> the modified source type of the {@link PLens}
+     * @param <C> the target type of the {@link PLens}
+     * @param <D> the modified target type of the {@link PLens}
+     * @return the composed {@link Getter}
+     */
     public final <B, C, D> Getter<S, C> composeLens(final PLens<A, B, C, D> other) {
         return composeGetter(other.asGetter());
     }
 
-    /** compose a {@link Getter} with a {@link PIso} */
+    /** Compose a {@link Getter} with a {@link PIso}
+     * @param other the {@link PIso}
+     * @param <B> the modified source type of the {@link PIso}
+     * @param <C> the target type of the {@link PIso}
+     * @param <D> the modified target type of the {@link PIso}
+     * @return the composed {@link Getter}
+     */
     public final <B, C, D> Getter<S, C> composeIso(final PIso<A, B, C, D> other) {
         return composeGetter(other.asGetter());
     }
 
-    /******************************************************************/
-    /** Transformation methods to view a {@link Getter} as another Optics */
-    /******************************************************************/
+    /* *********************************************************************/
+    /* * Transformation methods to view a {@link Getter} as another Optics */
+    /* *********************************************************************/
 
-    /** view a {@link Getter} with a {@link Fold} */
+    /** view a {@link Getter} with a {@link Fold}
+     * @return the {@link Fold}
+     */
     public final Fold<S, A> asFold() {
         return new Fold<S, A>() {
             @Override

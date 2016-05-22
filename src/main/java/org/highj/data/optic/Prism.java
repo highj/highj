@@ -37,57 +37,87 @@ public final class Prism<S, A> extends PPrism<S, S, A, A> implements __2<Prism.Â
         return pPrism.getMaybe(s);
     }
 
-    /***********************************************************/
-    /** Compose methods between a {@link Prism} and another Optics */
-    /***********************************************************/
+    /* **************************************************************/
+    /* * Compose methods between a {@link Prism} and another Optics */
+    /* **************************************************************/
 
-    /** compose a {@link Prism} with a {@link Setter} */
-    public final <C, D> Setter<S, C> composeSetter(final Setter<A, C> other) {
+    /** Compose a {@link Prism} with a {@link Setter}
+     * @param other the {@link Setter}
+     * @param <C> the target type of the {@link Setter}
+     * @return the composed {@link Setter}
+     */
+    public final <C> Setter<S, C> composeSetter(final Setter<A, C> other) {
         return new Setter<>(pPrism.composeSetter(other.pSetter));
     }
 
-    /** compose a {@link Prism} with a {@link Traversal} */
-    public final <C, D> Traversal<S, C> composeTraversal(final Traversal<A, C> other) {
+    /** Compose a {@link Prism} with a {@link Traversal}
+     * @param other the {@link Traversal}
+     * @param <C> the target type of the {@link Traversal}
+     * @return the composed {@link Traversal}
+     */
+    public final <C> Traversal<S, C> composeTraversal(final Traversal<A, C> other) {
         return new Traversal<>(pPrism.composeTraversal(other.pTraversal));
     }
 
-    /** compose a {@link Prism} with a {@link Optional} */
-    public final <C, D> Optional<S, C> composeOptional(final Optional<A, C> other) {
+    /** Compose a {@link Prism} with a {@link Optional}
+     * @param other the {@link Optional}
+     * @param <C> the target type of the {@link Optional}
+     * @return the composed {@link Optional}
+     */
+    public final <C> Optional<S, C> composeOptional(final Optional<A, C> other) {
         return new Optional<>(pPrism.composeOptional(other.pOptional));
     }
 
-    /** compose a {@link Prism} with a {@link Lens} */
-    public final <C, D> Optional<S, C> composeLens(final Lens<A, C> other) {
+    /** Compose a {@link Prism} with a {@link Lens}
+     * @param other the {@link Lens}
+     * @param <C> the target type of the {@link Lens}
+     * @return the composed {@link Optional}
+     */
+    public final <C> Optional<S, C> composeLens(final Lens<A, C> other) {
         return new Optional<>(pPrism.composeLens(other.pLens));
     }
 
-    /** compose a {@link Prism} with a {@link Prism} */
+    /** Compose a {@link Prism} with a {@link Prism}
+     * @param other the second {@link Prism}
+     * @param <C> the target type of the second {@link Prism}
+     * @return the composed {@link Prism}
+     */
     public final <C> Prism<S, C> composePrism(final Prism<A, C> other) {
         return new Prism<>(pPrism.composePrism(other.pPrism));
     }
 
-    /** compose a {@link Prism} with an {@link Iso} */
-    public final <C, D> Prism<S, C> composeIso(final Iso<A, C> other) {
+    /** Compose a {@link Prism} with an {@link Iso}
+     * @param other the {@link Iso}
+     * @param <C> the target type of the {@link Iso}
+     * @return the composed {@link Prism}
+     */
+    public final <C> Prism<S, C> composeIso(final Iso<A, C> other) {
         return new Prism<>(pPrism.composeIso(other.pIso));
     }
 
-    /*****************************************************************/
-    /** Transformation methods to view a {@link Prism} as another Optics */
-    /*****************************************************************/
+    /* ********************************************************************/
+    /* * Transformation methods to view a {@link Prism} as another Optics */
+    /* ********************************************************************/
 
-    /** view a {@link Prism} as a {@link Setter} */
+    /** View a {@link Prism} as a {@link Setter}
+     * @return the {@link Setter}
+     */
     @Override
     public final Setter<S, A> asSetter() {
         return new Setter<>(pPrism.asSetter());
     }
 
-    /** view a {@link Prism} as a {@link Traversal} */
+    /** view a {@link Prism} as a {@link Traversal}
+     * @return the {@link Traversal}
+     */
     @Override
     public final Traversal<S, A> asTraversal() {
         return new Traversal<>(pPrism.asTraversal());
     }
 
-    /** view a {@link Prism} as a {@link Optional} */
+    /** view a {@link Prism} as a {@link Optional}
+     * @return the {@link Optional}
+     */
     @Override
     public final Optional<S, A> asOptional() {
         return new Optional<>(pPrism.asOptional());

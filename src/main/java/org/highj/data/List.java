@@ -387,7 +387,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * Retrieves the head of the list.
      *
      * @return the head
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException for empty list
      */
     public A head() throws NoSuchElementException {
         return maybeHead().get();
@@ -397,7 +397,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * Retrieves the tail of the list.
      *
      * @return the tail
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException for empty list
      */
     public List<A> tail() throws NoSuchElementException {
         return maybeTail().get();
@@ -417,7 +417,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      *
      * @param index the index of the element
      * @return the element
-     * @throws IndexOutOfBoundsException
+     * @throws IndexOutOfBoundsException when index is negative or bigger than (size - 1)
      */
     public A get(int index) throws IndexOutOfBoundsException {
         return apply(index).getOrException(IndexOutOfBoundsException.class, "Index: " + index);
@@ -451,7 +451,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
     /**
      * Counts the number of elements satisfying a predicate.
      *
-     * @param predicate
+     * @param predicate the predicate to test for
      * @return the number of occurrences
      */
     public int count(Predicate<? super A> predicate) {
@@ -536,7 +536,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * Doesn't terminate for infinite lists.
      *
      * @return the last element
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException for empty list
      */
     public A last() throws NoSuchElementException {
         if (isEmpty()) {
@@ -567,7 +567,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * Doesn't terminate for infinite lists.
      *
      * @return the list
-     * @throws NoSuchElementException
+     * @throws NoSuchElementException for empty list
      */
     public List<A> init() throws NoSuchElementException {
         if (isEmpty()) {
