@@ -28,7 +28,7 @@ public class GeneratorTTest {
                 @Override
                 public <H> __<__<__<GeneratorT.µ, T2<A, A>>, T1.µ>, T0> run(Do.MContext<H, __<__<GeneratorT.µ, T2<A, A>>, T1.µ>> ctx) {
                     ctx.seq(hanoi(n-1, from, other, to));
-                    ctx.seq(GeneratorT.emit(T2.of(from, to)));
+                    ctx.seq(GeneratorT.yield(T2.of(from, to)));
                     ctx.seq(hanoi(n-1, other, to, from));
                     return ctx.done();
                 }

@@ -192,7 +192,7 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
 
         @Override
         public __<__<__<GeneratorT.µ, T2<Integer, A>>, T1.µ>, T0> generator(int shift, int key) {
-            return GeneratorT.emit(T2.of(key, value));
+            return GeneratorT.yield(T2.of(key, value));
         }
     }
 
