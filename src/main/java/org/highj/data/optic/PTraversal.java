@@ -30,56 +30,94 @@ import org.highj.typeclass1.monad.Applicative;
 public abstract class PTraversal<S, T, A, B> {
 
     /**
-     * modify polymorphically the target of a {@link PTraversal} with an Applicative function
+     * Modify polymorphically the target of a {@link PTraversal} with an Applicative function
+     * @param applicative the applicative functor
+     * @param f target modification function
+     * @param <X> applicative type
+     * @return result function
      */
     public abstract <X> F1<S, __<X, T>> modifyF(Applicative<X> applicative, Function<A, __<X, B>> f);
 
-    /** map each target to a {@link Monoid} and combine the results */
+    /** Map each target to a {@link Monoid} and combine the results
+     * @param monoid the {@link Monoid}
+     * @param f the function to convert the target type to the monoid type
+     * @param <M> the element type of the monoid
+     * @return the function to fold the source into a monoid value
+     */
     public final <M> F1<S, M> foldMap(final Monoid<M> monoid, final Function<A, M> f) {
         return s -> Const.narrow(modifyF(Const.applicative(monoid), a -> new Const<>(f.apply(a))).apply(s)).get();
     }
 
-    /** combine all targets using a target's {@link Monoid} */
+    /** Combine all targets using a target's {@link Monoid}
+     * @param m the monoid
+     * @return the function to fold the source into a target monoid value
+     */
     public final F1<S, A> fold(final Monoid<A> m) {
         return foldMap(m, F1.id());
     }
 
-    /** get all the targets of a {@link PTraversal} */
+    /** Get all the targets of a {@link PTraversal}
+     * @param s the source value
+     * @return a list of all targets
+     */
     public final List<A> getAll(final S s) {
         return foldMap(List.group(), List.monadPlus::pure).apply(s);
     }
 
-    /** find the first target of a {@link PTraversal} matching the predicate */
+    /** Find the first target of a {@link PTraversal} matching the predicate
+     * @param p the predicate
+     * @return the partial function
+     */
     public final F1<S, Maybe<A>> find(final Function<A, Boolean> p) {
         return foldMap(Maybe.firstMonoid(), a -> Maybe.JustWhenTrue(p.apply(a),() -> a));
     }
 
-    /** get the first target of a {@link PTraversal} */
+    /** Get the first target of a {@link PTraversal}
+     *  @param s the source value
+     *  @return the value as {@link Maybe#Just}, if there is any
+     */
     public final Maybe<A> headOption(final S s) {
         return find(__ -> true).apply(s);
     }
 
-    /** check if at least one target satisfies the predicate */
+    /** Check if at least one target satisfies the predicate
+     * @param p the predicate
+     * @return the function to test a source
+     */
     public final F1<S, Boolean> exist(final Function<A, Boolean> p) {
         return foldMap(Booleans.orGroup, p);
     }
 
-    /** check if all targets satisfy the predicate */
+    /** Check if all targets satisfy the predicate
+     * @param p the predicate
+     * @return the function to test a source
+     */
     public final F1<S, Boolean> all(final Function<A, Boolean> p) {
         return foldMap(Booleans.andGroup, p);
     }
 
-    /** modify polymorphically the target of a {@link PTraversal} with a function */
+    /** Modify polymorphically the target of a {@link PTraversal} with a function
+     * @param f the target modifying function
+     * @return the source modifying function
+     */
     public final F1<S, T> modify(final Function<A, B> f) {
         return s -> T1.narrow(modifyF(T1.monad, a -> T1.of(f.apply(a))).apply(s))._1();
     }
 
-    /** set polymorphically the target of a {@link PTraversal} with a value */
+    /** Set polymorphically the target of a {@link PTraversal} with a value
+     * @param b the modified target value
+     * @return the source modifying function
+     */
     public final F1<S, T> set(final B b) {
         return modify(F1.constant(b));
     }
 
-    /** join two {@link PTraversal} with the same target */
+    /** Join two {@link PTraversal} with the same target
+     * @param other the second {@link PTraversal}
+     * @param <S1> the source type of the second {@link PTraversal}
+     * @param <T1> the modified source type of the second {@link PTraversal}
+     * @return the combined {@link PTraversal}
+     */
     public final <S1, T1> PTraversal<Either<S, S1>, Either<T, T1>, A, B> sum(final PTraversal<S1, T1, A, B> other) {
         final PTraversal<S, T, A, B> self = this;
         return new PTraversal<Either<S, S1>, Either<T, T1>, A, B>() {
@@ -95,27 +133,45 @@ public abstract class PTraversal<S, T, A, B> {
         };
     }
 
-    /****************************************************************/
-    /** Compose methods between a {@link PTraversal} and another Optics */
-    /****************************************************************/
+    /* *******************************************************************/
+    /* * Compose methods between a {@link PTraversal} and another Optics */
+    /* *******************************************************************/
 
-    /** compose a {@link PTraversal} with a {@link Fold} */
+    /** Compose a {@link PTraversal} with a {@link Fold}
+     * @param other the {@link Fold}
+     * @param <C> the target type of the {@link Fold}
+     * @return the composed {@link Fold}
+     */
     public final <C> Fold<S, C> composeFold(final Fold<A, C> other) {
         return asFold().composeFold(other);
     }
 
     //
-    /** compose a {@link PTraversal} with a {@link Getter} */
+    /** compose a {@link PTraversal} with a {@link Getter}
+     * @param other the {@link Getter}
+     * @param <C> the target type of the {@link Getter}
+     * @return the composed {@link Fold}
+     */
     public final <C> Fold<S, C> composeFold(final Getter<A, C> other) {
         return asFold().composeGetter(other);
     }
 
-    /** compose a {@link PTraversal} with a {@link PSetter} */
+    /** Compose a {@link PTraversal} with a {@link PSetter}
+     * @param other the {@link PSetter}
+     * @param <C> the target type of the {@link PSetter}
+     * @param <D> the modified target type of the {@link PSetter}
+     * @return the composed {@link PSetter}
+     */
     public final <C, D> PSetter<S, T, C, D> composeSetter(final PSetter<A, B, C, D> other) {
         return asSetter().composeSetter(other);
     }
 
-    /** compose a {@link PTraversal} with a {@link PTraversal} */
+    /** compose a {@link PTraversal} with a {@link PTraversal}
+     * @param other the second {@link PTraversal}
+     * @param <C> the target type of the second {@link PTraversal}
+     * @param <D> the modified target type of the second {@link PTraversal}
+     * @return the composed {@link PTraversal}
+     */
     public final <C, D> PTraversal<S, T, C, D> composeTraversal(final PTraversal<A, B, C, D> other) {
         final PTraversal<S, T, A, B> self = this;
         return new PTraversal<S, T, C, D>() {
@@ -127,31 +183,53 @@ public abstract class PTraversal<S, T, A, B> {
         };
     }
 
-    /** compose a {@link PTraversal} with a {@link POptional} */
+    /** Compose a {@link PTraversal} with a {@link POptional}
+     * @param other the {@link POptional}
+     * @param <C> the target type of the {@link POptional}
+     * @param <D> the modified target type of the {@link POptional}
+     * @return the composed {@link PTraversal}
+     */
     public final <C, D> PTraversal<S, T, C, D> composeOptional(final POptional<A, B, C, D> other) {
         return composeTraversal(other.asTraversal());
     }
 
-    /** compose a {@link PTraversal} with a {@link PPrism} */
+    /** Compose a {@link PTraversal} with a {@link PPrism}
+     * @param other the {@link PPrism}
+     * @param <C> the target type of the {@link PPrism}
+     * @param <D> the modified target type of the {@link PPrism}
+     * @return the composed {@link PTraversal}
+     */
     public final <C, D> PTraversal<S, T, C, D> composePrism(final PPrism<A, B, C, D> other) {
         return composeTraversal(other.asTraversal());
     }
 
-    /** compose a {@link PTraversal} with a {@link PLens} */
+    /** Compose a {@link PTraversal} with a {@link PLens}
+     * @param other the {@link PLens}
+     * @param <C> the target type of the {@link PLens}
+     * @param <D> the modified target type of the {@link PLens}
+     * @return the composed {@link PTraversal}
+     */
     public final <C, D> PTraversal<S, T, C, D> composeLens(final PLens<A, B, C, D> other) {
         return composeTraversal(other.asTraversal());
     }
 
-    /** compose a {@link PTraversal} with a {@link PIso} */
+    /** Compose a {@link PTraversal} with a {@link PIso}
+     * @param other the {@link PIso}
+     * @param <C> the target type of the {@link PIso}
+     * @param <D> the modified target type of the {@link PIso}
+     * @return the composed {@link PTraversal}
+     */
     public final <C, D> PTraversal<S, T, C, D> composeIso(final PIso<A, B, C, D> other) {
         return composeTraversal(other.asTraversal());
     }
 
-    /**********************************************************************/
-    /** Transformation methods to view a {@link PTraversal} as another Optics */
-    /**********************************************************************/
+    /* *************************************************************************/
+    /* * Transformation methods to view a {@link PTraversal} as another Optics */
+    /* *************************************************************************/
 
-    /** view a {@link PTraversal} as a {@link Fold} */
+    /** View a {@link PTraversal} as a {@link Fold}
+     * @return the {@link Fold}
+     */
     public final Fold<S, A> asFold() {
         return new Fold<S, A>() {
             @Override
@@ -161,7 +239,9 @@ public abstract class PTraversal<S, T, A, B> {
         };
     }
 
-    /** view a {@link PTraversal} as a {@link PSetter} */
+    /** View a {@link PTraversal} as a {@link PSetter}
+     * @return the {@link PSetter}
+     */
     public PSetter<S, T, A, B> asSetter() {
         return PSetter.pSetter(this::modify);
     }
@@ -185,7 +265,13 @@ public abstract class PTraversal<S, T, A, B> {
         };
     }
 
-    /** create a {@link PTraversal} from a {@link Traversable} */
+    /** Create a {@link PTraversal} from a {@link Traversable}
+     * @param traverse the {@link Traversable}
+     * @param <T> the traversable type
+     * @param <A> the target type and source parameter type
+     * @param <B> the modified target type and modified source parameter type
+     * @return the {@link PTraversal}
+     */
     public static <T, A, B> PTraversal<__<T, A>, __<T, B>, A, B> fromTraversable(final Traversable<T> traverse) {
         return new PTraversal<__<T, A>, __<T, B>, A, B>() {
             @Override

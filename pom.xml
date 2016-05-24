@@ -7,8 +7,8 @@
     <artifactId>highj</artifactId>
     <packaging>jar</packaging>
     <version>0.7-java8-SNAPSHOT</version>
-    <name>Maven Quick Start Archetype</name>
-    <url>http://maven.apache.org</url>
+    <name>HighJ - Higher Kinded Types for Java</name>
+    <url>https://github.com/DanielGronau/highj</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
