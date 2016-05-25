@@ -1,6 +1,7 @@
 package org.highj.data.transformer;
 
 import org.derive4j.hkt.__;
+import org.highj.data.coroutine.ProducerT;
 import org.highj.data.tuple.T0;
 import org.highj.data.tuple.T1;
 import org.highj.data.tuple.T2;
@@ -19,16 +20,16 @@ public class GeneratorTTest {
     //     hanoi (n-1) from other to
     //     yield (from, to)
     //     hanoi (n-1) other to from
-    private static <A> GeneratorT<T2<A,A>,T1.µ,T0> hanoi(int n, A from, A to, A other) {
+    private static <A> ProducerT<T2<A,A>,T1.µ,T0> hanoi(int n, A from, A to, A other) {
         if (n == 0) {
-            return GeneratorT.done(T0.of());
+            return ProducerT.done(T0.of());
         }
-        return GeneratorT.suspend(() ->
-            GeneratorT.narrow(Do.do_(GeneratorT.<T2<A, A>, T1.µ>monad(), new Do.DoBlock<__<__<GeneratorT.µ, T2<A, A>>, T1.µ>, T0>() {
+        return ProducerT.suspend(() ->
+            ProducerT.narrow(Do.do_(ProducerT.<T2<A, A>, T1.µ>monad(), new Do.DoBlock<__<__<ProducerT.µ, T2<A, A>>, T1.µ>, T0>() {
                 @Override
-                public <H> __<__<__<GeneratorT.µ, T2<A, A>>, T1.µ>, T0> run(Do.MContext<H, __<__<GeneratorT.µ, T2<A, A>>, T1.µ>> ctx) {
+                public <H> __<__<__<ProducerT.µ, T2<A, A>>, T1.µ>, T0> run(Do.MContext<H, __<__<ProducerT.µ, T2<A, A>>, T1.µ>> ctx) {
                     ctx.seq(hanoi(n-1, from, other, to));
-                    ctx.seq(GeneratorT.yield(T2.of(from, to)));
+                    ctx.seq(ProducerT.yield(T2.of(from, to)));
                     ctx.seq(hanoi(n-1, other, to, from));
                     return ctx.done();
                 }
@@ -38,7 +39,7 @@ public class GeneratorTTest {
 
     @Test
     public void testHanoi() {
-        Iterator<T2<Character,Character>> iterator = GeneratorT.toIterator(hanoi(3, 'A', 'B', 'C'));
+        Iterator<T2<Character,Character>> iterator = ProducerT.toIterator(hanoi(3, 'A', 'B', 'C'));
         char[][] expectedResult = {{'A','B'},{'A','C'},{'B','C'},{'A','B'},{'C','A'},{'C','B'},{'A','B'}};
         int i = 0;
         while (iterator.hasNext()) {
