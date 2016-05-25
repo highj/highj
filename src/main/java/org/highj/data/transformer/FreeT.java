@@ -10,7 +10,9 @@ import org.derive4j.Data;
 import org.derive4j.Derive;
 import org.derive4j.Visibility;
 import org.derive4j.hkt.__;
+import org.derive4j.hkt.__3;
 import org.highj.data.Either;
+import org.highj.data.transformer.free.*;
 import org.highj.function.F1;
 import org.highj.function.NF;
 import org.highj.typeclass1.functor.Functor;
@@ -18,8 +20,13 @@ import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadRec;
 
 @Data(@Derive(inClass = "FreeTImpl", withVisibility = Visibility.Package))
-public abstract class FreeT<F,M,A> {
-    
+public abstract class FreeT<F,M,A> implements __3<FreeT.µ,F,M,A> {
+    public static class µ {}
+
+    public static <F,M,A> FreeT<F,M,A> narrow(__<__<__<FreeT.µ,F>,M>,A> a) {
+        return (FreeT<F,M,A>)a;
+    }
+
     public interface Cases<R,F,M,A> {
         R liftF(__<F,A> f);
         R liftM(__<M,A> m);
@@ -137,5 +144,29 @@ public abstract class FreeT<F,M,A> {
             .bind((Bound<F, M, ?, A> bounds2) -> mMonad.pure(Either.Left(reassociateBind(bounds2, bound.f()))))
             .suspend((Supplier<FreeT<F, M, A>> a) -> mMonad.pure(Either.<FreeT<F, M, B>, B>Left(bind(a.get(), bound.f()))))
             .apply(bound.m());
+    }
+
+    public static <F,M> FreeTFunctor<F,M> functor() {
+        return new FreeTFunctor<F,M>() {};
+    }
+
+    public static <F,M> FreeTApply<F,M> apply() {
+        return new FreeTApply<F,M>() {};
+    }
+
+    public static <F,M> FreeTApplicative<F,M> applicative() {
+        return new FreeTApplicative<F,M>() {};
+    }
+
+    public static <F,M> FreeTBind<F,M> bind() {
+        return new FreeTBind<F,M>() {};
+    }
+
+    public static <F,M> FreeTMonad<F,M> monad() {
+        return new FreeTMonad<F,M>() {};
+    }
+
+    public static <F,M> FreeTMonadTrans<F,M> monadTrans() {
+        return new FreeTMonadTrans<F,M>() {};
     }
 }
