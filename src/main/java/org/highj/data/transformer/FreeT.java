@@ -10,12 +10,12 @@ import org.derive4j.Data;
 import org.derive4j.Derive;
 import org.derive4j.Visibility;
 import org.derive4j.hkt.__;
+import org.highj.data.Either;
 import org.highj.function.F1;
+import org.highj.function.NF;
+import org.highj.typeclass1.monad.Monad;
+import org.highj.typeclass1.monad.MonadRec;
 
-/**
- *
- * @author clintonselke
- */
 @Data(@Derive(inClass = "FreeTImpl", withVisibility = Visibility.Package))
 public abstract class FreeT<F,M,A> {
     
@@ -78,5 +78,39 @@ public abstract class FreeT<F,M,A> {
     
     private static <F,M,A,B,C> FreeT<F,M,C> reassociateBind(Bound<F,M,A,B> bound, F1<B,FreeT<F,M,C>> f) {
         return suspend(() -> bind(bound.m(), (A a) -> bind(bound.f().apply(a), f)));
+    }
+
+    public __<M,A> run(MonadRec<M> mMonadRec, NF<F,M> interp) {
+        return mMonadRec.tailRec(
+            FreeTImpl
+                .<F,M,A>cases()
+                .liftF((__<F, A> fa) -> mMonadRec.map(Either::<FreeT<F, M, A>, A>Right, interp.apply(fa)))
+                .liftM((__<M, A> ma) -> mMonadRec.map(Either::<FreeT<F, M, A>, A>Right, ma))
+                .done((A a) -> mMonadRec.pure(Either.<FreeT<F, M, A>, A>Right(a)))
+                .bind((Bound<F, M, ?, A> bound) -> runBound(mMonadRec, interp, bound))
+                .suspend((Supplier<FreeT<F, M, A>> a) -> mMonadRec.pure(Either.<FreeT<F, M, A>, A>Left(a.get()))),
+            this
+        );
+    }
+
+    private static <F,M,A,B> __<M,Either<FreeT<F,M,B>,B>> runBound(Monad<M> mMonad, NF<F,M> interp, Bound<F,M,A,B> bound) {
+        return FreeTImpl
+            .<F,M,A>cases()
+            .liftF((__<F,A> fa) ->
+                mMonad.map(
+                    (A a) -> Either.<FreeT<F,M,B>,B>Left(bound.f().apply(a)),
+                    interp.apply(fa)
+                )
+            )
+            .liftM((__<M,A> ma) ->
+                mMonad.map(
+                    (A a) -> Either.<FreeT<F,M,B>,B>Left(bound.f().apply(a)),
+                    ma
+                )
+            )
+            .done((A a) -> mMonad.pure(Either.<FreeT<F,M,B>,B>Left(bound.f().apply(a))))
+            .bind((Bound<F,M,?,A> bounds2) -> mMonad.pure(Either.Left(reassociateBind(bounds2, bound.f()))))
+            .suspend((Supplier<FreeT<F,M,A>> a) -> mMonad.pure(Either.<FreeT<F,M,B>,B>Left(bind(a.get(), bound.f()))))
+            .apply(bound.m());
     }
 }
