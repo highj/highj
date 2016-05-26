@@ -16,4 +16,13 @@ public interface NF<F,G> extends __2<NF.µ,F,G> {
     }
 
     <A> __<G,A> apply(__<F,A> a);
+
+    static <F_> NF<F_,F_> identity() {
+        return new NF<F_,F_>() {
+            @Override
+            public <A> __<F_, A> apply(__<F_, A> a) {
+                return a;
+            }
+        };
+    }
 }
