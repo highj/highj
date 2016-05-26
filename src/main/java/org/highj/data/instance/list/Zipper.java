@@ -12,14 +12,14 @@ import java.util.function.Predicate;
 public class Zipper<A> implements __<Zipper.µ, A> {
     final private List<A> front;
     final private List<A> back;
-    final private int pos;
+    final private int position;
 
     public interface µ {}
 
-    private Zipper(List<A> front, List<A> back, int pos) {
+    private Zipper(List<A> front, List<A> back, int position) {
         this.front = front;
         this.back = back;
-        this.pos = pos;
+        this.position = position;
     }
 
     public static <A> Zipper<A> narrow(__<Zipper.µ, A> zipper) {
@@ -47,7 +47,7 @@ public class Zipper<A> implements __<Zipper.µ, A> {
     }
 
     public boolean isStart() {
-        return pos == 0;
+        return position == 0;
     }
 
     public boolean isEnd() {
@@ -55,7 +55,11 @@ public class Zipper<A> implements __<Zipper.µ, A> {
     }
 
     public int position() {
-        return pos;
+        return position;
+    }
+
+    public int size() {
+        return position + back.size();
     }
 
     public Zipper<A> toStart() {
@@ -76,18 +80,18 @@ public class Zipper<A> implements __<Zipper.µ, A> {
 
     public Zipper<A> toPosition(int index) {
         Zipper<A> result = this;
-        while(index != result.pos) {
-            result = result.pos < index ? result.forwards() : result.backwards();
+        while(index != result.position) {
+            result = result.position < index ? result.forwards() : result.backwards();
         }
         return result;
     }
 
     public Maybe<Zipper<A>> maybeToPosition(int index) {
         Zipper<A> result = this;
-        while(index != result.pos) {
-            if (result.pos < index && ! result.isEnd()) {
+        while(index != result.position) {
+            if (result.position < index && ! result.isEnd()) {
                result = result.forwards();
-            } else if (result.pos > index && ! result.isStart()) {
+            } else if (result.position > index && ! result.isStart()) {
                 result = result.backwards();
             } else {
                 return Maybe.Nothing();
@@ -97,19 +101,35 @@ public class Zipper<A> implements __<Zipper.µ, A> {
     }
 
     public Zipper<A> forwards() {
-        return new Zipper<>(front.plus(back.head()), back.tail(), pos+1);
+        return new Zipper<>(front.plus(back.head()), back.tail(), position +1);
+    }
+
+    public Zipper<A> forwards(int steps) {
+        return toPosition(position + steps);
     }
 
     public Zipper<A> backwards() {
-        return new Zipper<>(front.tail(), back.plus(front.head()), pos-1);
+        return new Zipper<>(front.tail(), back.plus(front.head()), position -1);
+    }
+
+    public Zipper<A> backwards(int steps) {
+        return toPosition(position - steps);
     }
 
     public Maybe<Zipper<A>> maybeForwards() {
         return Maybe.JustWhenTrue(! isEnd(), this::forwards);
     }
 
+    public Maybe<Zipper<A>> maybeForwards(int steps) {
+        return maybeToPosition(position + steps);
+    }
+
     public Maybe<Zipper<A>> maybeBackwards() {
         return Maybe.JustWhenTrue(! isStart(), this::backwards);
+    }
+
+    public Maybe<Zipper<A>> maybeBackwards(int steps) {
+        return maybeToPosition(position - steps);
     }
 
     public A readNext() {
@@ -129,11 +149,11 @@ public class Zipper<A> implements __<Zipper.µ, A> {
     }
 
     public Zipper<A> removeNext() {
-        return new Zipper<>(front, back.tail(), pos);
+        return new Zipper<>(front, back.tail(), position);
     }
 
     public Zipper<A> removeBefore() {
-        return new Zipper<>(front.tail(), back, pos-1);
+        return new Zipper<>(front.tail(), back, position -1);
     }
 
     public Maybe<Zipper<A>> maybeRemoveNext() {
@@ -145,19 +165,19 @@ public class Zipper<A> implements __<Zipper.µ, A> {
     }
 
     public Zipper<A> insertNext(A ... as) {
-        return new Zipper<>(front, back.plus(as), pos);
+        return new Zipper<>(front, back.plus(as), position);
     }
 
     public Zipper<A> insertBefore(A ... as) {
-        return new Zipper<>(front.plus(as), back, pos + as.length);
+        return new Zipper<>(front.plus(as), back, position + as.length);
     }
 
     public Zipper<A> replaceNext(A a) {
-        return new Zipper<>(front, back.tail().plus(a), pos);
+        return new Zipper<>(front, back.tail().plus(a), position);
     }
 
     public Zipper<A> replaceBefore(A a) {
-        return new Zipper<>(front.tail().plus(a), back, pos + 1);
+        return new Zipper<>(front.tail().plus(a), back, position + 1);
     }
 
     public Maybe<Zipper<A>> maybeReplaceNext(A a) {
@@ -169,7 +189,7 @@ public class Zipper<A> implements __<Zipper.µ, A> {
     }
 
     public Zipper<A> dropAfter() {
-        return new Zipper<>(front, List.empty(), pos);
+        return new Zipper<>(front, List.empty(), position);
     }
 
     public Zipper<A> dropBefore() {
@@ -181,7 +201,7 @@ public class Zipper<A> implements __<Zipper.µ, A> {
     }
 
     public <B> Zipper<B> map(Function<? super A, ? extends B> fn) {
-        return new Zipper<>(front.map(fn), back.map(fn), pos);
+        return new Zipper<>(front.map(fn), back.map(fn), position);
     }
 
     public Zipper<A> filter(Predicate<? super A> predicate) {
@@ -193,7 +213,7 @@ public class Zipper<A> implements __<Zipper.µ, A> {
     }
 
     public Zipper<A> filterAfter(Predicate<? super A> predicate) {
-        return new Zipper<>(front, back.filter(predicate), pos);
+        return new Zipper<>(front, back.filter(predicate), position);
     }
 
     public T2<List<A>,List<A>> split() {
