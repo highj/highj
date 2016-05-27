@@ -205,7 +205,7 @@ public class ZipperTest {
     }
 
     @Test
-    public void maybeReadBefore() {
+    public void testMaybeReadBefore() {
         List<String> list = List.of("foo", "bar", "baz");
         for (int i = 1; i < 3; i++) {
             assertThat(Zipper.fromList(list).toPosition(i + 1).maybeReadBefore()).isEqualTo(list.apply(i));
@@ -245,7 +245,7 @@ public class ZipperTest {
     }
 
     @Test
-    public void maybeRemoveBefore() {
+    public void testMaybeRemoveBefore() {
         List<String> list = List.of("foo", "bar", "baz", "ding", "dong");
         assertThat(Zipper.empty().maybeRemoveBefore().isNothing()).isTrue();
         assertThat(Zipper.fromList(list).maybeRemoveBefore().isNothing()).isTrue();
@@ -281,7 +281,7 @@ public class ZipperTest {
                 .insertBefore("bar1", "bar2")
                 .forwards()
                 .insertBefore("baz1")
-                .toList()).containsExactly("foo", "foo1", "bar", "bar1", "bar2", "baz", "baz1");
+                .toList()).containsExactly("foo", "foo1", "bar", "bar2", "bar1", "baz", "baz1");
     }
 
     @Test
@@ -302,7 +302,7 @@ public class ZipperTest {
                 .forwards()
                 .replaceBefore("foo1")
                 .forwards()
-                .replaceNext("bar1")
+                .replaceBefore("bar1")
                 .toList()).containsExactly("foo1", "bar1", "baz");
     }
 
@@ -382,7 +382,7 @@ public class ZipperTest {
         List<String> list = List.of("foo", "bar", "baz");
         assertThat(Zipper.<String>empty().dropAfter().toList()).isEmpty();
         assertThat(Zipper.fromList(list).dropAfter().toList()).isEmpty();
-        assertThat(Zipper.fromList(list).forwards().dropAfter().toList()).containsExactly("bar", "baz");
+        assertThat(Zipper.fromList(list).forwards().dropAfter().toList()).containsExactly("foo");
         assertThat(Zipper.fromListEnd(list).dropAfter().toList()).containsExactly("foo", "bar", "baz");
     }
 
@@ -391,7 +391,7 @@ public class ZipperTest {
         List<String> list = List.of("foo", "bar", "baz");
         assertThat(Zipper.<String>empty().dropBefore().toList()).isEmpty();
         assertThat(Zipper.fromListEnd(list).dropBefore().toList()).isEmpty();
-        assertThat(Zipper.fromListEnd(list).backwards().dropBefore().toList()).containsExactly("foo", "bar");
+        assertThat(Zipper.fromListEnd(list).backwards().dropBefore().toList()).containsExactly("baz");
         assertThat(Zipper.fromList(list).dropBefore().toList()).containsExactly("foo", "bar", "baz");
     }
 
