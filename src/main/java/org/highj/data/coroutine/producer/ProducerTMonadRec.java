@@ -15,7 +15,7 @@ import org.highj.typeclass1.monad.MonadRec;
  *
  * @author clintonselke
  */
-public interface GeneratorTMonadRec<E,M> extends GeneratorTMonad<E,M>, MonadRec<__<__<ProducerT.µ,E>,M>> {
+public interface ProducerTMonadRec<E,M> extends ProducerTMonad<E,M>, MonadRec<__<__<ProducerT.µ,E>,M>> {
 
     @Override
     public default <A, B> __<__<__<ProducerT.µ, E>, M>, B> tailRec(Function<A, __<__<__<ProducerT.µ, E>, M>, Either<A, B>>> function, A startA) {

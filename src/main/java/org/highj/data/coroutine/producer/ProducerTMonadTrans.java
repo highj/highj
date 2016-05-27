@@ -14,7 +14,7 @@ import org.highj.typeclass1.monad.MonadTrans;
  *
  * @author clintonselke
  */
-public interface GeneratorTMonadTrans<E,M> extends GeneratorTMonad<E,M>, MonadTrans<__<ProducerT.µ,E>,M> {
+public interface ProducerTMonadTrans<E,M> extends ProducerTMonad<E,M>, MonadTrans<__<ProducerT.µ,E>,M> {
 
     @Override
     public default <A> __2<__<ProducerT.µ, E>, M, A> lift(__<M, A> nestedA) {

@@ -17,13 +17,13 @@ import org.highj.typeclass1.monad.MonadRec;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
-import org.highj.data.coroutine.producer.GeneratorTApplicative;
-import org.highj.data.coroutine.producer.GeneratorTApply;
-import org.highj.data.coroutine.producer.GeneratorTBind;
-import org.highj.data.coroutine.producer.GeneratorTFunctor;
-import org.highj.data.coroutine.producer.GeneratorTMonad;
-import org.highj.data.coroutine.producer.GeneratorTMonadRec;
-import org.highj.data.coroutine.producer.GeneratorTMonadTrans;
+import org.highj.data.coroutine.producer.ProducerTApplicative;
+import org.highj.data.coroutine.producer.ProducerTApply;
+import org.highj.data.coroutine.producer.ProducerTBind;
+import org.highj.data.coroutine.producer.ProducerTFunctor;
+import org.highj.data.coroutine.producer.ProducerTMonad;
+import org.highj.data.coroutine.producer.ProducerTMonadRec;
+import org.highj.data.coroutine.producer.ProducerTMonadTrans;
 
 /**
  * JavaScript / Python style generator, expressed as a Monad.
@@ -197,31 +197,31 @@ public abstract class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
         return ProducerTImpl.lift(ma);
     }
 
-    public static <E,M> GeneratorTFunctor<E,M> functor() {
-        return new GeneratorTFunctor<E,M>() {};
+    public static <E,M> ProducerTFunctor<E,M> functor() {
+        return new ProducerTFunctor<E,M>() {};
     }
 
-    public static <E,M> GeneratorTApply<E,M> apply() {
-        return new GeneratorTApply<E,M>() {};
+    public static <E,M> ProducerTApply<E,M> apply() {
+        return new ProducerTApply<E,M>() {};
     }
 
-    public static <E,M> GeneratorTApplicative<E,M> applicative() {
-        return new GeneratorTApplicative<E,M>() {};
+    public static <E,M> ProducerTApplicative<E,M> applicative() {
+        return new ProducerTApplicative<E,M>() {};
     }
 
-    public static <E,M> GeneratorTBind<E,M> bind() {
-        return new GeneratorTBind<E,M>() {};
+    public static <E,M> ProducerTBind<E,M> bind() {
+        return new ProducerTBind<E,M>() {};
     }
 
-    public static <E,M> GeneratorTMonad<E,M> monad() {
-        return new GeneratorTMonad<E,M>() {};
+    public static <E,M> ProducerTMonad<E,M> monad() {
+        return new ProducerTMonad<E,M>() {};
     }
 
-    public static <E,M> GeneratorTMonadTrans<E,M> monadTrans() {
-        return new GeneratorTMonadTrans<E,M>() {};
+    public static <E,M> ProducerTMonadTrans<E,M> monadTrans() {
+        return new ProducerTMonadTrans<E,M>() {};
     }
     
-    public static <E,M> GeneratorTMonadRec<E,M> monadRec() {
-        return new GeneratorTMonadRec<E,M>() {};
+    public static <E,M> ProducerTMonadRec<E,M> monadRec() {
+        return new ProducerTMonadRec<E,M>() {};
     }
 }

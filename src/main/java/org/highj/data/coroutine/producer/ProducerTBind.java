@@ -5,7 +5,7 @@ import org.derive4j.hkt.__;
 import org.highj.data.coroutine.ProducerT;
 import org.highj.typeclass1.monad.Bind;
 
-public interface GeneratorTBind<E,M> extends GeneratorTApply<E,M>, Bind<__<__<ProducerT.µ,E>,M>> {
+public interface ProducerTBind<E,M> extends ProducerTApply<E,M>, Bind<__<__<ProducerT.µ,E>,M>> {
 
     @Override
     public default <A, B> __<__<__<ProducerT.µ, E>, M>, B> bind(__<__<__<ProducerT.µ, E>, M>, A> nestedA, Function<A, __<__<__<ProducerT.µ, E>, M>, B>> fn) {
