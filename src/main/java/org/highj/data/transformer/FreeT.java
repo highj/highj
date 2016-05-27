@@ -88,6 +88,36 @@ public abstract class FreeT<F,M,A> implements __3<FreeT.µ,F,M,A> {
         return suspend(() -> bind(bound.m(), (A a) -> bind(bound.f().apply(a), f)));
     }
 
+    public <N> FreeT<F,N,A> hoist(NF<M,N> nm) {
+        return bimap(NF.identity(), nm);
+    }
+
+    public <G> FreeT<G,M,A> interpret(NF<F,G> nf) {
+        return bimap(nf, NF.identity());
+    }
+
+    public <G,N> FreeT<G,N,A> bimap(NF<F,G> nf, NF<M,N> nm) {
+        return FreeTImpl
+            .<F,M,A>cases()
+            .liftF((__<F, A> f) -> FreeT.<G, N, A>liftF(nf.apply(f)))
+            .liftM((__<M,A> m) -> FreeT.<G, N, A>liftM(nm.apply(m)))
+            .done(FreeT::<G, N, A>done)
+            .bind((Bound<F, M, ?, A> bound) -> bimapBound(nf, nm, bound))
+            .suspend((Supplier<FreeT<F, M, A>> a) -> suspend(() -> a.get().bimap(nf, nm)))
+            .apply(this);
+    }
+
+    private static <F,G,M,N,A,B> FreeT<G,N,B> bimapBound(NF<F,G> nf, NF<M,N> nm, Bound<F,M,A,B> bound) {
+        return FreeTImpl
+            .<F,M,A>cases()
+            .liftF((__<F,A> f) -> FreeT.bind(liftF(nf.apply(f)), (A a) -> bound.f().apply(a).bimap(nf, nm)))
+            .liftM((__<M,A> m) -> FreeT.bind(liftM(nm.apply(m)), (A a) -> bound.f().apply(a).bimap(nf, nm)))
+            .done((A a) -> bound.f().apply(a).bimap(nf, nm))
+            .bind((Bound<F,M,?,A> bound2) -> reassociateBind(bound2, bound.f()).bimap(nf, nm))
+            .suspend((Supplier<FreeT<F,M,A>> a) -> suspend(() -> bind(a.get(), bound.f()).bimap(nf, nm)))
+            .apply(bound.m());
+    }
+
     public __<M,Either<A,__<F,FreeT<F,M,A>>>> resume(MonadRec<M> mMonadRec, Functor<F> fFunctor) {
         return mMonadRec.tailRec(
             FreeTImpl
