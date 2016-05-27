@@ -7,7 +7,7 @@ package org.highj.data;
 
 import org.derive4j.hkt.__;
 import org.highj.function.Strings;
-import org.highj.data.transformer.GeneratorT;
+import org.highj.data.coroutine.ProducerT;
 import org.highj.data.tuple.T0;
 import org.highj.data.tuple.T1;
 import org.highj.data.tuple.T2;
@@ -47,7 +47,7 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
 
     @Override
     public Iterator<T2<Integer, A>> iterator() {
-        return GeneratorT.toIterator(GeneratorT.narrow(root.generator(0, 0)));
+        return ProducerT.toIterator(ProducerT.narrow(root.generator(0, 0)));
     }
 
     public int size() {
@@ -84,7 +84,7 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
 
         public abstract Node<A> delete(int key);
 
-        public abstract __<__<__<GeneratorT.µ,T2<Integer,A>>,T1.µ>,T0> generator(int shift, int key);
+        public abstract __<__<__<ProducerT.µ,T2<Integer,A>>,T1.µ>,T0> generator(int shift, int key);
     }
 
     private static class Empty<A> extends Node<A> {
@@ -134,8 +134,8 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
         }
 
         @Override
-        public __<__<__<GeneratorT.µ,T2<Integer,A>>,T1.µ>,T0> generator(int shift, int key) {
-            return GeneratorT.<T2<Integer,A>,T1.µ>applicative().pure(T0.of());
+        public __<__<__<ProducerT.µ,T2<Integer,A>>,T1.µ>,T0> generator(int shift, int key) {
+            return ProducerT.<T2<Integer,A>,T1.µ>applicative().pure(T0.of());
         }
     }
 
@@ -191,8 +191,8 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
         }
 
         @Override
-        public __<__<__<GeneratorT.µ, T2<Integer, A>>, T1.µ>, T0> generator(int shift, int key) {
-            return GeneratorT.yield(T2.of(key, value));
+        public __<__<__<ProducerT.µ, T2<Integer, A>>, T1.µ>, T0> generator(int shift, int key) {
+            return ProducerT.yield(T2.of(key, value));
         }
     }
 
@@ -264,8 +264,8 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
         }
 
         @Override
-        public __<__<__<GeneratorT.µ, T2<Integer, A>>, T1.µ>, T0> generator(int shift, int key) {
-            return GeneratorT.<T2<Integer,A>,T1.µ>monad().sequence_(
+        public __<__<__<ProducerT.µ, T2<Integer, A>>, T1.µ>, T0> generator(int shift, int key) {
+            return ProducerT.<T2<Integer,A>,T1.µ>monad().sequence_(
                 List.zip(
                     List.of(nodes),
                     List.range(0)
