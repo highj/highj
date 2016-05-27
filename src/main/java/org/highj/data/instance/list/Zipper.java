@@ -401,7 +401,7 @@ public class Zipper<A> implements __<Zipper.µ, A> {
      * @throws NoSuchElementException when position is out of bounds
      */
     public Zipper<A> replaceBefore(A a) throws NoSuchElementException {
-        return new Zipper<>(front.tail().plus(a), back, position + 1);
+        return new Zipper<>(front.tail().plus(a), back, position);
     }
 
     /**
@@ -443,7 +443,7 @@ public class Zipper<A> implements __<Zipper.µ, A> {
      * @throws NoSuchElementException when position is out of bounds
      */
     public Zipper<A> modifyBefore(UnaryOperator<A> operator) throws NoSuchElementException {
-        return new Zipper<>(front.tail().plus(operator.apply(front.head())), back, position + 1);
+        return new Zipper<>(front.tail().plus(operator.apply(front.head())), back, position);
     }
 
     /**
@@ -514,7 +514,8 @@ public class Zipper<A> implements __<Zipper.µ, A> {
      * @return the {@link Zipper}
      */
     public Zipper<A> filter(Predicate<? super A> predicate) {
-        return new Zipper<>(front.filter(predicate), back.filter(predicate), front.size());
+        List<A> front2 = front.filter(predicate);
+        return new Zipper<>(front2, back.filter(predicate), front2.size());
     }
 
     /**
@@ -524,7 +525,8 @@ public class Zipper<A> implements __<Zipper.µ, A> {
      * @return the {@link Zipper}
      */
     public Zipper<A> filterBefore(Predicate<? super A> predicate) {
-        return new Zipper<>(front.filter(predicate), back, front.size());
+        List<A> front2 = front.filter(predicate);
+        return new Zipper<>(front2, back, front2.size());
     }
 
     /**
