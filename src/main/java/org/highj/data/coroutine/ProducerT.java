@@ -24,6 +24,9 @@ import org.highj.data.coroutine.producer.ProducerTFunctor;
 import org.highj.data.coroutine.producer.ProducerTMonad;
 import org.highj.data.coroutine.producer.ProducerTMonadRec;
 import org.highj.data.coroutine.producer.ProducerTMonadTrans;
+import org.highj.data.transformer.ErrorT;
+import org.highj.data.transformer.FreeT;
+import org.highj.function.NF;
 
 /**
  * JavaScript / Python style generator, expressed as a Monad.
@@ -32,45 +35,38 @@ import org.highj.data.coroutine.producer.ProducerTMonadTrans;
  * @param <M> The base monad type.
  * @param <A> The final return type after the full execution.
  */
-@Data(@Derive(inClass = "ProducerTImpl", withVisibility = Visibility.Package))
-public abstract class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
+public class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
     public static class µ {
+    }
+    
+    private final FreeT<YieldF.µ,M,A> _toFreeT;
+    
+    private ProducerT(FreeT<YieldF.µ,M,A> toFreeT) {
+        this._toFreeT = toFreeT;
+    }
+    
+    public static <E,M,A> ProducerT<E,M,A> producerT(FreeT<YieldF.µ,M,A> toFreeT) {
+        return new ProducerT<>(toFreeT);
     }
 
     public static <E,M,A> ProducerT<E,M,A> narrow(__<__<__<µ,E>,M>,A> a) {
         return (ProducerT<E,M,A>)a;
     }
-
-    public interface Cases<R,E,M,A> {
-        R done(A result);
-        R yield(E emitValue, ProducerT<E,M,A> rest);
-        R bind(Bound<E,M,?,A> bound);
-        R suspend(Supplier<ProducerT<E,M,A>> suspend);
-        R lift(__<M,A> ma);
+    
+    public FreeT<YieldF.µ,M,A> toFreeT() {
+        return _toFreeT;
     }
-
-    public abstract <R> R match(Cases<R,E,M,A> cases);
-
-    public static class Bound<E,M,A,B> {
-        private final ProducerT<E,M,A> _m;
-        private final F1<A,ProducerT<E,M,B>> _f;
-
-        private Bound(ProducerT<E,M,A> m, F1<A,ProducerT<E,M,B>> f) {
-            this._m = m;
-            this._f = f;
-        }
-
-        public static <E,M,A,B> Bound<E,M,A,B> mkBound(ProducerT<E,M,A> m, F1<A,ProducerT<E,M,B>> f) {
-            return new Bound(m, f);
-        }
-
-        public ProducerT<E,M,A> m() {
-            return _m;
-        }
-
-        public F1<A,ProducerT<E,M,B>> f() {
-            return _f;
-        }
+    
+    @SuppressWarnings("Convert2Lambda")
+    public __<M,Either<A, T2<E,ProducerT<E,M,A>>>> run(MonadRec<M> mMonadRec) {
+        toFreeT().hoist(new NF<M,__<__<ErrorT.µ,T2<E,ProducerT<E,M,A>>>,M>>() {
+            @Override
+            public <A2> __<__<__<ErrorT.µ, T2<E, ProducerT<E, M, A>>>, M>, A2> apply(__<M, A2> a) {
+                throw new UnsupportedOperationException();
+                //return ErrorT.<T2<E, ProducerT<E, M, A>>monadTrans(mMonadRec).lift(a);
+            }
+        });
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -80,6 +76,7 @@ public abstract class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
      * @return Either a completion value (left side of Either), or an yielded element tupled with the remaining
      *         computation to be resumed later (right side of Either).
      */
+    /*
     public __<M,Either<A, T2<E,ProducerT<E,M,A>>>> run(MonadRec<M> mMonadRec) {
         return mMonadRec.tailRec(ProducerTImpl
                 .<E,M,A>cases()
@@ -93,7 +90,8 @@ public abstract class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
             this
         );
     }
-
+    */
+    
     /**
      * Converts a Generator based on the identity monad into a Java Iterator.
      * 
@@ -101,6 +99,7 @@ public abstract class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
      * @param generator The generator to be converted into an iterator.
      * @return An iterator that will produce the same elements as the generator.
      */
+    /*
     public static <E> Iterator<E> toIterator(ProducerT<E,T1.µ,T0> generator) {
         final Maybe<T2<E,ProducerT<E,T1.µ,T0>>> initState = T1.narrow(generator.run(T1.monadRec))._1().maybeRight();
         return new Iterator<E>() {
@@ -145,6 +144,7 @@ public abstract class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
             .lift((__<M, B> mb) -> mMonad.map((B b) -> Either.<ProducerT<E, M, A>, Either<A, T2<E, ProducerT<E, M, A>>>>Left(bound.f().apply(b)), mb))
             .apply(bound.m());
     }
+    */
 
     /**
      * A Generator that has finished.
@@ -155,6 +155,7 @@ public abstract class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
      * @param r The finished return value.
      * @return A generator in its finished state returning value r.
      */
+    /*
     public static <E,M,A> ProducerT<E,M,A> done(A r) {
         return ProducerTImpl.done(r);
     }
@@ -162,6 +163,7 @@ public abstract class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
     public static <E,M,A> ProducerT<E,M,A> yield(E a, ProducerT<E,M,A> rest) {
         return ProducerTImpl.yield(a, rest);
     }
+    */
 
     /**
      * Produces a generator that will suspend its computation returning a yielded value,
@@ -172,6 +174,7 @@ public abstract class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
      * @param e The yielded element value.
      * @return The generator that performs the yield.
      */
+    /*
     public static <E,M> ProducerT<E,M,T0> yield(E e) {
         return yield(e, done(T0.of()));
     }
@@ -224,4 +227,5 @@ public abstract class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
     public static <E,M> ProducerTMonadRec<E,M> monadRec() {
         return new ProducerTMonadRec<E,M>() {};
     }
+    */
 }
