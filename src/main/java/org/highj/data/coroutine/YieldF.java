@@ -2,27 +2,37 @@ package org.highj.data.coroutine;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.function.F1;
+import org.highj.data.coroutine.yieldf.YieldFFunctor;
 
 public class YieldF<V,A> implements __2<YieldF.µ,V,A> {
     public static class µ {
     }
     
-    private final F1<V,A> k;
+    private final V value;
+    private final A next;
     
-    private YieldF(F1<V,A> k) {
-        this.k = k;
+    private YieldF(V value, A next) {
+        this.value = value;
+        this.next = next;
     }
     
     public static <V,A> YieldF<V,A> narrow(__<__<YieldF.µ,V>,A> a) {
         return (YieldF<V,A>)a;
     }
     
-    public static <V,A> YieldF<V,A> yield(F1<V,A> k) {
-        return new YieldF<>(k);
+    public static <V,A> YieldF<V,A> yield(V value, A next) {
+        return new YieldF<>(value, next);
     }
     
-    public F1<V,A> k() {
-        return k;
+    public V value() {
+        return value;
+    }
+    
+    public A next() {
+        return next;
+    }
+    
+    public static <V> YieldFFunctor<V> functor() {
+        return new YieldFFunctor<V>() {};
     }
 }
