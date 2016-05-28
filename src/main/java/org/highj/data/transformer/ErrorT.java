@@ -15,6 +15,7 @@ import org.highj.data.transformer.error.ErrorTFunctor;
 import org.highj.data.transformer.error.ErrorTMonad;
 import org.highj.data.transformer.error.ErrorTMonadError;
 import org.highj.data.transformer.error.ErrorTMonadRec;
+import org.highj.data.transformer.error.ErrorTMonadTrans;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Applicative;
 import org.highj.typeclass1.monad.Apply;
@@ -64,5 +65,9 @@ public interface ErrorT<E,M,A> extends __3<ErrorT.µ,E,M,A> {
     
     public static <E,M> ErrorTMonadRec<E,M> monadRec(MonadRec<M> mMonadRec) {
         return (ErrorTMonadRec<E,M>)() -> mMonadRec;
+    }
+    
+    public static <E,M> ErrorTMonadTrans<E,M> monadTrans(Monad<M> mMonad) {
+        return (ErrorTMonadTrans<E,M>)() -> mMonad;
     }
 }
