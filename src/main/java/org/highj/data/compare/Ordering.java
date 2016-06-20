@@ -14,6 +14,42 @@ public enum Ordering {
         return this == EQ ? that : this;
     }
 
+    public Ordering andThen(boolean x, boolean y) {
+        return this == EQ ? Ordering.compare(x, y) : this;
+    }
+
+    public Ordering andThen(char x, char y) {
+        return this == EQ ? Ordering.compare(x, y) : this;
+    }
+
+    public Ordering andThen(byte x, byte y) {
+        return this == EQ ? Ordering.compare(x, y) : this;
+    }
+
+    public Ordering andThen(short x, short y) {
+        return this == EQ ? Ordering.compare(x, y) : this;
+    }
+
+    public Ordering andThen(int x, int y) {
+        return this == EQ ? Ordering.compare(x, y) : this;
+    }
+
+    public Ordering andThen(long x, long y) {
+        return this == EQ ? Ordering.compare(x, y) : this;
+    }
+
+    public Ordering andThen(float x, float y) {
+        return this == EQ ? Ordering.compare(x, y) : this;
+    }
+
+    public Ordering andThen(double x, double y) {
+        return this == EQ ? Ordering.compare(x, y) : this;
+    }
+
+    public <T extends Comparable<? super T>> Ordering andThen(T x, T y) {
+        return this == EQ ? Ordering.compare(x, y) : this;
+    }
+
     public static Group<Ordering> group = new OrderingGroup();
 
     public static Ordering compare(boolean x, boolean y) {
