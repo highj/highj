@@ -58,16 +58,16 @@ public abstract class FreeArrow<F,ARR,B,C> implements __4<FreeArrow.µ,F,ARR,B,C
     
     public static class First<F,ARR,B,C,D,E,G> {
         private final FreeArrow<F,ARR,B,C> _a;
-        private final F1<T2<B,D>,E> _f;
+        private final F1<E,T2<B,D>> _f;
         private final F1<T2<C,D>,G> _g;
         
-        private First(FreeArrow<F,ARR,B,C> a, F1<T2<B,D>,E> f, F1<T2<C,D>,G> g) {
+        private First(FreeArrow<F,ARR,B,C> a, F1<E,T2<B,D>> f, F1<T2<C,D>,G> g) {
             this._a = a;
             this._f = f;
             this._g = g;
         }
         
-        public static <F,ARR,B,C,D,E,G> First<F,ARR,B,C,D,E,G> create(FreeArrow<F,ARR,B,C> a, F1<T2<B,D>,E> f, F1<T2<C,D>,G> g) {
+        public static <F,ARR,B,C,D,E,G> First<F,ARR,B,C,D,E,G> create(FreeArrow<F,ARR,B,C> a, F1<E,T2<B,D>> f, F1<T2<C,D>,G> g) {
             return new First<>(a, f, g);
         }
         
@@ -75,7 +75,7 @@ public abstract class FreeArrow<F,ARR,B,C> implements __4<FreeArrow.µ,F,ARR,B,C
             return _a;
         }
         
-        public F1<T2<B,D>,E> f() {
+        public F1<E,T2<B,D>> f() {
             return _f;
         }
         
@@ -108,28 +108,30 @@ public abstract class FreeArrow<F,ARR,B,C> implements __4<FreeArrow.µ,F,ARR,B,C
         return FreeArrowImpl.LiftA(arr);
     }
     
-    // FIXME: Need an abstraction that can avoid stack overflows.
-    // (Like MonadRec, but for Arrows)
     public __2<ARR,B,C> runFree(Arrow<ARR> arrow, NF2<F,ARR> interp) {
         return FreeArrowImpl
             .<F,ARR,B,C>cases()
             .Id((F1<B,C> id) -> arrow.dot(arrow.arr(id), arrow.<B>identity()))
-            .Compose((Compose<F,ARR,B,?,C> compose) -> runCompose(compose))
+            .Compose((Compose<F,ARR,B,?,C> compose) -> runCompose(arrow, interp, compose))
             .Arr((F1<B,C> f) -> arrow.arr(f))
-            .First((First<F,ARR,?,?,?,B,C> first) -> runFirst(first))
+            .First((First<F,ARR,?,?,?,B,C> first) -> runFirst(arrow, interp, first))
             .LiftF((__2<F,B,C> f) -> interp.apply(f))
             .LiftA(F1.id())
             .apply(this);
     }
     
-    private static <F,ARR,B,C,D> __2<ARR,B,D> runCompose(Compose<F,ARR,B,C,D> compose) {
-        // TODO: Finish this.
-        throw new UnsupportedOperationException();
+    private static <F,ARR,B,C,D> __2<ARR,B,D> runCompose(Arrow<ARR> arrow, NF2<F,ARR> interp, Compose<F,ARR,B,C,D> compose) {
+        return arrow.dot(compose.a1().runFree(arrow, interp), compose.a2().runFree(arrow, interp));
     }
     
-    private static <F,ARR,B,C,D,E,G> __2<ARR,E,G> runFirst(First<F,ARR,B,C,D,E,G> first) {
-        // TODO: Finish this.
-        throw new UnsupportedOperationException();
+    private static <F,ARR,B,C,D,E,G> __2<ARR,E,G> runFirst(Arrow<ARR> arrow, NF2<F,ARR> interp, First<F,ARR,B,C,D,E,G> first) {
+        return arrow.dot(
+            arrow.arr(first.g()),
+            arrow.dot(
+                arrow.first(first.a().runFree(arrow, interp)),
+                arrow.arr(first.f())
+            )
+        );
     }
 
     public static <F,ARR> FreeArrowSemigroupoid<F,ARR> semigroupoid() {
