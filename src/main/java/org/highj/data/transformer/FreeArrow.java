@@ -7,6 +7,7 @@ import org.derive4j.Visibility;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.derive4j.hkt.__4;
+import org.highj.data.transformer.free_arrow.FreeArrowArrow;
 import org.highj.data.transformer.free_arrow.FreeArrowCategory;
 import org.highj.data.transformer.free_arrow.FreeArrowSemigroupoid;
 import org.highj.data.tuple.T2;
@@ -137,5 +138,9 @@ public abstract class FreeArrow<F,ARR,B,C> implements __4<FreeArrow.µ,F,ARR,B,C
     
     public static <F,ARR> FreeArrowCategory<F,ARR> category() {
         return new FreeArrowCategory<F,ARR>() {};
+    }
+    
+    public static <F,ARR> FreeArrowArrow<F,ARR> arrow() {
+        return new FreeArrowArrow<F,ARR>() {};
     }
 }
