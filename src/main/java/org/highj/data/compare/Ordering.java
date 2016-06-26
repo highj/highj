@@ -1,7 +1,10 @@
 package org.highj.data.compare;
 
+import org.highj.data.Maybe;
 import org.highj.data.compare.ordering.OrderingGroup;
 import org.highj.typeclass0.group.Group;
+
+import java.util.function.Supplier;
 
 public enum Ordering {
     LT, EQ, GT;
@@ -90,6 +93,35 @@ public enum Ordering {
 
     public static Ordering fromInt(int compareResult) {
         return compare(compareResult, 0);
+    }
+
+    public <R> CaseLT<R> caseLT(Supplier<R> lessThan) {
+        return new CaseLT<>(this, Maybe.JustWhenTrue(this == LT, lessThan));
+    }
+
+    public static class CaseLT<R> {
+        private final Ordering ordering;
+        private final Maybe<R> value;
+
+        private CaseLT(Ordering ordering, Maybe<R> value) {
+            this.ordering = ordering;
+            this.value = value;
+        }
+        public CaseEQ<R> caseEQ(Supplier<R> equal) {
+            return new CaseEQ<>(value.orElse(Maybe.JustWhenTrue(ordering == EQ, equal)));
+        }
+    }
+
+    public static class CaseEQ<R> {
+        private final Maybe<R> value;
+
+        private CaseEQ(Maybe<R> value) {
+            this.value = value;
+        }
+
+        public R caseGT(Supplier<R> greaterThan) {
+            return value.getOrElse(greaterThan);
+        }
     }
 
 }

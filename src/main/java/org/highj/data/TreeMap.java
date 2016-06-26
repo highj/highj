@@ -5,10 +5,20 @@ import org.highj.data.tuple.T2;
 import org.highj.typeclass0.compare.Ord;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class TreeMap<K, V> implements Function<K, Maybe<V>> {
+/**
+ * A sorted map, backed by a left leaning RBTree implementation.
+ *
+ * {@link TreeMap} works strict.
+ *
+ * @param <K> key type
+ * @param <V> value type
+ */
+public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K,V>> {
 
     private final Ord<? super K> ord;
 
@@ -22,98 +32,285 @@ public class TreeMap<K, V> implements Function<K, Maybe<V>> {
                 : Ord.fromComparator(comparator);
     }
 
+    /**
+     * Creates an empty map, using the natural order of the key type.
+     * @param <K> key type
+     * @param <V> value type
+     * @return the map
+     */
     public static <K extends Comparable<? super K>, V> TreeMap<K, V> empty() {
         return new TreeMap<>(Comparator.naturalOrder(), Node.<K, V>empty());
     }
 
-    public static <K, V> TreeMap<K, V> empty(Comparator<K> comparator) {
+    /**
+     * Creates an empty map, using the given {@link Comparator}.
+     * @param comparator the comparator
+     * @param <K> key type
+     * @param <V> value type
+     * @return the map
+     */
+    public static <K, V> TreeMap<K, V> empty(Comparator<? super K> comparator) {
         return new TreeMap<>(comparator, Node.empty());
     }
 
-    public static <K extends Comparable<? super K>, V> TreeMap<K, V> of(K k, V v) {
-        return new TreeMap<>(Comparator.naturalOrder(), Node.singleton(k, v));
+    /**
+     * Creates an map with one entry, using the natural order of the key type.
+     * @param key the key
+     * @param value the value
+     * @param <K> key type
+     * @param <V> value type
+     * @return the map
+     */
+    public static <K extends Comparable<? super K>, V> TreeMap<K, V> of(K key, V value) {
+        return new TreeMap<>(Comparator.naturalOrder(), Node.singleton(key, value));
     }
 
-    public static <K, V> TreeMap<K, V> of(Comparator<K> comparator, K k, V v) {
-        return new TreeMap<>(comparator, Node.singleton(k, v));
+    /**
+     * Creates an map with one entry, using the given {@link Comparator}.
+     * @param comparator the
+     * @param key the key
+     * @param value the value
+     * @param <K> key type
+     * @param <V> value type
+     * @return the map
+     */
+    public static <K, V> TreeMap<K, V> of(Comparator<K> comparator, K key, V value) {
+        return new TreeMap<>(comparator, Node.singleton(key, value));
     }
 
-    public static <K extends Comparable<? super K>, V> TreeMap<K, V> of(Iterable<T2<K, V>> list) {
+    /**
+     * Creates an map from an {@link Iterable} of key-value pairs, using the natural order of the key type.
+     * @param iterable the {@link Iterable}
+     * @param <K> key type
+     * @param <V> value type
+     * @return the map
+     */
+    public static <K extends Comparable<? super K>, V> TreeMap<K, V> of(Iterable<T2<K, V>> iterable) {
         Ord<? super K> ord = Ord.fromComparable();
-        return new TreeMap<>(ord, Node.fromIterable(ord, list));
+        return new TreeMap<>(ord, Node.fromIterable(ord, iterable));
     }
 
-    public static <K, V> TreeMap<K, V> of(Comparator<K> comparator, Iterable<T2<K, V>> list) {
+    /**
+     * Creates an map from an {@link Iterable} of key-value pairs, using the given {@link Comparator}.
+     * @param comparator the
+     * @param iterable the {@link Iterable}
+     * @param <K> key type
+     * @param <V> value type
+     * @return the map
+     */
+    public static <K, V> TreeMap<K, V> of(Comparator<K> comparator, Iterable<T2<K, V>> iterable) {
         Ord<? super K> ord = Ord.fromComparator(comparator);
-        return new TreeMap<>(ord, Node.fromIterable(ord, list));
+        return new TreeMap<>(ord, Node.fromIterable(ord, iterable));
     }
 
+    /**
+     * Calculates the size of the map.
+     * @return the size
+     */
     public int size() {
         return root.size();
     }
 
+    /**
+     * Checks whether this map is empty.
+     * Note that using this method might be much faster than testing if {@link TreeMap#size} is equal to 0.
+     * @return true if empty
+     */
     public boolean isEmpty() {
         return root.isEmpty();
     }
 
-    public TreeMap<K, V> insert(K k, V v) {
-        return new TreeMap<>(ord, root.insert(ord, k, v));
+    /**
+     * Constructs a map from the current one, but also containing the given entry.
+     * @param key the key
+     * @param value the value
+     * @return the new map
+     */
+    public TreeMap<K, V> insert(K key, V value) {
+        return new TreeMap<>(ord, root.insert(ord, key, value));
     }
 
-    public TreeMap<K, V> insertAll(List<T2<K, V>> list) {
-        return new TreeMap<>(ord, root.insertAll(ord, list));
+    /**
+     * Constructs a map from the current one, but also containing the given entries.
+     * Note that using this method might be slightly faster than using {@link TreeMap#insert} multiple times.
+     * @param iterable the entries, given as {@link Iterable} of key-value pairs.
+     * @return the new map
+     */
+    public TreeMap<K, V> insertAll(Iterable<T2<K, V>> iterable) {
+        return new TreeMap<>(ord, root.insertAll(ord, iterable));
     }
 
+    /**
+     * Constructs a map from the current one, but without the entry specified by the given key.
+     * @param key the key
+     * @return the new map
+     */
     public TreeMap<K, V> delete(K key) {
         return new TreeMap<>(ord, root.delete(ord, key));
     }
 
+    /**
+     * Constructs a map from the current one, but without the entry with the smallest key.
+     * Calling this method on an empty list returns an empty list.
+     * @return the new map
+     */
     public TreeMap<K, V> deleteMin() {
         return new TreeMap<>(ord, root.deleteMin());
     }
 
+    /**
+     * Constructs a map from the current one, but without the entry with the largest key.
+     * Calling this method on an empty list returns an empty list.
+     * @return the new map
+     */
     public TreeMap<K, V> deleteMax() {
         return new TreeMap<>(ord, root.deleteMax());
     }
 
+    /**
+     * Retrieves a value from the map, if possible
+     * @param key the key
+     * @return the value wrapped in a {@link Maybe}, if there is any
+     */
     public Maybe<V> apply(K key) {
         return root.get(ord, key);
     }
 
+    /**
+     * Retrieves a value from the map.
+     * @param key the key
+     * @return the value
+     * @throws NoSuchElementException when no entry was found
+     */
     public V get(K key) throws NoSuchElementException {
         return root.get(ord, key).getOrException(NoSuchElementException.class);
     }
 
+    /**
+     * Checks whether a certain entry exists.
+     * @param key the key
+     * @return true if an entry for the given key is present
+     */
     public boolean containsKey(K key) {
         return root.containsKey(ord, key);
     }
 
-    public T2<K, V> minimum() {
+    /**
+     * Retrieves the entry with the smallest key.
+     * @return the entry
+     * @throws NoSuchElementException when called on an empty map
+     */
+    public T2<K, V> minimum() throws NoSuchElementException {
         return root.minimum();
     }
 
+    /**
+     * Retrieves the entry with the largest key.
+     * @return the entry
+     * @throws NoSuchElementException when called on an empty map
+     */
     public T2<K, V> maximum() {
         return root.maximum();
     }
 
+    /**
+     * Retrieves the smallest key of the map.
+     * @return the key
+     * @throws NoSuchElementException when called on an empty map
+     */
     public K minimumKey() {
         return root.minimum()._1();
     }
 
+    /**
+     * Retrieves the largest key of the map.
+     * @return the key
+     * @throws NoSuchElementException when called on an empty map
+     */
     public K maximumKey() {
         return root.maximum()._1();
     }
 
+    /**
+     * Retrieves an ordered list of all keys of the map.
+     * @return the list
+     */
     public List<K> toKeys() {
-        return root.toKeys();
+        return root.toList((k,v) -> k);
     }
 
+    /**
+     * Retrieves a list of all entries of the map, ordered by keys.
+     * @return the list
+     */
     public List<T2<K, V>> toList() {
-        return root.toList();
+        return root.toList(T2::of);
     }
 
+    /**
+     * Retrieves a list of all transformed entries of the map, ordered by keys.
+     * @param function the transformation {@link BiFunction}
+     * @return the list
+     */
+    public <R> List<R> toList(BiFunction<? super K,? super V,? extends R> function) {
+        return root.toList(function);
+    }
+
+    /**
+     * Retrieves a list of all values of the map, ordered by their keys.
+     * @return the list
+     */
     public List<V> toValues() {
-        return root.toValues();
+        return root.toList((k,v) -> v);
     }
 
+    @Override
+    public Iterator<T2<K,V>> iterator() {
+        return toList().iterator();
+    }
+
+    /**
+     * Transforms the value to a given key, if possible.
+     * If the entry wasn't found, the unmodified map is returned.
+     * @param key the key
+     * @param function the transformation {@link Function}
+     * @return the new map
+     */
+    public TreeMap<K,V> mapValue(K key, Function<? super V, ? extends V> function) {
+        return apply(key).map(v -> insert(key, function.apply(v))).getOrElse(this);
+    }
+
+    /**
+     * Transforms all values of the map.
+     * @param function the transformation {@link Function}
+     * @param <V1> the new value type
+     * @return the new map
+     */
+    public <V1> TreeMap<K, V1> mapValues(Function<? super V, ? extends V1> function) {
+       return new TreeMap<>(ord, root.mapValues(function));
+    }
+
+    /**
+     * Tests whether this map contains the same entries in the same order as another map.
+     * Note that both maps can still rely on different {@link Ord} instances. As a consequence, e.g.
+     * <code>m1.equals(m2)</code> doesn't imply <code>m1.insert(x,y).equals(m2.insert(x,y))</code>.
+     * @param o the {@link Object} to compare with
+     * @return true if both maps contain the same entries in the same order
+     */
+    @Override
+    public boolean equals(Object o) {
+       if(! (o instanceof TreeMap)) {
+           return false;
+       }
+       if (o == this) {
+           return true;
+       }
+       TreeMap<?,?> that = (TreeMap<?, ?>) o;
+       return this.toList().equals(that.toList());
+    }
+
+    @Override
+    public int hashCode() {
+        return 4711 + toList().hashCode();
+    }
 }

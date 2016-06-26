@@ -1,14 +1,16 @@
 package org.highj.data.impl.treeMap;
 
-import com.sun.org.apache.regexp.internal.RE;
 import org.highj.data.List;
 import org.highj.data.Maybe;
 import org.highj.data.compare.Ordering;
 import org.highj.data.tuple.T2;
+import org.highj.function.Integers;
 import org.highj.typeclass0.compare.Ord;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static org.highj.data.impl.treeMap.Node.Color.BLACK;
 import static org.highj.data.impl.treeMap.Node.Color.RED;
@@ -46,10 +48,6 @@ public class Node<K, V> {
         this.right = right;
     }
 
-    public boolean equals(Object o) {
-        return !(o == null || !(o instanceof Node)) && (this == o || this.toList().equals(((Node) o).toList()));
-    }
-
     @SuppressWarnings("unckecked")
     public static <K, V> Node<K, V> empty() {
         return (Node<K, V>) LEAF;
@@ -75,60 +73,31 @@ public class Node<K, V> {
         return result;
     }
 
-    public List<T2<K, V>> toList() {
-        return inorder(List.empty());
+    public <R> List<R> toList(BiFunction<? super K, ? super V, ? extends R> function) {
+        return inorder(function, List.empty());
     }
 
-    private List<T2<K, V>> inorder(List<T2<K, V>> list) {
-        return isEmpty() ? list : left.inorder(right.inorder(list).plus(T2.of(key, value)));
-    }
-
-    public List<K> toKeys() {
-        return inorderKey(List.empty());
-    }
-
-    private List<K> inorderKey(List<K> list) {
-        return isEmpty() ? list : left.inorderKey(right.inorderKey(list).plus(key));
-    }
-
-    public List<V> toValues() {
-        return inorderValue(List.empty());
-    }
-
-    private List<V> inorderValue(List<V> list) {
-        return isEmpty() ? list : left.inorderValue(right.inorderValue(list).plus(value));
+    private <R> List<R> inorder(BiFunction<? super K, ? super V, ? extends R> fn, List<R> list) {
+        return isEmpty() ? list
+                : left.inorder(fn, right.inorder(fn, list).plus(fn.apply(key, value)));
     }
 
     public Maybe<V> get(Ord<? super K> ord, K searchKey) {
-        if (isEmpty()) {
-            return Maybe.Nothing();
-        }
-        switch (ord.cmp(searchKey, key)) {
-            case LT:
-                return left.get(ord, searchKey);
-            case GT:
-                return right.get(ord, searchKey);
-            case EQ:
-                return Maybe.Just(value);
-            default:
-                throw new AssertionError();
-        }
+        return isEmpty()
+                ? Maybe.Nothing()
+                : ord.cmp(searchKey, key)
+                .caseLT(() -> left.get(ord, searchKey))
+                .caseEQ(() -> Maybe.Just(value))
+                .caseGT(() -> right.get(ord, searchKey));
     }
 
     public boolean containsKey(Ord<? super K> ord, K searchKey) {
-        if (isEmpty()) {
-            return false;
-        }
-        switch (ord.cmp(searchKey, key)) {
-            case LT:
-                return left.containsKey(ord, searchKey);
-            case GT:
-                return right.containsKey(ord, searchKey);
-            case EQ:
-                return true;
-            default:
-                throw new AssertionError();
-        }
+        return isEmpty()
+                ? false
+                : ord.cmp(searchKey, key)
+                .caseLT(() -> left.containsKey(ord, searchKey))
+                .caseEQ(() -> true)
+                .caseGT(() -> right.containsKey(ord, searchKey));
     }
 
     private boolean isBalanced() {
@@ -158,7 +127,7 @@ public class Node<K, V> {
     }
 
     private boolean isOrdered(Ord<? super K> ord) {
-        List<K> list = toKeys();
+        List<K> list = toList((k, v) -> k);
         return !List.<K, K, Ordering>zipWith(list, list.tail(),
                 x -> y -> ord.cmp(x, y)).contains(o -> o != Ordering.LT);
     }
@@ -204,7 +173,8 @@ public class Node<K, V> {
         }
     }
 
-    public String show() {
+    //for testing only
+    String show() {
         return show("");
     }
 
@@ -241,25 +211,18 @@ public class Node<K, V> {
     }
 
     private Node<K, V> insert_(Ord<? super K> ord, K k, V v) {
-        if (isEmpty()) {
-            return new Node<>(RED, 1, k, v, empty(), empty());
-        }
-        switch (ord.cmp(k, key)) {
-            case LT:
-                return balanceL(color, bHeight, key, value, left.insert_(ord, k, v), right);
-            case GT:
-                return balanceR(color, bHeight, key, value, left, right.insert_(ord, k, v));
-            case EQ:
-                return new Node<>(color, bHeight, k, v, left, right);
-            default:
-                throw new AssertionError();
-        }
+        return isEmpty()
+                ? new Node<>(RED, 1, k, v, empty(), empty())
+                : ord.cmp(k, key)
+                .caseLT(() -> balanceL(color, bHeight, key, value, left.insert_(ord, k, v), right))
+                .caseEQ(() -> new Node<>(color, bHeight, k, v, left, right))
+                .caseGT(() -> balanceR(color, bHeight, key, value, left, right.insert_(ord, k, v)));
     }
 
     private static <K, V> Node<K, V> balanceL(Color c, int bh, K k, V v, Node<K, V> left, Node<K, V> right) {
         if (c == BLACK && left.color == RED && left.left.color == RED) {
-            return new Node<>(RED, bh + 1, left.key, left.value, left.left.turn(BLACK),
-                    new Node<>(BLACK, bh, k, v, left.right, right));
+            Node<K, V> newRight = new Node<>(BLACK, bh, k, v, left.right, right);
+            return new Node<>(RED, bh + 1, left.key, left.value, left.left.turn(BLACK), newRight);
         } else {
             return new Node<>(c, bh, k, v, left, right);
         }
@@ -269,8 +232,8 @@ public class Node<K, V> {
         if ((c == BLACK) && left.color == RED && right.color == RED) {
             return new Node<>(RED, bh + 1, k, v, left.turn(BLACK), right.turn(BLACK));
         } else if (right.color == RED) {
-            return new Node<>(c, bh, right.key, right.value,
-                    new Node<>(RED, right.bHeight, k, v, left, right.left), right.right);
+            Node<K, V> newLeft = new Node<>(RED, right.bHeight, k, v, left, right.left);
+            return new Node<>(c, bh, right.key, right.value, newLeft, right.right);
         } else {
             return new Node<>(c, bh, k, v, left, right);
         }
@@ -284,14 +247,11 @@ public class Node<K, V> {
     private Node<K, V> deleteMin_() {
         if (color == BLACK) {
             throw new AssertionError("deleteMin_");
-        }
-        if (left.isEmpty() && right.isEmpty()) {
+        } else if (left.isEmpty() && right.isEmpty()) {
             return empty();
-        }
-        if (left.color == RED) {
+        } else if (left.color == RED) {
             return new Node<>(RED, bHeight, key, value, left.deleteMin_(), right);
-        }
-        if (left.isBlackLeftBlack()) {
+        } else if (left.isBlackLeftBlack()) {
             return right.isBlackLeftRed()
                     ? hardMin()
                     : balanceR(BLACK, bHeight - 1, key, value, left.turn(RED).deleteMin_(), right.turn(RED));
@@ -315,16 +275,12 @@ public class Node<K, V> {
     private Node<K, V> deleteMax_() {
         if (color == BLACK) {
             throw new AssertionError("deleteMax_");
-        }
-        if (left.isEmpty() && right.isEmpty()) {
+        } else if (left.isEmpty() && right.isEmpty()) {
             return empty();
-        }
-        if (left.color == RED) {
+        } else if (left.color == RED) {
             return rotateR();
-        }
-        if (right.isBlackLeftBlack()) {
-            return left.isBlackLeftRed()
-                    ? hardMax()
+        } else if (right.isBlackLeftBlack()) {
+            return left.isBlackLeftRed() ? hardMax()
                     : balanceR(BLACK, bHeight - 1, key, value, left.turn(RED), right.turn(RED).deleteMax_());
         } else {
             return new Node<>(RED, bHeight, key, value, left, right.rotateR());
@@ -347,71 +303,112 @@ public class Node<K, V> {
         return result.isEmpty() ? result : result.turn(BLACK);
     }
 
-    private  Node<K, V> delete_(Ord<? super K> ord, K k) {
-       if (isEmpty()) {
-           return this;
-       }
-       switch(ord.cmp(k, key)) {
-           case LT: return deleteLT(ord, k);
-           case GT: return deleteGT(ord, k);
-           case EQ: return deleteEQ(ord, k);
-       }
-       throw new AssertionError();
+    private Node<K, V> delete_(Ord<? super K> ord, K k) {
+        return isEmpty()
+                ? this
+                : ord.cmp(k, key)
+                .caseLT(() -> deleteLT(ord, k))
+                .caseEQ(() -> deleteEQ(ord, k))
+                .caseGT(() -> deleteGT(ord, k));
     }
 
-    private Node<K,V> deleteLT(Ord<? super K> ord, K k) {
-        if(color == RED && left.isBlackLeftBlack()) {
-           if (right.isBlackLeftRed()) {
-               Node<K,V> newLeft = new Node<>(BLACK, right.bHeight, key, value, left.turn(RED).delete_(ord,k), right.left.left);
-               Node<K,V> newRight = new Node<>(BLACK, right.bHeight, right.key, right.value, right.left.right, right.right);
-               return new Node<>(RED, bHeight, right.left.key, right.left.value, newLeft, newRight);
-           }
-           return balanceR(BLACK, bHeight - 1, key, value, left.turn(RED).delete_(ord, k), right.turn(RED));
+    private Node<K, V> deleteLT(Ord<? super K> ord, K k) {
+        if (color == RED && left.isBlackLeftBlack()) {
+            if (right.isBlackLeftRed()) {
+                Node<K, V> newLeft = new Node<>(BLACK, right.bHeight, key, value, left.turn(RED).delete_(ord, k), right.left.left);
+                Node<K, V> newRight = new Node<>(BLACK, right.bHeight, right.key, right.value, right.left.right, right.right);
+                return new Node<>(RED, bHeight, right.left.key, right.left.value, newLeft, newRight);
+            }
+            return balanceR(BLACK, bHeight - 1, key, value, left.turn(RED).delete_(ord, k), right.turn(RED));
         }
-        return new Node<>(color, bHeight, key, value, left.delete_(ord,k), right);
+        return new Node<>(color, bHeight, key, value, left.delete_(ord, k), right);
     }
 
-    private Node<K,V> deleteGT(Ord<? super K> ord, K k) {
-        if (! isEmpty() && left.color == RED) {
-            Node<K,V> newRight = new Node<>(RED, bHeight, key, value, left.right, right).delete_(ord,k);
+    private Node<K, V> deleteGT(Ord<? super K> ord, K k) {
+        if (!isEmpty() && left.color == RED) {
+            Node<K, V> newRight = new Node<>(RED, bHeight, key, value, left.right, right).delete_(ord, k);
             return balanceR(color, bHeight, left.key, left.value, left.left, newRight);
-        } else if (! isEmpty() && color == RED) {
+        } else if (!isEmpty() && color == RED) {
             if (right.isBlackLeftBlack()) {
                 if (left.isBlackLeftRed()) {
-                    Node<K,V> newRightRight = right.turn(RED).delete_(ord,k );
-                    Node<K,V> newRight = balanceR(BLACK, left.bHeight, key, value, left.right, newRightRight);
+                    Node<K, V> newRightRight = right.turn(RED).delete_(ord, k);
+                    Node<K, V> newRight = balanceR(BLACK, left.bHeight, key, value, left.right, newRightRight);
                     return new Node<>(RED, bHeight, left.key, left.value, left.left.turn(BLACK), newRight);
                 }
-                Node<K,V> newRight = right.turn(RED).delete_(ord, k);
-                return balanceR(BLACK, bHeight -1, key, value, left.turn(RED), newRight);
+                Node<K, V> newRight = right.turn(RED).delete_(ord, k);
+                return balanceR(BLACK, bHeight - 1, key, value, left.turn(RED), newRight);
             }
             return new Node<>(RED, bHeight, key, value, left, right.delete_(ord, k));
         }
         throw new AssertionError("deleteGT");
     }
 
-    private Node<K,V> deleteEQ(Ord<? super K> ord, K k) {
+    private Node<K, V> deleteEQ(Ord<? super K> ord, K k) {
         if (color == RED && left.isEmpty() && right.isEmpty()) {
             return empty();
-        }
-        if (! left.isEmpty() && left.color == RED) {
-            Node<K,V> newRight = new Node<>(RED, bHeight, key, value, left.right, right).delete_(ord,k);
+        } else if (!left.isEmpty() && left.color == RED) {
+            Node<K, V> newRight = new Node<>(RED, bHeight, key, value, left.right, right).delete_(ord, k);
             return balanceR(color, bHeight, left.key, left.value, left.left, newRight);
-        }
-        if (color == RED) {
-            T2<K,V> m = right.minimum();
-            if(right.isBlackLeftBlack()){
-                if(left.isBlackLeftRed()) {
-                    Node<K,V> newRightRight = right.turn(RED).deleteMin_();
-                    Node<K,V> newRight = balanceR(BLACK, left.bHeight, m._1(), m._2(), left.right, newRightRight);
+        } else if (color == RED) {
+            T2<K, V> m = right.minimum();
+            if (right.isBlackLeftBlack()) {
+                if (left.isBlackLeftRed()) {
+                    Node<K, V> newRightRight = right.turn(RED).deleteMin_();
+                    Node<K, V> newRight = balanceR(BLACK, left.bHeight, m._1(), m._2(), left.right, newRightRight);
                     return balanceR(RED, bHeight, left.key, left.value, left.left.turn(BLACK), newRight);
                 }
-                return balanceR(BLACK, bHeight-1, m._1(), m._2(), left.turn(RED), right.turn(RED).deleteMin_());
+                return balanceR(BLACK, bHeight - 1, m._1(), m._2(), left.turn(RED), right.turn(RED).deleteMin_());
             }
-            Node<K,V> newRight = new Node<>(BLACK, right.bHeight, right.key, right.value, right.left.deleteMin_(), right.right);
+            Node<K, V> newRight = new Node<>(BLACK, right.bHeight, right.key, right.value, right.left.deleteMin_(), right.right);
             return new Node<>(RED, bHeight, m._1(), m._2(), left, newRight);
         }
         throw new AssertionError("deleteEQ");
+    }
+
+    public <V1> Node<K, V1> mapValues(Function<? super V, ? extends V1> function) {
+        return isEmpty()
+                ? empty()
+                : new Node<>(color, bHeight, key, function.apply(value),
+                left.mapValues(function), right.mapValues(function));
+    }
+
+
+    private static <K, V> Node<K, V> merge(Node<K, V> t1, Node<K, V> t2) {
+        return t1.isEmpty() ? t2
+                : t2.isEmpty() ? t2
+                : Integers.ord.cmp(t1.bHeight, t2.bHeight)
+                .caseLT(() -> mergeLT(t1, t2, t1.bHeight))
+                .caseEQ(() -> mergeEQ(t1, t2))
+                .caseGT(() -> mergeGT(t1, t2, t2.bHeight))
+                .turn(BLACK);
+    }
+
+    private static <K, V> Node<K, V> mergeLT(Node<K, V> t1, Node<K, V> t2, int h1) {
+        return h1 == t2.bHeight
+                ? mergeEQ(t1, t2)
+                : balanceL(t2.color, t2.bHeight, t2.key, t2.value, mergeLT(t1, t2.left, h1), t2.right);
+    }
+
+    private static <K, V> Node<K, V> mergeGT(Node<K, V> t1, Node<K, V> t2, int h2) {
+         return t1.bHeight == h2
+                 ? mergeEQ(t1, t2)
+                 : balanceR(t1.color, t1.bHeight, t1.key, t1.value, t1.left, mergeGT(t1.right, t2, h2));
+    }
+
+    private static <K, V> Node<K, V> mergeEQ(Node<K, V> t1, Node<K, V> t2) {
+       if (t1.isEmpty() && t2.isEmpty()) {
+           return empty();
+       }
+       T2<K,V> m = t2.minimum();
+       Node<K,V> t2_ = t2.deleteMin();
+       if (t1.bHeight == t2.bHeight) {
+           return new Node<>(RED, t1.bHeight+1, m._1(), m._2(), t1, t2_);
+       } else if (t1.left.color == RED) {
+           Node<K,V> newRight = new Node<>(BLACK, t1.bHeight, m._1(), m._2(), t1.right, t2_);
+           return new Node<>(RED, t1.bHeight + 1, t1.key, t1.value, t1.left.turn(BLACK), newRight);
+       } else {
+           return new Node<>(BLACK, t1.bHeight, m._1(), m._2(), t1.turn(RED), t2_);
+       }
     }
 
 }

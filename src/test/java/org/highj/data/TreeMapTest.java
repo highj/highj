@@ -4,6 +4,7 @@ import org.highj.data.compare.Ordering;
 import org.highj.data.tuple.T2;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 
 import java.awt.*;
@@ -28,7 +29,7 @@ public class TreeMapTest {
     public void empty() {
         TreeMap<String, Integer> treeMap = TreeMap.empty();
         assertThat(treeMap.isEmpty()).isTrue();
-        assertThat(treeMap.size()).isEqualTo(0);
+        assertThat(treeMap).hasSize(0).isEmpty();
         assertThat(treeMap.apply("x").isNothing()).isTrue();
     }
 
@@ -36,7 +37,7 @@ public class TreeMapTest {
     public void empty_withComparator() {
         TreeMap<Point, Integer> treeMap = TreeMap.empty(POINT_COMPARATOR);
         assertThat(treeMap.isEmpty()).isTrue();
-        assertThat(treeMap.size()).isEqualTo(0);
+        assertThat(treeMap).hasSize(0);
         assertThat(treeMap.apply(new Point(2, 3)).isNothing()).isTrue();
     }
 
@@ -44,7 +45,7 @@ public class TreeMapTest {
     public void of() {
         TreeMap<String, Integer> treeMap = TreeMap.of("test", 42);
         assertThat(treeMap.isEmpty()).isFalse();
-        assertThat(treeMap.size()).isEqualTo(1);
+        assertThat(treeMap).hasSize(1);
         assertThat(treeMap.apply("x").isNothing()).isTrue();
         assertThat(treeMap.apply("test")).containsExactly(42);
     }
@@ -53,7 +54,7 @@ public class TreeMapTest {
     public void of_withComparator() {
         TreeMap<Point, Integer> treeMap = TreeMap.of(POINT_COMPARATOR, new Point(2, 3), 42);
         assertThat(treeMap.isEmpty()).isFalse();
-        assertThat(treeMap.size()).isEqualTo(1);
+        assertThat(treeMap).hasSize(1);
         assertThat(treeMap.apply(new Point(2, 4)).isNothing()).isTrue();
         assertThat(treeMap.apply(new Point(2, 3))).containsExactly(42);
     }
@@ -63,7 +64,7 @@ public class TreeMapTest {
         List<T2<String, Integer>> list = List.of(STRING_DATA).map(s -> T2.of(s, s.length()));
         TreeMap<String, Integer> treeMap = TreeMap.of(list);
         assertThat(treeMap.isEmpty()).isFalse();
-        assertThat(treeMap.size()).isEqualTo(22);
+        assertThat(treeMap).hasSize(22);
         assertThat(treeMap.apply("x").isNothing()).isTrue();
         assertThat(treeMap.apply("to")).containsExactly(2);
     }
@@ -74,17 +75,18 @@ public class TreeMapTest {
                 .map(p -> T2.of(p, p.x + p.y));
         TreeMap<Point, Integer> treeMap = TreeMap.of(POINT_COMPARATOR, list);
         assertThat(treeMap.isEmpty()).isFalse();
-        assertThat(treeMap.size()).isEqualTo(3);
+        assertThat(treeMap).hasSize(3);
         assertThat(treeMap.apply(new Point(3, 7)).isNothing()).isTrue();
         assertThat(treeMap.apply(new Point(2, 4))).containsExactly(6);
     }
 
     @Test
     public void size() {
-        TreeMap<Integer, Integer> treeMap = TreeMap.of(List.range(0, 1, 100).map(i -> T2.of(i, i * i)));
-        treeMap = treeMap.insert(10, 100);
-        treeMap = treeMap.insert(101, 10201);
-        assertThat(treeMap.size()).isEqualTo(102);
+        TreeMap<Integer, Integer> treeMap = TreeMap
+                .of(List.range(0, 1, 100).map(i -> T2.of(i, i * i)))
+                .insert(10, 100)
+                .insert(101, 10201);
+        assertThat(treeMap).hasSize(102);
     }
 
     @Test
@@ -189,6 +191,13 @@ public class TreeMapTest {
                 T2.of("four", 4), T2.of("one", 3), T2.of("three", 5), T2.of("two", 3));
     }
 
+    @Test
+    public void toList_withTransformation() {
+        TreeMap<String, Integer> treeMap = TreeMap.of(
+                List.of("one", "two", "three", "four").map(s -> T2.of(s, s.length())));
+        assertThat(treeMap.toList((k,v) -> k + v)).containsExactly(
+                "four4", "one3", "three5", "two3");
+    }
 
     @Test
     public void toValues() {
@@ -199,6 +208,7 @@ public class TreeMapTest {
 
     @Test
     public void deleteMin() {
+        assertThat(TreeMap.empty().deleteMin().isEmpty()).isTrue();
         TreeMap<String, Integer> treeMap = TreeMap.of(
                 List.of("one", "two", "three", "four").map(s -> T2.of(s, s.length())));
         assertThat(treeMap.deleteMin().toKeys()).containsExactly("one", "three", "two");
@@ -206,6 +216,7 @@ public class TreeMapTest {
 
     @Test
     public void deleteMax() {
+        assertThat(TreeMap.empty().deleteMax().isEmpty()).isTrue();
         TreeMap<String, Integer> treeMap = TreeMap.of(
                 List.of("one", "two", "three", "four").map(s -> T2.of(s, s.length())));
         assertThat(treeMap.deleteMax().toKeys()).containsExactly("four", "one", "three");
@@ -213,6 +224,7 @@ public class TreeMapTest {
 
     @Test
     public void delete() {
+        assertThat(TreeMap.<String,Integer>empty().delete("foo").isEmpty()).isTrue();
         TreeMap<String, Integer> treeMap = TreeMap.of(
                 List.of("one", "two", "three", "four").map(s -> T2.of(s, s.length())));
         assertThat(treeMap.delete("one").toKeys()).containsExactly("four", "three", "two");
@@ -220,6 +232,42 @@ public class TreeMapTest {
         assertThat(treeMap.delete("three").toKeys()).containsExactly("four", "one", "two");
         assertThat(treeMap.delete("four").toKeys()).containsExactly("one", "three", "two");
         assertThat(treeMap.delete("five").toKeys()).containsExactly("four", "one", "three", "two");
+    }
+
+    @Test
+    public void mapValue() {
+        assertThat(TreeMap.<String, Integer>empty().mapValue("foo", v -> v + 1).isEmpty()).isTrue();
+        TreeMap<String, Integer> treeMap = TreeMap.of(
+                List.of("one", "two", "three", "four").map(s -> T2.of(s, s.length())));
+        assertThat(treeMap.mapValue("five", v -> v + 1).toKeys())
+                .containsExactly("four", "one", "three", "two");
+        assertThat(treeMap.mapValue("two", v -> v + 1).get("two")).isEqualTo(4);
+    }
+
+    @Test
+    public void mapValues() {
+        assertThat(TreeMap.<String, Integer>empty().mapValues(v -> v + "!").isEmpty()).isTrue();
+        TreeMap<String, Integer> treeMap = TreeMap.of(
+                List.of("one", "two", "three", "four").map(s -> T2.of(s, s.length())));
+        assertThat(treeMap.mapValues(v -> v + "!").toKeys())
+                .containsExactly("four", "one", "three", "two");
+        assertThat(treeMap.mapValues(v -> v + "!").toValues()).containsExactly("4!","3!","5!","3!");
+    }
+
+    @Test
+    public void equals() {
+        List<T2<String, Integer>> list = List.of(STRING_DATA).map(s -> T2.of(s, s.length()));
+        TreeMap<String, Integer> treeMap1 = TreeMap.of(list);
+        TreeMap<String, Integer> treeMap2 = TreeMap.of(list.reverse());
+        assertThat(treeMap1).isEqualTo(treeMap2);
+    }
+
+    @Test
+    public void testHashCode() {
+        List<T2<String, Integer>> list = List.of(STRING_DATA).map(s -> T2.of(s, s.length()));
+        TreeMap<String, Integer> treeMap1 = TreeMap.of(list);
+        TreeMap<String, Integer> treeMap2 = TreeMap.of(list.reverse());
+        assertThat(treeMap1.hashCode()).isEqualTo(treeMap2.hashCode());
     }
 
     @Test

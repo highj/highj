@@ -1,6 +1,7 @@
 package org.highj.function;
 
 import org.highj.typeclass0.compare.Eq;
+import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
@@ -15,6 +16,8 @@ public enum Integers {
     ;
 
     public final static Eq<Integer> eq = new Eq.JavaEq<>();
+
+    public final static Ord<Integer> ord = Ord.fromComparable();
 
     public final static Function<Integer, Integer> negate = x -> -x;
 
