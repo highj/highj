@@ -250,6 +250,7 @@ public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K,V>> {
     /**
      * Retrieves a list of all transformed entries of the map, ordered by keys.
      * @param function the transformation {@link BiFunction}
+     * @param <R> result type
      * @return the list
      */
     public <R> List<R> toList(BiFunction<? super K,? super V,? extends R> function) {
