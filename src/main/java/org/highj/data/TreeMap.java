@@ -4,7 +4,6 @@ import org.highj.data.impl.treeMap.Node;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass0.compare.Ord;
 
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
@@ -25,11 +24,9 @@ public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K,V>> {
     private final Node<K, V> root;
 
     @SuppressWarnings("unchecked")
-    private TreeMap(Comparator<? super K> comparator, Node<K, V> root) {
+    private TreeMap(Ord<? super K> ord, Node<K, V> root) {
         this.root = root;
-        this.ord = comparator instanceof Ord
-                ? (Ord<? super K>) comparator
-                : Ord.fromComparator(comparator);
+        this.ord = ord;
     }
 
     /**
@@ -39,18 +36,18 @@ public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K,V>> {
      * @return the map
      */
     public static <K extends Comparable<? super K>, V> TreeMap<K, V> empty() {
-        return new TreeMap<>(Comparator.naturalOrder(), Node.<K, V>empty());
+        return new TreeMap<>(Ord.fromComparable(), Node.<K, V>empty());
     }
 
     /**
-     * Creates an empty map, using the given {@link Comparator}.
-     * @param comparator the comparator
+     * Creates an empty map, using the given {@link Ord}.
+     * @param ord the {@link Ord} instance
      * @param <K> key type
      * @param <V> value type
      * @return the map
      */
-    public static <K, V> TreeMap<K, V> empty(Comparator<? super K> comparator) {
-        return new TreeMap<>(comparator, Node.empty());
+    public static <K, V> TreeMap<K, V> empty(Ord<? super K> ord) {
+        return new TreeMap<>(ord, Node.empty());
     }
 
     /**
@@ -62,20 +59,20 @@ public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K,V>> {
      * @return the map
      */
     public static <K extends Comparable<? super K>, V> TreeMap<K, V> of(K key, V value) {
-        return new TreeMap<>(Comparator.naturalOrder(), Node.singleton(key, value));
+        return new TreeMap<>(Ord.fromComparable(), Node.singleton(key, value));
     }
 
     /**
-     * Creates an map with one entry, using the given {@link Comparator}.
-     * @param comparator the
+     * Creates an map with one entry, using the given {@link Ord}.
+     * @param ord the {@link Ord} instance
      * @param key the key
      * @param value the value
      * @param <K> key type
      * @param <V> value type
      * @return the map
      */
-    public static <K, V> TreeMap<K, V> of(Comparator<K> comparator, K key, V value) {
-        return new TreeMap<>(comparator, Node.singleton(key, value));
+    public static <K, V> TreeMap<K, V> of(Ord<? super K> ord, K key, V value) {
+        return new TreeMap<>(ord, Node.singleton(key, value));
     }
 
     /**
@@ -87,19 +84,18 @@ public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K,V>> {
      */
     public static <K extends Comparable<? super K>, V> TreeMap<K, V> of(Iterable<T2<K, V>> iterable) {
         Ord<? super K> ord = Ord.fromComparable();
-        return new TreeMap<>(ord, Node.fromIterable(ord, iterable));
+        return new TreeMap<>(Ord.fromComparable(), Node.fromIterable(ord, iterable));
     }
 
     /**
-     * Creates an map from an {@link Iterable} of key-value pairs, using the given {@link Comparator}.
-     * @param comparator the
+     * Creates an map from an {@link Iterable} of key-value pairs, using the given {@link Ord}.
+     * @param ord the {@link Ord} instance
      * @param iterable the {@link Iterable}
      * @param <K> key type
      * @param <V> value type
      * @return the map
      */
-    public static <K, V> TreeMap<K, V> of(Comparator<K> comparator, Iterable<T2<K, V>> iterable) {
-        Ord<? super K> ord = Ord.fromComparator(comparator);
+    public static <K, V> TreeMap<K, V> of(Ord<K> ord, Iterable<T2<K, V>> iterable) {
         return new TreeMap<>(ord, Node.fromIterable(ord, iterable));
     }
 

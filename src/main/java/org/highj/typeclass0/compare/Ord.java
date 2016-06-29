@@ -22,7 +22,9 @@ public interface Ord<T> extends Comparator<T>, Eq<T>, Function<T,Function<T,Orde
     }
 
     static <A> Ord<A> fromComparator(Comparator<A> comparator) {
-        return (one, two) -> Ordering.fromInt(comparator.compare(one, two));
+        return comparator instanceof Ord
+                       ? (Ord<A>) comparator
+                       : (one, two) -> Ordering.fromInt(comparator.compare(one, two));
     }
 
     static <A extends Comparable<? super A>> Ord<A> fromComparable() {

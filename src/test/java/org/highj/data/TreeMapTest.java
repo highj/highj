@@ -2,13 +2,12 @@ package org.highj.data;
 
 import org.highj.data.compare.Ordering;
 import org.highj.data.tuple.T2;
+import org.highj.typeclass0.compare.Ord;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 
 import java.awt.*;
-import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
@@ -22,8 +21,8 @@ public class TreeMapTest {
     private static String[] STRING_DATA =
             ("it is so shocking to find out how many people do not believe that they can learn "
                     + "and how many more believe learning to be difficult").split("\\s");
-    private static final Comparator<Point> POINT_COMPARATOR = (p1, p2) ->
-            Ordering.compare(p1.getX(), p2.getX()).andThen(p1.getY(), p2.getY()).cmpResult();
+    private static final Ord<Point> POINT_ORD = (p1, p2) ->
+            Ordering.compare(p1.getX(), p2.getX()).andThen(p1.getY(), p2.getY());
 
     @Test
     public void empty() {
@@ -35,7 +34,7 @@ public class TreeMapTest {
 
     @Test
     public void empty_withComparator() {
-        TreeMap<Point, Integer> treeMap = TreeMap.empty(POINT_COMPARATOR);
+        TreeMap<Point, Integer> treeMap = TreeMap.empty(POINT_ORD);
         assertThat(treeMap.isEmpty()).isTrue();
         assertThat(treeMap).hasSize(0);
         assertThat(treeMap.apply(new Point(2, 3)).isNothing()).isTrue();
@@ -52,7 +51,7 @@ public class TreeMapTest {
 
     @Test
     public void of_withComparator() {
-        TreeMap<Point, Integer> treeMap = TreeMap.of(POINT_COMPARATOR, new Point(2, 3), 42);
+        TreeMap<Point, Integer> treeMap = TreeMap.of(POINT_ORD, new Point(2, 3), 42);
         assertThat(treeMap.isEmpty()).isFalse();
         assertThat(treeMap).hasSize(1);
         assertThat(treeMap.apply(new Point(2, 4)).isNothing()).isTrue();
@@ -73,7 +72,7 @@ public class TreeMapTest {
     public void of_Iterable_withComparator() {
         List<T2<Point, Integer>> list = List.of(new Point(2, 4), new Point(6, 3), new Point(5, 2), new Point(6, 3))
                 .map(p -> T2.of(p, p.x + p.y));
-        TreeMap<Point, Integer> treeMap = TreeMap.of(POINT_COMPARATOR, list);
+        TreeMap<Point, Integer> treeMap = TreeMap.of(POINT_ORD, list);
         assertThat(treeMap.isEmpty()).isFalse();
         assertThat(treeMap).hasSize(3);
         assertThat(treeMap.apply(new Point(3, 7)).isNothing()).isTrue();
