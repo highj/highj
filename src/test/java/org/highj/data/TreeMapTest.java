@@ -270,6 +270,43 @@ public class TreeMapTest {
     }
 
     @Test
+    public void union() {
+        TreeMap<String, Integer> first = TreeMap.of(
+                List.of("one", "two", "three", "four").map(s -> T2.of(s, s.length())));
+        TreeMap<String, Integer> second = TreeMap.of(
+                List.of("three", "four", "five").map(s -> T2.of(s, s.length())));
+        assertThat(TreeMap.union((a,b) -> a+b, first, second)).containsExactly(
+                T2.of("five",4), T2.of("four",8), T2.of("one",3),T2.of("three",10), T2.of("two",3));
+    }
+
+    @Test
+    public void intersection() {
+        TreeMap<String, Integer> first = TreeMap.of(
+                List.of("one", "two", "three", "four").map(s -> T2.of(s, s.length())));
+        TreeMap<String, Integer> second = TreeMap.of(
+                List.of("three", "four", "five").map(s -> T2.of(s, s.length())));
+        assertThat(TreeMap.intersection((a,b) -> a+b, first, second)).containsExactly(
+                T2.of("four",8), T2.of("three",10));
+    }
+
+    @Test
+    public void difference() {
+        TreeMap<String, Integer> first = TreeMap.of(
+                List.of("one", "two", "three", "four").map(s -> T2.of(s, s.length())));
+        TreeMap<String, Integer> second = TreeMap.of(
+                List.of("three", "four", "five").map(s -> T2.of(s, s.length())));
+        assertThat(TreeMap.difference(first, second)).containsExactly(
+                T2.of("one",3), T2.of("two",3));
+    }
+
+    @Test
+    public void testToString() {
+        TreeMap<String, Integer> treeMap = TreeMap.of(
+                List.of("one", "two", "three", "four").map(s -> T2.of(s, s.length())));
+        assertThat(treeMap.toString()).isEqualTo("Map(four->4,one->3,three->5,two->3)");
+    }
+
+    @Test
     public void backToBack() {
         Random random = new Random(1);
         TreeMap<Integer, Double> treeMap = TreeMap.empty();
