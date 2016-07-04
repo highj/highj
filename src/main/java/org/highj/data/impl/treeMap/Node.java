@@ -2,7 +2,7 @@ package org.highj.data.impl.treeMap;
 
 import org.highj.data.List;
 import org.highj.data.Maybe;
-import org.highj.data.compare.Ordering;
+import org.highj.typeclass0.compare.Ordering;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.function.Integers;

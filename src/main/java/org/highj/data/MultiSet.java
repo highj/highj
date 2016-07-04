@@ -1,7 +1,7 @@
 package org.highj.data;
 
 import org.derive4j.hkt.__;
-import org.highj.data.compare.Ordering;
+import org.highj.typeclass0.compare.Ordering;
 import org.highj.function.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass0.group.Monoid;

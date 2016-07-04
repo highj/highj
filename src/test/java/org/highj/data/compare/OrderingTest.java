@@ -3,7 +3,7 @@ package org.highj.data.compare;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.highj.data.compare.Ordering.*;
+import static org.highj.typeclass0.compare.Ordering.*;
 
 public class OrderingTest {
     @Test

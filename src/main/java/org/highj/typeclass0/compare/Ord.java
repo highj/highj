@@ -1,7 +1,7 @@
 package org.highj.typeclass0.compare;
 
 import org.derive4j.hkt.__;
-import org.highj.data.compare.Ordering;
+import org.highj.typeclass0.compare.ord.OrdContravariant;
 
 import java.util.Comparator;
 import java.util.function.Function;
@@ -66,4 +66,6 @@ public interface Ord<T> extends Comparator<T>, Eq<T>, Function<T,Function<T,Orde
     default T max(T one, T two) {
         return greaterEqual(one, two) ? one : two;
     }
+
+    OrdContravariant contravariant = new OrdContravariant(){};
 }

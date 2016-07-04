@@ -1,10 +1,10 @@
 package org.highj.typeclass0.compare;
 
 public interface Eq<T> {
-    public boolean eq(T one, T two);
+    boolean eq(T one, T two);
 
     //uses Object.equalsFn() instead of custom Eq
-    public static class JavaEq<T> implements Eq<T> {
+    class JavaEq<T> implements Eq<T> {
 
         @Override
         public boolean eq(T one, T two) {

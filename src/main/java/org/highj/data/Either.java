@@ -2,11 +2,8 @@ package org.highj.data;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.instance.either.EitherBifunctor;
-import org.highj.data.instance.either.EitherExtend;
-import org.highj.data.instance.either.EitherMonad;
-import org.highj.data.instance.either.EitherMonadPlus;
-import org.highj.data.compare.Ordering;
+import org.highj.data.instance.either.*;
+import org.highj.typeclass0.compare.Ordering;
 import org.highj.function.Functions;
 import org.highj.function.Strings;
 import org.highj.data.tuple.T2;
@@ -473,7 +470,8 @@ public abstract class Either<A, B> implements __2<Either.µ, A, B> {
     }
 
     /**
-     * Generates an {@link Ord} instance for a given {@link Either} type.
+     * An {@link Ord} instance for {@link Either}, which sorts Left and Right values according to the
+     * given {@link Ord} instances, and assumes that Left values are smaller than Right values.
      *
      * @param ordA the {@link Ord} for Left values
      * @param ordB the {@link Ord} for Right values
@@ -482,19 +480,7 @@ public abstract class Either<A, B> implements __2<Either.µ, A, B> {
      * @return the {@link Ord} instance
      */
     public static <A, B> Ord<Either<A, B>> ord(Ord<A> ordA, Ord<B> ordB) {
-        return (one, two) -> {
-            if (one == null && two == null) {
-                return Ordering.EQ;
-            } else if (one == null) {
-                return Ordering.LT;
-            } else if (two == null) {
-                return Ordering.GT;
-            } else if (one.isLeft()) {
-                return two.isRight() ? Ordering.LT : ordA.cmp(one.getLeft(), two.getLeft());
-            } else {
-                return two.isLeft() ? Ordering.GT : ordB.cmp(one.getRight(), two.getRight());
-            }
-        };
+        return (EitherOrd<A, B>) () -> T2.of(ordA, ordB);
     }
 
     /**

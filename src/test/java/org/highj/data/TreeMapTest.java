@@ -1,6 +1,6 @@
 package org.highj.data;
 
-import org.highj.data.compare.Ordering;
+import org.highj.typeclass0.compare.Ordering;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass0.compare.Ord;
 import org.junit.Rule;
