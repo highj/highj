@@ -19,14 +19,18 @@ public class PriorityQueue<A> implements __<PriorityQueue.µ,A>, Iterable<A> {
 
     public interface µ{}
 
+    public enum QueueType {MIN, MAX}
+
     private final int size;
     private final Heap<A> root;
     private final Comparator<? super A> comparator;
+    private final QueueType queueType;
 
-    private PriorityQueue(Comparator<? super A> comparator, int size, Heap<A> root) {
+    private PriorityQueue(Comparator<? super A> comparator, int size, Heap<A> root, QueueType queueType) {
         this.comparator = comparator;
         this.size = size;
         this.root = root;
+        this.queueType = queueType;
     }
 
     @Override
@@ -76,7 +80,7 @@ public class PriorityQueue<A> implements __<PriorityQueue.µ,A>, Iterable<A> {
      * @return the priority queue
      */
     public static <A> PriorityQueue<A> minQueueCmp(Comparator<? super A> cmp, A ... as) {
-        return new PriorityQueue<A>(cmp, 0, Heap.empty()).plus(as);
+        return new PriorityQueue<A>(cmp, 0, Heap.empty(), QueueType.MIN).plus(as);
     }
 
     /**
@@ -87,7 +91,7 @@ public class PriorityQueue<A> implements __<PriorityQueue.µ,A>, Iterable<A> {
      * @return the priority queue
      */
     public static <A> PriorityQueue<A> maxQueueCmp(Comparator<? super A> cmp, A ... as) {
-        return new PriorityQueue<A>(cmp.reversed(), 0, Heap.empty()).plus(as);
+        return new PriorityQueue<A>(cmp.reversed(), 0, Heap.empty(), QueueType.MAX).plus(as);
     }
 
     /**
@@ -97,7 +101,7 @@ public class PriorityQueue<A> implements __<PriorityQueue.µ,A>, Iterable<A> {
      * @return the priority queue
      */
     public static <A extends Comparable<? super A>> PriorityQueue<A> minQueue(A ... as) {
-        return new PriorityQueue<>(Comparator.<A>naturalOrder(), 0, Heap.empty()).plus(as);
+        return new PriorityQueue<>(Comparator.<A>naturalOrder(), 0, Heap.empty(), QueueType.MIN).plus(as);
     }
 
     /**
@@ -107,7 +111,15 @@ public class PriorityQueue<A> implements __<PriorityQueue.µ,A>, Iterable<A> {
      * @return the priority queue
      */
     public static <A extends Comparable<? super A>> PriorityQueue<A> maxQueue(A ... as) {
-        return new PriorityQueue<>(Comparator.<A>reverseOrder(), 0, Heap.empty()).plus(as);
+        return new PriorityQueue<>(Comparator.<A>reverseOrder(), 0, Heap.empty(), QueueType.MAX).plus(as);
+    }
+
+    /**
+     * The type of the priority queue.
+     * @return MIN for a minimum queue, MAX for a maximum queue.
+     */
+    public QueueType queueType() {
+        return queueType;
     }
 
     /**
@@ -133,7 +145,7 @@ public class PriorityQueue<A> implements __<PriorityQueue.µ,A>, Iterable<A> {
         for(A a : as) {
             result = result.plus(comparator, sz++, a);
         }
-        return new PriorityQueue<>(comparator, sz, result);
+        return new PriorityQueue<>(comparator, sz, result, queueType);
     }
 
     /**
@@ -141,7 +153,7 @@ public class PriorityQueue<A> implements __<PriorityQueue.µ,A>, Iterable<A> {
      * @return a new priority queue
      */
     public PriorityQueue<A> drop() {
-        return new PriorityQueue<>(comparator, size - 1, root.pop(comparator, size));
+        return new PriorityQueue<>(comparator, size - 1, root.pop(comparator, size), queueType);
     }
 
     /**
