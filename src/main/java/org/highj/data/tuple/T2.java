@@ -16,6 +16,7 @@ import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 
+import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -145,6 +146,10 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
 
     public <BB> T2<A, BB> map_2(Function<? super B, ? extends BB> fn) {
         return of(_1(), fn.apply(_2()));
+    }
+
+    public <C> C cata(BiFunction<? super A,? super B,? extends C> fn) {
+        return fn.apply(_1(), _2());
     }
 
     public T2<B, A> swap() {

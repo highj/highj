@@ -70,6 +70,10 @@ public abstract class T1<A> implements __<T1.µ, A>, Supplier<A> {
         return fn.apply(_1());
     }
 
+    public <B> B cata(Function<? super A, ? extends B> fn) {
+        return fn.apply(_1());
+    }
+
     @Override
     public int hashCode() {
         return _1().hashCode();

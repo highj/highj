@@ -6,6 +6,7 @@ import org.highj.data.HList;
 import org.highj.data.HList.HCons;
 import org.highj.data.HList.HNil;
 import org.highj.data.tuple.t3.*;
+import org.highj.function.F3;
 import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Group;
@@ -86,6 +87,10 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
 
     public <CC> T3<A, B, CC> map_3(Function<? super C, ? extends CC> fn) {
         return of(_1(), _2(), fn.apply(_3()));
+    }
+
+    public <D> D cata(F3<? super A,? super B,? super C, ? extends D> fn) {
+        return fn.apply(_1(), _2(), _3());
     }
 
     @Override

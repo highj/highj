@@ -6,6 +6,7 @@ import org.highj.data.HList;
 import org.highj.data.HList.HCons;
 import org.highj.data.HList.HNil;
 import org.highj.data.tuple.t4.*;
+import org.highj.function.F4;
 import org.highj.typeclass0.compare.Eq;
 import org.highj.typeclass0.compare.Ord;
 import org.highj.typeclass0.group.Group;
@@ -99,6 +100,10 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
 
     public <DD> T4<A, B, C, DD> map_4(Function<? super D, ? extends DD> fn) {
         return of(_1(), _2(), _3(), fn.apply(_4()));
+    }
+
+    public <E> E cata(F4<? super A,? super B,? super C, ? super D, ? extends E> fn) {
+        return fn.apply(_1(), _2(), _3(), _4());
     }
 
     @Override
