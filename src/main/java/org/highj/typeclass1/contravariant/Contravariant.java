@@ -10,6 +10,8 @@ import java.util.function.Function;
  * A contravariant functor.
  *
  * Mirrors Data.Functor.Contravariant.
+ *
+ * @param <F> the Contravariant instance
  */
 public interface Contravariant<F> extends Invariant<F> {
 

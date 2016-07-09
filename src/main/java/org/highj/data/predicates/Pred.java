@@ -1,69 +1,96 @@
 package org.highj.data.predicates;
 
 import org.derive4j.hkt.__;
-import org.highj.data.predicates.pred.AndGroup;
-import org.highj.data.predicates.pred.OrGroup;
 import org.highj.data.predicates.pred.PredContravariant;
 import org.highj.typeclass0.group.Group;
 
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 @FunctionalInterface
 public interface Pred<A> extends __<Pred.µ, A>, Predicate<A> {
 
-    public static class µ {
+    interface µ {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A> Pred<A> narrow(__<µ, A> nestedA) {
+    static <A> Pred<A> narrow(__<µ, A> nestedA) {
         return (Pred) nestedA;
     }
 
-    public static <A> Pred<A> fromPredicate(Predicate<A> predicate) {
+    static <A> Pred<A> fromPredicate(Predicate<A> predicate) {
         return predicate::test;
     }
 
-    public static <A> Pred<A> fromFunction(Function<A, Boolean> fn) {
+    static <A> Pred<A> fromFunction(Function<A, Boolean> fn) {
         return fn::apply;
     }
 
-    public static <A> Pred<A> True() {
+    static <A> Pred<A> True() {
         return a -> true;
     }
 
-    public static <A> Pred<A> False() {
+    static <A> Pred<A> False() {
         return a -> false;
     }
 
-    public default Pred<A> not() {
+    default Pred<A> not() {
         return a -> !test(a);
     }
 
-    public default Pred<A> and(Pred<A> that) {
+    default Pred<A> and(Pred<A> that) {
         return a -> this.test(a) && that.test(a);
     }
 
-    public default Pred<A> or(Pred<A> that) {
+    default Pred<A> or(Pred<A> that) {
         return a -> this.test(a) || that.test(a);
     }
 
-    public default Pred<A> xor(Pred<A> that) {
+    default Pred<A> xor(Pred<A> that) {
         return a -> this.test(a) ^ that.test(a);
     }
 
-    public default Pred<A> eq(Pred<A> that) {
+    default Pred<A> eq(Pred<A> that) {
         return a -> this.test(a) == that.test(a);
     }
 
-    public static <A> Group<Pred<A>> andGroup() {
-        return new AndGroup<>();
+    static <A> Pred<A> fromJavaSet(Set<A> set) {
+        return set::contains;
     }
 
-    public static <A> Group<Pred<A>> orGroup() {
-        return new OrGroup<>();
+    @SafeVarargs
+    static <A> Pred<A> ands(final Pred<A>... predicates) {
+        return a -> {
+            for (Pred<A> pred : predicates) {
+                if (!pred.test(a)) {
+                    return false;
+                }
+            }
+            return true;
+        };
     }
 
-    public static final PredContravariant contravariant = new PredContravariant();
+    @SafeVarargs
+    static <A> Pred<A> ors(final Pred<A>... predicates) {
+        return a -> {
+            for (Pred<A> pred : predicates) {
+                if (pred.test(a)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+    }
+
+    static <A> Group<Pred<A>> andGroup() {
+        return Group.create(Pred.True(), (f,g) -> x -> f.test(x) && g.test(x), Pred::not);
+    }
+
+    static <A> Group<Pred<A>> orGroup() {
+        return Group.create(Pred.False(), (f,g) -> x -> f.test(x) || g.test(x), Pred::not);
+    }
+
+    PredContravariant contravariant = new PredContravariant(){};
 
 }

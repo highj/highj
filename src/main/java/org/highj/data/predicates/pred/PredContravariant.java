@@ -6,10 +6,9 @@ import org.highj.typeclass1.contravariant.Contravariant;
 
 import java.util.function.Function;
 
-public class PredContravariant implements Contravariant<Pred.µ> {
+public interface PredContravariant extends Contravariant<Pred.µ> {
     @Override
-    public <A, B> Pred<A> contramap(Function<A, B> fn, __<Pred.µ, B> nestedB) {
-        // contramap f g = Predicate $ getPredicate g . f
+    default <A, B> Pred<A> contramap(Function<A, B> fn, __<Pred.µ, B> nestedB) {
         return a -> Pred.narrow(nestedB).test(fn.apply(a));
     }
 }
