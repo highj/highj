@@ -4,7 +4,6 @@ import org.derive4j.hkt.__;
 import org.highj.data.tuple.t2.T2Monad;
 import org.highj.data.eq.Eq;
 import org.highj.function.F1;
-import org.highj.function.Integers;
 import org.highj.function.Strings;
 import org.junit.Test;
 
@@ -50,7 +49,7 @@ public class T2Test {
 
     @Test
     public void eqTest() throws Exception {
-        Eq<T2<String,Integer>> eq = T2.eq(Eq.fromEquals(), Integers.eq);
+        Eq<T2<String,Integer>> eq = T2.eq(Eq.fromEquals(), Eq.fromEquals());
         T2<String,Integer> a1 = T2.of("a", 1);
         T2<String,Integer> a2 = T2.of("a", 2);
         T2<String,Integer> b1 = T2.of("b", 1);

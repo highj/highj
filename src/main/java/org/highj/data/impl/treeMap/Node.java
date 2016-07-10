@@ -5,7 +5,7 @@ import org.highj.data.Maybe;
 import org.highj.data.ord.Ordering;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
-import org.highj.function.Integers;
+import org.highj.util.Integers;
 import org.highj.data.ord.Ord;
 
 import java.util.NoSuchElementException;
@@ -29,6 +29,8 @@ import static org.highj.data.impl.treeMap.Node.Color.RED;
    <http://www.cs.princeton.edu/~rs/talks/LLRB/RedBlack.pdf>
 */
 public abstract class Node<K, V> {
+
+    private static final Ord<Integer> INTEGER_ORD = Ord.fromComparable();
 
     enum Color {RED, BLACK}
 
@@ -415,7 +417,7 @@ public abstract class Node<K, V> {
         } else if (t2.isEmpty()) {
             return t1.insert(ord, k, v);
         }
-        return Integers.ord.cmp(t1.bHeight, t2.bHeight)
+        return INTEGER_ORD.cmp(t1.bHeight, t2.bHeight)
                 .caseLT(() -> joinLT(k, v, t1, t2))
                 .caseEQ(() -> black(t1.bHeight + 1, k, v, t1, t2))
                 .caseGT(() -> joinGT(k, v, t1, t2));
@@ -442,7 +444,7 @@ public abstract class Node<K, V> {
     private static <K, V> Node<K, V> merge(Node<K, V> t1, Node<K, V> t2) {
         return t1.isEmpty() ? t2
                 : t2.isEmpty() ? t2
-                : Integers.ord.cmp(t1.bHeight, t2.bHeight)
+                : INTEGER_ORD.cmp(t1.bHeight, t2.bHeight)
                 .caseLT(() -> mergeLT(t1, t2, t1.bHeight))
                 .caseEQ(() -> mergeEQ(t1, t2))
                 .caseGT(() -> mergeGT(t1, t2, t2.bHeight))

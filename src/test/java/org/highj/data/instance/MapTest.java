@@ -6,7 +6,7 @@ import org.highj.data.List;
 import org.highj.data.Map;
 import org.highj.data.Maybe;
 import org.highj.data.tuple.T2;
-import org.highj.function.Integers;
+import org.highj.util.Integers;
 import org.junit.Test;
 
 import java.util.Iterator;

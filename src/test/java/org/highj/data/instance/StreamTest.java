@@ -3,7 +3,7 @@ package org.highj.data.instance;
 import org.derive4j.hkt.__;
 import org.highj.data.List;
 import org.highj.data.Stream;
-import org.highj.function.Integers;
+import org.highj.util.Integers;
 import org.highj.function.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass1.monad.Monad;
