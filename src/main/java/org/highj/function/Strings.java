@@ -1,6 +1,7 @@
 package org.highj.function;
 
 import org.highj.data.eq.Eq;
+import org.highj.data.ord.Ord;
 import org.highj.typeclass0.group.Group;
 
 import java.util.Arrays;
@@ -33,9 +34,9 @@ public enum Strings {
         return one + two;
     }
 
-    public static final Eq<String> eq = Eq.fromEquals();
-
     public static final Eq<String> eqIgnoreCase = (one, two) -> one == null ? two == null : one.equalsIgnoreCase(two);
+
+    public static final Ord<String> ordIgnoreCase = Ord.fromComparator(String.CASE_INSENSITIVE_ORDER);
 
     public static final Group<String> group = Group.create("", Strings::concat, Strings::reverse);
 
