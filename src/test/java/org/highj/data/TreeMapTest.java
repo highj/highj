@@ -1,8 +1,8 @@
 package org.highj.data;
 
-import org.highj.typeclass0.compare.Ordering;
+import org.highj.data.ord.Ordering;
 import org.highj.data.tuple.T2;
-import org.highj.typeclass0.compare.Ord;
+import org.highj.data.ord.Ord;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

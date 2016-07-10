@@ -6,7 +6,7 @@
 package org.highj.typeclass0.num;
 
 import org.highj.data.ratio.Rational;
-import org.highj.typeclass0.compare.Ord;
+import org.highj.data.ord.Ord;
 
 /**
  *

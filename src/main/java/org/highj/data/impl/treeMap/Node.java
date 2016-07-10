@@ -2,11 +2,11 @@ package org.highj.data.impl.treeMap;
 
 import org.highj.data.List;
 import org.highj.data.Maybe;
-import org.highj.typeclass0.compare.Ordering;
+import org.highj.data.ord.Ordering;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.function.Integers;
-import org.highj.typeclass0.compare.Ord;
+import org.highj.data.ord.Ord;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;

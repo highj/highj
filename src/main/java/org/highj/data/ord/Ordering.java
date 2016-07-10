@@ -1,4 +1,4 @@
-package org.highj.typeclass0.compare;
+package org.highj.data.ord;
 
 import org.highj.data.Maybe;
 import org.highj.typeclass0.group.Group;

@@ -3,7 +3,7 @@ package org.highj.data;
 import org.highj.data.impl.treeMap.Node;
 import org.highj.data.tuple.T2;
 import org.highj.function.Strings;
-import org.highj.typeclass0.compare.Ord;
+import org.highj.data.ord.Ord;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

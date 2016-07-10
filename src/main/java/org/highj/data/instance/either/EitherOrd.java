@@ -2,11 +2,11 @@ package org.highj.data.instance.either;
 
 import org.highj.data.Either;
 import org.highj.data.tuple.T2;
-import org.highj.typeclass0.compare.Ord;
-import org.highj.typeclass0.compare.Ordering;
+import org.highj.data.ord.Ord;
+import org.highj.data.ord.Ordering;
 
-import static org.highj.typeclass0.compare.Ordering.GT;
-import static org.highj.typeclass0.compare.Ordering.LT;
+import static org.highj.data.ord.Ordering.GT;
+import static org.highj.data.ord.Ordering.LT;
 
 /**
  * An {@link Ord} instance for {@link Either}, which sorts Left and Right values according to the

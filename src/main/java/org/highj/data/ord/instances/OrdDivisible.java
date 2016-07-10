@@ -1,14 +1,14 @@
-package org.highj.typeclass0.compare.ord;
+package org.highj.data.ord.instances;
 
 import org.derive4j.hkt.__;
 import org.highj.data.tuple.T2;
-import org.highj.typeclass0.compare.Ord;
-import org.highj.typeclass0.compare.Ordering;
+import org.highj.data.ord.Ord;
+import org.highj.data.ord.Ordering;
 import org.highj.typeclass1.contravariant.Divisible;
 
 import java.util.function.Function;
 
-import static org.highj.typeclass0.compare.Ordering.EQ;
+import static org.highj.data.ord.Ordering.EQ;
 
 public abstract class OrdDivisible implements OrdContravariant, Divisible<Ord.µ> {
 

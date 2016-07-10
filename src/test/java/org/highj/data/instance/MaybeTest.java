@@ -8,7 +8,7 @@ import org.highj.function.F3;
 import org.highj.function.Functions;
 import org.highj.function.Integers;
 import org.highj.data.tuple.T0;
-import org.highj.typeclass0.compare.Eq;
+import org.highj.data.eq.Eq;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.comonad.Extend;
 import org.highj.typeclass1.foldable.Traversable;

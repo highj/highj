@@ -1,10 +1,10 @@
 package org.highj.data.tuple;
 
-import org.highj.typeclass0.compare.Ordering;
+import org.highj.data.ord.Ordering;
 import org.highj.data.HList;
 import org.highj.data.tuple.t0.T0Group;
-import org.highj.typeclass0.compare.Eq;
-import org.highj.typeclass0.compare.Ord;
+import org.highj.data.eq.Eq;
+import org.highj.data.ord.Ord;
 import org.highj.typeclass0.group.Group;
 
 /**

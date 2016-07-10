@@ -1,12 +1,12 @@
-package org.highj.typeclass0.compare.ord;
+package org.highj.data.ord.instances;
 
 import org.derive4j.hkt.__;
-import org.highj.typeclass0.compare.Ord;
+import org.highj.data.ord.Ord;
 import org.highj.typeclass1.contravariant.Contravariant;
 
 import java.util.function.Function;
 
-import static org.highj.typeclass0.compare.Ord.*;
+import static org.highj.data.ord.Ord.*;
 
 public interface OrdContravariant extends Contravariant<µ> {
 

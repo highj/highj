@@ -1,7 +1,7 @@
 package org.highj.function;
 
-import org.highj.typeclass0.compare.Eq;
-import org.highj.typeclass0.compare.Ord;
+import org.highj.data.eq.Eq;
+import org.highj.data.ord.Ord;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;

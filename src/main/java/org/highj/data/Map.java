@@ -3,7 +3,7 @@ package org.highj.data;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.highj.data.instance.map.MapApply;
-import org.highj.typeclass0.compare.Ordering;
+import org.highj.data.ord.Ordering;
 import org.highj.data.tuple.T2;
 import org.highj.util.Iterators;
 
