@@ -1,7 +1,6 @@
 package org.highj.typeclass0.compare;
 
 import org.highj.data.Maybe;
-import org.highj.typeclass0.compare.ordering.OrderingGroup;
 import org.highj.typeclass0.group.Group;
 
 import java.util.function.Supplier;
@@ -53,7 +52,12 @@ public enum Ordering {
         return this == EQ ? Ordering.compare(x, y) : this;
     }
 
-    public static Group<Ordering> group = new OrderingGroup();
+    public Ordering inverse() {
+        return this == LT ? GT :
+                this == EQ ? EQ : LT;
+    }
+
+    public static Group<Ordering> group = Group.create(EQ, Ordering::andThen, Ordering::inverse);
 
     public static Ordering compare(boolean x, boolean y) {
         return x == y ? EQ : !x ? LT : GT;
@@ -107,6 +111,7 @@ public enum Ordering {
             this.ordering = ordering;
             this.value = value;
         }
+
         public CaseEQ<R> caseEQ(Supplier<R> equal) {
             return new CaseEQ<>(value.orElse(Maybe.JustWhenTrue(ordering == EQ, equal)));
         }
