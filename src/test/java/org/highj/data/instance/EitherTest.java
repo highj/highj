@@ -62,7 +62,7 @@ public class EitherTest {
 
     @Test
     public void testEq() {
-        Eq<Either<String, Integer>> eq = eq(new Eq.JavaEq<String>(), new Eq.JavaEq<Integer>());
+        Eq<Either<String, Integer>> eq = eq(Eq.fromEquals(), Eq.fromEquals());
         Either<String, Integer> left = Left("Test");
         Either<String, Integer> left2 = Left("Test");
         Either<String, Integer> left3 = Left("TestX");

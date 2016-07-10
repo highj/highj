@@ -33,7 +33,7 @@ public enum Strings {
         return one + two;
     }
 
-    public static final Eq<String> eq = new Eq.JavaEq<>();
+    public static final Eq<String> eq = Eq.fromEquals();
 
     public static final Eq<String> eqIgnoreCase = (one, two) -> one == null ? two == null : one.equalsIgnoreCase(two);
 

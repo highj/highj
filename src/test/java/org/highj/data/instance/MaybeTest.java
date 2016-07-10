@@ -81,7 +81,7 @@ public class MaybeTest {
 
     @Test
     public void testEq() {
-        Eq<Maybe<String>> eq = eq(new Eq.JavaEq<String>());
+        Eq<Maybe<String>> eq = eq(Eq.fromEquals());
         Maybe<String> nothing1 = Nothing();
         Maybe<String> nothing2 = Nothing();
         Maybe<String> foo1 = Just("foo");

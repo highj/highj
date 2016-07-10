@@ -15,7 +15,7 @@ import static java.lang.Math.*;
 public enum Integers {
     ;
 
-    public final static Eq<Integer> eq = new Eq.JavaEq<>();
+    public final static Eq<Integer> eq = Eq.fromEquals();
 
     public final static Ord<Integer> ord = Ord.fromComparable();
 

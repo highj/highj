@@ -57,7 +57,7 @@ public class T1Test {
 
     @Test
     public void testEq() {
-        Eq<T1<String>> eq = T1.eq(new Eq.JavaEq<>());
+        Eq<T1<String>> eq = T1.eq(Eq.fromEquals());
         T1<String> one = T1.of("hello");
         T1<String> two = T1.ofLazy(() -> "hello");
         T1<String> three = T1.of("world");
