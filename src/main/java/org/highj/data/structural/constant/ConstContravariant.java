@@ -9,12 +9,11 @@ import java.util.function.Function;
 import static org.highj.data.structural.Const.narrow;
 import static org.highj.data.structural.Const.µ;
 
-public interface ConstContravariant<S> extends Contravariant<__<µ,S>> {
+public interface ConstContravariant<S> extends Contravariant<__<µ, S>> {
 
     @Override
-    public default <A, B> Const<S, A> contramap(Function<A, B> fn,__<__<µ, S>, B> nestedB) {
-        //contramap __ (Const a) = Const a
-        Const<S,B> constB = narrow(nestedB);
+    default <A, B> Const<S, A> contramap(Function<A, B> fn, __<__<µ, S>, B> nestedB) {
+        Const<S, B> constB = narrow(nestedB);
         return new Const<>(constB.get());
     }
 }

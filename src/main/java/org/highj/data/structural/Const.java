@@ -3,12 +3,15 @@ package org.highj.data.structural;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.highj.data.structural.constant.*;
+import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 
-public class Const<A, B> implements __2<Const.µ, A, B> {
+import java.util.function.Supplier;
 
-    public static class µ {
+public class Const<A, B> implements __2<Const.µ, A, B>, Supplier<A> {
+
+    public interface µ {
     }
 
     private final A value;
@@ -19,7 +22,12 @@ public class Const<A, B> implements __2<Const.µ, A, B> {
 
     @SuppressWarnings("unchecked")
     public static <A, B> Const<A, B> narrow(__<__<µ, A>, B> value) {
-        return (Const) value;
+        return (Const<A,B>) value;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <A, B> Const<A, B> narrow(__2<µ, A, B> value) {
+        return (Const<A,B>) value;
     }
 
     public A get() {
@@ -44,6 +52,25 @@ public class Const<A, B> implements __2<Const.µ, A, B> {
         };
     }
 
+    public static <S> ConstDivisible<S> divisible(Monoid<S> monoid) {
+        return () -> monoid;
+    }
+
     public static final ConstBiapplicative biapplicative = new ConstBiapplicative() {
     };
+
+    public static <M,A> Semigroup<Const<M,A>> semigroup(Semigroup<M> semigroup) {
+        return (x,y) -> new Const<>(semigroup.apply(x.get(), y.get()));
+    }
+
+    public static <M,A> Monoid<Const<M,A>> monoid(Monoid<M> monoid) {
+        return Monoid.create(new Const<>(monoid.identity()),
+                (x,y) -> new Const<>(monoid.apply(x.get(), y.get())));
+    }
+
+    public static <M,A> Group<Const<M,A>> group(Group<M> group) {
+        return Group.create(new Const<>(group.identity()),
+                (x,y) -> new Const<>(group.apply(x.get(), y.get())),
+                z -> new Const<>(group.inverse(z.get())));
+    }
 }
