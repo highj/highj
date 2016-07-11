@@ -1,16 +1,23 @@
 package org.highj.data.ord;
 
 import org.derive4j.hkt.__;
+import org.highj.data.Either;
 import org.highj.data.eq.Eq;
 import org.highj.data.tuple.T2;
 import org.highj.function.Strings;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.awt.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrdTest {
+
+    @Rule
+    public ExpectedException shouldThrow = ExpectedException.none();
+
     @Test
     public void narrow() {
         Ord<String> ord = Ord.fromComparable();
@@ -128,6 +135,28 @@ public class OrdTest {
         assertThat(div.cmp(new Point(3, 2), new Point(3, 2))).isEqualTo(Ordering.EQ);
         assertThat(div.cmp(new Point(3, 2), new Point(2, 9))).isEqualTo(Ordering.GT);
         assertThat(div.cmp(new Point(3, 2), new Point(3, 1))).isEqualTo(Ordering.GT);
+    }
+
+    @Test
+    public void decidable() {
+        Ord<Integer> evenFirst = Ord.decidable.choose(
+                i -> i % 2 == 0 ? Either.Left(i) : Either.Right(i),
+                Ord.<Integer>fromComparable(),
+                Ord.<Integer>fromComparable());
+        //even numbers have normal order
+        assertThat(evenFirst.cmp(2, 6)).isEqualTo(Ordering.LT);
+        assertThat(evenFirst.cmp(4, 4)).isEqualTo(Ordering.EQ);
+        assertThat(evenFirst.cmp(6, 2)).isEqualTo(Ordering.GT);
+        //odd numbers have normal order
+        assertThat(evenFirst.cmp(1, 5)).isEqualTo(Ordering.LT);
+        assertThat(evenFirst.cmp(3, 3)).isEqualTo(Ordering.EQ);
+        assertThat(evenFirst.cmp(5, 1)).isEqualTo(Ordering.GT);
+        //even numbers are always smaller than odd numbers
+        assertThat(evenFirst.cmp(6, 1)).isEqualTo(Ordering.LT);
+        assertThat(evenFirst.cmp(1, 6)).isEqualTo(Ordering.GT);
+
+        shouldThrow.expect(AssertionError.class);
+        Ord.decidable.lose(p -> null);
     }
 
 }

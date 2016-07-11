@@ -1,14 +1,20 @@
 package org.highj.data.eq;
 
 import org.derive4j.hkt.__;
+import org.highj.data.Either;
 import org.highj.data.tuple.T2;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.awt.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EqTest {
+
+    @Rule
+    public ExpectedException shouldThrow = ExpectedException.none();
 
     @Test
     public void narrow() {
@@ -48,6 +54,26 @@ public class EqTest {
         Eq<Point> div = Eq.divisible.divide(p -> T2.of(p.x, p.y), Eq.fromEquals(), Eq.fromEquals());
         assertThat(div.eq(new Point(2, 3), new Point(1, 7))).isFalse();
         assertThat(div.eq(new Point(2, 3), new Point(2, 3))).isTrue();
+    }
+
+    @Test
+    public void decidable() {
+        Eq<Integer> evenFirst = Eq.decidable.choose(
+                i -> i % 2 == 0 ? Either.Left(i) : Either.Right(i),
+                Eq.divisible.conquer(),
+                Eq.divisible.conquer());
+        //all even numbers are "equal"
+        assertThat(evenFirst.eq(2, 6)).isTrue();
+        assertThat(evenFirst.eq(4, 4)).isTrue();
+        //all odd numbers are "equal"
+        assertThat(evenFirst.eq(1, 5)).isTrue();
+        assertThat(evenFirst.eq(3, 3)).isTrue();
+        //even numbers are not "equal" to odd numbers
+        assertThat(evenFirst.eq(6, 1)).isFalse();
+        assertThat(evenFirst.eq(1, 6)).isFalse();
+
+        shouldThrow.expect(AssertionError.class);
+        Eq.decidable.lose(p -> null);
     }
 
 }

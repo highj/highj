@@ -2,6 +2,7 @@ package org.highj.data.eq;
 
 import org.derive4j.hkt.__;
 import org.highj.data.eq.instances.EqContravariant;
+import org.highj.data.eq.instances.EqDecidable;
 import org.highj.data.eq.instances.EqDivisible;
 
 /**
@@ -66,5 +67,11 @@ public interface Eq<T> extends __<Eq.µ, T> {
      * The {@link org.highj.typeclass1.contravariant.Divisible} instance of {@link Eq}
      */
     EqDivisible divisible = new EqDivisible() {
+    };
+
+    /**
+     * The {@link org.highj.typeclass1.contravariant.Decidable} instance of {@link Eq}
+     */
+    EqDecidable decidable = new EqDecidable() {
     };
 }

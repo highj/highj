@@ -10,10 +10,10 @@ import java.util.function.Function;
 
 import static org.highj.data.ord.Ordering.EQ;
 
-public abstract class OrdDivisible implements OrdContravariant, Divisible<Ord.µ> {
+public interface OrdDivisible extends OrdContravariant, Divisible<Ord.µ> {
 
     @Override
-    public <A, B, C> Ord<A> divide(Function<A, T2<B, C>> fn, __<Ord.µ, B> fb, __<Ord.µ, C> fc) {
+    default  <A, B, C> Ord<A> divide(Function<A, T2<B, C>> fn, __<Ord.µ, B> fb, __<Ord.µ, C> fc) {
         return (x, y) -> T2.merge(fn.apply(x), fn.apply(y),
                 bx -> by -> Ord.narrow(fb).cmp(bx, by),
                 cx -> cy -> Ord.narrow(fc).cmp(cx, cy))
@@ -21,7 +21,7 @@ public abstract class OrdDivisible implements OrdContravariant, Divisible<Ord.µ
     }
 
     @Override
-    public <A> Ord<A> conquer() {
+    default  <A> Ord<A> conquer() {
         return (x, y) -> EQ;
     }
 }

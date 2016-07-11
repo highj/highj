@@ -3,6 +3,7 @@ package org.highj.data.ord;
 import org.derive4j.hkt.__;
 import org.highj.data.eq.Eq;
 import org.highj.data.ord.instances.OrdContravariant;
+import org.highj.data.ord.instances.OrdDecidable;
 import org.highj.data.ord.instances.OrdDivisible;
 
 import java.util.Comparator;
@@ -178,5 +179,11 @@ public interface Ord<T> extends Comparator<T>, Function<T, Function<T, Ordering>
      * The {@link org.highj.typeclass1.contravariant.Divisible} instance of {@link Ord}
      */
     OrdDivisible divisible = new OrdDivisible() {
+    };
+
+    /**
+     * The {@link org.highj.typeclass1.contravariant.Decidable} instance of {@link Ord}
+     */
+    OrdDecidable decidable = new OrdDecidable() {
     };
 }
