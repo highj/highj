@@ -3,6 +3,7 @@ package org.highj.data.num.instances;
 import org.highj.data.List;
 import org.highj.data.Stream;
 import org.highj.data.num.BigIntegers;
+import org.highj.data.predicates.Pred;
 
 import java.math.BigInteger;
 import java.util.function.Predicate;
@@ -42,15 +43,13 @@ public interface BigIntegerEnum extends org.highj.typeclass0.num.Enum<BigInteger
 
     @Override
     default List<BigInteger> enumFromTo(BigInteger a, BigInteger b) {
-        Predicate<BigInteger> test = a.compareTo(b) <= 0
-                ? x -> x.compareTo(b) <= 0
-                : x -> x.compareTo(b) >= 0;
+        Pred<BigInteger> test = x -> x.compareTo(b) <= 0;
         return enumFrom(a).takeWhile(test);
     }
 
     @Override
     default List<BigInteger> enumFromThenTo(BigInteger a, BigInteger b, BigInteger c) {
-        Predicate<BigInteger> test = a.compareTo(b) <= 0
+        Pred<BigInteger> test = a.compareTo(b) <= 0
                 ? x -> x.compareTo(c) <= 0
                 : x -> x.compareTo(c) >= 0;
         return enumFromThen(a,b).takeWhile(test);

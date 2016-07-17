@@ -121,12 +121,14 @@ public class IntegersTest {
     public void minMonoid() {
         assertThat(Integers.minMonoid.identity()).isEqualTo(Integer.MAX_VALUE);
         assertThat(Integers.minMonoid.apply(17, 23)).isEqualTo(17);
+        assertThat(Integers.minMonoid.apply(23, 17)).isEqualTo(17);
     }
 
     @Test
     public void maxMonoid() {
         assertThat(Integers.maxMonoid.identity()).isEqualTo(Integer.MIN_VALUE);
         assertThat(Integers.maxMonoid.apply(17, 23)).isEqualTo(23);
+        assertThat(Integers.maxMonoid.apply(23, 17)).isEqualTo(23);
     }
 
     @Test
@@ -188,6 +190,7 @@ public class IntegersTest {
         assertThat(enumeration.enumFromThen(10, 8)).startsWith(10, 8, 6, 4);
 
         assertThat(enumeration.enumFromTo(10, 15)).containsExactly(10, 11, 12, 13, 14, 15);
+        assertThat(enumeration.enumFromTo(10, 10)).containsExactly(10);
         assertThat(enumeration.enumFromTo(10, 5)).isEmpty();
 
         assertThat(enumeration.enumFromThenTo(10, 12, 16)).containsExactly(10, 12, 14, 16);
@@ -195,6 +198,7 @@ public class IntegersTest {
         assertThat(enumeration.enumFromThenTo(-10, -12, -16)).containsExactly(-10, -12, -14, -16);
         assertThat(enumeration.enumFromThenTo(-10, -12, -17)).containsExactly(-10, -12, -14, -16);
         assertThat(enumeration.enumFromThenTo(10, 8, 15)).isEmpty();
+        assertThat(enumeration.enumFromThenTo(10, 10, 10)).startsWith(10,10,10,10);
     }
 
     @Test

@@ -41,6 +41,9 @@ public interface Enum<A> {
     }
     
     public default List<A> enumFromThenTo(A a, A b, A c) {
+        if (a.equals(b) && b.equals(c)) {
+            return List.cycle(a);
+        }
         int x = fromEnum(a);
         int y = fromEnum(b);
         int z = fromEnum(c);
