@@ -2,6 +2,7 @@ package org.highj.function;
 
 import org.highj.data.List;
 import org.highj.data.Maybe;
+import org.highj.data.Stream;
 import org.highj.data.tuple.*;
 import org.highj.typeclass0.group.Monoid;
 
@@ -137,10 +138,6 @@ public enum Functions {
 
     public static <A, B, C, D, E> Supplier<E> lazy(final Function<A, Function<B, Function<C, Function<D, E>>>> fn, final A a, final B b, final C c, final D d) {
         return () -> fn.apply(a).apply(b).apply(c).apply(d);
-    }
-
-    public static <A> List<A> iterate(Function<A,A> fn, A start) {
-        return List.Cons$(start, () -> Functions.<A>iterate(fn, fn.apply(start)));
     }
 
     public static <A,B> Function<A,Maybe<B>> fromJavaMap(Map<A,B> map) {

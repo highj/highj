@@ -59,7 +59,7 @@ public abstract class Tree<A> implements __<Tree.µ, A> {
     }
 
     public List<List<A>> levels() {
-        return Functions.iterate(ts -> ts.concatMap(t -> t.subForest()), List.of(this))
+        return Stream.unfold(ts -> ts.concatMap(Tree::subForest), List.of(this))
                 .takeWhile((List<Tree<A>> ts) -> !ts.isEmpty())
                 .map(xs -> xs.map(x -> x.rootLabel));
     }
