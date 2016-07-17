@@ -1,8 +1,13 @@
-package org.highj.util;
+package org.highj.data.num;
 
+import org.highj.data.num.instances.IntegerEnum;
+import org.highj.data.num.instances.IntegerIntegral;
+import org.highj.data.num.instances.IntegerNum;
+import org.highj.data.num.instances.IntegerReal;
 import org.highj.data.predicates.Pred;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
+import org.highj.util.Contracts;
 
 import java.util.function.Function;
 
@@ -56,7 +61,7 @@ public interface Integers {
     };
 
     /**
-     *  Calculates the greatest common divisor of two integers.
+     * Calculates the greatest common divisor of two integers.
      */
     Function<Integer, Function<Integer, Integer>> gcd = a -> b -> {
         int absA = abs(a);
@@ -130,4 +135,28 @@ public interface Integers {
      * The bitwise xor monoid of integers.
      */
     Monoid<Integer> xorMonoid = Monoid.create(0, (x, y) -> x ^ y);
+
+    /**
+     * The Enum instance of {@link Integer}
+     */
+    IntegerEnum enumeration = new IntegerEnum() {
+    };
+
+    /**
+     * The Num instance of {@link Integer}
+     */
+    IntegerNum num = new IntegerNum() {
+    };
+
+    /**
+     * The Real instance of {@link Integer}
+     */
+    IntegerReal real = new IntegerReal() {
+    };
+
+    /**
+     * The Integral instance of {@link Integer}
+     */
+    IntegerIntegral integral = new IntegerIntegral() {
+    };
 }

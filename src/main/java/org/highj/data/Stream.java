@@ -135,10 +135,6 @@ public abstract class Stream<A> implements __<Stream.µ, A>, Iterable<A>, Functi
         return n <= 0 ? List.Nil() : List.Cons$(head(), () -> tail().take(n - 1));
     }
 
-    public List<A> takeWhile(Function<A, Boolean> predicate) {
-        return !predicate.apply(head()) ? List.Nil() : List.Cons$(head(), () -> tail().takeWhile(predicate));
-    }
-
     public List<A> takeWhile(Predicate<A> predicate) {
         return !predicate.test(head()) ? List.Nil() : List.Cons$(head(), () -> tail().takeWhile(predicate));
     }
@@ -146,14 +142,6 @@ public abstract class Stream<A> implements __<Stream.µ, A>, Iterable<A>, Functi
     public Stream<A> drop(int n) {
         Stream<A> result = this;
         while (n-- > 0) {
-            result = result.tail();
-        }
-        return result;
-    }
-
-    public Stream<A> dropWhile(Function<A, Boolean> predicate) {
-        Stream<A> result = this;
-        while (predicate.apply(result.head())) {
             result = result.tail();
         }
         return result;

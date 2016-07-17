@@ -1,6 +1,13 @@
-package org.highj.util;
+package org.highj.data.num;
 
+import org.highj.data.ratio.Rational;
+import org.highj.data.tuple.T2;
+import org.highj.typeclass0.num.Integral;
+import org.highj.typeclass0.num.Num;
+import org.highj.typeclass0.num.Real;
 import org.junit.Test;
+
+import java.math.BigInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -138,5 +145,71 @@ public class IntegersTest {
     public void andMonoid() {
         assertThat(Integers.andMonoid.identity()).isEqualTo(-1);
         assertThat(Integers.andMonoid.apply(17, 23)).isEqualTo(17 & 23);
+    }
+
+    @Test
+    public void num() {
+        Num<Integer> num = Integers.num;
+
+        assertThat(num.abs(-10)).isEqualTo(10);
+        assertThat(num.abs(0)).isEqualTo(0);
+        assertThat(num.abs(10)).isEqualTo(10);
+
+        assertThat(num.negate(-10)).isEqualTo(10);
+        assertThat(num.negate(0)).isEqualTo(0);
+        assertThat(num.negate(10)).isEqualTo(-10);
+
+        assertThat(num.signum(-10)).isEqualTo(-1);
+        assertThat(num.signum(0)).isEqualTo(0);
+        assertThat(num.signum(10)).isEqualTo(1);
+
+        assertThat(num.add(7, 3)).isEqualTo(10);
+        assertThat(num.subtract(7, 3)).isEqualTo(4);
+        assertThat(num.times(7, 3)).isEqualTo(21);
+
+        assertThat(num.fromBigInteger(BigInteger.TEN)).isEqualTo(10);
+    }
+
+    @Test
+    public void enumeration() {
+        org.highj.typeclass0.num.Enum<Integer> enumeration = Integers.enumeration;
+
+        assertThat(enumeration.toEnum(42)).isEqualTo(42);
+        assertThat(enumeration.fromEnum(42)).isEqualTo(42);
+
+        assertThat(enumeration.pred(10)).isEqualTo(9);
+        assertThat(enumeration.pred(-10)).isEqualTo(-11);
+        assertThat(enumeration.succ(10)).isEqualTo(11);
+        assertThat(enumeration.succ(-10)).isEqualTo(-9);
+
+        assertThat(enumeration.enumFrom(10)).startsWith(10, 11, 12, 13);
+
+        assertThat(enumeration.enumFromThen(10, 12)).startsWith(10, 12, 14, 16);
+        assertThat(enumeration.enumFromThen(10, 8)).startsWith(10, 8, 6, 4);
+
+        assertThat(enumeration.enumFromTo(10, 15)).containsExactly(10, 11, 12, 13, 14, 15);
+        assertThat(enumeration.enumFromTo(10, 5)).isEmpty();
+
+        assertThat(enumeration.enumFromThenTo(10, 12, 16)).containsExactly(10, 12, 14, 16);
+        assertThat(enumeration.enumFromThenTo(10, 12, 17)).containsExactly(10, 12, 14, 16);
+        assertThat(enumeration.enumFromThenTo(-10, -12, -16)).containsExactly(-10, -12, -14, -16);
+        assertThat(enumeration.enumFromThenTo(-10, -12, -17)).containsExactly(-10, -12, -14, -16);
+        assertThat(enumeration.enumFromThenTo(10, 8, 15)).isEmpty();
+    }
+
+    @Test
+    public void real() {
+        Real<Integer> real = Integers.real;
+        assertThat(real.toRational(23)).isEqualTo(
+                Rational.rational(BigInteger.valueOf(23), BigInteger.ONE));
+    }
+
+    @Test
+    public void integral() {
+        Integral<Integer> integral = Integers.integral;
+        assertThat(integral.quotRem(23, 7)).isEqualTo(T2.of(3, 2));
+        assertThat(integral.quotRem(-23, 7)).isEqualTo(T2.of(-3, -2));
+        assertThat(integral.quotRem(23, -7)).isEqualTo(T2.of(-3, 2));
+        assertThat(integral.quotRem(-23, -7)).isEqualTo(T2.of(3, -2));
     }
 }

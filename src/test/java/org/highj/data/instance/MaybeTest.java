@@ -6,7 +6,7 @@ import org.highj.data.List;
 import org.highj.data.Maybe;
 import org.highj.function.F3;
 import org.highj.function.Functions;
-import org.highj.util.Integers;
+import org.highj.data.num.Integers;
 import org.highj.data.tuple.T0;
 import org.highj.data.eq.Eq;
 import org.highj.typeclass0.group.Monoid;

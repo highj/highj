@@ -8,7 +8,7 @@ import org.highj.data.Stream;
 import org.highj.data.instance.list.ListMonadPlus;
 import org.highj.data.instance.list.ListTraversable;
 import org.highj.data.instance.list.ZipApplicative;
-import org.highj.util.Integers;
+import org.highj.data.num.Integers;
 import org.highj.function.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
