@@ -7,7 +7,7 @@ import org.derive4j.hkt.__2;
 import org.highj.data.Either;
 import org.highj.data.List;
 import org.highj.data.Maybe;
-import org.highj.function.Booleans;
+import org.highj.data.bool.Booleans;
 import org.highj.function.F1;
 import org.highj.function.Functions;
 import org.highj.data.tuple.T2;
