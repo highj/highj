@@ -1,35 +1,30 @@
 package org.highj.function.f1;
 
 import org.derive4j.hkt.__;
+import org.highj.data.Either;
 import org.highj.function.F1;
 import org.highj.typeclass1.monad.Monad;
+import org.highj.typeclass1.monad.MonadRec;
 
 import java.util.function.Function;
 
-public class F1Monad<R> implements Monad<__<F1.µ, R>> {
+public interface F1Monad<R> extends F1Functor<R>, Monad<__<F1.µ, R>> {
 
     @Override
-    public <A> F1<R, A> pure(A a) {
-        //pure = const
+    default <A> F1<R, A> pure(A a) {
         return F1.constant(a);
     }
 
     @Override
-    public <A, B> F1<R, B> ap(__<__<F1.µ, R>, Function<A, B>> fn, __<__<F1.µ, R>, A> nestedA) {
-        //(<*>) f g x = f x (g x)
-        final F1<R, Function<A, B>> fRAB = F1.narrow(fn);
-        final F1<R, A> fRA = F1.narrow(nestedA);
-        return r -> fRAB.apply(r).apply(fRA.apply(r));
+    default <A, B> F1<R, B> ap(__<__<F1.µ, R>, Function<A, B>> fn, __<__<F1.µ, R>, A> a) {
+        return r -> F1.narrow(fn).apply(r).apply(
+                F1.narrow(a).apply(r));
     }
 
     @Override
-    public <A, B> F1<R, B> map(Function<A, B> fAB, __<__<F1.µ, R>, A> nestedA) {
-        return F1.compose((F1<A, B>) fAB::apply, F1.narrow(nestedA));
+    default <A, B> F1<R, B> bind(__<__<F1.µ, R>, A> a, Function<A, __<__<F1.µ, R>, B>> fn) {
+        return r -> F1.narrow(fn.apply(
+                F1.narrow(a).apply(r))).apply(r);
     }
 
-    @Override
-    public <A, B> F1<R, B> bind(__<__<F1.µ, R>, A> a, Function<A, __<__<F1.µ, R>, B>> fn) {
-        //m >>= k  = Reader $ \r -> runReader (k (runReader m r)) r
-        return r -> F1.narrow(fn.apply(F1.narrow(a).apply(r))).apply(r);
-    }
 }

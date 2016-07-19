@@ -10,6 +10,7 @@ import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.typeclass0.group.Monoid;
+import org.highj.util.Memo;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -47,20 +48,8 @@ public interface F1<A, B> extends __2<F1.µ, A, B>, Function<A, B> {
     }
 
     static <A, B> F1<A, B> constant(final Supplier<B> thunk) {
-        //without memoization we cannot be sure that the constant function is really constant
-        return new F1<A, B>() {
-            Maybe<B> memo = Maybe.Nothing();
-
-            @Override
-            public B apply(A a) {
-                if (memo.isJust()) {
-                    return memo.get();
-                }
-                B b = thunk.get();
-                memo = Maybe.Just(b);
-                return b;
-            }
-        };
+        Memo<B> memo = new Memo<>(thunk);
+        return a -> memo.get();
     }
 
     static <A, B, C> F1<A, C> compose(final Function<? super B, ? extends C> f, final Function<? super A, ? extends B> g) {
@@ -84,7 +73,7 @@ public interface F1<A, B> extends __2<F1.µ, A, B>, Function<A, B> {
     }
 
     static <R> F1Monad<R> monad() {
-        return new F1Monad<>();
+        return new F1Monad<R>(){};
     }
 
     static <A, B, C> F1<A, T2<B, C>> fanout(__<__<µ, A>, B> fab, __<__<µ, A>, C> fac) {
@@ -126,7 +115,7 @@ public interface F1<A, B> extends __2<F1.µ, A, B>, Function<A, B> {
         return compose(narrow(that), this);
     }
 
-    F1Arrow arrow = new F1Arrow();
+    F1Arrow arrow = new F1Arrow(){};
     
     static <A, B> F1<A, Maybe<B>> fromJavaMap(Map<A, B> map) {
         return a -> map.containsKey(a) ? Maybe.Just(map.get(a)) : Maybe.<B>Nothing();
