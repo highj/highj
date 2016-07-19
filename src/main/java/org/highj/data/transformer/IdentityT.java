@@ -3,6 +3,7 @@ package org.highj.data.transformer;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.highj.data.transformer.identity.*;
+import org.highj.typeclass1.contravariant.Contravariant;
 import org.highj.typeclass1.foldable.Foldable;
 import org.highj.typeclass1.foldable.Traversable;
 import org.highj.typeclass1.foldable.Traversable1;
@@ -13,7 +14,7 @@ import java.util.function.Function;
 
 public class IdentityT<M, A> implements __2<IdentityT.µ, M, A> {
 
-    public static class µ {
+    public interface µ {
     }
 
     private final __<M, A> value;
@@ -24,7 +25,7 @@ public class IdentityT<M, A> implements __2<IdentityT.µ, M, A> {
 
     @SuppressWarnings("unchecked")
     public static <M, A> IdentityT<M, A> narrow(__<__<µ, M>, A> value) {
-        return (IdentityT) value;
+        return (IdentityT<M, A>) value;
     }
 
     public __<M, A> get() {
@@ -45,65 +46,48 @@ public class IdentityT<M, A> implements __2<IdentityT.µ, M, A> {
         };
     }
 
-    public static <M> IdentityTFunctor<M> functor(final Functor<M> functorM) {
-        return () -> functorM;
+    public static <M> IdentityTFunctor<M> functor(final Functor<M> mFunctor) {
+        return () -> mFunctor;
     }
 
-    public static <M> IdentityTApply<M> apply(final Apply<M> applyM) {
-        return () -> applyM;
+    public static <M> IdentityTApply<M> apply(final Apply<M> mApply) {
+        return () -> mApply;
     }
 
-    public static <M> IdentityTApplicative<M> applicative(final Applicative<M> applicativeM) {
-        return () -> applicativeM;
+    public static <M> IdentityTApplicative<M> applicative(final Applicative<M> mApplicative) {
+        return () -> mApplicative;
     }
 
-    public static <M> IdentityTBind<M> bind(final Bind<M> bindM) {
-        return () -> bindM;
+    public static <M> IdentityTBind<M> bind(final Bind<M> mBind) {
+        return () -> mBind;
     }
 
-    public static <M> IdentityTMonadTrans<M> monadTrans(final Monad<M> monad) {
-        return () -> monad;
+    public static <M> IdentityTMonadTrans<M> monadTrans(final Monad<M> mMonad) {
+        return () -> mMonad;
     }
 
-    public static <M> IdentityTMonadZero<M> monadZero(final MonadZero<M> monadZero) {
-        return () -> monadZero;
+    public static <M> IdentityTMonadZero<M> monadZero(final MonadZero<M> mMonadZero) {
+        return () -> mMonadZero;
     }
 
-    public static <M> IdentityTMonadPlus<M> monadPlus(final MonadPlus<M> monadPlus) {
-        return () -> monadPlus;
+    public static <M> IdentityTMonadPlus<M> monadPlus(final MonadPlus<M> mMonadPlus) {
+        return () -> mMonadPlus;
     }
 
-    public static <M> IdentityTFoldable<M> foldable(final Foldable<M> foldableM) {
-        return () -> foldableM;
+    public static <M> IdentityTFoldable<M> foldable(final Foldable<M> mFoldable) {
+        return () -> mFoldable;
     }
 
-    public static <M> IdentityTTraversable<M> traversable(final Traversable<M> traversableM) {
-        return () -> traversableM;
+    public static <M> IdentityTTraversable<M> traversable(final Traversable<M> mTraversable) {
+        return () -> mTraversable;
     }
 
-    public static <M> IdentityTTraversable1<M> traversable1(final Traversable1<M> traversable1M) {
-        return () -> traversable1M;
+    public static <M> IdentityTTraversable1<M> traversable1(final Traversable1<M> mTraversable1) {
+        return () -> mTraversable1;
     }
 
+    public static <M> IdentityTContravariant<M> contravariant(Contravariant<M> mContravariant) {
+        return () -> mContravariant;
+    }
 }
 
-
-/*
-
-instance (MonadFix m) => MonadFix (IdentityT m) where
-    mfix f = IdentityT (mfix (runIdentityT . f))
-
-instance (MonadIO m) => MonadIO (IdentityT m) where
-    liftIO = IdentityT . liftIO
-
--- | Lift a @callCC@ operation to the new monadTrans.
-liftCallCC :: (((a -> m b) -> m a) ->
-    m a) -> ((a -> IdentityT m b) -> IdentityT m a) -> IdentityT m a
-liftCallCC callCC f =
-    IdentityT $ callCC $ \ c -> runIdentityT (f (IdentityT . c))
-
--- | Lift a @catchError@ operation to the new monadTrans.
-liftCatch :: (m a -> (e -> m a) -> m a) ->
-    IdentityT m a -> (e -> IdentityT m a) -> IdentityT m a
-liftCatch f m h = IdentityT $ f (runIdentityT m) (runIdentityT . h)
-*/

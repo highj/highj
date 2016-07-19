@@ -4,11 +4,9 @@ import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.highj.data.Maybe;
 import org.highj.data.transformer.maybe.*;
+import org.highj.typeclass1.contravariant.Contravariant;
 import org.highj.typeclass1.functor.Functor;
-import org.highj.typeclass1.monad.Applicative;
-import org.highj.typeclass1.monad.Apply;
-import org.highj.typeclass1.monad.Monad;
-import org.highj.typeclass1.monad.MonadRec;
+import org.highj.typeclass1.monad.*;
 
 /**
  * @param <M> the wrapped monad
@@ -33,7 +31,7 @@ public class MaybeT<M, A> implements __2<MaybeT.µ, M, A> {
 
     @SuppressWarnings("unchecked")
     public static <M, A> MaybeT<M, A> narrow(__<__<µ, M>, A> value) {
-        return (MaybeT) value;
+        return (MaybeT<M, A>) value;
     }
 
     public static <M> MaybeTFunctor<M> functor(final Functor<M> functorM) {
@@ -59,87 +57,12 @@ public class MaybeT<M, A> implements __2<MaybeT.µ, M, A> {
     public static <M> MaybeTMonadTrans<M> monadTrans(final Monad<M> mMonad) {
         return () -> mMonad;
     }
-    
+
     public static <M> MaybeTMonadRec<M> monadRec(final MonadRec<M> mMonadRec) {
         return () -> mMonadRec;
     }
 
+    public static <M> MaybeTContravariant<M> contravariant(final Contravariant<M> mContravariant) {
+        return () -> mContravariant;
+    }
 }
-
-
-/*
-
--- | Transform the computation inside a @MaybeT@.
---
--- * @'runMaybeT' ('mapMaybeT' f m) = f ('runMaybeT' m)@
-mapMaybeT :: (m (Maybe a) -> n (Maybe b)) -> MaybeT m a -> MaybeT n b
-mapMaybeT f = MaybeT . f . runMaybeT
-
-instance (Foldable f) => Foldable (MaybeT f) where
-    foldMap f (MaybeT a) = foldMap (foldMap f) a
-
-instance (Traversable f) => Traversable (MaybeT f) where
-    traverse f (MaybeT a) = MaybeT <$> traverse (traverse f) a
-
-instance (Functor m, Monad m) => Applicative (MaybeT m) where
-    pure = return
-    (<*>) = ap
-
-instance (Functor m, Monad m) => Alternative (MaybeT m) where
-    empty = mzero
-    (<|>) = mplus
-
-instance (Monad m) => Monad (MaybeT m) where
-    fail __ = MaybeT (return Nothing)
-    return = lift . return
-    x >>= f = MaybeT $ do
-        v <- runMaybeT x
-        case v of
-            Nothing -> return Nothing
-            JustLazy y  -> runMaybeT (f y)
-
-instance (Monad m) => MonadPlus (MaybeT m) where
-    mzero = MaybeT (return Nothing)
-    mplus x y = MaybeT $ do
-        v <- runMaybeT x
-        case v of
-            Nothing -> runMaybeT y
-            JustLazy __  -> return v
-
-instance (MonadFix m) => MonadFix (MaybeT m) where
-    mfix f = MaybeT (mfix (runMaybeT . f . unJust))
-      where unJust = fromMaybe (error "mfix MaybeT: Nothing")
-
-instance MonadTrans MaybeT where
-    lift = MaybeT . liftM JustLazy
-
-instance (MonadIO m) => MonadIO (MaybeT m) where
-    liftIO = lift . liftIO
-
--- | Lift a @callCC@ operation to the new monadTrans.
-liftCallCC :: (((Maybe a -> m (Maybe b)) -> m (Maybe a)) ->
-    m (Maybe a)) -> ((a -> MaybeT m b) -> MaybeT m a) -> MaybeT m a
-liftCallCC callCC f =
-    MaybeT $ callCC $ \ c -> runMaybeT (f (MaybeT . c . JustLazy))
-
--- | Lift a @catchError@ operation to the new monadTrans.
-liftCatch :: (m (Maybe a) -> (e -> m (Maybe a)) -> m (Maybe a)) ->
-    MaybeT m a -> (e -> MaybeT m a) -> MaybeT m a
-liftCatch f m h = MaybeT $ f (runMaybeT m) (runMaybeT . h)
-
--- | Lift a @listen@ operation to the new monadTrans.
-liftListen :: Monad m =>
-    (m (Maybe a) -> m (Maybe a,w)) -> MaybeT m a -> MaybeT m (a,w)
-liftListen listen = mapMaybeT $ \ m -> do
-    (a, w) <- listen m
-    return $! fmap (\ r -> (r, w)) a
-
--- | Lift a @pass@ operation to the new monadTrans.
-liftPass :: Monad m => (m (Maybe a,w -> w) -> m (Maybe a)) ->
-    MaybeT m (a,w -> w) -> MaybeT m a
-liftPass pass = mapMaybeT $ \ m -> pass $ do
-    a <- m
-    return $! case a of
-        Nothing     -> (Nothing, id)
-        JustLazy (v, f) -> (JustLazy v, f)
-*/
