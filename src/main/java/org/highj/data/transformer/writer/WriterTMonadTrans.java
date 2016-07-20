@@ -12,10 +12,10 @@ import org.highj.typeclass1.monad.MonadTrans;
 public interface WriterTMonadTrans<W, M> extends WriterTMonad<W, M>, MonadTrans<__<WriterT.µ, W>, M> {
 
     @Override
-    public Monad<M> get();
+    Monad<M> getM();
 
     @Override
-    public default <A> WriterT<W, M, A> lift(__<M, A> nestedA) {
-        return () -> get().map((A a) -> T2.of(a, wMonoid().identity()), nestedA);
+    default <A> WriterT<W, M, A> lift(__<M, A> nestedA) {
+        return () -> getM().map((A a) -> T2.of(a, getW().identity()), nestedA);
     }
 }

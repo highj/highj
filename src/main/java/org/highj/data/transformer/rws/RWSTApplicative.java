@@ -19,13 +19,13 @@ import org.highj.typeclass1.monad.Monad;
 public interface RWSTApplicative<R,W,S,M> extends RWSTApply<R,W,S,M>, Applicative<__<__<__<__<RWST.µ,R>,W>,S>,M>> {
     
     @Override
-    public Monad<M> m();
+    public Monad<M> getM();
     
     @Override
-    public Monoid<W> w();
+    public Monoid<W> getW();
 
     @Override
     public default <A> RWST<R, W, S, M, A> pure(A a) {
-        return (R r, S s) -> m().pure(T3.of(a,s,w().identity()));
+        return (R r, S s) -> getM().pure(T3.of(a,s, getW().identity()));
     }
 }

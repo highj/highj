@@ -18,6 +18,6 @@ public interface RWSTMonadTrans<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadTrans<
 
     @Override
     public default <A> RWST<R, W, S, M, A> lift(__<M, A> nestedA) {
-        return (R r, S s) -> m().map((A a) -> T3.of(a,s,w().identity()), nestedA);
+        return (R r, S s) -> getM().map((A a) -> T3.of(a,s, getW().identity()), nestedA);
     }
 }

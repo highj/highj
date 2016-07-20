@@ -11,12 +11,12 @@ import org.highj.typeclass1.monad.Applicative;
  */
 public interface WriterTApplicative<W, M> extends WriterTApply<W, M>, Applicative<__<__<WriterT.µ, W>, M>> {
 
-    public Monoid<W> wMonoid();
+    Monoid<W> getW();
 
-    public Applicative<M> get();
+    Applicative<M> getM();
 
     @Override
-    public default <A> WriterT<W, M, A> pure(A a) {
-        return () -> get().pure(T2.of(a, wMonoid().identity()));
+    default <A> WriterT<W, M, A> pure(A a) {
+        return () -> getM().pure(T2.of(a, getW().identity()));
     }
 }

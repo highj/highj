@@ -12,12 +12,12 @@ import org.highj.typeclass0.group.Monoid;
  */
 public interface MonadWriter<W,M> extends Monad<M> {
 
-    public Monoid<W> wMonoid();
+    Monoid<W> getW();
 
-    public __<M,T0> tell(W w);
+    __<M,T0> tell(W w);
 
-    public <A> __<M,T2<A,W>> listen(__<M,A> nestedA);
+    <A> __<M,T2<A,W>> listen(__<M,A> nestedA);
 
-    public <A> __<M,A> pass(__<M,T2<A,Function<W,W>>> m);
+    <A> __<M,A> pass(__<M,T2<A,Function<W,W>>> m);
 }
 

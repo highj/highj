@@ -8,14 +8,8 @@ package org.highj.data.transformer;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__3;
 import org.highj.data.Either;
-import org.highj.data.transformer.error.ErrorTApplicative;
-import org.highj.data.transformer.error.ErrorTApply;
-import org.highj.data.transformer.error.ErrorTBind;
-import org.highj.data.transformer.error.ErrorTFunctor;
-import org.highj.data.transformer.error.ErrorTMonad;
-import org.highj.data.transformer.error.ErrorTMonadError;
-import org.highj.data.transformer.error.ErrorTMonadRec;
-import org.highj.data.transformer.error.ErrorTMonadTrans;
+import org.highj.data.transformer.error.*;
+import org.highj.typeclass1.contravariant.Contravariant;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Applicative;
 import org.highj.typeclass1.monad.Apply;
@@ -23,51 +17,55 @@ import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadRec;
 
 /**
- *
  * @author clintonselke
  */
-public interface ErrorT<E,M,A> extends __3<ErrorT.µ,E,M,A> {
-    public static class µ {}
-    
-    public static <E,M,A> ErrorT<E,M,A> narrow(__3<µ,E,M,A> a) {
-        return (ErrorT<E,M,A>)a;
+public interface ErrorT<E, M, A> extends __3<ErrorT.µ, E, M, A> {
+    interface µ {
     }
-    
-    public static <E,M,A> ErrorT<E,M,A> narrow(__<__<__<µ, E>, M>, A> a) {
-        return (ErrorT<E,M,A>)a;
+
+    static <E, M, A> ErrorT<E, M, A> narrow(__3<µ, E, M, A> a) {
+        return (ErrorT<E, M, A>) a;
     }
-    
-    public __<M,Either<E,A>> run();
-    
-    public static <E,M> ErrorTFunctor<E,M> functor(Functor<M> mFunctor) {
-        return (ErrorTFunctor<E,M>)() -> mFunctor;
+
+    static <E, M, A> ErrorT<E, M, A> narrow(__<__<__<µ, E>, M>, A> a) {
+        return (ErrorT<E, M, A>) a;
     }
-    
-    public static <E,M> ErrorTApply<E,M> apply(Apply<M> mApply) {
-        return (ErrorTApply<E,M>)() -> mApply;
+
+    __<M, Either<E, A>> run();
+
+    static <E, M> ErrorTFunctor<E, M> functor(Functor<M> mFunctor) {
+        return () -> mFunctor;
     }
-    
-    public static <E,M> ErrorTApplicative<E,M> applicative(Applicative<M> mApplicative) {
-        return (ErrorTApplicative<E,M>)() -> mApplicative;
+
+    static <E, M> ErrorTApply<E, M> apply(Apply<M> mApply) {
+        return () -> mApply;
     }
-    
-    public static <E,M> ErrorTBind<E,M> bind(Monad<M> mMonad) {
-        return (ErrorTBind<E,M>)() -> mMonad;
+
+    static <E, M> ErrorTApplicative<E, M> applicative(Applicative<M> mApplicative) {
+        return () -> mApplicative;
     }
-    
-    public static <E,M> ErrorTMonad<E,M> monad(Monad<M> mMonad) {
-        return (ErrorTMonad<E,M>)() -> mMonad;
+
+    static <E, M> ErrorTBind<E, M> bind(Monad<M> mMonad) {
+        return () -> mMonad;
     }
-    
-    public static <E,M> ErrorTMonadError<E,M> monadError(Monad<M> mMonad) {
-        return (ErrorTMonadError<E,M>)() -> mMonad;
+
+    static <E, M> ErrorTMonad<E, M> monad(Monad<M> mMonad) {
+        return () -> mMonad;
     }
-    
-    public static <E,M> ErrorTMonadRec<E,M> monadRec(MonadRec<M> mMonadRec) {
-        return (ErrorTMonadRec<E,M>)() -> mMonadRec;
+
+    static <E, M> ErrorTMonadError<E, M> monadError(Monad<M> mMonad) {
+        return () -> mMonad;
     }
-    
-    public static <E,M> ErrorTMonadTrans<E,M> monadTrans(Monad<M> mMonad) {
-        return (ErrorTMonadTrans<E,M>)() -> mMonad;
+
+    static <E, M> ErrorTMonadRec<E, M> monadRec(MonadRec<M> mMonadRec) {
+        return () -> mMonadRec;
+    }
+
+    static <E, M> ErrorTMonadTrans<E, M> monadTrans(Monad<M> mMonad) {
+        return () -> mMonad;
+    }
+
+    static <E, M> ErrorTContravariant<E, M> contravariant(Contravariant<M> mContravariant) {
+        return () -> mContravariant;
     }
 }

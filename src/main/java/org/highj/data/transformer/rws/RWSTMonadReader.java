@@ -19,7 +19,7 @@ public interface RWSTMonadReader<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadReade
 
     @Override
     public default RWST<R, W, S, M, R> ask() {
-        return (R r, S s) -> m().pure(T3.of(r, s, w().identity()));
+        return (R r, S s) -> getM().pure(T3.of(r, s, getW().identity()));
     }
 
     @Override

@@ -9,5 +9,5 @@ import org.highj.typeclass1.monad.Monad;
  */
 public interface WriterTMonad<W, M> extends WriterTApplicative<W, M>, WriterTBind<W, M>, Monad<__<__<WriterT.µ, W>, M>> {
 
-    public Monad<M> get();
+    Monad<M> getM();
 }

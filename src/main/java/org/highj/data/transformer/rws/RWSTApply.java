@@ -20,16 +20,16 @@ import org.highj.typeclass1.monad.Bind;
 public interface RWSTApply<R,W,S,M> extends RWSTFunctor<R,W,S,M>, Apply<__<__<__<__<RWST.µ,R>,W>,S>,M>> {
     
     @Override
-    public Bind<M> m();
+    public Bind<M> getM();
     
-    public Semigroup<W> w();
+    public Semigroup<W> getW();
 
     @Override
     public default <A, B> RWST<R, W, S, M, B> ap(__<__<__<__<__<RWST.µ, R>, W>, S>, M>, Function<A, B>> fn, __<__<__<__<__<RWST.µ, R>, W>, S>, M>, A> nestedA) {
-        return (R r, S s) -> m().bind(
+        return (R r, S s) -> getM().bind(
             RWST.narrow(fn).run(r, s),
-            (T3<Function<A,B>,S,W> x) -> m().map(
-                (T3<A,S,W> x2) -> T3.of(x._1().apply(x2._1()), x2._2(), w().apply(x._3(), x2._3())),
+            (T3<Function<A,B>,S,W> x) -> getM().map(
+                (T3<A,S,W> x2) -> T3.of(x._1().apply(x2._1()), x2._2(), getW().apply(x._3(), x2._3())),
                 RWST.narrow(nestedA).run(r, x._2())
             )
         );

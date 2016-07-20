@@ -19,11 +19,11 @@ public interface RWSTMonadState<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadState<
 
     @Override
     public default RWST<R, W, S, M, S> get() {
-        return (R r, S s) -> m().pure(T3.of(s, s, w().identity()));
+        return (R r, S s) -> getM().pure(T3.of(s, s, getW().identity()));
     }
 
     @Override
     public default RWST<R, W, S, M, T0> put(S s) {
-        return (R r, S oldS) -> m().pure(T3.of(T0.of(), s, w().identity()));
+        return (R r, S oldS) -> getM().pure(T3.of(T0.of(), s, getW().identity()));
     }
 }

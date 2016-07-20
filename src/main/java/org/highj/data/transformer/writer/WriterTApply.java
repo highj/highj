@@ -13,14 +13,14 @@ import java.util.function.Function;
  */
 public interface WriterTApply<W, M> extends WriterTFunctor<W, M>, Apply<__<__<WriterT.µ, W>, M>> {
 
-    public Semigroup<W> wSemigroup();
+    Semigroup<W> getW();
 
-    public Apply<M> get();
+    Apply<M> getM();
 
     @Override
-    public default <A, B> WriterT<W, M, B> ap(__<__<__<WriterT.µ, W>, M>, Function<A, B>> fn, __<__<__<WriterT.µ, W>, M>, A> nestedA) {
-        return () -> get().apply2(
-                (T2<Function<A, B>, W> x1) -> (T2<A, W> x2) -> T2.of(x1._1().apply(x2._1()), wSemigroup().apply(x1._2(), x2._2())),
+    default <A, B> WriterT<W, M, B> ap(__<__<__<WriterT.µ, W>, M>, Function<A, B>> fn, __<__<__<WriterT.µ, W>, M>, A> nestedA) {
+        return () -> getM().apply2(
+                (T2<Function<A, B>, W> x1) -> (T2<A, W> x2) -> T2.of(x1._1().apply(x2._1()), getW().apply(x1._2(), x2._2())),
                 WriterT.narrow(fn).run(),
                 WriterT.narrow(nestedA).run()
         );

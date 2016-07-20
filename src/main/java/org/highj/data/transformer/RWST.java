@@ -50,11 +50,11 @@ public interface RWST<R,W,S,M,A> extends __5<RWST.µ,R,W,S,M,A> {
     public static <R,W,S,M> RWSTApply<R,W,S,M> apply(Bind<M> mBind, Semigroup<W> wSemigroup) {
         return new RWSTApply<R,W,S,M>() {
             @Override
-            public Bind<M> m() {
+            public Bind<M> getM() {
                 return mBind;
             }
             @Override
-            public Semigroup<W> w() {
+            public Semigroup<W> getW() {
                 return wSemigroup;
             }
         };
@@ -63,11 +63,11 @@ public interface RWST<R,W,S,M,A> extends __5<RWST.µ,R,W,S,M,A> {
     public static <R,W,S,M> RWSTApplicative<R,W,S,M> applicative(Monad<M> mMonad, Monoid<W> wMonoid) {
         return new RWSTApplicative<R,W,S,M>() {
             @Override
-            public Monad<M> m() {
+            public Monad<M> getM() {
                 return mMonad;
             }
             @Override
-            public Monoid<W> w() {
+            public Monoid<W> getW() {
                 return wMonoid;
             }
         };
@@ -76,11 +76,11 @@ public interface RWST<R,W,S,M,A> extends __5<RWST.µ,R,W,S,M,A> {
     public static <R,W,S,M> RWSTBind<R,W,S,M> bind(Monad<M> mMonad, Semigroup<W> wSemigroup) {
         return new RWSTBind<R,W,S,M>() {
             @Override
-            public Bind<M> m() {
+            public Bind<M> getM() {
                 return mMonad;
             }
             @Override
-            public Semigroup<W> w() {
+            public Semigroup<W> getW() {
                 return wSemigroup;
             }
         };
@@ -89,11 +89,11 @@ public interface RWST<R,W,S,M,A> extends __5<RWST.µ,R,W,S,M,A> {
     public static <R,W,S,M> RWSTMonad<R,W,S,M> monad(Monad<M> mMonad, Monoid<W> wMonoid) {
         return new RWSTMonad<R,W,S,M>() {
             @Override
-            public Monad<M> m() {
+            public Monad<M> getM() {
                 return mMonad;
             }
             @Override
-            public Monoid<W> w() {
+            public Monoid<W> getW() {
                 return wMonoid;
             }
         };
@@ -102,11 +102,11 @@ public interface RWST<R,W,S,M,A> extends __5<RWST.µ,R,W,S,M,A> {
     public static <R,W,S,M> RWSTMonadReader<R,W,S,M> monadReader(Monad<M> mMonad, Monoid<W> wMonoid) {
         return new RWSTMonadReader<R,W,S,M>() {
             @Override
-            public Monad<M> m() {
+            public Monad<M> getM() {
                 return mMonad;
             }
             @Override
-            public Monoid<W> w() {
+            public Monoid<W> getW() {
                 return wMonoid;
             }
         };
@@ -115,11 +115,11 @@ public interface RWST<R,W,S,M,A> extends __5<RWST.µ,R,W,S,M,A> {
     public static <R,W,S,M> RWSTMonadWriter<R,W,S,M> monadWriter(Monad<M> mMonad, Monoid<W> wMonoid) {
         return new RWSTMonadWriter<R,W,S,M>() {
             @Override
-            public Monad<M> m() {
+            public Monad<M> getM() {
                 return mMonad;
             }
             @Override
-            public Monoid<W> w() {
+            public Monoid<W> getW() {
                 return wMonoid;
             }
         };
@@ -128,11 +128,11 @@ public interface RWST<R,W,S,M,A> extends __5<RWST.µ,R,W,S,M,A> {
     public static <R,W,S,M> RWSTMonadState<R,W,S,M> monadState(Monad<M> mMonad, Monoid<W> wMonoid) {
         return new RWSTMonadState<R,W,S,M>() {
             @Override
-            public Monad<M> m() {
+            public Monad<M> getM() {
                 return mMonad;
             }
             @Override
-            public Monoid<W> w() {
+            public Monoid<W> getW() {
                 return wMonoid;
             }
         };
@@ -141,11 +141,11 @@ public interface RWST<R,W,S,M,A> extends __5<RWST.µ,R,W,S,M,A> {
     public static <R,W,S,M> RWSTMonadRWS<R,W,S,M> monadRWS(Monad<M> mMonad, Monoid<W> wMonoid) {
         return new RWSTMonadRWS<R,W,S,M>() {
             @Override
-            public Monad<M> m() {
+            public Monad<M> getM() {
                 return mMonad;
             }
             @Override
-            public Monoid<W> w() {
+            public Monoid<W> getW() {
                 return wMonoid;
             }
         };
@@ -154,11 +154,11 @@ public interface RWST<R,W,S,M,A> extends __5<RWST.µ,R,W,S,M,A> {
     public static <R,W,S,M> RWSTMonadTrans<R,W,S,M> monadTrans(Monad<M> mMonad, Monoid<W> wMonoid) {
         return new RWSTMonadTrans<R,W,S,M>() {
             @Override
-            public Monad<M> m() {
+            public Monad<M> getM() {
                 return mMonad;
             }
             @Override
-            public Monoid<W> w() {
+            public Monoid<W> getW() {
                 return wMonoid;
             }
         };
@@ -167,11 +167,11 @@ public interface RWST<R,W,S,M,A> extends __5<RWST.µ,R,W,S,M,A> {
     public static <R,W,S,M> RWSTMonadRec<R,W,S,M> monadRec(MonadRec<M> mMonadRec, Monoid<W> wMonoid) {
         return new RWSTMonadRec<R,W,S,M>() {
             @Override
-            public MonadRec<M> m() {
+            public MonadRec<M> getM() {
                 return mMonadRec;
             }
             @Override
-            public Monoid<W> w() {
+            public Monoid<W> getW() {
                 return wMonoid;
             }
         };
