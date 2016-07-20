@@ -1,4 +1,4 @@
-package org.highj.data.optic;
+package org.highj.optic;
 
 import java.util.function.Function;
 
