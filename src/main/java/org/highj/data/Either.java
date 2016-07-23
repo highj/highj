@@ -92,10 +92,24 @@ public abstract class Either<A, B> implements __2<Either.µ, A, B> {
                 b -> Either.<C, D>Right(rightFn.apply(b)));
     }
 
+    /**
+     * Transforms the left side of {@link Either}.
+     *
+     * @param leftFn transformation function
+     * @param <C> new Left type
+     * @return the converted {@link Either}
+     */
     public <C> Either<C, B> leftMap(Function<? super A, ? extends C> leftFn) {
         return bimap(leftFn, Function.<B>identity());
     }
 
+    /**
+     * Transforms the right side of {@link Either}.
+     *
+     * @param rightFn transformation function
+     * @param <C> new Right type
+     * @return the converted {@link Either}
+     */
     public <C> Either<A, C> rightMap(Function<? super B, ? extends C> rightFn) {
         return bimap(Function.<A>identity(), rightFn);
     }
@@ -454,18 +468,8 @@ public abstract class Either<A, B> implements __2<Either.µ, A, B> {
      * @param <B> Right type
      * @return the {@link Eq} instance
      */
-    public static <A, B> Eq<Either<A, B>> eq(Eq<A> eqA, Eq<B> eqB) {
-        return (one, two) -> {
-            if (one == null && two == null) {
-                return true;
-            } else if (one == null || two == null) {
-                return false;
-            } else if (one.isLeft() && two.isLeft()) {
-                return eqA.eq(one.getLeft(), two.getLeft());
-            } else {
-                return one.isRight() && two.isRight() && eqB.eq(one.getRight(), two.getRight());
-            }
-        };
+    public static <A, B> EitherEq<A, B> eq(Eq<A> eqA, Eq<B> eqB) {
+        return () -> T2.of(eqA, eqB);
     }
 
     /**
@@ -478,8 +482,8 @@ public abstract class Either<A, B> implements __2<Either.µ, A, B> {
      * @param <B>  the Right type
      * @return the {@link Ord} instance
      */
-    public static <A, B> Ord<Either<A, B>> ord(Ord<A> ordA, Ord<B> ordB) {
-        return (EitherOrd<A, B>) () -> T2.of(ordA, ordB);
+    public static <A, B> EitherOrd<A, B> ord(Ord<A> ordA, Ord<B> ordB) {
+        return () -> T2.of(ordA, ordB);
     }
 
     /**

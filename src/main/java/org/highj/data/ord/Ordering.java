@@ -277,7 +277,7 @@ public enum Ordering {
      * @return intermediate result for fluent interface
      */
     public <R> CaseLT<R> caseLT(Supplier<R> lessThan) {
-        return new CaseLT<>(this, Maybe.JustWhenTrue(this == LT, lessThan));
+        return new CaseLT<>(Maybe.JustWhenTrue(this == LT, lessThan));
     }
 
     /**
@@ -285,17 +285,15 @@ public enum Ordering {
      *
      * @param <R> the result type
      */
-    public static class CaseLT<R> {
-        private final Ordering ordering;
+    public class CaseLT<R> {
         private final Maybe<R> value;
 
-        private CaseLT(Ordering ordering, Maybe<R> value) {
-            this.ordering = ordering;
+        private CaseLT(Maybe<R> value) {
             this.value = value;
         }
 
         public CaseEQ<R> caseEQ(Supplier<R> equal) {
-            return new CaseEQ<>(value.orElse(Maybe.JustWhenTrue(ordering == EQ, equal)));
+            return new CaseEQ<>(value.orElse(Maybe.JustWhenTrue(Ordering.this == EQ, equal)));
         }
     }
 
