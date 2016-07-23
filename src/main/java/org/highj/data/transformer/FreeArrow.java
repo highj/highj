@@ -4,6 +4,7 @@ import org.derive4j.Data;
 import org.derive4j.Derive;
 import org.derive4j.Flavour;
 import org.derive4j.Visibility;
+import org.derive4j.hkt.Leibniz;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.derive4j.hkt.__4;
@@ -24,7 +25,7 @@ public abstract class FreeArrow<F,ARR,B,C> implements __4<FreeArrow.µ,F,ARR,B,C
     }
     
     public interface Cases<R,F,ARR,B,C> {
-        R Id(F1<B,C> id);
+        R Id(Leibniz<B,C> idLeibniz);
         R Compose(Compose<F,ARR,B,?,C> compose);
         R Arr(F1<B,C> arrF);
         R First(First<F,ARR,?,?,?,B,C> first);
@@ -58,34 +59,34 @@ public abstract class FreeArrow<F,ARR,B,C> implements __4<FreeArrow.µ,F,ARR,B,C
     
     public static class First<F,ARR,B,C,D,E,G> {
         private final FreeArrow<F,ARR,B,C> _a;
-        private final F1<E,T2<B,D>> _f;
-        private final F1<T2<C,D>,G> _g;
+        private final Leibniz<E,T2<B,D>> _leibniz1;
+        private final Leibniz<T2<C,D>,G> _leibniz2;
         
-        private First(FreeArrow<F,ARR,B,C> a, F1<E,T2<B,D>> f, F1<T2<C,D>,G> g) {
+        private First(FreeArrow<F,ARR,B,C> a, Leibniz<E,T2<B,D>> leibniz1, Leibniz<T2<C,D>,G> leibniz2) {
             this._a = a;
-            this._f = f;
-            this._g = g;
+            this._leibniz1 = leibniz1;
+            this._leibniz2 = leibniz2;
         }
         
-        public static <F,ARR,B,C,D,E,G> First<F,ARR,B,C,D,E,G> create(FreeArrow<F,ARR,B,C> a, F1<E,T2<B,D>> f, F1<T2<C,D>,G> g) {
-            return new First<>(a, f, g);
+        public static <F,ARR,B,C,D> First<F,ARR,B,C,D,T2<B,D>,T2<C,D>> create(FreeArrow<F,ARR,B,C> a) {
+            return new First<>(a, Leibniz.refl(), Leibniz.refl());
         }
         
         public FreeArrow<F,ARR,B,C> a() {
             return _a;
         }
         
-        public F1<E,T2<B,D>> f() {
-            return _f;
+        public Leibniz<E,T2<B,D>> leibniz1() {
+            return _leibniz1;
         }
         
-        public F1<T2<C,D>,G> g() {
-            return _g;
+        public Leibniz<T2<C,D>,G> leibniz2() {
+            return _leibniz2;
         }
     }
     
     public static <F,ARR,B> FreeArrow<F,ARR,B,B> id() {
-        return FreeArrowImpl.Id(F1.id());
+        return FreeArrowImpl.Id(Leibniz.refl());
     }
     
     public static <F,ARR,B,C> FreeArrow<F,ARR,B,C> arr(F1<B,C> f) {
@@ -97,7 +98,7 @@ public abstract class FreeArrow<F,ARR,B,C> implements __4<FreeArrow.µ,F,ARR,B,C
     }
     
     public static <F,ARR,B,C,D> FreeArrow<F,ARR,T2<B,D>,T2<C,D>> first(FreeArrow<F,ARR,B,C> a) {
-        return FreeArrowImpl.First(First.<F,ARR,B,C,D,T2<B,D>,T2<C,D>>create(a, F1.id(), F1.id()));
+        return FreeArrowImpl.First(First.<F,ARR,B,C,D>create(a));
     }
     
     public static <F,ARR,B,C> FreeArrow<F,ARR,B,C> liftF(__2<F,B,C> f) {
@@ -111,7 +112,7 @@ public abstract class FreeArrow<F,ARR,B,C> implements __4<FreeArrow.µ,F,ARR,B,C
     public __2<ARR,B,C> runFree(Arrow<ARR> arrow, NF2<F,ARR> interp) {
         return FreeArrowImpl
             .<F,ARR,B,C>cases()
-            .Id((F1<B,C> id) -> arrow.dot(arrow.arr(id), arrow.<B>identity()))
+            .Id((Leibniz<B,C> leibniz) -> __2.coerce(leibniz.subst(arrow.<B>identity())))
             .Compose((Compose<F,ARR,B,?,C> compose) -> runCompose(arrow, interp, compose))
             .Arr((F1<B,C> f) -> arrow.arr(f))
             .First((First<F,ARR,?,?,?,B,C> first) -> runFirst(arrow, interp, first))
@@ -125,13 +126,7 @@ public abstract class FreeArrow<F,ARR,B,C> implements __4<FreeArrow.µ,F,ARR,B,C
     }
     
     private static <F,ARR,B,C,D,E,G> __2<ARR,E,G> runFirst(Arrow<ARR> arrow, NF2<F,ARR> interp, First<F,ARR,B,C,D,E,G> first) {
-        return arrow.dot(
-            arrow.arr(first.g()),
-            arrow.dot(
-                arrow.first(first.a().runFree(arrow, interp)),
-                arrow.arr(first.f())
-            )
-        );
+        return __2.coerce(first.leibniz1().symm().<ARR,G>lift2().coerce(first.leibniz2().subst(arrow.first(first.a().runFree(arrow, interp)))));
     }
 
     public static <F,ARR> FreeArrowSemigroupoid<F,ARR> semigroupoid() {
