@@ -6,23 +6,29 @@
 package org.highj.data;
 
 import org.derive4j.hkt.__;
+import org.highj.data.instance.intmap.IntMapFunctor;
 import org.highj.function.Strings;
 import org.highj.data.coroutine.ProducerT;
 import org.highj.data.tuple.T0;
 import org.highj.data.tuple.T1;
 import org.highj.data.tuple.T2;
+import org.highj.util.ArrayUtils;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.function.Function;
 
 /**
  * @author clintonselke
  */
-public class IntMap<A> implements Iterable<T2<Integer,A>>{
+public class IntMap<A> implements __<IntMap.µ, A>, Iterable<T2<Integer,A>>{
     private static final int NUM_BRANCHING_BITS = 5;
     private static final int NUM_BRANCHES = 1 << NUM_BRANCHING_BITS;
     private static final int MASK = (1 << NUM_BRANCHING_BITS) - 1;
     private static final Node<?>[] EMPTY_ARRAY = new Node<?>[NUM_BRANCHES];
+
+    public interface µ{
+    }
 
     static {
         Arrays.fill(EMPTY_ARRAY, Empty.empty());
@@ -32,6 +38,11 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
 
     private IntMap(Node<A> root) {
         this.root = root;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <A> IntMap<A> narrow(__<IntMap.µ, A> hkt) {
+        return (IntMap<A>) hkt;
     }
 
     private static final IntMap<?> EMPTY = new IntMap<>(Empty.empty());
@@ -67,27 +78,33 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
         return root2 == root ? this : new IntMap<>(root2);
     }
 
+    public <B> IntMap<B> mapValues(Function<? super A, ? extends B> fn) {
+        return new IntMap<B>(root.mapValues(fn));
+    }
+
     @Override
     public String toString() {
         return root.toString();
     }
 
-    private static abstract class Node<A> {
+    private interface Node<A> {
 
-        public abstract boolean isEmpty();
+        boolean isEmpty();
 
-        public abstract int size();
+        int size();
 
-        public abstract Node<A> insert(int key, A value);
+        Node<A> insert(int key, A value);
 
-        public abstract Maybe<A> lookup(int key);
+        Maybe<A> lookup(int key);
 
-        public abstract Node<A> delete(int key);
+        Node<A> delete(int key);
 
-        public abstract __<__<__<ProducerT.µ,T2<Integer,A>>,T1.µ>,T0> generator(int shift, int key);
+        <B> Node<B> mapValues(Function<? super A, ? extends B> fn);
+
+        __<__<__<ProducerT.µ,T2<Integer,A>>,T1.µ>,T0> generator(int shift, int key);
     }
 
-    private static class Empty<A> extends Node<A> {
+    private static class Empty<A> implements Node<A> {
         private static final Empty<?> EMPTY = new Empty<>();
 
         @SuppressWarnings("unchecked")
@@ -134,12 +151,17 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
         }
 
         @Override
+        public <B> Node<B> mapValues(Function<? super A, ? extends B> fn) {
+            return empty();
+        }
+
+        @Override
         public __<__<__<ProducerT.µ,T2<Integer,A>>,T1.µ>,T0> generator(int shift, int key) {
             return ProducerT.<T2<Integer,A>,T1.µ>applicative().pure(T0.of());
         }
     }
 
-    private static class Leaf<A> extends Node<A> {
+    private static class Leaf<A> implements Node<A> {
         private final A value;
 
         private Leaf(A value) {
@@ -191,12 +213,17 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
         }
 
         @Override
+        public <B> Node<B> mapValues(Function<? super A, ? extends B> fn) {
+            return new Leaf<B>(fn.apply(value));
+        }
+
+        @Override
         public __<__<__<ProducerT.µ, T2<Integer, A>>, T1.µ>, T0> generator(int shift, int key) {
             return ProducerT.yield(T2.of(key, value));
         }
     }
 
-    private static class Branch<A> extends Node<A> {
+    private static class Branch<A> implements Node<A> {
         private final Node<A>[] nodes;
 
         private Branch(Node<A>[] nodes) {
@@ -259,6 +286,11 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
         }
 
         @Override
+        public <B> Node<B> mapValues(Function<? super A, ? extends B> fn) {
+            return new Branch<B>(ArrayUtils.map(nodes, n -> n.mapValues(fn), emptyArray()));
+        }
+
+        @Override
         public String toString() {
             return Strings.mkString("(Branch ", " ", ")", nodes);
         }
@@ -277,6 +309,9 @@ public class IntMap<A> implements Iterable<T2<Integer,A>>{
             );
         }
     }
+
+    public static IntMapFunctor functor = new IntMapFunctor() {
+    };
 
     @SuppressWarnings("unchecked")
     private static <A> Node<A>[] emptyArray() {
