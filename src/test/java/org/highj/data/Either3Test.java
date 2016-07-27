@@ -2,14 +2,21 @@ package org.highj.data;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__3;
+import org.highj.data.eq.Eq;
+import org.highj.data.instance.either3.*;
+import org.highj.data.ord.Ord;
+import org.highj.data.tuple.T2;
+import org.highj.function.Strings;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.highj.data.ord.Ordering.*;
 
 public class Either3Test {
 
@@ -359,4 +366,160 @@ public class Either3Test {
         ).isEqualTo("R4712");
     }
 
+    @Test
+    public void eq() {
+        Either3Eq<Integer, String, Long> eq = Either3.eq(
+                Eq.fromEquals(),
+                Strings.eqIgnoreCase,
+                Eq.fromEquals());
+        Either3<Integer, String, Long> left = Either3.Left(42);
+        Either3<Integer, String, Long> middle = Either3.Middle("foo");
+        Either3<Integer, String, Long> right = Either3.Right(4711L);
+
+        assertThat(eq.eq(null, null)).isTrue();
+
+        assertThat(eq.eq(left, null)).isFalse();
+        assertThat(eq.eq(null, left)).isFalse();
+
+        assertThat(eq.eq(left, middle)).isFalse();
+        assertThat(eq.eq(left, right)).isFalse();
+        assertThat(eq.eq(middle, right)).isFalse();
+
+        assertThat(eq.eq(left, Either3.Left(100))).isFalse();
+        assertThat(eq.eq(middle, Either3.Middle("FOOO"))).isFalse();
+        assertThat(eq.eq(right, Either3.Right(4712L))).isFalse();
+
+        assertThat(eq.eq(left, Either3.Left(42))).isTrue();
+        assertThat(eq.eq(middle, Either3.Middle("FoO"))).isTrue();
+        assertThat(eq.eq(right, Either3.Right(4711L))).isTrue();
+    }
+
+    @Test
+    public void ord() {
+        Either3Ord<Integer, String, Long> ord = Either3.ord(
+                Ord.<Integer>fromComparable(),
+                Strings.ordIgnoreCase,
+                Ord.<Long>fromComparable());
+        Either3<Integer, String, Long> left = Either3.Left(42);
+        Either3<Integer, String, Long> middle = Either3.Middle("foo");
+        Either3<Integer, String, Long> right = Either3.Right(4711L);
+
+        assertThat(ord.cmp(null, null)).isEqualTo(EQ);
+
+        assertThat(ord.cmp(left, null)).isEqualTo(GT);
+        assertThat(ord.cmp(null, left)).isEqualTo(LT);
+
+        assertThat(ord.cmp(left, middle)).isEqualTo(LT);
+        assertThat(ord.cmp(left, right)).isEqualTo(LT);
+        assertThat(ord.cmp(middle, right)).isEqualTo(LT);
+
+        assertThat(ord.cmp(middle, left)).isEqualTo(GT);
+        assertThat(ord.cmp(right, left)).isEqualTo(GT);
+        assertThat(ord.cmp(right, middle)).isEqualTo(GT);
+
+        assertThat(ord.cmp(left, Either3.Left(100))).isEqualTo(LT);
+        assertThat(ord.cmp(middle, Either3.Middle("FOOO"))).isEqualTo(LT);
+        assertThat(ord.cmp(right, Either3.Right(4712L))).isEqualTo(LT);
+
+        assertThat(ord.cmp(left, Either3.Left(42))).isEqualTo(EQ);
+        assertThat(ord.cmp(middle, Either3.Middle("FoO"))).isEqualTo(EQ);
+        assertThat(ord.cmp(right, Either3.Right(4711L))).isEqualTo(EQ);
+
+        assertThat(ord.cmp(left, Either3.Left(10))).isEqualTo(GT);
+        assertThat(ord.cmp(middle, Either3.Middle("FO"))).isEqualTo(GT);
+        assertThat(ord.cmp(right, Either3.Right(4710L))).isEqualTo(GT);
+    }
+
+    @Test
+    public void functor() {
+        Either3Functor<Integer, String> functor = Either3.functor();
+        Either3<Integer, String, Long> left = Either3.Left(42);
+        Either3<Integer, String, Long> middle = Either3.Middle("foo");
+        Either3<Integer, String, Long> right = Either3.Right(4711L);
+
+        assertThat(functor.map(x -> x + "!", left)).isEqualTo(left);
+        assertThat(functor.map(x -> x + "!", middle)).isEqualTo(middle);
+        assertThat(functor.map(x -> x + "!", right)).isEqualTo(Either3.Right("4711!"));
+    }
+
+    @Test
+    public void applicative() {
+        Either3Applicative<Integer, String> applicative = Either3.applicative();
+        Either3<Integer, String, Long> left = Either3.Left(42);
+        Either3<Integer, String, Long> middle = Either3.Middle("foo");
+        Either3<Integer, String, Long> right = Either3.Right(4711L);
+
+        Either3<Integer, String, Function<Long, String>> leftFn = Either3.Left(57);
+        Either3<Integer, String, Function<Long, String>> middleFn = Either3.Middle("bar");
+        Either3<Integer, String, Function<Long, String>> rightFn = Either3.Right(x -> x + "!");
+
+        assertThat(applicative.ap(leftFn, left)).isEqualTo(leftFn);
+        assertThat(applicative.ap(leftFn, middle)).isEqualTo(leftFn);
+        assertThat(applicative.ap(leftFn, right)).isEqualTo(leftFn);
+
+        assertThat(applicative.ap(middleFn, left)).isEqualTo(middleFn);
+        assertThat(applicative.ap(middleFn, middle)).isEqualTo(middleFn);
+        assertThat(applicative.ap(middleFn, right)).isEqualTo(middleFn);
+
+        assertThat(applicative.ap(rightFn, left)).isEqualTo(left);
+        assertThat(applicative.ap(rightFn, middle)).isEqualTo(middle);
+        assertThat(applicative.ap(rightFn, right)).isEqualTo(Either3.Right("4711!"));
+    }
+
+    @Test
+    public void monad() {
+        Either3Monad<Integer, String> monad = Either3.monad();
+
+        Either3<Integer, String, Long> left = Either3.Left(42);
+        Either3<Integer, String, Long> middle = Either3.Middle("foo");
+        Either3<Integer, String, Long> right = Either3.Right(4711L);
+
+        assertThat(monad.bind(left, x -> Either3.Middle(x + "!"))).isEqualTo(left);
+        assertThat(monad.bind(middle, x -> Either3.Middle(x + "!"))).isEqualTo(middle);
+        assertThat(monad.bind(right, x -> Either3.Middle(x + "!"))).isEqualTo(Either3.Middle("4711!"));
+    }
+
+    @Test
+    public void monadRec() {
+        Either3Monad<String, String> monadRec = Either3.monad();
+        Function<T2<Integer, Integer>, __<__<__<Either3.µ, String>, String>, Either<T2<Integer, Integer>, Integer>>> factorial = pair -> {
+            int factor = pair._1();
+            int product = pair._2();
+            if (factor < 0) {
+                return Either3.Left("Can't be negative");
+            } else if (factor > 10) {
+                return Either3.Middle("Factorial gets too big");
+            } else if (factor == 0) {
+                return Either3.Right(Either.Right(product));
+            } else {
+                return Either3.Right(Either.Left(T2.of(factor - 1, factor * product)));
+            }
+        };
+        Either3<String, String, Integer> validResult = monadRec.tailRec(factorial, T2.of(10, 1));
+        assertThat(validResult).isEqualTo(Either3.Right(3628800));
+        Either3<String, String, Integer> tooBigResult = monadRec.tailRec(factorial, T2.of(20, 1));
+        assertThat(tooBigResult).isEqualTo(Either3.Middle("Factorial gets too big"));
+        Either3<String, String, Integer> invalidResult = monadRec.tailRec(factorial, T2.of(-10, 1));
+        assertThat(invalidResult).isEqualTo(Either3.Left("Can't be negative"));
+    }
+
+    @Test
+    public void bifunctor() {
+        Either3Bifunctor<Integer> bifunctor = Either3.bifunctor();
+        Either3<Integer, String, Long> left = Either3.Left(42);
+        Either3<Integer, String, Long> middle = Either3.Middle("foo");
+        Either3<Integer, String, Long> right = Either3.Right(4711L);
+
+        assertThat(bifunctor.first(x -> x + "!", left)).isEqualTo(left);
+        assertThat(bifunctor.first(x -> x + "!", middle)).isEqualTo(Either3.Middle("foo!"));
+        assertThat(bifunctor.first(x -> x + "!", right)).isEqualTo(right);
+
+        assertThat(bifunctor.second(x -> x + "?", left)).isEqualTo(left);
+        assertThat(bifunctor.second(x -> x + "?", middle)).isEqualTo(middle);
+        assertThat(bifunctor.second(x -> x + "?", right)).isEqualTo(Either3.Right("4711?"));
+
+        assertThat(bifunctor.bimap(x -> x + "!", y -> y + "?", left)).isEqualTo(left);
+        assertThat(bifunctor.bimap(x -> x + "!", y -> y + "?", middle)).isEqualTo(Either3.Middle("foo!"));
+        assertThat(bifunctor.bimap(x -> x + "!", y -> y + "?", right)).isEqualTo(Either3.Right("4711?"));
+    }
 }
