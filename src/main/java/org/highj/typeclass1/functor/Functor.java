@@ -7,7 +7,6 @@ import org.highj.typeclass1.invariant.Invariant;
 
 import java.util.function.Function;
 
-//Minimal complete definition: map OR lift
 public interface Functor<F> extends Invariant<F> {
 
     // fmap (Data.Functor)
