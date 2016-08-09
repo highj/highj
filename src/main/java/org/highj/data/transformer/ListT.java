@@ -19,6 +19,7 @@ import org.highj.data.transformer.list.ListTMonadPlus;
 import org.highj.data.transformer.list.ListTMonadTrans;
 import org.highj.data.transformer.list.ListTMonadZero;
 import org.highj.data.transformer.list.ListTPlus;
+import org.highj.data.transformer.list.ListTUnfoldable;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
@@ -285,7 +286,7 @@ public class ListT<M, A> implements __2<ListT.µ, M, A> {
         Function<T2<B, ListT<M, A>>, __<M, Maybe<T2<T2<B, ListT<M, A>>, B>>>> g = t2 ->
                 monad.map(h -> h.map(
                         stepYield -> {
-                            B b__ = fn.apply(b, stepYield.head);
+                            B b__ = fn.apply(t2._1(), stepYield.head);
                             return Maybe.Just(T2.of(T2.of(b__, stepYield.tail.get()), b__));
                         },
                         stepSkip -> Maybe.Just(T2.of(T2.of(t2._1(), stepSkip.tail.get()), t2._1())),
@@ -318,6 +319,10 @@ public class ListT<M, A> implements __2<ListT.µ, M, A> {
 
     public static <M> ListTFunctor<M> functor(Functor<M> mFunctor) {
         return () -> mFunctor;
+    }
+
+    public static <M> ListTUnfoldable<M> unfoldable(Monad<M> mMonad) {
+        return () -> mMonad;
     }
 
     public static <M> ListTApply<M> apply(Monad<M> mMonad) {
