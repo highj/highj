@@ -1,13 +1,15 @@
 package org.highj.data;
 
 import org.derive4j.hkt.__;
-import org.derive4j.hkt.__3;
 import org.derive4j.hkt.__4;
 import org.highj.data.eq.Eq;
-import org.highj.data.instance.either3.*;
-import org.highj.data.instance.either4.*;
+import org.highj.data.instance.either4.Either4Applicative;
+import org.highj.data.instance.either4.Either4Bifunctor;
+import org.highj.data.instance.either4.Either4Eq;
+import org.highj.data.instance.either4.Either4Functor;
+import org.highj.data.instance.either4.Either4Monad;
+import org.highj.data.instance.either4.Either4Ord;
 import org.highj.data.ord.Ord;
-import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.function.Functions;
 import org.highj.function.Strings;
@@ -53,7 +55,6 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
         return (Either4) value;
     }
 
-
     /**
      * Recovers an {@link Either4} value.
      *
@@ -72,11 +73,11 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
     /**
      * The catamorphism of {@link Either4}
      *
-     * @param fn1   function for E1 values
-     * @param fn2   function for E2 values
-     * @param fn3   function for E3 values
-     * @param fn4   function for E4 values
-     * @param <E>      the result type
+     * @param fn1 function for E1 values
+     * @param fn2 function for E2 values
+     * @param fn3 function for E3 values
+     * @param fn4 function for E4 values
+     * @param <E> the result type
      * @return the result of the function application
      */
     public abstract <E> E either(Function<A, E> fn1, Function<B, E> fn2, Function<C, E> fn3, Function<D, E> fn4);
@@ -84,11 +85,11 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
     /**
      * The catamorphism using constant functions.
      *
-     * @param r1   result if it is a E1 value
-     * @param r2   result if it is a E2 value
-     * @param r3   result if it is a E3 value
-     * @param r4   result if it is a E4 value
-     * @param <E>    the result type
+     * @param r1  result if it is a E1 value
+     * @param r2  result if it is a E2 value
+     * @param r3  result if it is a E3 value
+     * @param r4  result if it is a E4 value
+     * @param <E> the result type
      * @return the result of the function application
      */
     public <E> E constant(E r1, E r2, E r3, E r4) {
@@ -101,14 +102,14 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
     /**
      * Converts an {@link Either4}.
      *
-     * @param fn1   the mapping function for an E1
-     * @param fn2   the mapping function for an E2
-     * @param fn3   the mapping function for an E3
-     * @param fn4   the mapping function for an E4
-     * @param <A_>     the new Left type
-     * @param <B_>     the new Left type
-     * @param <C_>     the new Right type
-     * @param <D_>     the new Right type
+     * @param fn1  the mapping function for an E1
+     * @param fn2  the mapping function for an E2
+     * @param fn3  the mapping function for an E3
+     * @param fn4  the mapping function for an E4
+     * @param <A_> the new Left type
+     * @param <B_> the new Left type
+     * @param <C_> the new Right type
+     * @param <D_> the new Right type
      * @return the converted {@link Either}
      */
     public <A_, B_, C_, D_> Either4<A_, B_, C_, D_> quadMap(
@@ -116,17 +117,17 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
             Function<? super B, ? extends B_> fn2,
             Function<? super C, ? extends C_> fn3,
             Function<? super D, ? extends D_> fn4) {
-        return either(a -> Either4.<A_, B_, C_, D_>E1(fn1.apply(a)),
-                b -> Either4.<A_, B_, C_, D_>E2(fn2.apply(b)),
-                c -> Either4.<A_, B_, C_, D_>E3(fn3.apply(c)),
-                d -> Either4.<A_, B_, C_, D_>E4(fn4.apply(d)));
+        return either(a -> Either4.<A_, B_, C_, D_> E1(fn1.apply(a)),
+                b -> Either4.<A_, B_, C_, D_> E2(fn2.apply(b)),
+                c -> Either4.<A_, B_, C_, D_> E3(fn3.apply(c)),
+                d -> Either4.<A_, B_, C_, D_> E4(fn4.apply(d)));
     }
 
     /**
      * Transforms the E1 of {@link Either4}.
      *
-     * @param fn1 transformation function
-     * @param <A_>  new E1 type
+     * @param fn1  transformation function
+     * @param <A_> new E1 type
      * @return the converted {@link Either4}
      */
     public <A_> Either4<A_, B, C, D> map1(Function<? super A, ? extends A_> fn1) {
@@ -136,8 +137,8 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
     /**
      * Transforms the E2 of {@link Either4}.
      *
-     * @param fn2 transformation function
-     * @param <B_>  new E2 type
+     * @param fn2  transformation function
+     * @param <B_> new E2 type
      * @return the converted {@link Either4}
      */
     public <B_> Either4<A, B_, C, D> map2(Function<? super B, ? extends B_> fn2) {
@@ -147,8 +148,8 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
     /**
      * Transforms the E3 of {@link Either4}.
      *
-     * @param fn3 transformation function
-     * @param <C_>  new E3 type
+     * @param fn3  transformation function
+     * @param <C_> new E3 type
      * @return the converted {@link Either4}
      */
     public <C_> Either4<A, B, C_, D> map3(Function<? super C, ? extends C_> fn3) {
@@ -158,8 +159,8 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
     /**
      * Transforms the E4 of {@link Either4}.
      *
-     * @param fn4 transformation function
-     * @param <D_>  new E4 type
+     * @param fn4  transformation function
+     * @param <D_> new E4 type
      * @return the converted {@link Either4}
      */
     public <D_> Either4<A, B, C, D_> map4(Function<? super D, ? extends D_> fn4) {
@@ -183,7 +184,7 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
      *
      * @return the nested {@link Either3} instance
      */
-    public Either3<A,Either<B, C>, D> combineMiddle() {
+    public Either3<A, Either<B, C>, D> combineMiddle() {
         return either(a -> Either3.Left(a),
                 b -> Either3.Middle(Either.Left(b)),
                 c -> Either3.Middle(Either.Right(c)),
@@ -357,12 +358,12 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
     /**
      * Returns the index of the current instance, <code>E1.index() == 1</code>,
      * <code>E2.index() == 2</code> etc.
+     *
      * @return the index
      */
     public int index() {
         return constant(1, 2, 3, 4);
     }
-
 
     /**
      * Test if this is an E1 instance.
@@ -447,7 +448,6 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
                 Functions.constant(Maybe.Nothing()),
                 Maybe::Just);
     }
-
 
     /**
      * Extracts the E1 value, or uses the default value if it doesn't exist.
@@ -612,7 +612,6 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
         public CaseE3<R> caseE3(Function<C, R> fn3) {
             return new CaseE3<>(maybe, fn3);
         }
-
     }
 
     /**
@@ -662,12 +661,13 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
      * @param <D>  the E3 type
      * @return the instance
      */
-    public static <A, B, C, D> Either4Ord<A, B, C,D> ord(Ord<A> ordA, Ord<B> ordB, Ord<C> ordC, Ord<D> ordD) {
+    public static <A, B, C, D> Either4Ord<A, B, C, D> ord(Ord<A> ordA, Ord<B> ordB, Ord<C> ordC, Ord<D> ordD) {
         return () -> T4.of(ordA, ordB, ordC, ordD);
     }
 
     /**
      * The functor instance of  {@link Either4}.
+     *
      * @param <S> the fixed E1 type
      * @param <T> the fixed E2 type
      * @param <U> the fixed E3 type
@@ -680,6 +680,7 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
 
     /**
      * The applicative instance of  {@link Either4}.
+     *
      * @param <S> the fixed E1 type
      * @param <T> the fixed E2 type
      * @param <U> the fixed E3 type
@@ -692,6 +693,7 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
 
     /**
      * The monad instance of {@link Either4}, also implementing {@link MonadRec}.
+     *
      * @param <S> the fixed E1 type
      * @param <T> the fixed E2 type
      * @param <U> the fixed E3 type
@@ -704,9 +706,10 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
 
     /**
      * The bifunctor instance of  {@link Either4}.
+     *
      * @param <S> the fixed E1 type
      * @param <T> the fixed E2 type
-     * @return  the instance
+     * @return the instance
      */
     public static <S, T> Either4Bifunctor<S, T> bifunctor() {
         return new Either4Bifunctor<S, T>() {

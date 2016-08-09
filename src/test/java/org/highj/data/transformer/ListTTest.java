@@ -1,16 +1,16 @@
 package org.highj.data.transformer;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.highj.data.Maybe.*;
-
-import java.util.function.Function;
-
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.highj.data.List;
 import org.highj.data.Maybe;
 import org.highj.data.tuple.T2;
 import org.junit.Test;
+
+import java.util.function.Function;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.highj.data.Maybe.*;
 
 public class ListTTest {
     @Test
@@ -423,6 +423,18 @@ public class ListTTest {
     }
 
     @Test
+    public void zipApplicative() {
+        // the zipApplicative instance must apply the functions to the values
+        ListT<µ, Function<Integer, Integer>> listFn = listTOf(x -> x + 10, y -> y + 20, z -> z + 30);
+        ListT<µ, Integer> listInt = listTOf(1, 2, 3, 4);
+        ListT<µ, Integer> listAp = ListT.zipApplicative(monad).ap(listFn, listInt);
+        assertListTEquals(listAp, 11, 22, 33);
+        // the zipApplicative instance must provide a repeating list as pure value
+        ListT<µ, Integer> listPure = ListT.zipApplicative(monad).pure(42);
+        assertListTStartsWith(listPure, 42, 42, 42, 42);
+    }
+
+    @Test
     public void bind() {
         // the bind instance must apply the given function to the list
         ListT<µ, Integer> listT = listTOf(1, 2, 3);
@@ -440,17 +452,17 @@ public class ListTTest {
         // the monadTrans instance must lift a monad value to a list
         ListT<µ, Integer> listMaybe = ListT.monadTrans(monad).lift(Just(42));
         assertListTEquals(listMaybe, 42);
-        ListT<List.µ, Integer> listList = ListT.monadTrans(List.monadPlus).<Integer>lift(List.of(11,12,13,14));
-        assertThat(listList.head(List.monadPlus)).isEqualTo(List.of(Just(11),Just(12),Just(13),Just(14)));
+        ListT<List.µ, Integer> listList = ListT.monadTrans(List.monadPlus).<Integer> lift(List.of(11, 12, 13, 14));
+        assertThat(listList.head(List.monadPlus)).isEqualTo(List.of(Just(11), Just(12), Just(13), Just(14)));
     }
 
     @Test
     public void alt() {
         // the alt instance must append two lists
         ListT<µ, Integer> listOne = listTOf(1, 2, 3);
-        ListT<µ, Integer> listTwo = listTOf(4,5);
+        ListT<µ, Integer> listTwo = listTOf(4, 5);
         ListT<µ, Integer> listOneTwo = ListT.alt(monad).mplus(listOne, listTwo);
-        assertListTEquals(listOneTwo, 1,2,3,4,5);
+        assertListTEquals(listOneTwo, 1, 2, 3, 4, 5);
     }
 
     @Test
@@ -476,9 +488,9 @@ public class ListTTest {
     public void monadPlus() {
         // the monadPlus instance must append two lists
         ListT<µ, Integer> listOne = listTOf(1, 2, 3);
-        ListT<µ, Integer> listTwo = listTOf(4,5);
+        ListT<µ, Integer> listTwo = listTOf(4, 5);
         ListT<µ, Integer> listOneTwo = ListT.monadPlus(monad).mplus(listOne, listTwo);
-        assertListTEquals(listOneTwo, 1,2,3,4,5);
+        assertListTEquals(listOneTwo, 1, 2, 3, 4, 5);
     }
 
     @SafeVarargs
