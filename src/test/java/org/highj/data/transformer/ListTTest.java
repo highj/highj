@@ -351,12 +351,22 @@ public class ListTTest {
 
     @Test
     public void zipWith() {
-        // zipWith_() must zip two lists
+        // zipWith() must zip two lists
         ListT<µ, Integer> listInt = listTOf(1, 2, 3);
         ListT<µ, String> listString = listTOf("foo", "bar", "baz", "quux");
-        ListT<µ, String> listT = ListT.zipWith_(monad,
-                (i, s) -> Just(s.substring(0, i)), listInt, listString);
+        ListT<µ, String> listT = ListT.zipWith(monad,
+                (i, s) -> s.substring(0, i), listInt, listString);
         assertListTEquals(listT, "f", "ba", "baz");
+        // zipWith() must produce an empty list if one or both input lists are empty
+        ListT<µ, String> listOneNil = ListT.zipWith(monad,
+                (i, s) -> s.substring(0, i), listInt, ListTTest.<String> listTOf());
+        assertListTEquals(listOneNil);
+        ListT<µ, String> listNilTwo = ListT.zipWith(monad,
+                (i, s) -> s.substring(0, i), ListTTest.<Integer> listTOf(), listString);
+        assertListTEquals(listNilTwo);
+        ListT<µ, String> listNilNil = ListT.zipWith(monad,
+                (i, s) -> s.substring(0, i), ListTTest.<Integer> listTOf(), ListTTest.<String> listTOf());
+        assertListTEquals(listNilNil);
     }
 
     @Test
