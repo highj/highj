@@ -635,12 +635,14 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
     /**
      * The {@link Eq} instance of {@link Either4}.
      *
-     * @param eqA the {@link Eq} instance of the left type
-     * @param eqB the {@link Eq} instance of the middle type
-     * @param eqC the {@link Eq} instance of the right type
-     * @param <A> the left type
-     * @param <B> the middle type
-     * @param <C> the right type
+     * @param eqA the {@link Eq} instance of the E1 type
+     * @param eqB the {@link Eq} instance of the E2 type
+     * @param eqC the {@link Eq} instance of the E3 type
+     * @param eqD the {@link Eq} instance of the E4 type
+     * @param <A> the E1 type
+     * @param <B> the E2 type
+     * @param <C> the E3 type
+     * @param <D> the E4 type
      * @return the instance
      */
     public static <A, B, C, D> Either4Eq<A, B, C, D> eq(Eq<A> eqA, Eq<B> eqB, Eq<C> eqC, Eq<D> eqD) {
