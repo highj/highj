@@ -11,6 +11,7 @@ import org.highj.data.transformer.list.ListTBind;
 import org.highj.data.transformer.list.ListTFunctor;
 import org.highj.data.transformer.list.ListTMonad;
 import org.highj.data.transformer.list.ListTMonadPlus;
+import org.highj.data.transformer.list.ListTMonadRec;
 import org.highj.data.transformer.list.ListTMonadTrans;
 import org.highj.data.transformer.list.ListTMonadZero;
 import org.highj.data.transformer.list.ListTPlus;
@@ -28,6 +29,7 @@ import org.highj.typeclass1.monad.Apply;
 import org.highj.typeclass1.monad.Bind;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadPlus;
+import org.highj.typeclass1.monad.MonadRec;
 import org.highj.typeclass1.monad.MonadTrans;
 import org.highj.typeclass1.monad.MonadZero;
 import org.highj.typeclass1.unfoldable.Unfoldable;
@@ -830,5 +832,14 @@ public class ListT<M, A> implements __2<ListT.µ, M, A> {
         return () -> mMonad;
     }
 
-    //TODO MonadRec instance
+    /**
+     * The {@link MonadRec} instance of {@link ListT}.
+     *
+     * @param mMonad the {@link Monad} instance
+     * @param <M>    nested monadic type
+     * @return the monadRec instance
+     */
+    public static <M> ListTMonadRec<M> monadRec(Monad<M> mMonad) {
+        return () -> mMonad;
+    }
 }

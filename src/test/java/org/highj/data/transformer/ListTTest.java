@@ -2,6 +2,7 @@ package org.highj.data.transformer;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
+import org.highj.data.Either;
 import org.highj.data.List;
 import org.highj.data.Maybe;
 import org.highj.data.tuple.T2;
@@ -491,6 +492,28 @@ public class ListTTest {
         ListT<µ, Integer> listTwo = listTOf(4, 5);
         ListT<µ, Integer> listOneTwo = ListT.monadPlus(monad).mplus(listOne, listTwo);
         assertListTEquals(listOneTwo, 1, 2, 3, 4, 5);
+    }
+
+    @Test
+    public void monadRec() {
+        Function<String, __<__<ListT.µ, µ>, Either<String, Character>>> substrings = s -> {
+            if (s.length() == 1) {
+                return ListT.singleton(monad, Either.Right(s.charAt(0)));
+            }
+            ListT<µ, String> result = ListT.nil(monad);
+            for (int lower = 0; lower < s.length(); lower++) {
+                for (int higher = lower + 1; higher <= s.length(); higher++) {
+                    String t = s.substring(lower, higher);
+                    if (!t.equals(s)) {
+                        result = result.prepend(monad, s.substring(lower, higher));
+                    }
+                }
+            }
+            return ListT.functor(monad).map(Either::Left, result);
+        };
+
+        ListT<µ, Character> listT = ListT.narrow(ListT.monadRec(monad).tailRec(substrings, "abc"));
+        assertListTEquals(listT, 'a', 'a', 'b', 'b', 'b', 'c', 'c');
     }
 
     @SafeVarargs
