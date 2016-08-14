@@ -9,13 +9,13 @@ import java.util.function.Function;
 
 public interface T2Apply<S> extends T2Functor<S>, Apply<__<T2.µ, S>> {
 
-    public Semigroup<S> getS();
+    Semigroup<S> get();
 
     @Override
-    public default <A, B> T2<S, B> ap(__<__<T2.µ, S>, Function<A, B>> fn, __<__<T2.µ, S>, A> nestedA) {
+    default <A, B> T2<S, B> ap(__<__<T2.µ, S>, Function<A, B>> fn, __<__<T2.µ, S>, A> nestedA) {
         T2<S, Function<A, B>> fnPair = T2.narrow(fn);
         T2<S, A> aPair = T2.narrow(nestedA);
-        return T2.of(getS().apply(fnPair._1(), aPair._1()), fnPair._2().apply(aPair._2()));
+        return T2.of(get().apply(fnPair._1(), aPair._1()), fnPair._2().apply(aPair._2()));
     }
 
 }

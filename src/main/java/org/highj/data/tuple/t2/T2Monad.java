@@ -10,9 +10,9 @@ import java.util.function.Function;
 public interface T2Monad<S> extends T2Bind<S>, T2Applicative<S>, Monad<__<T2.µ, S>> {
 
     @Override
-    public Monoid<S> getS();
+    Monoid<S> get();
 
-    public default <A, B> T2<S, B> ap(__<__<T2.µ, S>, Function<A, B>> fn, __<__<T2.µ, S>, A> nestedA) {
+    default <A, B> T2<S, B> ap(__<__<T2.µ, S>, Function<A, B>> fn, __<__<T2.µ, S>, A> nestedA) {
         return T2Applicative.super.ap(fn, nestedA);
     }
 }

@@ -77,7 +77,7 @@ public interface F1Arrow extends ArrowChoice<F1.µ>, ArrowApply<F1.µ>, ArrowLoo
         F1<T2<B,D>,T2<C,D>> fn = F1.narrow(arrow);
         class Util {
             T2<B,D> input(B b) {
-                return T2.ofLazy(() -> b, () -> fn.apply(input(b))._2());
+                return T2.of$(() -> b, () -> fn.apply(input(b))._2());
             }
         }
         final Util util = new Util();

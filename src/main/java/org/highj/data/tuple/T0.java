@@ -2,13 +2,12 @@ package org.highj.data.tuple;
 
 import org.highj.data.ord.Ordering;
 import org.highj.data.HList;
-import org.highj.data.tuple.t0.T0Group;
 import org.highj.data.eq.Eq;
 import org.highj.data.ord.Ord;
 import org.highj.typeclass0.group.Group;
 
 /**
- * A tuple of arity 0, a.k.a. "unit".
+ * An immutable tuple of arity 0, a.k.a. "unit".
  * It often plays a role similar to <code>void</code>.
  */
 public enum T0 {
@@ -28,11 +27,25 @@ public enum T0 {
         return "()";
     }
 
+    /**
+     * Represents the tuple as heterogenous list.
+     * @return the {@link HList}
+     */
     public HList.HNil toHlist() { return HList.nil; }
 
+    /**
+     * The {@link Eq} instance.
+     */
     public static final Eq<T0> eq =  (one, two) -> true;
 
+    /**
+     * The {@link Ord} instance.
+     */
     public static final Ord<T0> ord =  (one, two) -> Ordering.EQ;
 
-    public static final Group<T0> group = new T0Group();
+    /**
+     * The {@link Group} instance.
+     */
+    public static final Group<T0> group = Group.create(
+       unit, (x,y) -> unit, z -> unit);
 }

@@ -2,35 +2,57 @@ package org.highj.data.tuple;
 
 import org.derive4j.hkt.__;
 import org.highj.data.HList;
+import org.highj.data.tuple.t1.T1Applicative;
 import org.highj.data.tuple.t1.T1Comonad;
+import org.highj.data.tuple.t1.T1Functor;
 import org.highj.data.tuple.t1.T1Monad;
 import org.highj.data.eq.Eq;
 import org.highj.data.ord.Ord;
+import org.highj.data.tuple.t1.T1MonadRec;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
+import org.highj.typeclass1.comonad.Comonad;
+import org.highj.typeclass1.functor.Functor;
+import org.highj.typeclass1.monad.Applicative;
+import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadRec;
 
+import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * A tuple of arity 1, a.k.a. "cell" or "Id".
+ * An immutable tuple of arity 1, a.k.a. "cell" or "Id".
  */
 public abstract class T1<A> implements __<T1.µ, A>, Supplier<A> {
     public static class µ {
 
     }
 
+    private T1() {}
+
     @Override
     public A get() {
         return _1();
     }
 
+    /**
+     * Returns the only element of the tuple.
+     * @return the element
+     */
     public abstract A _1();
 
+    /**
+     * Constructs a {@link T1} from a value.
+     * @param a the value
+     * @param <A> the value type
+     * @return the unary tuple
+     */
     public static <A> T1<A> of(A a) {
+        Objects.requireNonNull(a);
         return new T1<A>() {
             @Override
             public A _1() {
@@ -39,18 +61,31 @@ public abstract class T1<A> implements __<T1.µ, A>, Supplier<A> {
         };
     }
 
-    public static <A> T1<A> ofLazy(Supplier<A> thunkA) {
+    /**
+     * Constructs a {@link T1} from a value in a lazy fashion.
+     *
+     * @param supplier the supplier for the value
+     * @param <A> the value type
+     * @return the unary tuple
+     */
+    public static <A> T1<A> of$(Supplier<A> supplier) {
         return new T1<A>() {
             @Override
             public A _1() {
-                return thunkA.get();
+                return Objects.requireNonNull(supplier.get());
             }
         };
     }
 
+    /**
+     * Converts the higher kinded representation of {@link T1} to the standard one.
+     * @param hkt the higher kinded representation
+     * @param <A> the element type
+     * @return the unary tuple
+     */
     @SuppressWarnings("unchecked")
-    public static <A> T1<A> narrow(__<µ, A> value) {
-        return (T1) value;
+    public static <A> T1<A> narrow(__<µ, A> hkt) {
+        return (T1) hkt;
     }
 
     @Override
@@ -58,18 +93,71 @@ public abstract class T1<A> implements __<T1.µ, A>, Supplier<A> {
         return String.format("(%s)", _1());
     }
 
+    /**
+     * Converts the wrapped value using the given function.
+     * @param fn the transformation function
+     * @param <B> the new element type
+     * @return the transformed tuple
+     */
     public <B> T1<B> map(Function<? super A, ? extends B> fn) {
         return of(fn.apply(_1()));
     }
 
-    public <B> T1<B> ap(T1<Function<A, B>> nestedFn) {
-        return map(narrow(nestedFn)._1());
+    /**
+     * Converts the wrapped value using the given function in a lazy fashion.
+     * @param fn the transformation function
+     * @param <B> the new element type
+     * @return the transformed tuple
+     */
+    public <B> T1<B> map$(Function<? super A, ? extends B> fn) {
+        return of$(() -> fn.apply(_1()));
     }
 
+    /**
+     * Applies the wrapped function to the wrapped value.
+     * @param nestedFn the wrapped transformation function
+     * @param <B> the new element type
+     * @return the transformed tuple
+     */
+    public <B> T1<B> ap(T1<Function<A, B>> nestedFn) {
+        return map(nestedFn._1());
+    }
+    /**
+     * Applies the wrapped function to the wrapped value in a lazy fashion.
+     * @param nestedFn the wrapped transformation function
+     * @param <B> the new element type
+     * @return the transformed tuple
+     */
+    public <B> T1<B> ap$(T1<Function<A, B>> nestedFn) {
+        return T1.of$(() -> nestedFn._1().apply(_1()));
+    }
+
+    /**
+     * Applies the function with {@link T1} return type to the wrapped value.
+     * @param fn the transformation function
+     * @param <B> the new element type
+     * @return the transformed tuple
+     */
     public <B> T1<B> bind(Function<A, T1<B>> fn) {
         return fn.apply(_1());
     }
 
+    /**
+     * Applies the function with {@link T1} return type to the wrapped value in a lazy fashion.
+     * @param fn the transformation function
+     * @param <B> the new element type
+     * @return the transformed tuple
+     */
+    public <B> T1<B> bind$(Function<A, T1<B>> fn) {
+        return of$(() -> fn.apply(_1())._1());
+    }
+
+    /**
+     * The catamorphism of {@link T1}.
+     * @param fn the function to be applied to the value
+     * @param <B> the result type
+     * @return the result of the function application
+     */
     public <B> B cata(Function<? super A, ? extends B> fn) {
         return fn.apply(_1());
     }
@@ -88,43 +176,116 @@ public abstract class T1<A> implements __<T1.µ, A>, Supplier<A> {
         return false;
     }
 
-    public static <A, B, C> T1<C> merge(T1<A> a, T1<B> b, Function<A, Function<B, C>> fn) {
-        return new T1<C>() {
-            @Override
-            public C _1() {
-                return fn.apply(a._1()).apply(b._1());
-            }
-        };
+    /**
+     * Merges two {@link T1} into a single one using the given function.
+     * @param a the first tuple
+     * @param b the second tuple
+     * @param fn the merge function
+     * @param <A> the element type of the first tuple
+     * @param <B> the element type of the second tuple
+     * @param <C> the element type of the result
+     * @return the merged tuple
+     */
+    public static <A, B, C> T1<C> merge(T1<A> a, T1<B> b, BiFunction<A, B, C> fn) {
+        return of(fn.apply(a._1(), b._1()));
+    }
+   /**
+     * Merges two {@link T1} into a single one using the given function in a lazy fashion.
+     * @param a the first tuple
+     * @param b the second tuple
+     * @param fn the merge function
+     * @param <A> the element type of the first tuple
+     * @param <B> the element type of the second tuple
+     * @param <C> the element type of the result
+     * @return the merged tuple
+     */
+    public static <A, B, C> T1<C> merge$(T1<A> a, T1<B> b, BiFunction<A, B, C> fn) {
+        return of$(() -> fn.apply(a._1(), b._1()));
     }
 
+    /**
+     * The {@link Eq} instance.
+     * @param eqA the {@link Eq} instance of the element type
+     * @param <A> the element type
+     * @return the instance
+     */
     public static <A> Eq<T1<A>> eq(Eq<? super A> eqA) {
         return (one, two) -> eqA.eq(one._1(), two._1());
     }
 
+    /**
+     * The {@link Ord} instance.
+     * @param ordA the {@link Ord} instance of the element type
+     * @param <A> the element type
+     * @return the instance
+     */
     public static <A> Ord<T1<A>> ord(Ord<? super A> ordA) {
         return (one, two) -> ordA.cmp(one._1(), two._1());
     }
 
-    public static final T1Monad monad = new T1Monad(){};
-    public static final T1Comonad comonad = new T1Comonad(){};
-    public static final MonadRec<µ> monadRec = monad;
+    /**
+     * The {@link Functor} instance.
+     */
+    public static final T1Functor functor = new T1Functor(){};
 
-    public static <A> Semigroup<T1<A>> semigroup(BinaryOperator<A> semigroupA) {
+    /**
+     * The {@link Applicative} instance.
+     */
+    public static final T1Applicative applicative = new T1Applicative(){};
+
+    /**
+     * The {@link Monad} instance.
+     */
+    public static final T1Monad monad = new T1Monad(){};
+
+    /**
+     * The {@link MonadRec} instance.
+     */
+    public static final T1MonadRec monadRec = new T1MonadRec(){};
+
+    /**
+     * The {@link Comonad} instance.
+     */
+    public static final T1Comonad comonad = new T1Comonad(){};
+
+    /**
+     * The {@link Semigroup} instance.
+     * @param semigroupA the semigroup of the element type
+     * @param <A> the element type
+     * @return the instance
+     */
+    public static <A> Semigroup<T1<A>> semigroup(Semigroup<A> semigroupA) {
         return (x, y) -> T1.of(semigroupA.apply(x._1(), y._1()));
     }
 
+    /**
+     * The {@link Monoid} instance.
+     * @param monoidA the monoid of the element type
+     * @param <A> the element type
+     * @return the instance
+     */
     public static <A> Monoid<T1<A>> monoid(Monoid<A> monoidA) {
         return Monoid.create(T1.of(monoidA.identity()),
                 (x, y) -> T1.of(monoidA.apply(x._1(), y._1())));
     }
 
+    /**
+     * The {@link Group} instance.
+     * @param groupA the group of the element type
+     * @param <A> the element type
+     * @return the instance
+     */
     public static <A> Group<T1<A>> group(Group<A> groupA) {
         return Group.create(T1.of(groupA.identity()),
                 (x, y) -> T1.of(groupA.apply(x._1(), y._1())),
                 z -> T1.of(groupA.inverse(z._1())));
     }
 
-    public HList.HCons<A, HList.HNil> toHlist() {
+    /**
+     * Represents the tuple as heterogenous list.
+     * @return the {@link HList}
+     */
+    public HList.HCons<A, HList.HNil> toHList() {
         return HList.single(_1());
     }
 

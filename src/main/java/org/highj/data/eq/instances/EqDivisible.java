@@ -12,8 +12,8 @@ public interface EqDivisible extends EqContravariant, Divisible<Eq.µ> {
     @Override
     default <A, B, C> Eq<A> divide(Function<A, T2<B, C>> fn, __<Eq.µ, B> fb, __<Eq.µ, C> fc) {
         return (x, y) -> T2.merge(fn.apply(x), fn.apply(y),
-                bx -> by -> Eq.narrow(fb).eq(bx, by),
-                cx -> cy -> Eq.narrow(fc).eq(cx, cy))
+                (bx, by) -> Eq.narrow(fb).eq(bx, by),
+                (cx, cy) -> Eq.narrow(fc).eq(cx, cy))
                 .cata((one, two) -> one && two);
     }
 

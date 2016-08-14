@@ -15,8 +15,8 @@ public interface OrdDivisible extends OrdContravariant, Divisible<Ord.µ> {
     @Override
     default  <A, B, C> Ord<A> divide(Function<A, T2<B, C>> fn, __<Ord.µ, B> fb, __<Ord.µ, C> fc) {
         return (x, y) -> T2.merge(fn.apply(x), fn.apply(y),
-                bx -> by -> Ord.narrow(fb).cmp(bx, by),
-                cx -> cy -> Ord.narrow(fc).cmp(cx, cy))
+                (bx, by) -> Ord.narrow(fb).cmp(bx, by),
+                (cx, cy) -> Ord.narrow(fc).cmp(cx, cy))
                 .cata(Ordering::andThen);
     }
 

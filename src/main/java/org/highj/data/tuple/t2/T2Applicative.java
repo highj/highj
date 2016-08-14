@@ -8,10 +8,10 @@ import org.highj.typeclass1.monad.Applicative;
 public interface T2Applicative<S> extends T2Apply<S>, Applicative<__<T2.µ, S>> {
 
     @Override
-    public Monoid<S> getS();
+    Monoid<S> get();
 
     @Override
-    public default <A> T2<S, A> pure(A a) {
-        return T2.of(getS().identity(), a);
+    default <A> T2<S, A> pure(A a) {
+        return T2.of(get().identity(), a);
     }
 }

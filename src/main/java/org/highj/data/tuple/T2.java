@@ -5,84 +5,79 @@ import org.derive4j.hkt.__2;
 import org.highj.data.HList;
 import org.highj.data.HList.HCons;
 import org.highj.data.HList.HNil;
+import org.highj.data.eq.Eq;
+import org.highj.data.ord.Ord;
+import org.highj.data.tuple.t2.T2Applicative;
+import org.highj.data.tuple.t2.T2Apply;
 import org.highj.data.tuple.t2.T2Biapplicative;
+import org.highj.data.tuple.t2.T2Biapply;
+import org.highj.data.tuple.t2.T2Bifunctor;
 import org.highj.data.tuple.t2.T2Bind;
 import org.highj.data.tuple.t2.T2Comonad;
 import org.highj.data.tuple.t2.T2Functor;
 import org.highj.data.tuple.t2.T2Monad;
-import org.highj.data.eq.Eq;
-import org.highj.data.ord.Ord;
+import org.highj.data.tuple.t2.T2MonadRec;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
+import org.highj.typeclass1.comonad.Comonad;
+import org.highj.typeclass1.functor.Functor;
+import org.highj.typeclass1.monad.Applicative;
+import org.highj.typeclass1.monad.Apply;
+import org.highj.typeclass1.monad.Bind;
+import org.highj.typeclass1.monad.Monad;
+import org.highj.typeclass1.monad.MonadRec;
+import org.highj.typeclass2.bifunctor.Biapplicative;
+import org.highj.typeclass2.bifunctor.Biapply;
+import org.highj.typeclass2.bifunctor.Bifunctor;
 
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * A tuple of arity 2, a.k.a. "pair".
+ * An immutable tuple of arity 2, a.k.a. "pair".
+ *
+ * @param <A> the type of the first element
+ * @param <B> the type of the second element
  */
 public abstract class T2<A, B> implements __2<T2.µ, A, B> {
-    public static final T2Biapplicative biapplicative = new T2Biapplicative() {
-    };
 
-    public static <S> T2Bind<S> bind(Semigroup<S> semigroupS) {
-        return () -> semigroupS;
+    public interface µ {
     }
 
-    public static <S> T2Comonad<S> comonad() {
-        return new T2Comonad<S>() {
-        };
+    private T2() {
     }
 
-    public static <A, B> Eq<T2<A, B>> eq(Eq<? super A> eqA, Eq<? super B> eqB) {
-        return (one, two) -> eqA.eq(one._1(), two._1())
-                && eqB.eq(one._2(), two._2());
-    }
+    /**
+     * Extracts the first element of the tuple.
+     *
+     * @return the first value
+     */
+    public abstract A _1();
 
-    public static <S> T2Functor<S> functor() {
-        return new T2Functor<S>() {
-        };
-    }
+    /**
+     * Extrcts the second element of the tuple.
+     *
+     * @return the second value
+     */
+    public abstract B _2();
 
-    public static <A, B> Group<T2<A, B>> group(Group<A> groupA, Group<B> groupB) {
-        return Group.create(T2.of(groupA.identity(), groupB.identity()),
-                (x, y) -> T2.of(groupA.apply(x._1(), y._1()), groupB.apply(x._2(), y._2())),
-                z -> T2.of(groupA.inverse(z._1()), groupB.inverse(z._2())));
-    }
-
-    public static <A, AA, B, BB, C, CC> T2<C, CC> merge(T2<A, AA> a, T2<B, BB> b, Function<A, Function<B, C>> fn1, Function<AA, Function<BB, CC>> fn2) {
-        return new T2<C, CC>() {
-            @Override
-            public C _1() {
-                return fn1.apply(a._1()).apply(b._1());
-            }
-
-            @Override
-            public CC _2() {
-                return fn2.apply(a._2()).apply(b._2());
-            }
-        };
-    }
-
-    public static <S> T2Monad<S> monad(Monoid<S> monoidS) {
-        return () -> monoidS;
-    }
-
-    public static <A, B> Monoid<T2<A, B>> monoid(Monoid<A> monoidA, Monoid<B> monoidB) {
-        return Monoid.create(T2.of(monoidA.identity(), monoidB.identity()),
-                (x, y) -> T2.of(monoidA.apply(x._1(), y._1()), monoidB.apply(x._2(), y._2())));
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <A, B> T2<A, B> narrow(__<__<µ, A>, B> value) {
-        return (T2) value;
-    }
-
+    /**
+     * Constructs a {@link T2} tuple from two values.
+     *
+     * @param a   the first value
+     * @param b   the second value
+     * @param <A> the type of the first element
+     * @param <B> the type of the second element
+     * @return the binary tuple
+     */
     public static <A, B> T2<A, B> of(A a, B b) {
-        assert a != null && b != null;
+        Objects.requireNonNull(a);
+        Objects.requireNonNull(b);
         return new T2<A, B>() {
 
             @Override
@@ -97,33 +92,229 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
         };
     }
 
-    public static <A, B> T2<A, B> ofLazy(Supplier<A> thunkA, Supplier<B> thunkB) {
+    /**
+     * Constructs a {@link T2} tuple in a lazy fashion.
+     *
+     * @param supplierA the supplier of the first value
+     * @param supplierB the supplier of the second value
+     * @param <A>       the type of the first element
+     * @param <B>       the type of the second element
+     * @return the binary tuple
+     */
+    public static <A, B> T2<A, B> of$(Supplier<A> supplierA, Supplier<B> supplierB) {
         return new T2<A, B>() {
 
             @Override
             public A _1() {
-                return thunkA.get();
+                return Objects.requireNonNull(supplierA.get());
             }
 
             @Override
             public B _2() {
-                return thunkB.get();
+                return Objects.requireNonNull(supplierB.get());
             }
         };
     }
 
-    public static <A, B> Ord<T2<A, B>> ord(Ord<? super A> ordA, Ord<? super B> ordB) {
-        return (one, two) -> ordA.cmp(one._1(), two._1())
-                .andThen(ordB.cmp(one._2(), two._2()));
+    /**
+     * Converts the higher kinded representation of the tuple to the standard one.
+     *
+     * @param value the higher kinded representation
+     * @param <A>   the type of the first element
+     * @param <B>   the type of the second element
+     * @return the standard representation
+     */
+    @SuppressWarnings("unchecked")
+    public static <A, B> T2<A, B> narrow(__<__<µ, A>, B> value) {
+        return (T2) value;
     }
 
-    public static <A, B> Semigroup<T2<A, B>> semigroup(BinaryOperator<A> semigroupA, BinaryOperator<B> semigroupB) {
-        return (x, y) -> T2.of(semigroupA.apply(x._1(), y._1()), semigroupB.apply(x._2(), y._2()));
+    /**
+     * Maps both elements of the tuple at the same time.
+     *
+     * @param fn1  the first transformation function
+     * @param fn2  the second transformation function
+     * @param <AA> Nthe type of the first element
+     * @param <BB> Nthe type of the second element
+     * @return the transformed tuple
+     */
+    public <AA, BB> T2<AA, BB> bimap(Function<? super A, ? extends AA> fn1, Function<? super B, ? extends BB> fn2) {
+        return T2.of(fn1.apply(_1()), fn2.apply(_2()));
     }
 
-    public abstract A _1();
+    /**
+     * Maps both elements of the tuple in a lazy fashion.
+     *
+     * @param fn1  the first transformation function
+     * @param fn2  the second transformation function
+     * @param <AA> Nthe type of the first element
+     * @param <BB> Nthe type of the second element
+     * @return the transformed tuple
+     */
+    public <AA, BB> T2<AA, BB> bimap$(Function<? super A, ? extends AA> fn1, Function<? super B, ? extends BB> fn2) {
+        return T2.of$(() -> fn1.apply(_1()), () -> fn2.apply(_2()));
+    }
 
-    public abstract B _2();
+    /**
+     * Maps the first element of the tuple.
+     *
+     * @param fn   the transformation function
+     * @param <AA> Nthe type of the first element
+     * @return the transformed tuple
+     */
+    public <AA> T2<AA, B> map_1(Function<? super A, ? extends AA> fn) {
+        return T2.of(fn.apply(_1()), _2());
+    }
+
+    /**
+     * Maps the first element of the tuple in a lazy fashion.
+     *
+     * @param fn   the transformation function
+     * @param <AA> Nthe type of the first element
+     * @return the transformed tuple
+     */
+    public <AA> T2<AA, B> map_1$(Function<? super A, ? extends AA> fn) {
+        return T2.of$(() -> fn.apply(_1()), this::_2);
+    }
+
+    /**
+     * Maps the second element of the tuple.
+     *
+     * @param fn   the transformation function
+     * @param <BB> Nthe type of the second element
+     * @return the transformed tuple
+     */
+    public <BB> T2<A, BB> map_2(Function<? super B, ? extends BB> fn) {
+        return T2.of(_1(), fn.apply(_2()));
+    }
+
+    /**
+     * Maps the second element of the tuple in a lazy fashion.
+     *
+     * @param fn   the transformation function
+     * @param <BB> Nthe type of the second element
+     * @return the transformed tuple
+     */
+    public <BB> T2<A, BB> map_2$(Function<? super B, ? extends BB> fn) {
+        return T2.of$(this::_1, () -> fn.apply(_2()));
+    }
+
+    /**
+     * The catamorphism of {@link T2}.
+     *
+     * @param fn  the transformation function
+     * @param <C> the result value
+     * @return the result
+     */
+    public <C> C cata(BiFunction<? super A, ? super B, ? extends C> fn) {
+        return fn.apply(_1(), _2());
+    }
+
+    /**
+     * Constructs a tuple with swapped elements.
+     *
+     * @return the transformed tuple
+     */
+    public T2<B, A> swap() {
+        return of(_2(), _1());
+    }
+
+    /**
+     * Constructs a tuple with swapped elements in a lazy fashion.
+     *
+     * @return the transformed tuple
+     */
+    public T2<B, A> swap$() {
+        return T2.of$(this::_2, this::_1);
+    }
+
+    /**
+     * Merges two tuples using two functions.
+     *
+     * @param a    the first tuple
+     * @param b    the second tuple
+     * @param fn1  the first merging function
+     * @param fn2  the second merging function
+     * @param <A>  the type of the first element of the first tuple
+     * @param <AA> the type of the second element of the first tuple
+     * @param <B>  the type of the first element of the second tuple
+     * @param <BB> the type of the second element of the second tuple
+     * @param <C>  the type of the first element of the merged tuple
+     * @param <CC> the type of the second element of the merged tuple
+     * @return the merged tuple
+     */
+    public static <A, AA, B, BB, C, CC> T2<C, CC> merge(T2<A, AA> a, T2<B, BB> b, BiFunction<A, B, C> fn1, BiFunction<AA, BB, CC> fn2) {
+        return T2.of(fn1.apply(a._1(), b._1()), fn2.apply(a._2(), b._2()));
+    }
+
+    /**
+     * Merges two tuples using two functions in a lazy fashion.
+     *
+     * @param a    the first tuple
+     * @param b    the second tuple
+     * @param fn1  the first merging function
+     * @param fn2  the second merging function
+     * @param <A>  the type of the first element of the first tuple
+     * @param <AA> the type of the second element of the first tuple
+     * @param <B>  the type of the first element of the second tuple
+     * @param <BB> the type of the second element of the second tuple
+     * @param <C>  the type of the first element of the merged tuple
+     * @param <CC> the type of the second element of the merged tuple
+     * @return the merged tuple
+     */
+    public static <A, AA, B, BB, C, CC> T2<C, CC> merge$(T2<A, AA> a, T2<B, BB> b, BiFunction<A, B, C> fn1, BiFunction<AA, BB, CC> fn2) {
+        return T2.of$(() -> fn1.apply(a._1(), b._1()), () -> fn2.apply(a._2(), b._2()));
+    }
+
+    /**
+     * Converts the tuple to a heterogenous list.
+     *
+     * @return the {@link HList}
+     */
+    public HCons<A, HCons<B, HNil>> toHList() {
+        return HList.cons(_1(), HList.cons(_2(), HList.nil));
+    }
+
+    /**
+     * Converts the tuple to  map entry.
+     *
+     * @return the {@link java.util.Map.Entry}
+     */
+    public Map.Entry<A, B> toMapEntry() {
+        return new Map.Entry<A, B>() {
+            @Override
+            public A getKey() {
+                return _1();
+            }
+
+            @Override
+            public B getValue() {
+                return _2();
+            }
+
+            @Override
+            public B setValue(B value) {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+    /**
+     * Constructs a tuple from a {@link java.util.Map.Entry}
+     *
+     * @param entry the map entry
+     * @param <A>   the type of the first element
+     * @param <B>   the type of the second element
+     * @return the tuple
+     */
+    public static <A, B> T2<A, B> fromMapEntry(Map.Entry<A, B> entry) {
+        return T2.of(entry.getKey(), entry.getValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * _1().hashCode() + 37 * _2().hashCode();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -136,37 +327,172 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
     }
 
     @Override
-    public int hashCode() {
-        return 31 * _1().hashCode() + 37 * _2().hashCode();
-    }
-
-    public <AA> T2<AA, B> map_1(Function<? super A, ? extends AA> fn) {
-        return of(fn.apply(_1()), _2());
-    }
-
-    public <BB> T2<A, BB> map_2(Function<? super B, ? extends BB> fn) {
-        return of(_1(), fn.apply(_2()));
-    }
-
-    public <C> C cata(BiFunction<? super A,? super B,? extends C> fn) {
-        return fn.apply(_1(), _2());
-    }
-
-    public T2<B, A> swap() {
-        return of(_2(), _1());
-    }
-
-    @Override
     public String toString() {
         return String.format("(%s,%s)", _1(), _2());
     }
 
-
-    public HCons<A, HCons<B, HNil>> toHlist() {
-        return HList.cons(_1(), HList.cons(_2(), HList.nil));
+    /**
+     * The {@link Eq} instance.
+     *
+     * @param eqA the eq instance of the type of the first element
+     * @param eqB the eq instance of the type of the second element
+     * @param <A> the type of the first element
+     * @param <B> the type of the second element
+     * @return the instance
+     */
+    public static <A, B> Eq<T2<A, B>> eq(Eq<? super A> eqA, Eq<? super B> eqB) {
+        return (one, two) -> eqA.eq(one._1(), two._1())
+                && eqB.eq(one._2(), two._2());
     }
 
-    public static class µ {
-
+    /**
+     * The {@link Ord} instance.
+     *
+     * @param ordA the ord instance of the type of the first element
+     * @param ordB the ord instance of the type of the second element
+     * @param <A>  the type of the first element
+     * @param <B>  the type of the second element
+     * @return the instance
+     */
+    public static <A, B> Ord<T2<A, B>> ord(Ord<? super A> ordA, Ord<? super B> ordB) {
+        return (one, two) -> ordA.cmp(one._1(), two._1())
+                .andThen(ordB.cmp(one._2(), two._2()));
     }
+
+    /**
+     * The {@link Semigroup} instance.
+     *
+     * @param semigroupA the semigroup of the type of the first element
+     * @param semigroupB the semigroup of the type of the second element
+     * @param <A>        the type of the first element
+     * @param <B>        the type of the second element
+     * @return the instance
+     */
+    public static <A, B> Semigroup<T2<A, B>> semigroup(Semigroup<A> semigroupA, Semigroup<B> semigroupB) {
+        return (x, y) -> T2.of(semigroupA.apply(x._1(), y._1()), semigroupB.apply(x._2(), y._2()));
+    }
+
+    /**
+     * The {@link Monoid} instance.
+     *
+     * @param monoidA the monoid instance of the type of the first element
+     * @param monoidB the monoid instance of the type of the second element
+     * @param <A>     the type of the first element
+     * @param <B>     the type of the second element
+     * @return the instance
+     */
+    public static <A, B> Monoid<T2<A, B>> monoid(Monoid<A> monoidA, Monoid<B> monoidB) {
+        return Monoid.create(T2.of(monoidA.identity(), monoidB.identity()),
+                (x, y) -> T2.of(monoidA.apply(x._1(), y._1()), monoidB.apply(x._2(), y._2())));
+    }
+
+    /**
+     * The {@link Group} instance.
+     *
+     * @param groupA the group instance of the type of the first element
+     * @param groupB the group instance of the type of the second element
+     * @param <A>    the type of the first element
+     * @param <B>    the type of the second element
+     * @return the instance
+     */
+    public static <A, B> Group<T2<A, B>> group(Group<A> groupA, Group<B> groupB) {
+        return Group.create(T2.of(groupA.identity(), groupB.identity()),
+                (x, y) -> T2.of(groupA.apply(x._1(), y._1()), groupB.apply(x._2(), y._2())),
+                z -> T2.of(groupA.inverse(z._1()), groupB.inverse(z._2())));
+    }
+
+    /**
+     * The {@link Functor} instance.
+     *
+     * @param <M> the type of the first element
+     * @return the instance
+     */
+    public static <M> T2Functor<M> functor() {
+        return new T2Functor<M>() {
+        };
+    }
+
+    /**
+     * The {@link Apply} instance.
+     *
+     * @param mSemigroup the semigroup of the type of the first element
+     * @param <M>        the type of the first element
+     * @return the instance
+     */
+    public static <M> T2Apply<M> apply(Semigroup<M> mSemigroup) {
+        return () -> mSemigroup;
+    }
+
+    /**
+     * The {@link Applicative} instance.
+     *
+     * @param mMonoid the monoid of the type of the first element
+     * @param <M>     the type of the first element
+     * @return the instance
+     */
+    public static <M> T2Applicative<M> applicative(Monoid<M> mMonoid) {
+        return () -> mMonoid;
+    }
+
+    /**
+     * The {@link Bind} instance.
+     *
+     * @param mSemigroup the semigroup of the type of the first element
+     * @param <M>        the type of the first element
+     * @return the instance
+     */
+    public static <M> T2Bind<M> bind(Semigroup<M> mSemigroup) {
+        return () -> mSemigroup;
+    }
+
+    /**
+     * The {@link Monad} instance.
+     *
+     * @param mMonoid the monoid of the type of the first element
+     * @param <M>     the type of the first element
+     * @return the instance
+     */
+    public static <M> T2Monad<M> monad(Monoid<M> mMonoid) {
+        return () -> mMonoid;
+    }
+
+    /**
+     * The {@link MonadRec} instance.
+     *
+     * @param mMonoid the monoid of the type of the first element
+     * @param <M>     the type of the first element
+     * @return instance
+     */
+    public static <M> T2MonadRec<M> monadRec(Monoid<M> mMonoid) {
+        return () -> mMonoid;
+    }
+
+    /**
+     * The {@link Comonad} instance.
+     *
+     * @param <M> the monoid of the type of the first element
+     * @return the instance
+     */
+    public static <M> T2Comonad<M> comonad() {
+        return new T2Comonad<M>() {
+        };
+    }
+
+    /**
+     * The {@link Bifunctor} instance.
+     */
+    public static final T2Bifunctor bifunctor = new T2Bifunctor() {
+    };
+
+    /**
+     * The {@link Biapply} instance.
+     */
+    public static final T2Biapply biapply = new T2Biapply() {
+    };
+
+    /**
+     * The {@link Biapplicative} instance.
+     */
+    public static final T2Biapplicative biapplicative = new T2Biapplicative() {
+    };
 }

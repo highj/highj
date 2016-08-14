@@ -9,7 +9,7 @@ import java.util.function.Function;
 public interface T2Functor<S> extends Functor<__<T2.µ, S>> {
 
     @Override
-    public default <A, B> T2<S, B> map(Function<A, B> fn, __<__<T2.µ, S>, A> nestedA) {
+    default <A, B> T2<S, B> map(Function<A, B> fn, __<__<T2.µ, S>, A> nestedA) {
         return T2.narrow(nestedA).map_2(fn);
     }
 }
