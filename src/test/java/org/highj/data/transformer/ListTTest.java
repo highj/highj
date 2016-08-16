@@ -513,7 +513,7 @@ public class ListTTest {
         };
 
         ListT<µ, Character> listT = ListT.narrow(ListT.monadRec(monad).tailRec(substrings, "abc"));
-        assertListTEquals(listT, 'a', 'a', 'b', 'b', 'b', 'c', 'c');
+        assertListTEquals(listT, 'c', 'c', 'b', 'b', 'b', 'a', 'a');
     }
 
     @SafeVarargs
