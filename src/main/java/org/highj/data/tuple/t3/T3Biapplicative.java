@@ -8,10 +8,10 @@ import org.highj.typeclass2.bifunctor.Biapplicative;
 public interface T3Biapplicative<S> extends T3Biapply<S>, Biapplicative<__<T3.µ, S>> {
 
     @Override
-    public Monoid<S> getS();
+    Monoid<S> getS();
 
     @Override
-    public default <A, B> T3<S, A, B> bipure(A a, B b) {
-        return T3.of(getS().identity(), a,b);
+    default <A, B> T3<S, A, B> bipure(A a, B b) {
+        return T3.of(getS().identity(), a, b);
     }
 }

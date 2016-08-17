@@ -1,8 +1,18 @@
 package org.highj.data.tuple;
 
 import org.derive4j.hkt.__;
+import org.highj.data.HList;
 import org.highj.data.eq.Eq;
+import org.highj.data.num.Integers;
+import org.highj.data.ord.Ord;
+import org.highj.data.ord.Ordering;
+import org.highj.function.Strings;
+import org.highj.typeclass0.group.Group;
+import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass0.group.Semigroup;
 import org.junit.Test;
+
+import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -214,76 +224,113 @@ public class T3Test {
 
     @Test
     public void ord() {
-
+        Ord<T3<String, Integer, Character>> ord = T3.ord(Ord.fromComparable(), Ord.fromComparable(), Ord.fromComparable());
+        T3<String, Integer, Character> t3 = T3.of("bar", 42, 'A');
+        assertThat(ord.cmp(t3, T3.of("bar", 42, 'A'))).isEqualTo(Ordering.EQ);
+        assertThat(ord.cmp(t3, T3.of$(() -> "bar", () -> 42, () -> 'A'))).isEqualTo(Ordering.EQ);;
+        assertThat(ord.cmp(t3, T3.of("foo", 42, 'A'))).isEqualTo(Ordering.LT);
+        assertThat(ord.cmp(t3, T3.of("bar", 43, 'A'))).isEqualTo(Ordering.LT);
+        assertThat(ord.cmp(t3, T3.of("bar", 42, 'B'))).isEqualTo(Ordering.LT);
+        assertThat(ord.cmp(T3.of("foo", 42, 'A'), t3)).isEqualTo(Ordering.GT);
+        assertThat(ord.cmp(T3.of("bar", 43, 'A'), t3)).isEqualTo(Ordering.GT);
+        assertThat(ord.cmp(T3.of("bar", 42, 'B'), t3)).isEqualTo(Ordering.GT);
     }
 
     @Test
     public void testToString() {
-
+        T3<String, Integer, Character> t3 = T3.of("foo", 42, 'A');
+        assertThat(t3.toString()).isEqualTo("(foo,42,A)");
     }
 
     @Test
     public void functor() {
-
+        T3<String, Integer, Character> t3 = T3.of("foo", 42, 'A');
+        assertThat(T3.<String, Integer>functor().map(c -> (int) c, t3)).isEqualTo(T3.of("foo", 42, 65));
     }
 
     @Test
     public void apply() {
-
+        T3<String, Integer, Character> t3 = T3.of("bar", 42, 'A');
+        T3<String, Integer, Function<Character, Character>> fn = T3.of("foo", 8, c -> (char)(c + 1));
+        T3<String, Integer, Character> ap = T3.apply(Strings.group, Integers.additiveGroup).ap(fn, t3);
+        assertThat(ap).isEqualTo(T3.of("foobar", 50, 'B'));
     }
 
     @Test
     public void applicative() {
-
+        T3<String, Integer, Character> pure = T3.applicative(Strings.group, Integers.additiveGroup).pure('A');
+        assertThat(pure).isEqualTo(T3.of("",0,'A'));
     }
 
     @Test
     public void bind() {
-
+        T3<String, Integer, Character> t3 = T3.of("foo", 42, 'A');
+        T3<String, Integer, Character> bind = T3.monad(Strings.group, Integers.additiveGroup).bind(t3, c -> T3.of("" + c, (int) c, c));
+        assertThat(bind).isEqualTo(T3.of("fooA", 42+65, 'A'));
     }
 
     @Test
     public void monad() {
-
+        // no new methods
     }
 
     @Test
     public void comonad() {
-
+        assertThat(T3.comonad().extract(T3.of("foo", 42, 'A'))).isEqualTo('A');
+        assertThat(T3.comonad().duplicate(T3.of("foo", 42, 'A')))
+                .isEqualTo(T3.of("foo", 42, T3.of("foo", 42, 'A')));
     }
 
     @Test
     public void semigroup() {
-
+        Semigroup<T3<String, Integer, Integer>> semigroup = T3.semigroup(Strings.group, Integers.additiveGroup, Integers.multiplicativeMonoid);
+        assertThat(semigroup.apply(T3.of("foo", 5, 5), T3.of("bar", 2, 2))).isEqualTo(T3.of("foobar", 7, 10));
     }
 
     @Test
     public void monoid() {
-
+        Monoid<T3<String, Integer, Integer>> monoid = T3.monoid(Strings.group, Integers.additiveGroup, Integers.multiplicativeMonoid);
+        assertThat(monoid.apply(T3.of("foo", 5, 5), T3.of("bar", 2, 2))).isEqualTo(T3.of("foobar", 7, 10));
+        assertThat(monoid.identity()).isEqualTo(T3.of("",0,1));
     }
 
     @Test
     public void group() {
-
+        Group<T3<String, Integer, Integer>> group = T3.group(Strings.group, Integers.additiveGroup, Integers.additiveGroup);
+        assertThat(group.apply(T3.of("foo", 5, 5), T3.of("bar", 2, 2))).isEqualTo(T3.of("foobar", 7, 7));
+        assertThat(group.identity()).isEqualTo(T3.of("",0,0));
+        assertThat(group.inverse(T3.of("foo", 2, 2))).isEqualTo(T3.of("oof",-2,-2));
     }
 
     @Test
     public void bifunctor() {
-
+        T3<String, Integer, Character> t3 = T3.of("foo", 42, 'A');
+        assertThat(T3.<String>bifunctor().bimap(i -> i + 8, c -> (int) c, t3)).isEqualTo(T3.of("foo", 50, 65));
+        assertThat(T3.<String>bifunctor().first(i -> i + 8, t3)).isEqualTo(T3.of("foo", 50, 'A'));
+        assertThat(T3.<String>bifunctor().second( c -> (int) c, t3)).isEqualTo(T3.of("foo", 42, 65));
     }
 
     @Test
     public void biapply() {
-
+        T3<String, Integer, Character> t3 = T3.of("bar", 42, 'A');
+        T3<String, Function<Integer, Integer>, Function<Character, String>> fn =
+                T3.of("foo", i -> i + 8, c -> c+ "!");
+        T3<String, Integer, String> biapply = T3.biapply(Strings.group).biapply(fn, t3);
+        assertThat(biapply).isEqualTo(T3.of("foobar", 50, "A!"));
     }
 
     @Test
     public void biapplicative() {
-
+        T3<String, Integer, Character> t3 = T3.biapplicative(Strings.group).bipure(42, 'A');
+        assertThat(t3).isEqualTo(T3.of("", 42, 'A'));
     }
 
     @Test
     public void toHList() {
-
+        HList.HCons<String, HList.HCons<Integer, HList.HCons<Character, HList.HNil>>> hList = T3.of("foo", 42, 'A').toHList();
+        assertThat(hList.head()).isEqualTo("foo");
+        assertThat(hList.tail().head()).isEqualTo(42);
+        assertThat(hList.tail().tail().head()).isEqualTo('A');
+        assertThat(hList.tail().tail().tail()).isEqualTo(HList.nil());
     }
 }
