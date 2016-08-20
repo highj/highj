@@ -283,22 +283,22 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
      * @param fn1   the merging function for the first values
      * @param fn2   the merging function for the second values
      * @param fn3   the merging function for the third values
-     * @param <A>   the type of the first element of the first tuple
-     * @param <AA>  the type of the first element of the second tuple
-     * @param <AAA> the type of the first element of the result
-     * @param <B>   the type of the second element of the first tuple
-     * @param <BB>  the type of the second element of the second tuple
-     * @param <BBB> the type of the second element of the result
-     * @param <C>   the type of the third element of the first tuple
-     * @param <CC>  the type of the third element of the second tuple
-     * @param <CCC> the type of the third element of the result
+     * @param <A1>   the type of the first element of the first tuple
+     * @param <A2>  the type of the second element of the first tuple
+     * @param <A3> the type of the third element of the first tuple
+     * @param <B1>   the type of the first element of the second tuple
+     * @param <B2>  the type of the second element of the second tuple
+     * @param <B3> the type of the third element of the second tuple
+     * @param <C1>   the type of the first element of the result
+     * @param <C2>  the type of the second element of the result
+     * @param <C3> the type of the third element of the result
      * @return the merged tuple
      */
-    public static <A, AA, AAA, B, BB, BBB, C, CC, CCC> T3<C, CC, CCC> merge(
-            T3<A, AA, AAA> a, T3<B, BB, BBB> b,
-            BiFunction<A, B, C> fn1,
-            BiFunction<AA, BB, CC> fn2,
-            BiFunction<AAA, BBB, CCC> fn3) {
+    public static <A1, A2, A3, B1, B2, B3, C1, C2, C3> T3<C1, C2, C3> merge(
+            T3<A1, A2, A3> a, T3<B1, B2, B3> b,
+            BiFunction<A1, B1, C1> fn1,
+            BiFunction<A2, B2, C2> fn2,
+            BiFunction<A3, B3, C3> fn3) {
         return of(fn1.apply(a._1(), b._1()),
                 fn2.apply(a._2(), b._2()),
                 fn3.apply(a._3(), b._3()));
@@ -312,22 +312,22 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
      * @param fn1   the merging function for the first values
      * @param fn2   the merging function for the second values
      * @param fn3   the merging function for the third values
-     * @param <A>   the type of the first element of the first tuple
-     * @param <AA>  the type of the first element of the second tuple
-     * @param <AAA> the type of the first element of the result
-     * @param <B>   the type of the second element of the first tuple
-     * @param <BB>  the type of the second element of the second tuple
-     * @param <BBB> the type of the second element of the result
-     * @param <C>   the type of the third element of the first tuple
-     * @param <CC>  the type of the third element of the second tuple
-     * @param <CCC> the type of the third element of the result
+     * @param <A1>   the type of the first element of the first tuple
+     * @param <A2>  the type of the second element of the first tuple
+     * @param <A3> the type of the third element of the first tuple
+     * @param <B1>   the type of the first element of the second tuple
+     * @param <B2>  the type of the second element of the second tuple
+     * @param <B3> the type of the third element of the second tuple
+     * @param <C1>   the type of the first element of the result
+     * @param <C2>  the type of the second element of the result
+     * @param <C3> the type of the third element of the result
      * @return the merged tuple
      */
-    public static <A, AA, AAA, B, BB, BBB, C, CC, CCC> T3<C, CC, CCC> merge$(
-            T3<A, AA, AAA> a, T3<B, BB, BBB> b,
-            BiFunction<A, B, C> fn1,
-            BiFunction<AA, BB, CC> fn2,
-            BiFunction<AAA, BBB, CCC> fn3) {
+    public static <A1, A2, A3, B1, B2, B3, C1, C2, C3> T3<C1, C2, C3> merge$(
+            T3<A1, A2, A3> a, T3<B1, B2, B3> b,
+            BiFunction<A1, B1, C1> fn1,
+            BiFunction<A2, B2, C2> fn2,
+            BiFunction<A3, B3, C3> fn3) {
         return of$(() -> fn1.apply(a._1(), b._1()),
                 () -> fn2.apply(a._2(), b._2()),
                 () -> fn3.apply(a._3(), b._3()));
@@ -375,7 +375,7 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
      *
      * @param <S> the type of the first element
      * @param <T> the type of the second element
-     * @return the instane
+     * @return the instance
      */
     public static <S, T> T3Functor<S, T> functor() {
         return new T3Functor<S, T>() {

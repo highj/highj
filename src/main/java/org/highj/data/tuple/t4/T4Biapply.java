@@ -10,12 +10,12 @@ import java.util.function.Function;
 
 public interface T4Biapply<S, T> extends T4Bifunctor<S, T>, Biapply<__<__<T4.µ, S>, T>> {
 
-    public Semigroup<S> getS();
+    Semigroup<S> getS();
 
-    public Semigroup<T> getT();
+    Semigroup<T> getT();
 
     @Override
-    public default <A, B, C, D> T4<S, T, B, D> biapply(__2<__<__<T4.µ, S>, T>, Function<A, B>, Function<C, D>> fn, __2<__<__<T4.µ, S>, T>, A, C> ac) {
+    default <A, B, C, D> T4<S, T, B, D> biapply(__2<__<__<T4.µ, S>, T>, Function<A, B>, Function<C, D>> fn, __2<__<__<T4.µ, S>, T>, A, C> ac) {
         T4<S, T, Function<A, B>, Function<C, D>> quadFn = T4.narrow(fn);
         T4<S, T, A, C> quadAC = T4.narrow(ac);
         return T4.of(getS().apply(quadFn._1(), quadAC._1()),

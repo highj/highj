@@ -34,7 +34,6 @@ import org.highj.typeclass2.bifunctor.Bifunctor;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -235,15 +234,15 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
      * @param b    the second tuple
      * @param fn1  the first merging function
      * @param fn2  the second merging function
-     * @param <A>  the type of the first element of the first tuple
-     * @param <AA> the type of the second element of the first tuple
-     * @param <B>  the type of the first element of the second tuple
-     * @param <BB> the type of the second element of the second tuple
-     * @param <C>  the type of the first element of the merged tuple
-     * @param <CC> the type of the second element of the merged tuple
+     * @param <A1>  the type of the first element of the first tuple
+     * @param <A2> the type of the second element of the first tuple
+     * @param <B1>  the type of the first element of the second tuple
+     * @param <B2> the type of the second element of the second tuple
+     * @param <C1>  the type of the first element of the merged tuple
+     * @param <C2> the type of the second element of the merged tuple
      * @return the merged tuple
      */
-    public static <A, AA, B, BB, C, CC> T2<C, CC> merge(T2<A, AA> a, T2<B, BB> b, BiFunction<A, B, C> fn1, BiFunction<AA, BB, CC> fn2) {
+    public static <A1, A2, B1, B2, C1, C2> T2<C1, C2> merge(T2<A1, A2> a, T2<B1, B2> b, BiFunction<A1, B1, C1> fn1, BiFunction<A2, B2, C2> fn2) {
         return T2.of(fn1.apply(a._1(), b._1()), fn2.apply(a._2(), b._2()));
     }
 
@@ -254,15 +253,15 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
      * @param b    the second tuple
      * @param fn1  the first merging function
      * @param fn2  the second merging function
-     * @param <A>  the type of the first element of the first tuple
-     * @param <AA> the type of the second element of the first tuple
-     * @param <B>  the type of the first element of the second tuple
-     * @param <BB> the type of the second element of the second tuple
-     * @param <C>  the type of the first element of the merged tuple
-     * @param <CC> the type of the second element of the merged tuple
+     * @param <A1>  the type of the first element of the first tuple
+     * @param <A2> the type of the second element of the first tuple
+     * @param <B1>  the type of the first element of the second tuple
+     * @param <B2> the type of the second element of the second tuple
+     * @param <C1>  the type of the first element of the merged tuple
+     * @param <C2> the type of the second element of the merged tuple
      * @return the merged tuple
      */
-    public static <A, AA, B, BB, C, CC> T2<C, CC> merge$(T2<A, AA> a, T2<B, BB> b, BiFunction<A, B, C> fn1, BiFunction<AA, BB, CC> fn2) {
+    public static <A1, A2, B1, B2, C1, C2> T2<C1, C2> merge$(T2<A1, A2> a, T2<B1, B2> b, BiFunction<A1, B1, C1> fn1, BiFunction<A2, B2, C2> fn2) {
         return T2.of$(() -> fn1.apply(a._1(), b._1()), () -> fn2.apply(a._2(), b._2()));
     }
 

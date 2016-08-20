@@ -7,16 +7,16 @@ import org.highj.typeclass1.monad.Apply;
 
 import java.util.function.Function;
 
-public interface  T4Apply<S,T,U> extends T4Functor<S,T,U>, Apply<__<__<__<T4.µ,S>, T>, U>> {
+public interface T4Apply<S, T, U> extends T4Functor<S, T, U>, Apply<__<__<__<T4.µ, S>, T>, U>> {
 
-    public Semigroup<S> getS();
+    Semigroup<S> getS();
 
-    public Semigroup<T> getT();
+    Semigroup<T> getT();
 
-    public Semigroup<U> getU();
+    Semigroup<U> getU();
 
     @Override
-    public default <A, B> T4<S, T, U, B> ap(__<__<__<__<T4.µ, S>, T>, U>, Function<A, B>> fn, __<__<__<__<T4.µ, S>, T>, U>, A> nestedA) {
+    default <A, B> T4<S, T, U, B> ap(__<__<__<__<T4.µ, S>, T>, U>, Function<A, B>> fn, __<__<__<__<T4.µ, S>, T>, U>, A> nestedA) {
         T4<S, T, U, Function<A, B>> fnQuadruple = T4.narrow(fn);
         T4<S, T, U, A> aQuadruple = T4.narrow(nestedA);
         return T4.of(getS().apply(fnQuadruple._1(), aQuadruple._1()),
