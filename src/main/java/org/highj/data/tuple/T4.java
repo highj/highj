@@ -22,6 +22,7 @@ import org.highj.typeclass2.bifunctor.Biapplicative;
 import org.highj.typeclass2.bifunctor.Biapply;
 import org.highj.typeclass2.bifunctor.Bifunctor;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -340,12 +341,12 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
      */
     public static <A1, A2, A3, A4, B1, B2, B3, B4, C1, C2, C3, C4> T4<C1, C2, C3, C4> merge(
             T4<A1, A2, A3, A4> a, T4<B1, B2, B3, B4> b,
-            Function<A1, Function<B1, C1>> fn1, Function<A2, Function<B2, C2>> fn2,
-            Function<A3, Function<B3, C3>> fn3, Function<A4, Function<B4, C4>> fn4) {
-        return of(fn1.apply(a._1()).apply(b._1()),
-                fn2.apply(a._2()).apply(b._2()),
-                fn3.apply(a._3()).apply(b._3()),
-                fn4.apply(a._4()).apply(b._4()));
+            BiFunction<A1, B1, C1> fn1, BiFunction<A2, B2, C2> fn2,
+            BiFunction<A3, B3, C3> fn3, BiFunction<A4, B4, C4> fn4) {
+        return of(fn1.apply(a._1(), b._1()),
+                fn2.apply(a._2(), b._2()),
+                fn3.apply(a._3(), b._3()),
+                fn4.apply(a._4(), b._4()));
     }
 
     /**
@@ -373,12 +374,12 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
      */
     public static <A1, A2, A3, A4, B1, B2, B3, B4, C1, C2, C3, C4> T4<C1, C2, C3, C4> merge$(
             T4<A1, A2, A3, A4> a, T4<B1, B2, B3, B4> b,
-            Function<A1, Function<B1, C1>> fn1, Function<A2, Function<B2, C2>> fn2,
-            Function<A3, Function<B3, C3>> fn3, Function<A4, Function<B4, C4>> fn4) {
-        return of$(() -> fn1.apply(a._1()).apply(b._1()),
-                () -> fn2.apply(a._2()).apply(b._2()),
-                () -> fn3.apply(a._3()).apply(b._3()),
-                () -> fn4.apply(a._4()).apply(b._4()));
+            BiFunction<A1, B1, C1> fn1, BiFunction<A2, B2, C2> fn2,
+            BiFunction<A3, B3, C3> fn3, BiFunction<A4, B4, C4> fn4) {
+        return of$(() -> fn1.apply(a._1(), b._1()),
+                () -> fn2.apply(a._2(), b._2()),
+                () -> fn3.apply(a._3(), b._3()),
+                () -> fn4.apply(a._4(), b._4()));
     }
 
     /**
@@ -415,8 +416,9 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
      * @param <D>  the type of the fourth value
      * @return the instance
      */
-    public static <A, B, C, D> Ord<T4<A, B, C, D>> ord(Ord<? super A> ordA, Ord<? super B> ordB,
-                                                       Ord<? super C> ordC, Ord<? super D> ordD) {
+    public static <A, B, C, D> Ord<T4<A, B, C, D>> ord(
+            Ord<? super A> ordA, Ord<? super B> ordB,
+            Ord<? super C> ordC, Ord<? super D> ordD) {
         return (one, two) -> ordA.cmp(one._1(), two._1())
                 .andThen(ordB.cmp(one._2(), two._2()))
                 .andThen(ordC.cmp(one._3(), two._3()))
@@ -703,7 +705,7 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
      * Converts the tuple to a heterogenous list.
      * @return the {@link HList}
      */
-    public HCons<A, HCons<B, HCons<C, HCons<D, HNil>>>> toHlist() {
+    public HCons<A, HCons<B, HCons<C, HCons<D, HNil>>>> toHList() {
         return HList.cons(_1(), HList.cons(_2(), HList.cons(_3(), HList.cons(_4(), HList.nil))));
     }
 
