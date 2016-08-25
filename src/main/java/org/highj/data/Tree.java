@@ -87,7 +87,7 @@ public abstract class Tree<A> implements __<Tree.µ, A> {
     }
 
     private static List<String> shift(String first, String other, List<String> strings) {
-        return List.zipWith(List.Cons(first, List.cycle(other)), strings, x -> y -> x + y);
+        return List.zipWith(List.Cons(first, List.cycle(other)), strings, (x, y) -> x + y);
     }
 
     public boolean equals(Object o) {

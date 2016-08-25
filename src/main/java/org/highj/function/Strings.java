@@ -7,6 +7,7 @@ import org.highj.typeclass0.group.Group;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.highj.util.Contracts.require;
@@ -18,7 +19,7 @@ public enum Strings {
         return new StringBuilder(s).reverse().toString();
     }
 
-    public static final Function<String, Function<Integer, String>> repeat =  s -> n -> {
+    public static final BiFunction<String, Integer, String> repeat = (s, n) -> {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < n; i++) {
             sb.append(s);

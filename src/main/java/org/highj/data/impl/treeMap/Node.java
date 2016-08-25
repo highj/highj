@@ -164,8 +164,7 @@ public abstract class Node<K, V> {
 
     private boolean isOrdered(Ord<? super K> ord) {
         List<K> list = toList((k, v) -> k);
-        return !List.<K, K, Ordering>zipWith(list, list.tail(),
-                x -> y -> ord.cmp(x, y)).contains(o -> o != Ordering.LT);
+        return ! List.zipWith(list, list.tail(), ord::cmp).contains(o -> o != Ordering.LT);
     }
 
     private boolean blackHeight() {

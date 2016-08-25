@@ -7,12 +7,12 @@ import org.highj.typeclass1.alternative.Alternative;
 public interface MonadPlus<M> extends MonadZero<M>, Alternative<M> {
 
     //MonadPlus.(++) (Control.Monad)
-    public <A> __<M, A> mplus(__<M, A> one, __<M, A> two);
+    <A> __<M, A> mplus(__<M, A> one, __<M, A> two);
 
 
     //msum (Control.Monad)
-    public default <A> __<M, A> msum(__<List.µ, __<M, A>> list) {
-        return List.narrow(list).foldr((__<M, A> one) -> (__<M, A> two) -> mplus(one, two), this.<A>mzero());
+    default <A> __<M, A> msum(__<List.µ, __<M, A>> list) {
+        return List.narrow(list).foldr(this::mplus, this.<A>mzero());
     }
 
     enum Bias {

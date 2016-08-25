@@ -190,7 +190,7 @@ public class StreamTest {
 
     @Test
     public void testZipWith() throws Exception {
-        Stream<String> stream = zipWith(s -> n -> Strings.repeat.apply(s).apply(n), cycle("foo", "bar", "baz"), range(2));
+        Stream<String> stream = zipWith(s -> n -> Strings.repeat.apply(s, n), cycle("foo", "bar", "baz"), range(2));
         assertEquals("Stream(foofoo,barbarbar,bazbazbazbaz,foofoofoofoofoo...)", stream.toString(4));
     }
 

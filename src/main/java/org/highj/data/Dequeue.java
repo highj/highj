@@ -7,6 +7,7 @@ import org.highj.function.Strings;
 import org.highj.data.tuple.T2;
 
 import java.util.Iterator;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 //BankersQueue implementation of Haskell package dequeue-0.1.5
@@ -179,11 +180,11 @@ public class Dequeue<A> implements __<Dequeue.µ, A>, Iterable<A> {
         return toList().iterator();
     }
 
-    public <B> B foldr(final Function<A, Function<B, B>> fn, final B b) {
+    public <B> B foldr(BiFunction<A, B, B> fn, B b) {
         return toList().foldr(fn, b);
     }
 
-    public <B> B foldl(final B b, final Function<B, Function<A, B>> fn) {
+    public <B> B foldl(B b, BiFunction<B, A, B> fn) {
         return toList().foldl(b, fn);
     }
 

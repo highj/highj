@@ -169,13 +169,13 @@ public class DequeueTest {
     @Test
     public void testFoldr() throws Exception {
         Dequeue<Character> dq = Dequeue.of('a','b','c');
-        assertThat(dq.<String>foldr(c -> s -> s + "-" + c, "z")).isEqualTo("z-c-b-a");
+        assertThat(dq.<String>foldr((c, s) -> s + "-" + c, "z")).isEqualTo("z-c-b-a");
     }
 
     @Test
     public void testFoldl() throws Exception {
         Dequeue<Character> dq = Dequeue.of('a','b','c');
-        assertThat(dq.<String>foldl("z", s -> c -> s + "-" + c)).isEqualTo("z-a-b-c");
+        assertThat(dq.<String>foldl("z", (s, c) -> s + "-" + c)).isEqualTo("z-a-b-c");
     }
 
     @Test

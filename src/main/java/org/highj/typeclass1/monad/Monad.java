@@ -15,17 +15,17 @@ import java.util.function.Function;
 public interface Monad<M> extends Applicative<M>, Bind<M> {
 
     // mapM (Control.Monad)
-    public default <A, B> Function<List<A>, __<M, List<B>>> mapM(final Function<A, __<M, B>> fn) {
+    default <A, B> Function<List<A>, __<M, List<B>>> mapM(final Function<A, __<M, B>> fn) {
         return list -> sequence(list.map(fn));
     }
 
     // mapM_ (Control.Monad)
-    public default <A, B> Function<List<A>, __<M, T0>> mapM_(final Function<A, __<M, B>> fn) {
+    default <A, B> Function<List<A>, __<M, T0>> mapM_(final Function<A, __<M, B>> fn) {
         return list -> sequence_(list.map(fn));
     }
 
     //foldM (Control.Monad)
-    public default <A, B> Function<A, Function<List<B>, __<M, A>>> foldM(final Function<A, Function<B, __<M, A>>> fn) {
+    default <A, B> Function<A, Function<List<B>, __<M, A>>> foldM(final Function<A, Function<B, __<M, A>>> fn) {
         return a -> listB -> {
             __<M, A> result = pure(a);
             final Mutable<B> b = new Mutable<>();
@@ -40,7 +40,7 @@ public interface Monad<M> extends Applicative<M>, Bind<M> {
     }
 
     //foldM_ (Control.Monad)
-    public default <A, B> Function<A, Function<List<B>, __<M, T0>>> foldM_(final Function<A, Function<B, __<M, A>>> fn) {
+    default <A, B> Function<A, Function<List<B>, __<M, T0>>> foldM_(final Function<A, Function<B, __<M, A>>> fn) {
         return a -> listB -> {
             __<M, A> result = pure(a);
             final Mutable<B> b = Mutable.newMutable();
@@ -55,25 +55,25 @@ public interface Monad<M> extends Applicative<M>, Bind<M> {
     }
 
     //replicateM (Control.Monad)
-    public default <A> __<M, List<A>> replicateM(int n, __<M, A> nestedA) {
+    default <A> __<M, List<A>> replicateM(int n, __<M, A> nestedA) {
         return sequence(List.replicate(n, nestedA));
     }
 
     //replicateM_ (Control.Monad)
-    public default <A> __<M, T0> replicateM_(int n, __<M, A> nestedA) {
+    default <A> __<M, T0> replicateM_(int n, __<M, A> nestedA) {
         return sequence_(List.replicate(n, nestedA));
     }
 
     //sequence (Control.Monad)
-    public default <A> __<M, List<A>> sequence(List<__<M, A>> list) {
+    default <A> __<M, List<A>> sequence(List<__<M, A>> list) {
         //  sequence ms = foldr (liftM2 (:)) (return []) ms
         Function<__<M, A>, Function<__<M, List<A>>, __<M, List<A>>>> f2 = lift2((A a) -> (List<A> as) -> List.<A>Cons(a, as));
-        return list.foldr(x -> y -> f2.apply(x).apply(y), pure(List.<A>Nil()));
+        return list.foldr((x, y) -> f2.apply(x).apply(y), pure(List.<A>Nil()));
     }
 
     //sequence_ (Control.Monad)
-    public default <A> __<M, T0> sequence_(List<__<M, A>> list) {
-        return list.foldr((__<M,A> a) -> (__<M,T0> b) -> rightSeq(a, b), pure(T0.of()));
+    default <A> __<M, T0> sequence_(List<__<M, A>> list) {
+        return list.foldr(this::rightSeq, pure(T0.of()));
     }
 
 }

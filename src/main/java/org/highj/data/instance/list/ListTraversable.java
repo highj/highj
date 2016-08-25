@@ -18,12 +18,12 @@ public interface ListTraversable extends ListFunctor, Traversable<µ> {
 
     @Override
     default <A, B> B foldr(Function<A, Function<B, B>> fn, B b, __<µ, A> nestedA) {
-        return narrow(nestedA).foldr(fn, b);
+        return narrow(nestedA).foldr((x,y) -> fn.apply(x).apply(y), b);
     }
 
     @Override
     default <A, B> A foldl(Function<A, Function<B, A>> fn, A a, __<µ, B> bs) {
-        return narrow(bs).foldl(a, fn);
+        return narrow(bs).foldl(a, (x,y) -> fn.apply(x).apply(y));
     }
 
     @Override
@@ -32,9 +32,9 @@ public interface ListTraversable extends ListFunctor, Traversable<µ> {
         //  where cons_f x ys = (:) <$> f x <*> ys
         List<A> listA = narrow(traversable);
         __<µ, B> emptyB = List.<B>empty();
-        return listA.foldr(a -> bs -> {
+        return listA.foldr((a, bs) -> {
             __<X,Function<__<µ, B>, __<µ, B>>> mapF =
-                    applicative.map(e -> es -> List.<B>narrow(es).plus(e), fn.apply(a));
+                    applicative.map(e -> es -> List.narrow(es).plus(e), fn.apply(a));
             return applicative.ap(mapF, bs);
         }, applicative.pure(emptyB));
     }

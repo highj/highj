@@ -16,8 +16,7 @@ public interface ZipApplicative extends Applicative<µ>, ListFunctor {
 
     @Override
     default <A, B> List<B> ap(__<µ, Function<A, B>> fn, __<µ, A> nestedA) {
-        Function<Function<A,B>, Function<A,B>> zipFn = f -> f;
-        return zipWith(narrow(fn), narrow(nestedA), zipFn);
+        return zipWith(narrow(fn), narrow(nestedA), Function::apply);
     }
 
 }

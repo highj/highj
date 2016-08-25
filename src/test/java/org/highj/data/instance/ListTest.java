@@ -120,13 +120,13 @@ public class ListTest {
     @Test
     public void testFoldl() {
         assertThat(List.of(1, 2, 3).foldl("xy", Strings.repeat)).isEqualTo("xyxyxyxyxyxy");
-        assertThat(List.of(1, 2, 3, 4).foldl(10, x -> y -> x - y)).isEqualTo(0);
+        assertThat(List.of(1, 2, 3, 4).foldl(10, (x, y) -> x - y)).isEqualTo(0);
     }
 
     @Test
     public void testFoldr() {
-        assertThat(List.of(1, 2, 3).foldr(a -> b -> Strings.repeat.apply(b).apply(a), "xy")).isEqualTo("xyxyxyxyxyxy");
-        assertThat(List.of(1, 2, 3, 4, 5).foldr(x -> y -> y - x, 15)).isEqualTo(0);
+        assertThat(List.of(1, 2, 3).foldr((a, b) -> Strings.repeat.apply(b, a), "xy")).isEqualTo("xyxyxyxyxyxy");
+        assertThat(List.of(1, 2, 3, 4, 5).foldr((x, y) -> y - x, 15)).isEqualTo(0);
     }
 
     @Test
@@ -464,11 +464,11 @@ public class ListTest {
         List<String> stringList = List.of("one", "two", "three", "four", "blubb");
         assertThat(List.zipWith(stringList, intList, Strings.repeat)).containsExactly(
                 "one", "twotwo", "threethreethree", "fourfour");
-        assertThat(List.zipWith(stringList, intList, intList, s -> i -> j ->
+        assertThat(List.zipWith(stringList, intList, intList, (s, i, j) ->
                 String.format("%s %d %d", s, i, j * j)))
                 .containsExactly("one 1 1", "two 2 4", "three 3 9", "four 2 4");
 
-        assertThat(List.zipWith(stringList, intList, intList, intList, s -> i -> j -> k ->
+        assertThat(List.zipWith(stringList, intList, intList, intList, (s, i, j, k) ->
                 String.format("%s %d %d %d", s, i, j * j, k + k)))
                 .containsExactly("one 1 1 2", "two 2 4 4", "three 3 9 6", "four 2 4 4");
 
@@ -505,5 +505,12 @@ public class ListTest {
         assertThat(group.apply(List.of(1,2,3), List.of(4,5,6))).containsExactly(1,2,3,4,5,6);
         assertThat(group.inverse(group.identity())).isEmpty();
         assertThat(group.inverse(List.of(1,2,3))).containsExactly(3,2,1);
+    }
+
+    @Test
+    public void testUnfoldable() {
+        Function<Integer, Maybe<T2<Integer, Integer>>> fn =
+                i -> Maybe.JustWhenTrue(i <= 10, () -> T2.of(i*i, i + 1));
+        assertThat(List.unfoldable.unfoldr(fn, 1)).containsExactly(1,4,9,16,25,36,49,64,81,100);
     }
 }

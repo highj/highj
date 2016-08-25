@@ -1,21 +1,23 @@
 package org.highj.data;
 
 import org.derive4j.hkt.__;
-import org.highj.data.instance.list.ListMonadPlus;
-import org.highj.data.instance.list.ListTraversable;
-import org.highj.data.instance.list.ZipApplicative;
-import org.highj.data.instance.list.Zipper;
+import org.highj.data.instance.list.*;
+import org.highj.function.F3;
+import org.highj.function.F4;
 import org.highj.function.Functions;
 import org.highj.function.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.typeclass0.group.Group;
+import org.highj.typeclass1.monad.MonadPlus;
+import org.highj.typeclass1.unfoldable.Unfoldable;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Iterables;
 import org.highj.util.Lazy;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -874,8 +876,8 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * @param <B> result type
      * @return result of the folding operation
      */
-    public <B> B foldr(final Function<A, Function<B, B>> fn, final B startValue) {
-        return reverse().foldl(startValue, Functions.flip(fn));
+    public <B> B foldr(BiFunction<A, B, B> fn, B startValue) {
+        return reverse().foldl(startValue, (b,a) -> fn.apply(a,b));
     }
 
     /**
@@ -889,10 +891,10 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * @param <B> result type
      * @return result of the folding operation
      */
-    public <B> B foldl(final B startValue, final Function<B, Function<A, B>> fn) {
+    public <B> B foldl(B startValue, BiFunction<B, A, B> fn) {
         B result = startValue;
         for (A a : this) {
-            result = fn.apply(result).apply(a);
+            result = fn.apply(result, a);
         }
         return result;
     }
@@ -909,7 +911,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * @return the combined list
      */
     public static <A, B> List<T2<A, B>> zip(List<A> listA, List<B> listB) {
-        return zipWith(listA, listB, a -> b -> T2.of(a, b));
+        return zipWith(listA, listB, T2::of);
     }
 
     /**
@@ -926,7 +928,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * @return the combined list
      */
     public static <A, B, C> List<T3<A, B, C>> zip(List<A> listA, List<B> listB, List<C> listC) {
-        return zipWith(listA, listB, listC, a -> b -> c -> T3.of(a, b, c));
+        return zipWith(listA, listB, listC, T3::of);
     }
 
     /**
@@ -945,7 +947,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * @return the combined list
      */
     public static <A, B, C, D> List<T4<A, B, C, D>> zip(List<A> listA, List<B> listB, List<C> listC, List<D> listD) {
-        return zipWith(listA, listB, listC, listD, a -> b -> c -> d -> T4.of(a, b, c, d));
+        return zipWith(listA, listB, listC, listD, T4::of);
     }
 
     /**
@@ -961,9 +963,9 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * @param <C>  the result type
      * @return the combined list
      */
-    public static <A, B, C> List<C> zipWith(final List<A> listA, final List<B> listB, final Function<A, Function<B, C>> fn) {
+    public static <A, B, C> List<C> zipWith(final List<A> listA, final List<B> listB, final BiFunction<A, B, C> fn) {
         return listA.isEmpty() || listB.isEmpty() ? Nil() :
-                List.Cons$(fn.apply(listA.head()).apply(listB.head()), () -> zipWith(listA.tail(), listB.tail(), fn));
+                List.Cons$(fn.apply(listA.head(), listB.head()), () -> zipWith(listA.tail(), listB.tail(), fn));
     }
 
     /**
@@ -981,9 +983,9 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * @param <D>  the result type
      * @return the combined list
      */
-    public static <A, B, C, D> List<D> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final Function<A, Function<B, Function<C, D>>> fn) {
+    public static <A, B, C, D> List<D> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final F3<A, B, C, D> fn) {
         return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() ? Nil() :
-                List.Cons$(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), fn));
+                List.Cons$(fn.apply(listA.head(), listB.head(), listC.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), fn));
     }
 
     /**
@@ -1003,9 +1005,9 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * @param <E>  the result type
      * @return the combined list
      */
-    public static <A, B, C, D, E> List<E> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final List<D> listD, final Function<A, Function<B, Function<C, Function<D, E>>>> fn) {
+    public static <A, B, C, D, E> List<E> zipWith(final List<A> listA, final List<B> listB, final List<C> listC, final List<D> listD, final F4<A, B, C, D, E> fn) {
         return listA.isEmpty() || listB.isEmpty() || listC.isEmpty() || listD.isEmpty() ? Nil() :
-                List.Cons$(fn.apply(listA.head()).apply(listB.head()).apply(listC.head()).apply(listD.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), listD.tail(), fn));
+                List.Cons$(fn.apply(listA.head(), listB.head(), listC.head(), listD.head()), () -> zipWith(listA.tail(), listB.tail(), listC.tail(), listD.tail(), fn));
     }
 
     /**
@@ -1114,9 +1116,15 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
     };
 
     /**
-     * The {@link org.highj.typeclass1.monad.MonadPlus} instance of lists.
+     * The {@link MonadPlus} instance of lists.
      */
     public static final ListMonadPlus monadPlus = new ListMonadPlus() {
+    };
+
+    /**
+     * The {@link Unfoldable} instance of lists.
+     */
+    public static final ListUnfoldable unfoldable = new ListUnfoldable() {
     };
 
     /**
