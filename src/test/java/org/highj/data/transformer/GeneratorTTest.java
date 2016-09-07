@@ -5,7 +5,7 @@ import org.highj.data.coroutine.ProducerT;
 import org.highj.data.tuple.T0;
 import org.highj.data.tuple.T1;
 import org.highj.data.tuple.T2;
-import org.highj.do_.Do;
+import org.highj.do_.Do_;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -25,15 +25,13 @@ public class GeneratorTTest {
             return ProducerT.done(T0.of());
         }
         return ProducerT.suspend(() ->
-            ProducerT.narrow(Do.do_(ProducerT.<T2<A, A>, T1.µ>monad(), new Do.DoBlock<__<__<ProducerT.µ, T2<A, A>>, T1.µ>, T0>() {
-                @Override
-                public <H> __<__<__<ProducerT.µ, T2<A, A>>, T1.µ>, T0> run(Do.MContext<H, __<__<ProducerT.µ, T2<A, A>>, T1.µ>> ctx) {
-                    ctx.seq(hanoi(n-1, from, other, to));
-                    ctx.seq(ProducerT.yield(T2.of(from, to)));
-                    ctx.seq(hanoi(n-1, other, to, from));
-                    return ctx.done();
-                }
-            }))
+            ProducerT.narrow(
+                Do_.<__<__<ProducerT.µ,T2<A,A>>,T1.µ>>do_()
+                    .__(hanoi(n-1, from, other, to))
+                    .__(ProducerT.yield(T2.of(from, to)))
+                    .__(hanoi(n-1, other, to, from))
+                    .runNoResultNoTailRec(ProducerT.monad())
+            )
         );
     }
 

@@ -1,5 +1,6 @@
 package org.highj.do_;
 
+import org.derive4j.hkt.Leibniz;
 import org.derive4j.hkt.__;
 import org.highj.data.Maybe;
 import org.junit.Test;
@@ -11,9 +12,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.highj.data.Either;
 import org.highj.data.List;
-import org.highj.do_.Do.DoBlock;
-import org.highj.do_.Do.MValue;
-import static org.highj.do_.Do.do_;
 
 /**
  *
@@ -24,15 +22,17 @@ public class DoTest {
     @Test
     @SuppressWarnings("UnusedAssignment")
     public void testNondeterminism() {
-        List<String> results = List.narrow(do_(List.monadPlus, new DoBlock<List.µ,String>() {
-            @Override
-            public <H> __<List.µ, String> run(Do.MContext<H, List.µ> ctx) {
-                MValue<H,Integer> va = ctx.assign(List.range(1, 1, 3));
-                MValue<H,Integer> vb = ctx.assign(List.range(1, 1, 3));
-                MValue<H,String> vr = ctx.let2(va, vb, (Integer a, Integer b) -> "" + a + " x " + b + " = " + (a*b));
-                return ctx.doneRes(vr);
-            }
-        }));
+        List<String> results = List.narrow(
+            Do_.<List.µ>do_()
+                .pushM(List.range(1, 1, 3))
+                .pushM(List.range(1, 1, 3))
+                .map2(
+                    Leibniz.refl(),
+                    (Integer a, Integer b) ->
+                        "" + a + " x " + b + " = " + (a*b)
+                )
+                .runWithResultNoTailRec(Leibniz.refl(), List.monadPlus)
+        );
         assertThat(results).containsExactly(
                 "1 x 1 = 1", "1 x 2 = 2", "1 x 3 = 3",
                 "2 x 1 = 2", "2 x 2 = 4", "2 x 3 = 6",
@@ -42,46 +42,41 @@ public class DoTest {
 
     @Test
     public void testDoBlock() {
-        Maybe<String> onetwo = Maybe.narrow(do_(Maybe.monad, new DoBlock<Maybe.µ,String>() {
-            @Override
-            public <H> __<Maybe.µ, String> run(Do.MContext<H, Maybe.µ> ctx) {
-                MValue<H,String> va = ctx.assign(Maybe.Just("one"));
-                MValue<H,String> vb = ctx.assign(Maybe.Just("two"));
-                MValue<H,String> vr = ctx.let2(va, vb, (String a, String b) -> a + b);
-                return ctx.doneRes(vr);
-            }
-        }));
+        Maybe<String> onetwo = Maybe.narrow(
+            Do_.<Maybe.µ>do_()
+                .push("one")
+                .push("two")
+                .map2(Leibniz.refl(), (String a, String b) -> a + b)
+                .runWithResult(Leibniz.refl(), Maybe.monad)
+        );
         assertEquals("onetwo", onetwo.get());
 
-        Maybe<String> empty = Maybe.narrow(do_(Maybe.monad, new DoBlock<Maybe.µ,String>() {
-            @Override
-            public <H> __<Maybe.µ, String> run(Do.MContext<H, Maybe.µ> ctx) {
-                MValue<H,String> va = ctx.assign(Maybe.Just("one"));
-                MValue<H,String> vb = ctx.assign(Maybe.Nothing());
-                MValue<H,String> vr = ctx.let2(va, vb, (String a, String b) -> a + b);
-                return ctx.doneRes(vr);
-            }
-        }));
+        Maybe<String> empty = Maybe.narrow(
+            Do_.<Maybe.µ>do_()
+                .push("one")
+                .pushM(Maybe.<String>Nothing())
+                .map2(Leibniz.refl(), (String a, String b) -> a + b)
+                .runWithResult(Leibniz.refl(), Maybe.monad)
+        );
         assertTrue(empty.isNothing());
     }
 
     @Test
     public void testBind() {
-        Either<String, Integer> handSum = Either.narrow(do_(Either.<String>monad(), new DoBlock<__<Either.µ,String>,Integer>() {
-            @Override
-            public <H> __<__<Either.µ, String>, Integer> run(Do.MContext<H, __<Either.µ, String>> ctx) {
-                MValue<H,Integer> va = ctx.assign(Either.Right(6));
-                MValue<H,Integer> vb = ctx.assign(Either.Right(7));
-                return ctx.doneRes(ctx.assignBind2(va, vb, (Integer a, Integer b) -> {
+        Either<String, Integer> handSum = Either.narrow(
+            Do_.<__<Either.µ,String>>do_()
+                .push(6)
+                .push(7)
+                .pushBind2(Leibniz.refl(), (Integer a, Integer b) -> {
                     int r = a + b;
                     if (r > 10) {
                         return Either.<String, Integer>Left("Not enough fingers!");
                     } else {
                         return Either.<String, Integer>Right(r);
                     }
-                }));
-            }
-        }));
+                })
+                .runWithResult(Leibniz.refl(), Either.monad())
+        );
         assertEquals("Left(Not enough fingers!)", handSum.toString());
     }
 }
