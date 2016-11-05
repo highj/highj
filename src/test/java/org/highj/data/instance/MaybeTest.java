@@ -4,18 +4,16 @@ import org.derive4j.hkt.__;
 import org.highj.data.Either;
 import org.highj.data.List;
 import org.highj.data.Maybe;
-import org.highj.function.F3;
-import org.highj.function.Functions;
+import org.highj.data.eq.Eq;
 import org.highj.data.num.Integers;
 import org.highj.data.tuple.T0;
-import org.highj.data.eq.Eq;
+import org.highj.function.F3;
+import org.highj.function.Functions;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.comonad.Extend;
 import org.highj.typeclass1.foldable.Traversable;
-import org.highj.typeclass1.monad.Monad;
-import org.highj.typeclass1.monad.MonadFix;
-import org.highj.typeclass1.monad.MonadPlus;
-import org.highj.typeclass1.monad.MonadRec;
+import org.highj.typeclass1.monad.*;
+import org.highj.util.Gen;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -355,7 +353,7 @@ public class MaybeTest {
 
     @Test
     public void testLift3() {
-        F3<Maybe<String>, Maybe<Integer>,  Maybe<Integer>, Maybe<String>> fun = Maybe.lift3(String::substring);
+        F3<Maybe<String>, Maybe<Integer>, Maybe<Integer>, Maybe<String>> fun = Maybe.lift3(String::substring);
         assertThat(fun.apply(Nothing(), Nothing(), Nothing()).isNothing()).isTrue();
         assertThat(fun.apply(Just("foobar"), Nothing(), Nothing()).isNothing()).isTrue();
         assertThat(fun.apply(Nothing(), Just(1), Nothing()).isNothing()).isTrue();
@@ -537,11 +535,18 @@ public class MaybeTest {
     @Test
     public void testTraversable() {
         Traversable<Maybe.µ> traversable = Maybe.traversable;
-        Maybe<__<List.µ,String>> maybeList = Just(List.of("foo","bar"));
+        Maybe<__<List.µ, String>> maybeList = Just(List.of("foo", "bar"));
         List<__<µ, String>> sequenced = List.narrow(traversable.sequenceA(List.monadPlus, maybeList));
         assertThat(sequenced).hasSize(2);
         assertThat(narrow(sequenced.head()).get()).isEqualTo("foo");
         assertThat(narrow(sequenced.tail().head()).get()).isEqualTo("bar");
+    }
+
+    @Test
+    public void functorLaw() {
+        Gen<__<µ, String>> maybeGen = Gen.stringGen.map(s ->
+                Gen.rnd.nextDouble() < 0.9 ? Maybe.Just(s) : Maybe.Nothing());
+        FunctorLaw.test(Maybe.monad, maybeGen);
     }
 
 }
