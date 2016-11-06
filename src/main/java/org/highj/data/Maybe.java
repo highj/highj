@@ -1,6 +1,7 @@
 package org.highj.data;
 
 import org.derive4j.hkt.__;
+import org.highj.data.eq.PartialEq;
 import org.highj.data.instance.maybe.*;
 import org.highj.function.F3;
 import org.highj.function.Functions;
@@ -390,6 +391,17 @@ public abstract class Maybe<A> implements __<Maybe.µ, A>, Iterable<A> {
         return (one, two) -> one.cata(two.isNothing(),
                 x -> two.<Boolean>cata(false, y -> eqA.eq(x, y)));
     }
+
+    /**
+     * Returns the {@link PartialEq} instance for {@link Maybe}.
+     */
+    public static PartialEq<Maybe.µ> partialEq = new PartialEq<µ>() {
+        @Override
+        public <T> Eq<__<µ, T>> deriveEq(Eq<? super T> eq) {
+            return (one, two) -> narrow(one).cata(narrow(two).isNothing(),
+                     x -> narrow(two).<Boolean>cata(false, y -> eq.eq(x, y)));
+        }
+    };
 
     @Override
     public int hashCode() {

@@ -4,6 +4,7 @@ import org.highj.data.List;
 import org.highj.data.Stream;
 
 import java.util.Random;
+import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 
 public interface Gen<A> {
@@ -24,6 +25,10 @@ public interface Gen<A> {
         return sb.toString();
     }, "").take(maxSize);
 
-    Gen<Integer> intGen = maxSize -> Stream.unfold(i -> rnd.nextInt(), 0).take(maxSize);
+    Gen<Integer> intGen = maxSize -> Stream.unfold(i -> rnd.nextInt(), rnd.nextInt()).take(maxSize);
+
+    Gen<Long> longGen = maxSize -> Stream.unfold(i -> rnd.nextLong(), rnd.nextLong()).take(maxSize);
+
+    Gen<Boolean> boolGen = maxSize -> Stream.unfold(i -> rnd.nextBoolean(), rnd.nextBoolean()).take(maxSize);
 
 }
