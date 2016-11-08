@@ -6,14 +6,14 @@ import org.highj.typeclass1.monad.Apply;
 
 import java.util.function.Function;
 
-public interface AsyncIOApply<E> extends AsyncIOFunctor<E>, Apply<__<AsyncIO.µ,E>> {
+public interface AsyncIOApply extends AsyncIOFunctor, Apply<AsyncIO.µ> {
     @Override
-    default <A, B> __<__<AsyncIO.µ, E>, B> ap(__<__<AsyncIO.µ, E>, Function<A, B>> mf, __<__<AsyncIO.µ, E>, A> ma) {
-        return AsyncIO.<E>bind().bind(
+    default <A, B> __<AsyncIO.µ, B> ap(__<AsyncIO.µ, Function<A, B>> mf, __<AsyncIO.µ, A> ma) {
+        return AsyncIO.bind.bind(
             mf,
             (Function<A,B> f) ->
-                AsyncIO.<E>functor().map(
-                    f::apply,
+                AsyncIO.functor.map(
+                    f,
                     ma
                 )
         );

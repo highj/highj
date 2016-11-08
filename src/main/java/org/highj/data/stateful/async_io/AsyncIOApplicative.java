@@ -9,10 +9,12 @@ import org.highj.data.tuple.T0;
 import org.highj.function.F1;
 import org.highj.typeclass1.monad.Applicative;
 
-public interface AsyncIOApplicative<E> extends AsyncIOApply<E>, Applicative<__<AsyncIO.µ,E>> {
+import java.io.IOException;
+
+public interface AsyncIOApplicative extends AsyncIOApply, Applicative<AsyncIO.µ> {
     @Override
-    default <A> __<__<AsyncIO.µ, E>, A> pure(A a) {
-        return (AsyncIO<E,A>)(F1<Either<E,A>,SafeIO<T0>> handler) ->
-            SafeIO.applicative.pure(Maybe.Just(Either.<E,A>Right(a)));
+    default <A> __<AsyncIO.µ, A> pure(A a) {
+        return (AsyncIO<A>)(F1<Either<IOException,A>,SafeIO<T0>> handler) ->
+            SafeIO.applicative.pure(Maybe.Just(Either.<IOException,A>Right(a)));
     }
 }
