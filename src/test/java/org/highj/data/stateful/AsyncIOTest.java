@@ -69,7 +69,7 @@ public class AsyncIOTest {
                     util.bResult = b3;
                     util.bAsync = false;
                 }
-                return eitherEq.eq(util.aResult, util.bResult);
+                return eitherEq.eq(util.aResult, util.bResult) && util.aAsync == util.bAsync;
             };
         }
     };
