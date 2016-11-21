@@ -8,6 +8,8 @@ import org.highj.typeclass1.monad.Applicative;
 
 import java.util.function.Function;
 
+import static org.derive4j.hkt.TypeEq.as__2;
+
 @FunctionalInterface
 public interface ApplicativeFromArrow<Arr,X> extends Applicative<__<Arr, X>> {
 
@@ -15,7 +17,7 @@ public interface ApplicativeFromArrow<Arr,X> extends Applicative<__<Arr, X>> {
 
     @Override
     public default <A, B> __2<Arr, X, B> ap(__<__<Arr, X>, Function<A, B>> fn, __<__<Arr, X>, A> nestedA) {
-        return getArrow().then(getArrow().fanout(__2.coerce(fn), __2.coerce(nestedA)), getArrow().arr(
+        return getArrow().then(getArrow().fanout(as__2(fn), as__2(nestedA)), getArrow().arr(
                 (T2<Function<A, B>, A> pair) -> pair._1().apply(pair._2())));
     }
 
@@ -26,6 +28,6 @@ public interface ApplicativeFromArrow<Arr,X> extends Applicative<__<Arr, X>> {
 
     @Override
     public default <A, B> __2<Arr, X, B> map(Function<A, B> fn, __<__<Arr, X>, A> nestedA) {
-        return getArrow().then(__2.coerce(nestedA), getArrow().arr(fn));
+        return getArrow().then(as__2(nestedA), getArrow().arr(fn));
     }
 }

@@ -1,5 +1,6 @@
 package org.highj.data.structural;
 
+import org.derive4j.hkt.HktConfig;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.highj.data.structural.constant.*;
@@ -9,6 +10,7 @@ import org.highj.typeclass0.group.Semigroup;
 
 import java.util.function.Supplier;
 
+@HktConfig(typeEqMethodName = "const_")
 public class Const<A, B> implements __2<Const.µ, A, B>, Supplier<A> {
 
     public interface µ {

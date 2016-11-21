@@ -7,6 +7,8 @@ import org.highj.typeclass1.monad.Apply;
 
 import java.util.function.Function;
 
+import static org.derive4j.hkt.TypeEq.as__2;
+
 public class CurriedApply<F,X> extends CurriedFunctor<F,X> implements Apply<__<F,X>> {
 
     private final Biapply<F> biapply;
@@ -21,9 +23,9 @@ public class CurriedApply<F,X> extends CurriedFunctor<F,X> implements Apply<__<F
 
     @Override
     public <A, B> __2<F, X, B> ap(__<__<F, X>, Function<A, B>> fn, __<__<F, X>, A> nestedA) {
-        __2<F,X,Function<A,B>> uncurriedFn = __2.coerce(fn);
+        __2<F,X,Function<A,B>> uncurriedFn = as__2(fn);
         Function<X, Function<X,X>> dotFn = x -> y -> semigroup.apply(x, y);
         __2<F,Function<X,X>, Function<A,B>> biFn = biapply.first(dotFn, uncurriedFn);
-        return biapply.biapply(biFn, __2.coerce(nestedA));
+        return biapply.biapply(biFn, as__2(nestedA));
     }
 }
