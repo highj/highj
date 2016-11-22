@@ -14,16 +14,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class FunctorLaw<F> {
 
     private final Functor<F> functor;
-    private final PartialGen<F> partialGen;
-    private final PartialEq<F> partialEq;
+    protected final PartialGen<F> partialGen;
+    protected final PartialEq<F> partialEq;
 
-    private FunctorLaw(Functor<F> functor, PartialGen<F> partialGen, PartialEq<F> partialEq) {
+    public FunctorLaw(Functor<F> functor, PartialGen<F> partialGen, PartialEq<F> partialEq) {
         this.functor = functor;
         this.partialGen = partialGen;
         this.partialEq = partialEq;
     }
 
-    private void mapIdentity() {
+    /**
+     * Mapping over the identity function should not change the value.
+     * map(x -> x, a) == a
+     */
+    public void mapIdentity() {
         Eq<__<F, String>> eq = partialEq.deriveEq(Eq.fromEquals());
         Gen<__<F, String>> gen = partialGen.deriveGen(Gen.stringGen);
         for (__<F, String> a : gen.get(20)) {
@@ -32,7 +36,12 @@ public class FunctorLaw<F> {
         }
     }
 
-    private void mapComposition() {
+    /**
+     * Mapping over a composed function should be the same as mapping successively over both
+     * underlying functions.
+     * map(p.andThen(q), x) = map(q, map(p, x))
+     */
+    public void mapComposition() {
         Function<String, Integer> fab = String::length;
         Function<Integer, Long> fbc = i -> Long.valueOf(i) * Long.valueOf(i);
         Gen<__<F, String>> gen = partialGen.deriveGen(Gen.stringGen);
@@ -44,10 +53,13 @@ public class FunctorLaw<F> {
         }
     }
 
-    public static <F> void test(Functor<F> functor, PartialGen<F> partialGen, PartialEq<F> partialEq) {
-        FunctorLaw<F> law = new FunctorLaw<>(functor, partialGen, partialEq);
-        law.mapIdentity();
-        law.mapComposition();
+    public void testAll() {
+        test();
+    }
+
+    public void test() {
+        mapIdentity();
+        mapComposition();
     }
 
 }

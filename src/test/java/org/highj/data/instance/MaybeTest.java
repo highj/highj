@@ -544,7 +544,7 @@ public class MaybeTest {
     }
 
     @Test
-    public void functorLaw() {
+    public void monadLaw() {
         PartialGen<µ> partialGen = new PartialGen<µ>() {
             @Override
             public <T> Gen<__<µ, T>> deriveGen(Gen<T> gen) {
@@ -552,7 +552,7 @@ public class MaybeTest {
                         Gen.rnd.nextDouble() < 0.9 ? Maybe.Just(s) : Maybe.Nothing());
             }
         };
-        FunctorLaw.test(Maybe.monad, partialGen, Maybe.partialEq);
+        new MonadLaw<>(Maybe.monad, partialGen, Maybe.partialEq).testAll();
     }
 
 }

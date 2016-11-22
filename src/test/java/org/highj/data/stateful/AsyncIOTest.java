@@ -90,13 +90,8 @@ public class AsyncIOTest {
     }
 
     @Test
-    public void functorLaw() {
-        FunctorLaw.test(AsyncIO.functor, partialGen, partialEq);
-    }
-
-    @Test
     public void monadLaw() {
-        MonadLaw.test(AsyncIO.monad, partialGen, partialEq);
+        new MonadLaw<>(AsyncIO.monad, partialGen, partialEq).testAll();
     }
 
 }

@@ -10,19 +10,16 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MonadLaw<M> {
+public class MonadLaw<M> extends ApplicativeLaw<M> {
     private final Monad<M> monad;
-    private final PartialGen<M> partialGen;
-    private final PartialEq<M> partialEq;
 
-    private MonadLaw(Monad<M> monad, PartialGen<M> partialGen, PartialEq<M> partialEq) {
+    public MonadLaw(Monad<M> monad, PartialGen<M> partialGen, PartialEq<M> partialEq) {
+        super(monad, partialGen, partialEq);
         this.monad = monad;
-        this.partialGen = partialGen;
-        this.partialEq = partialEq;
     }
 
     // pure a >>= f ≡ f a
-    private void leftIdentity() {
+    public void leftIdentity() {
         Eq<__<M, Integer>> eq = partialEq.deriveEq(Eq.fromEquals());
         Gen<String> gen = Gen.stringGen;
         Function<String, __<M,Integer>> f = (String x) -> monad.pure(x.length());
@@ -34,7 +31,7 @@ public class MonadLaw<M> {
     }
 
     // m >>= pure ≡ m
-    private void rightIdentity() {
+    public void rightIdentity() {
         Eq<__<M, String>> eq = partialEq.deriveEq(Eq.fromEquals());
         Gen<__<M, String>> gen = partialGen.deriveGen(Gen.stringGen);
         for (__<M, String> m : gen.get(20)) {
@@ -45,7 +42,7 @@ public class MonadLaw<M> {
     }
 
     // (m >>= f) >>= g ≡ m >>= (\x -> f x >>= g)
-    private void associativity() {
+    public void associativity() {
         Eq<__<M, String>> eq = partialEq.deriveEq(Eq.fromEquals());
         Gen<__<M, String>> gen = partialGen.deriveGen(Gen.stringGen);
         Function<String,__<M,Integer>> f = (String x) -> monad.pure(x.length());
@@ -57,10 +54,17 @@ public class MonadLaw<M> {
         }
     }
 
-    public static <M> void test(Monad<M> monad, PartialGen<M> partialGen, PartialEq<M> partialEq) {
-        MonadLaw<M> law = new MonadLaw<>(monad, partialGen, partialEq);
-        law.leftIdentity();
-        law.rightIdentity();
-        law.associativity();
+    @Override
+    public void testAll() {
+        super.testAll();
+        test();
     }
+
+    @Override
+    public void test() {
+        leftIdentity();
+        rightIdentity();
+        associativity();
+    }
+
 }
