@@ -14,11 +14,12 @@ import org.highj.data.transformer.free_arrow.FreeArrowSemigroupoid;
 import org.highj.data.tuple.T2;
 import org.highj.function.F1;
 import org.highj.function.NF2;
+import org.highj.highjdata;
 import org.highj.typeclass2.arrow.Arrow;
 
 import static org.derive4j.hkt.TypeEq.as__2;
 
-@Data(value=@Derive(inClass = "FreeArrowImpl", withVisibility = Visibility.Package), flavour = Flavour.HighJ)
+@highjdata
 public abstract class FreeArrow<F,ARR,B,C> implements __4<FreeArrow.µ,F,ARR,B,C> {
     public static class µ {}
     
