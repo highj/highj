@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.derive4j</groupId>
             <artifactId>derive4j</artifactId>
-            <version>0.8</version>
+            <version>0.10</version>
             <optional>true</optional>
         </dependency>
         <dependency>

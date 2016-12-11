@@ -15,11 +15,12 @@ import org.highj.data.Either;
 import org.highj.data.transformer.free.*;
 import org.highj.function.F1;
 import org.highj.function.NF;
+import org.highj.highjdata;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadRec;
 
-@Data(@Derive(inClass = "FreeTImpl", withVisibility = Visibility.Package))
+@highjdata
 public abstract class FreeT<F,M,A> implements __3<FreeT.µ,F,M,A> {
     public static class µ {}
 

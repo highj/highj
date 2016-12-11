@@ -9,13 +9,14 @@ import org.highj.data.Either;
 import org.highj.data.tuple.T0;
 import org.highj.data.tuple.T2;
 import org.highj.function.F2;
+import org.highj.highjdata;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadRec;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Data(value = @Derive(inClass = "DoIndexedImpl", withVisibility = Visibility.Package), flavour = Flavour.HighJ)
+@highjdata
 abstract class DoIndexed<M,S1,S2> {
 
     public interface Cases<M,S1,S2,R> {
