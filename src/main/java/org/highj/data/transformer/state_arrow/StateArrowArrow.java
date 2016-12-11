@@ -13,6 +13,8 @@ import org.highj.data.transformer.StateArrow;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.Arrow;
 
+import static org.highj.Hkt.asStateArrow;
+
 /**
  *
  * @author clintonselke
@@ -33,7 +35,7 @@ public interface StateArrowArrow<S,A> extends StateArrowCategory<S,A>, Arrow<__<
             a().dot(
                 a().arr((T2<T2<C,S>,D> x) -> T2.of(T2.of(x._1()._1(), x._2()), x._1()._2())),
                 a().dot(
-                    a().first(StateArrow.narrow(arrow).run()),
+                    a().first(asStateArrow(arrow).run()),
                     a().arr((T2<T2<B,D>,S> x) -> T2.of(T2.of(x._1()._1(), x._2()), x._1()._2()))
                 )
             )

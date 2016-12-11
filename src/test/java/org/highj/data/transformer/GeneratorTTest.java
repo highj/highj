@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.Iterator;
 
 import static junit.framework.Assert.assertEquals;
+import static org.highj.Hkt.asProducerT;
 
 public class GeneratorTTest {
 
@@ -25,7 +26,7 @@ public class GeneratorTTest {
             return ProducerT.done(T0.of());
         }
         return ProducerT.suspend(() ->
-            ProducerT.narrow(
+            asProducerT(
                 Do_.<__<__<ProducerT.µ,T2<A,A>>,T1.µ>>do_()
                     .__(hanoi(n-1, from, other, to))
                     .__(ProducerT.yield(T2.of(from, to)))

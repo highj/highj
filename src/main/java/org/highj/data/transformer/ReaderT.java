@@ -18,10 +18,6 @@ public interface ReaderT<R, M, A> extends __3<ReaderT.µ, R, M, A> {
     interface µ {
     }
 
-    static <R, M, A> ReaderT<R, M, A> narrow(__<__<__<µ, R>, M>, A> a) {
-        return (ReaderT<R, M, A>) a;
-    }
-
     __<M, A> run(R r);
 
     static <R, M> ReaderTFunctor<R, M> functor(Functor<M> mFunctor) {

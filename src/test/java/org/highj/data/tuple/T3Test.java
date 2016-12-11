@@ -15,6 +15,7 @@ import org.junit.Test;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.highj.Hkt.asT3;
 
 public class T3Test {
 
@@ -92,10 +93,10 @@ public class T3Test {
     public void narrow() {
         T3<String, Integer, Character> t3 = T3.of("foo", 42, 'A');
         __<__<__<T3.µ, String>, Integer>, Character> hkt = t3;
-        assertThat(T3.narrow(hkt)).isSameAs(t3);
+        assertThat(asT3(hkt)).isSameAs(t3);
         T3<String, Integer, Character> t3$ = T3.of$(() -> "foo", () -> 42, () -> 'A');
         __<__<__<T3.µ, String>, Integer>, Character> hkt$ = t3$;
-        assertThat(T3.narrow(hkt$)).isSameAs(t3$);
+        assertThat(asT3(hkt$)).isSameAs(t3$);
     }
 
     @Test
@@ -227,7 +228,7 @@ public class T3Test {
         Ord<T3<String, Integer, Character>> ord = T3.ord(Ord.fromComparable(), Ord.fromComparable(), Ord.fromComparable());
         T3<String, Integer, Character> t3 = T3.of("bar", 42, 'A');
         assertThat(ord.cmp(t3, T3.of("bar", 42, 'A'))).isEqualTo(Ordering.EQ);
-        assertThat(ord.cmp(t3, T3.of$(() -> "bar", () -> 42, () -> 'A'))).isEqualTo(Ordering.EQ);;
+        assertThat(ord.cmp(t3, T3.of$(() -> "bar", () -> 42, () -> 'A'))).isEqualTo(Ordering.EQ);
         assertThat(ord.cmp(t3, T3.of("foo", 42, 'A'))).isEqualTo(Ordering.LT);
         assertThat(ord.cmp(t3, T3.of("bar", 43, 'A'))).isEqualTo(Ordering.LT);
         assertThat(ord.cmp(t3, T3.of("bar", 42, 'B'))).isEqualTo(Ordering.LT);

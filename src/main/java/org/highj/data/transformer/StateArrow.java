@@ -35,23 +35,7 @@ public class StateArrow<S,A,B,C> implements __4<StateArrow.µ,S,A,B,C> {
     public static <S,A,B,C> StateArrow<S,A,B,C> stateArrow(__2<A,T2<B,S>,T2<C,S>> run) {
         return new StateArrow<>(run);
     }
-    
-    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(__4<µ,S,A,B,C> a) {
-        return (StateArrow<S,A,B,C>)a;
-    }
-    
-    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(__3<__<µ,S>,A,B,C> a) {
-        return (StateArrow<S,A,B,C>)a;
-    }
-    
-    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(__2<__<__<µ,S>,A>,B,C> a) {
-        return (StateArrow<S,A,B,C>)a;
-    }
-    
-    public static <S,A,B,C> StateArrow<S,A,B,C> narrow(__<__<__<__<µ,S>,A>,B>,C> a) {
-        return (StateArrow<S,A,B,C>)a;
-    }
-    
+
     public __2<A,T2<B,S>,T2<C,S>> run() {
         return _run;
     }

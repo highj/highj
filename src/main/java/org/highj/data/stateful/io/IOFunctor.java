@@ -6,9 +6,11 @@ import org.highj.typeclass1.functor.Functor;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asIO;
+
 public interface IOFunctor extends Functor<IO.µ> {
     @Override
     default <A, B> IO<B> map(Function<A, B> fn, __<IO.µ, A> nestedA) {
-        return () -> fn.apply(IO.narrow(nestedA).run());
+        return () -> fn.apply(asIO(nestedA).run());
     }
 }

@@ -11,6 +11,8 @@ import org.highj.data.transformer.RWST;
 import org.highj.data.tuple.T3;
 import org.highj.typeclass1.monad.MonadReader;
 
+import static org.highj.Hkt.asRWST;
+
 /**
  *
  * @author clintonselke
@@ -24,6 +26,6 @@ public interface RWSTMonadReader<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadReade
 
     @Override
     public default <A> RWST<R, W, S, M, A> local(Function<R, R> modFn, __<__<__<__<__<RWST.µ, R>, W>, S>, M>, A> nestedA) {
-        return (R r, S s) -> RWST.narrow(nestedA).run(modFn.apply(r), s);
+        return (R r, S s) -> asRWST(nestedA).run(modFn.apply(r), s);
     }
 }

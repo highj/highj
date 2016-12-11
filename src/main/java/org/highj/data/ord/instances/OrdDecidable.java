@@ -8,6 +8,8 @@ import org.highj.typeclass1.contravariant.Decidable;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asOrd;
+
 public interface OrdDecidable extends OrdDivisible, Decidable<Ord.µ> {
 
     @Override
@@ -19,12 +21,12 @@ public interface OrdDecidable extends OrdDivisible, Decidable<Ord.µ> {
     default <A, B, C> Ord<A> choose(Function<A, Either<B, C>> fn, __<Ord.µ, B> fb, __<Ord.µ, C> fc) {
         return (x, y) -> fn.apply(x).either(
                 c -> fn.apply(y).either(
-                        d -> Ord.narrow(fb).cmp(c, d),
+                        d -> asOrd(fb).cmp(c, d),
                         otherwise -> Ordering.LT
                 ),
                 c -> fn.apply(y).either(
                         otherwise -> Ordering.GT,
-                        d -> Ord.narrow(fc).cmp(c, d)
+                        d -> asOrd(fc).cmp(c, d)
                 ));
     }
 }

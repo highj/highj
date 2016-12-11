@@ -6,14 +6,16 @@ import org.highj.typeclass1.monad.MonadPlus;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asIdentityT;
+
 public interface IdentityTMonadPlus<M> extends IdentityTMonadZero<M>, MonadPlus<__<IdentityT.µ, M>> {
 
     public MonadPlus<M> get();
 
     @Override
     public default <A> IdentityT<M, A> mplus(__<__<IdentityT.µ, M>, A> one, __<__<IdentityT.µ, M>, A> two) {
-        IdentityT<M, A> oneId = IdentityT.narrow(one);
-        IdentityT<M, A> twoId = IdentityT.narrow(two);
+        IdentityT<M, A> oneId = asIdentityT(one);
+        IdentityT<M, A> twoId = asIdentityT(two);
         return new IdentityT<M, A>(get().mplus(oneId.get(), twoId.get()));
     }
 

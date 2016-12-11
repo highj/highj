@@ -116,19 +116,6 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
     }
 
     /**
-     * Converts the higher kinded representation of the tuple to the standard one.
-     *
-     * @param value the higher kinded representation
-     * @param <A>   the type of the first element
-     * @param <B>   the type of the second element
-     * @return the standard representation
-     */
-    @SuppressWarnings("unchecked")
-    public static <A, B> T2<A, B> narrow(__<__<µ, A>, B> value) {
-        return (T2) value;
-    }
-
-    /**
      * Maps both elements of the tuple at the same time.
      *
      * @param fn1  the first transformation function

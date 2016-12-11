@@ -2,6 +2,7 @@ package org.highj.function;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
+import org.highj.Hkt;
 import org.highj.data.Maybe;
 import org.highj.function.f1.F1Arrow;
 import org.highj.function.f1.F1Monad;
@@ -16,6 +17,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static org.highj.Hkt.asF1;
+
 /**
  * A class representing an unary function.
  */
@@ -27,11 +30,6 @@ public interface F1<A, B> extends __2<F1.µ, A, B>, Function<A, B> {
 
     static <A> F1<A, A> id() {
         return a -> a;
-    }
-
-    @SuppressWarnings("unchecked")
-    static <A, B> F1<A, B> narrow(__<__<µ, A>, B> function) {
-        return (F1) function;
     }
 
     @SuppressWarnings("unchecked")
@@ -77,23 +75,23 @@ public interface F1<A, B> extends __2<F1.µ, A, B>, Function<A, B> {
     }
 
     static <A, B, C> F1<A, T2<B, C>> fanout(__<__<µ, A>, B> fab, __<__<µ, A>, C> fac) {
-        final F1<A, B> fnab = narrow(fab);
-        final F1<A, C> fnac = narrow(fac);
+        final F1<A, B> fnab = asF1(fab);
+        final F1<A, C> fnac = asF1(fac);
         return a -> T2.of(fnab.apply(a), fnac.apply(a));
     }
 
     static <A, B, C, D> F1<A, T3<B, C, D>> fanout(__<__<µ, A>, B> fab, __<__<µ, A>, C> fac, __<__<µ, A>, D> fad) {
-        final F1<A, B> fnab = narrow(fab);
-        final F1<A, C> fnac = narrow(fac);
-        final F1<A, D> fnad = narrow(fad);
+        final F1<A, B> fnab = asF1(fab);
+        final F1<A, C> fnac = asF1(fac);
+        final F1<A, D> fnad = asF1(fad);
         return a -> T3.of(fnab.apply(a), fnac.apply(a), fnad.apply(a));
     }
 
     static <A, B, C, D, E> F1<A, T4<B, C, D, E>> fanout(__<__<µ, A>, B> fab, __<__<µ, A>, C> fac, __<__<µ, A>, D> fad, __<__<µ, A>, E> fae) {
-        final F1<A, B> fnab = narrow(fab);
-        final F1<A, C> fnac = narrow(fac);
-        final F1<A, D> fnad = narrow(fad);
-        final F1<A, E> fnae = narrow(fae);
+        final F1<A, B> fnab = asF1(fab);
+        final F1<A, C> fnac = asF1(fac);
+        final F1<A, D> fnad = asF1(fad);
+        final F1<A, E> fnae = asF1(fae);
         return a -> T4.of(fnab.apply(a), fnac.apply(a), fnad.apply(a), fnae.apply(a));
     }
 
@@ -112,7 +110,7 @@ public interface F1<A, B> extends __2<F1.µ, A, B>, Function<A, B> {
 
     //avoid name clash with Function.andThen()
     default <C> F1<A, C> then(__<__<µ, B>, C> that) {
-        return compose(narrow(that), this);
+        return compose(asF1(that), this);
     }
 
     F1Arrow arrow = new F1Arrow(){};

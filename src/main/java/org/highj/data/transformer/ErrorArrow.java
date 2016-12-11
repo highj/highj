@@ -34,23 +34,7 @@ public class ErrorArrow<EX,A,B,C> implements __4<ErrorArrow.µ,EX,A,B,C> {
     public static <EX,A,B,C> ErrorArrow<EX,A,B,C> errorArrow(__2<A,B,Either<EX,C>> run) {
         return new ErrorArrow<>(run);
     }
-    
-    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(__4<µ,EX,A,B,C> a) {
-        return (ErrorArrow<EX,A,B,C>)a;
-    }
-    
-    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(__3<__<µ,EX>,A,B,C> a) {
-        return (ErrorArrow<EX,A,B,C>)a;
-    }
-    
-    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(__2<__<__<µ,EX>,A>,B,C> a) {
-        return (ErrorArrow<EX,A,B,C>)a;
-    }
-    
-    public static <EX,A,B,C> ErrorArrow<EX,A,B,C> narrow(__<__<__<__<µ,EX>,A>,B>,C> a) {
-        return (ErrorArrow<EX,A,B,C>)a;
-    }
-    
+
     public __2<A,B,Either<EX,C>> run() {
         return _run;
     }

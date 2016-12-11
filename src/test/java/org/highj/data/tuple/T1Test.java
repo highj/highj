@@ -18,6 +18,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.highj.Hkt.asT1;
 
 public class T1Test {
 
@@ -48,10 +49,10 @@ public class T1Test {
     @Test
     public void narrow() {
         __<T1.µ, Integer> fortyTwo = T1.of(42);
-        assertThat(T1.narrow(fortyTwo)._1()).isEqualTo(42);
+        assertThat(asT1(fortyTwo)._1()).isEqualTo(42);
         //lazy version
         __<T1.µ, String> hello = T1.of$(() -> "hello");
-        assertThat(T1.narrow(hello)._1());
+        assertThat(asT1(hello)._1());
     }
 
     @Test
@@ -185,7 +186,7 @@ public class T1Test {
     public void functor() {
         Functor<T1.µ> functor = T1.functor;
         T1<String> hello = T1.of("hello");
-        T1<Integer> five = T1.narrow(functor.map(String::length, hello));
+        T1<Integer> five = asT1(functor.map(String::length, hello));
         assertThat(five._1()).isEqualTo(5);
     }
 
@@ -204,7 +205,7 @@ public class T1Test {
         Monad<T1.µ> monad = T1.monad;
         Function<String, __<T1.µ, Integer>> lengthFn = Functions.compose(T1::of, String::length);
         T1<String> hello = T1.of("hello");
-        T1<Integer> five = T1.narrow(monad.bind(hello, lengthFn));
+        T1<Integer> five = asT1(monad.bind(hello, lengthFn));
         assertThat(five._1()).isEqualTo(5);
     }
 
@@ -221,7 +222,7 @@ public class T1Test {
         T1Comonad comonad = T1.comonad;
         assertThat(comonad.duplicate(T1.of(2))).isEqualTo(T1.of(T1.of(2)));
         assertThat(comonad.extract(T1.of(2))).isEqualTo(2);
-        Function<__<T1.µ, String>, Integer> function = nested -> T1.narrow(nested)._1().length();
+        Function<__<T1.µ, String>, Integer> function = nested -> asT1(nested)._1().length();
         assertThat(comonad.extend(function).apply(T1.of("hello"))).isEqualTo(T1.of(5));
     }
 

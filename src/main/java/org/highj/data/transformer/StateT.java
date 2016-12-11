@@ -16,10 +16,6 @@ public interface StateT<S, M, A> extends __3<StateT.µ, S, M, A> {
     interface µ {
     }
 
-    static <S, M, A> StateT<S, M, A> narrow(__<__<__<µ, S>, M>, A> a) {
-        return (StateT<S, M, A>) a;
-    }
-
     __<M, T2<A, S>> run(S s);
 
     default __<M, A> eval(Functor<M> mFunctor, S s) {

@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.function.Function;
 
+import static org.highj.Hkt.asProducerT;
+
 /**
  * @author clintonselke
  */
@@ -40,11 +42,6 @@ public class IntMap<A> implements __<IntMap.µ, A>, Iterable<T2<Integer,A>>{
         this.root = root;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <A> IntMap<A> narrow(__<IntMap.µ, A> hkt) {
-        return (IntMap<A>) hkt;
-    }
-
     private static final IntMap<?> EMPTY = new IntMap<>(Empty.empty());
 
     @SuppressWarnings("unchecked")
@@ -58,7 +55,7 @@ public class IntMap<A> implements __<IntMap.µ, A>, Iterable<T2<Integer,A>>{
 
     @Override
     public Iterator<T2<Integer, A>> iterator() {
-        return ProducerT.toIterator(ProducerT.narrow(root.generator(0, 0)));
+        return ProducerT.toIterator(asProducerT(root.generator(0, 0)));
     }
 
     public int size() {
@@ -292,7 +289,7 @@ public class IntMap<A> implements __<IntMap.µ, A>, Iterable<T2<Integer,A>>{
 
         @Override
         public String toString() {
-            return Strings.mkString("(Branch ", " ", ")", nodes);
+            return Strings.mkString("(Branch ", " ", ")", (Object[]) nodes);
         }
 
         @Override

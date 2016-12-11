@@ -62,11 +62,6 @@ public class Dequeue<A> implements __<Dequeue.µ, A>, Iterable<A> {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static <A> Dequeue<A> narrow(__<µ, A> value) {
-        return (Dequeue) value;
-    }
-
     public <B> Dequeue<B> map(Function<? super A, ? extends B> f) {
         //fmap f (BankersDequeue sizeF front sizeR rear) =
         //  BankersDequeue sizeF (fmap f front) sizeR (fmap f rear)

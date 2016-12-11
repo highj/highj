@@ -11,6 +11,8 @@ import org.highj.data.Either;
 import org.highj.data.stateful.IO;
 import org.highj.typeclass1.monad.MonadRec;
 
+import static org.highj.Hkt.asIO;
+
 /**
  *
  * @author clintonselke
@@ -22,7 +24,7 @@ public interface IOMonadRec extends IOMonad, MonadRec<IO.µ> {
         return () -> {
             A a = startA;
             while (true) {
-                Either<A,B> x = IO.narrow(f.apply(a)).run();
+                Either<A,B> x = asIO(f.apply(a)).run();
                 for (A x2 : x.maybeLeft()) {
                     a = x2;
                 }

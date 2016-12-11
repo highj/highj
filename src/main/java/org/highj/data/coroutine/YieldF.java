@@ -16,10 +16,6 @@ public class YieldF<V,A> implements __2<YieldF.µ,V,A> {
         this.next = next;
     }
     
-    public static <V,A> YieldF<V,A> narrow(__<__<YieldF.µ,V>,A> a) {
-        return (YieldF<V,A>)a;
-    }
-    
     public static <V,A> YieldF<V,A> yield(V value, A next) {
         return new YieldF<>(value, next);
     }

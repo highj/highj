@@ -31,32 +31,6 @@ public abstract class Either<A, B> implements __2<Either.µ, A, B> {
     }
 
     /**
-     * Recovers an {@link Either} value.
-     *
-     * @param value the curried higher kinded type representation
-     * @param <A> the Left type
-     * @param <B> the Right type
-     * @return the standard representation
-     */
-    @SuppressWarnings("unchecked")
-    public static <A, B> Either<A, B> narrow(__<__<µ, A>, B> value) {
-        return (Either) value;
-    }
-
-    /**
-     * Recovers an {@link Either} value.
-     *
-     * @param value the higher kinded type representation
-     * @param <A> the Left type
-     * @param <B> the Right type
-     * @return the standard representation
-     */
-    @SuppressWarnings("unchecked")
-    public static <A, B> Either<A, B> narrow(__2<µ, A, B> value) {
-        return (Either) value;
-    }
-
-    /**
      * The catamorphism of {@link Either}
      *
      * @param leftFn  function for Left values

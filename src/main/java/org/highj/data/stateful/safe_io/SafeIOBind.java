@@ -10,6 +10,8 @@ import org.derive4j.hkt.__;
 import org.highj.data.stateful.SafeIO;
 import org.highj.typeclass1.monad.Bind;
 
+import static org.highj.Hkt.asSafeIO;
+
 /**
  *
  * @author clintonselke
@@ -18,6 +20,6 @@ public interface SafeIOBind extends SafeIOApply, Bind<SafeIO.µ> {
 
     @Override
     public default <A, B> SafeIO<B> bind(__<SafeIO.µ, A> nestedA, Function<A, __<SafeIO.µ, B>> fn) {
-        return () -> SafeIO.narrow(fn.apply(SafeIO.narrow(nestedA).run())).run();
+        return () -> asSafeIO(fn.apply(asSafeIO(nestedA).run())).run();
     }
 }

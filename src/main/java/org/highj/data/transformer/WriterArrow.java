@@ -35,23 +35,7 @@ public class WriterArrow<W,A,B,C> implements __4<WriterArrow.µ,W,A,B,C> {
     public static <W,A,B,C> WriterArrow<W,A,B,C> writerArrow(__2<A,B,T2<C,W>> run) {
         return new WriterArrow<>(run);
     }
-    
-    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(__4<µ,W,A,B,C> a) {
-        return (WriterArrow<W,A,B,C>)a;
-    }
-    
-    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(__3<__<µ,W>,A,B,C> a) {
-        return (WriterArrow<W,A,B,C>)a;
-    }
-    
-    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(__2<__<__<µ,W>,A>,B,C> a) {
-        return (WriterArrow<W,A,B,C>)a;
-    }
-    
-    public static <W,A,B,C> WriterArrow<W,A,B,C> narrow(__<__<__<__<µ,W>,A>,B>,C> a) {
-        return (WriterArrow<W,A,B,C>)a;
-    }
-    
+
     public __2<A,B,T2<C,W>> run() {
         return _run;
     }

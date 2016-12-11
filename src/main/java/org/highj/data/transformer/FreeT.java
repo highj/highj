@@ -24,10 +24,6 @@ import org.highj.typeclass1.monad.MonadRec;
 public abstract class FreeT<F,M,A> implements __3<FreeT.µ,F,M,A> {
     public static class µ {}
 
-    public static <F,M,A> FreeT<F,M,A> narrow(__<__<__<FreeT.µ,F>,M>,A> a) {
-        return (FreeT<F,M,A>)a;
-    }
-
     public interface Cases<R,F,M,A> {
         R liftF(__<F,A> f);
         R liftM(__<M,A> m);

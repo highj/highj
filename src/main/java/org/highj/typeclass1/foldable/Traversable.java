@@ -1,12 +1,15 @@
 package org.highj.typeclass1.foldable;
 
 import org.derive4j.hkt.__;
+import org.highj.Hkt;
 import org.highj.data.structural.Const;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.monad.Applicative;
 import org.highj.typeclass1.functor.Functor;
 
 import java.util.function.Function;
+
+import static org.highj.Hkt.asConst;
 
 /**
  * The Traversable type class.
@@ -35,7 +38,7 @@ public interface Traversable<T> extends Foldable<T>, Functor<T> {
         //foldMapDefault f = getConst . traverse (Const . f)
         Applicative<__<Const.µ, B>> applicative = Const.applicative(mb);
         __<__<Const.µ,B>, __<T, A>> co = traverse(applicative, a -> new Const<>(fn.apply(a)), nestedA);
-        return Const.narrow(co).get();
+        return asConst(co).get();
     }
 
 }

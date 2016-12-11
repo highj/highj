@@ -12,6 +12,8 @@ import org.highj.data.Maybe;
 import org.highj.data.transformer.MaybeT;
 import org.highj.typeclass1.monad.MonadRec;
 
+import static org.highj.Hkt.asMaybeT;
+
 /**
  *
  * @author clintonselke
@@ -30,7 +32,7 @@ public interface MaybeTMonadRec<M> extends MaybeTMonad<M>, MonadRec<__<MaybeT.µ
                         () -> Either.<A,Maybe<B>>Right(Maybe.Nothing()),
                         (Either<A,B> x2) -> x2.rightMap((B x3) -> Maybe.Just(x3))
                     ),
-                MaybeT.narrow(f.apply(a)).get()
+                asMaybeT(f.apply(a)).get()
             ),
             startA
         ));

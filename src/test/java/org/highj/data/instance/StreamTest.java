@@ -12,15 +12,10 @@ import org.junit.Test;
 import java.util.Iterator;
 
 import static junit.framework.Assert.assertEquals;
+import static org.highj.Hkt.asStream;
 import static org.highj.data.Stream.*;
 
 public class StreamTest {
-    @Test
-    public void testNarrow() throws Exception {
-        __<µ, String> foo = cycle("foo");
-        Stream<String> stream = narrow(foo);
-        assertEquals("foo", stream.head());
-    }
 
     @Test
     public void testHead() throws Exception {
@@ -219,16 +214,16 @@ public class StreamTest {
         Monad<Stream.µ> monad = Stream.monad;
 
         Stream<String> foobars = newStream("foo", repeat("bars"));
-        Stream<Integer> foobarsLength = narrow(monad.<String, Integer>map(String::length, foobars));
+        Stream<Integer> foobarsLength = asStream(monad.<String, Integer>map(String::length, foobars));
         assertEquals("Stream(3,4,4,4,4,4,4,4,4,4...)", foobarsLength.toString());
 
-        Stream<String> foos = narrow(monad.pure("foo"));
+        Stream<String> foos = asStream(monad.pure("foo"));
         assertEquals("Stream(foo,foo,foo,foo,foo,foo,foo,foo,foo,foo...)", foos.toString());
 
-        Stream<Integer> absSqr = narrow(monad.ap(cycle(Integers.negate, Integers.sqr), range(1)));
+        Stream<Integer> absSqr = asStream(monad.ap(cycle(Integers.negate, Integers.sqr), range(1)));
         assertEquals("Stream(-1,4,-3,16,-5,36,-7,64,-9,100...)", absSqr.toString());
 
-        Stream<Integer> streamOfStream = narrow(monad.bind(range(1),
+        Stream<Integer> streamOfStream = asStream(monad.bind(range(1),
                 integer -> range(1, integer)));
         assertEquals("Stream(1,3,7,13,21,31,43,57,73,91...)", streamOfStream.toString());
     }

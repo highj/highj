@@ -10,6 +10,8 @@ import org.highj.typeclass2.arrow.ArrowLoop;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asF1;
+
 public interface F1Arrow extends ArrowChoice<F1.µ>, ArrowApply<F1.µ>, ArrowLoop<F1.µ> {
     @Override
     default <A, B> F1<A, B> arr(Function<A, B> fn) {
@@ -18,13 +20,13 @@ public interface F1Arrow extends ArrowChoice<F1.µ>, ArrowApply<F1.µ>, ArrowLoo
 
     @Override
     default <A, B, C> F1<T2<A, C>, T2<B, C>> first(__2<F1.µ, A, B> arrow) {
-        final F1<A, B> fn = F1.narrow(arrow);
+        final F1<A, B> fn = asF1(arrow);
         return pair -> T2.of(fn.apply(pair._1()), pair._2());
     }
 
     @Override
     default <A, B, C> F1<T2<C, A>, T2<C, B>> second(__2<F1.µ, A, B> arrow) {
-        final F1<A, B> fn = F1.narrow(arrow);
+        final F1<A, B> fn = asF1(arrow);
         return pair -> T2.of(pair._1(), fn.apply(pair._2()));
     }
 
@@ -40,8 +42,8 @@ public interface F1Arrow extends ArrowChoice<F1.µ>, ArrowApply<F1.µ>, ArrowLoo
 
     @Override
     default <A, B, C> F1<A, C> dot(__2<F1.µ, B, C> bc, __2<F1.µ, A, B> ab) {
-        F1<B, C> bcFn = F1.narrow(bc);
-        F1<A, B> abFn = F1.narrow(ab);
+        F1<B, C> bcFn = asF1(bc);
+        F1<A, B> abFn = asF1(ab);
         return F1.compose(bcFn, abFn);
     }
 
@@ -57,24 +59,24 @@ public interface F1Arrow extends ArrowChoice<F1.µ>, ArrowApply<F1.µ>, ArrowLoo
 
     @Override
     default <B, C, BB, CC> F1<Either<B, BB>, Either<C, CC>> merge(__2<F1.µ, B, C> f, __2<F1.µ, BB, CC> g) {
-        return F1.narrow(ArrowChoice.super.merge(f,g));
+        return asF1(ArrowChoice.super.merge(f,g));
     }
 
     @Override
     default <B, C, D> F1<Either<B, C>, D> fanin(__2<F1.µ, B, D> f, __2<F1.µ, C, D> g) {
-        Function<B,D> funF = F1.narrow(f);
-        Function<C,D> funG = F1.narrow(g);
+        Function<B,D> funF = asF1(f);
+        Function<C,D> funG = asF1(g);
         return e -> e.either(funF, funG);
     }
 
     @Override
     default <A, B> F1<T2<__2<F1.µ, A, B>,A>, B> app() {
-        return pair -> F1.narrow(pair._1()).apply(pair._2());
+        return pair -> asF1(pair._1()).apply(pair._2());
     }
 
     @Override
     default <B, C, D> F1<B, C> loop(__2<F1.µ, T2<B, D>, T2<C, D>> arrow) {
-        F1<T2<B,D>,T2<C,D>> fn = F1.narrow(arrow);
+        F1<T2<B,D>,T2<C,D>> fn = asF1(arrow);
         class Util {
             T2<B,D> input(B b) {
                 return T2.of$(() -> b, () -> fn.apply(input(b))._2());

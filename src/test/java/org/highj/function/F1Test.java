@@ -18,20 +18,12 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.highj.Hkt.asF1;
 
 public class F1Test {
     @Test
     public void testId() throws Exception {
         assertThat(F1.id().apply("test")).isEqualTo("test");
-    }
-
-    @Test
-    public void testNarrow() throws Exception {
-        F1<String, Integer> fn = String::length;
-        __<__<F1.µ,String>, Integer> fnMy1 = fn;
-        assertThat(F1.narrow(fnMy1).apply("abcd")).isEqualTo(4);
-        __2<F1.µ,String, Integer> fnMy2 = fn;
-        assertThat(F1.narrow(fnMy2).apply("abcd")).isEqualTo(4);
     }
 
     @Test

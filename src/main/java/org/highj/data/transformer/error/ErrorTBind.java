@@ -12,6 +12,8 @@ import org.highj.data.transformer.ErrorT;
 import org.highj.typeclass1.monad.Bind;
 import org.highj.typeclass1.monad.Monad;
 
+import static org.highj.Hkt.asErrorT;
+
 /**
  *
  * @author clintonselke
@@ -23,10 +25,10 @@ public interface ErrorTBind<E,M> extends ErrorTApply<E,M>, Bind<__<__<ErrorT.µ,
     @Override
     public default <A, B> ErrorT<E, M, B> bind(__<__<__<ErrorT.µ, E>, M>, A> nestedA, Function<A, __<__<__<ErrorT.µ, E>, M>, B>> fn) {
         return () -> get().bind(
-            ErrorT.narrow(nestedA).run(),
+            asErrorT(nestedA).run(),
             (Either<E,A> a) -> a.either(
                 (E e) -> get().pure(Either.<E,B>Left(e)),
-                (A a2) -> ErrorT.narrow(fn.apply(a2)).run()
+                (A a2) -> asErrorT(fn.apply(a2)).run()
             )
         );
     }

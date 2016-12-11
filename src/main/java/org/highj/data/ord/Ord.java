@@ -33,18 +33,6 @@ public interface Ord<T> extends Comparator<T>, Function<T, Function<T, Ordering>
     }
 
     /**
-     * Converts the higher kinded representation of an {@link Ord} back to the standard one.
-     *
-     * @param value the {@link Ord} in higher kinded representation
-     * @param <A>   the ordered type
-     * @return the {@link Ord} converted back to standard form
-     */
-    @SuppressWarnings("unchecked")
-    static <A> Ord<A> narrow(__<µ, A> value) {
-        return (Ord) value;
-    }
-
-    /**
      * Constructs an {@link Ord} from a {@link Comparator}.
      * <p>
      * If the given {@link Comparator} is already an {@link Ord}, it will be just casted.

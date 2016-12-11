@@ -12,6 +12,8 @@ import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.Arrow;
 import org.highj.typeclass2.arrow.Semigroupoid;
 
+import static org.highj.Hkt.asReaderArrow;
+
 /**
  *
  * @author clintonselke
@@ -24,9 +26,9 @@ public interface ReaderArrowSemigroupoid<R,A> extends Semigroupoid<__<__<ReaderA
     public default <B, C, D> ReaderArrow<R, A, B, D> dot(__2<__<__<ReaderArrow.µ, R>, A>, C, D> cd, __2<__<__<ReaderArrow.µ, R>, A>, B, C> bc) {
         return ReaderArrow.readerArrow(
             a().dot(
-                ReaderArrow.narrow(cd).run(),
+                asReaderArrow(cd).run(),
                 a().fanout(
-                    ReaderArrow.narrow(bc).run(),
+                    asReaderArrow(bc).run(),
                     a().arr(T2::_2)
                 )
             )

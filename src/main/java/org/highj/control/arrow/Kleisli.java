@@ -23,11 +23,6 @@ public class Kleisli<M, A, B> implements __3<Kleisli.µ, M, A, B>, Function<A, _
         return fn.apply(a);
     }
 
-    @SuppressWarnings("unchecked")
-    public static <M, A, B> Kleisli<M, A, B> narrow(__<__<__<µ, M>, A>, B> nested) {
-        return (Kleisli) nested;
-    }
-
     public static <M> KleisliArrow<M> arrow(Monad<M> mMonad) {
         return () -> mMonad;
     }

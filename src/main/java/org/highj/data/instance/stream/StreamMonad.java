@@ -6,6 +6,7 @@ import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asStream;
 
 public class StreamMonad implements Monad<Stream.µ> {
     @Override
@@ -20,16 +21,16 @@ public class StreamMonad implements Monad<Stream.µ> {
 
     @Override
     public <A, B> Stream<B> map(Function<A, B> fn, __<Stream.µ, A> nestedA) {
-        return Stream.narrow(nestedA).map(fn);
+        return asStream(nestedA).map(fn);
     }
 
     @Override
     public <A> Stream<A> join(__<Stream.µ, __<Stream.µ, A>> nestedNestedA) {
-        Stream<__<Stream.µ, A>> nestedStream = Stream.narrow(nestedNestedA);
-        Stream<A> xs = Stream.narrow(nestedStream.head());
+        Stream<__<Stream.µ, A>> nestedStream = asStream(nestedNestedA);
+        Stream<A> xs = asStream(nestedStream.head());
         final Stream<__<Stream.µ, A>> xss = nestedStream.tail();
         return Stream.newLazyStream(xs.head(), () -> {
-            Stream<__<Stream.µ, A>> tails = xss.<__<Stream.µ, A>>map(as -> Stream.narrow(as).tail());
+            Stream<__<Stream.µ, A>> tails = xss.<__<Stream.µ, A>>map(as -> asStream(as).tail());
             return join(tails);
         });
     }

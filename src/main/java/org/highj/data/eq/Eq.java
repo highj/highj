@@ -17,18 +17,6 @@ public interface Eq<T> extends __<Eq.µ, T> {
     }
 
     /**
-     * Converts the higher kinded representation of an {@link Eq} back to the standard one.
-     *
-     * @param value the {@link Eq} in higher kinded representation
-     * @param <A>   the type with equivalence relation
-     * @return the {@link Eq} converted back to standard form
-     */
-    @SuppressWarnings("unchecked")
-    static <A> Eq<A> narrow(__<µ, A> value) {
-        return (Eq) value;
-    }
-
-    /**
      * Tests if two values are equivalent.
      *
      * @param one the first value

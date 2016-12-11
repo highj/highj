@@ -10,6 +10,8 @@ import org.derive4j.hkt.__;
 import org.highj.data.stateful.SafeIO;
 import org.highj.typeclass1.functor.Functor;
 
+import static org.highj.Hkt.asSafeIO;
+
 /**
  *
  * @author clintonselke
@@ -18,6 +20,6 @@ public interface SafeIOFunctor extends Functor<SafeIO.µ> {
 
     @Override
     public default <A, B> SafeIO<B> map(Function<A, B> fn, __<SafeIO.µ, A> nestedA) {
-        return () -> fn.apply(SafeIO.narrow(nestedA).run());
+        return () -> fn.apply(asSafeIO(nestedA).run());
     }
 }

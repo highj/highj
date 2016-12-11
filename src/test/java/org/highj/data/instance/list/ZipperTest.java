@@ -6,6 +6,7 @@ import org.highj.typeclass1.functor.Functor;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.highj.Hkt.asZipper;
 
 public class ZipperTest {
     @Test
@@ -464,8 +465,8 @@ public class ZipperTest {
     public void testFunctor() {
         List<String> list = List.of("one", "two", "three", "four");
         Functor<Zipper.µ> functor = Zipper.functor;
-        assertThat(Zipper.narrow(functor.map(String::length, Zipper.empty())).toList()).isEmpty();
-        assertThat(Zipper.narrow(functor.map(String::length, Zipper.fromList(list))).toList()).containsExactly(3, 3, 5, 4);
-        assertThat(Zipper.narrow(functor.map(String::length, Zipper.fromList(list).forwards())).position()).isEqualTo(1);
+        assertThat(asZipper(functor.map(String::length, Zipper.empty())).toList()).isEmpty();
+        assertThat(asZipper(functor.map(String::length, Zipper.fromList(list))).toList()).containsExactly(3, 3, 5, 4);
+        assertThat(asZipper(functor.map(String::length, Zipper.fromList(list).forwards())).position()).isEqualTo(1);
     }
 }

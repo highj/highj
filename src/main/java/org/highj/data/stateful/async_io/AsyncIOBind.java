@@ -12,18 +12,21 @@ import org.highj.typeclass1.monad.Bind;
 import java.io.IOException;
 import java.util.function.Function;
 
+import static org.highj.Hkt.asAsyncIO;
+import static org.highj.Hkt.asSafeIO;
+
 public interface AsyncIOBind extends AsyncIOApply, Bind<AsyncIO.µ> {
     @Override
     default <A, B> __<AsyncIO.µ, B> bind(__<AsyncIO.µ, A> ma, Function<A, __<AsyncIO.µ, B>> f) {
         return (AsyncIO<B>)(F1<Either<IOException,B>,SafeIO<T0>> handler) ->
-            SafeIO.narrow(
+            asSafeIO(
                 SafeIO.bind.bind(
-                    AsyncIO.narrow(ma).toIO(
+                    asAsyncIO(ma).toIO(
                         (Either<IOException,A> x) ->
                             x.either(
                                 (IOException e) -> handler.apply(Either.<IOException,B>Left(e)),
                                 (A a) ->
-                                    AsyncIO.narrow(f.apply(a)).run(handler)
+                                    asAsyncIO(f.apply(a)).run(handler)
                             )
                     ),
                     (Maybe<Either<IOException,A>> x) ->
@@ -32,7 +35,7 @@ public interface AsyncIOBind extends AsyncIOApply, Bind<AsyncIO.µ> {
                                 x2.either(
                                     (IOException e) -> SafeIO.applicative.pure(Maybe.Just(Either.<IOException,B>Left(e))),
                                     (A a) ->
-                                        AsyncIO.narrow(f.apply(a)).toIO(handler)
+                                        asAsyncIO(f.apply(a)).toIO(handler)
                                 )
                         ).getOrElse(
                             SafeIO.applicative.pure(Maybe.<Either<IOException,B>>Nothing())

@@ -46,18 +46,6 @@ public class Set<A> implements __<Set.µ, A>, Iterable<A>, Predicate<A> {
     }
 
     /**
-     * Converts the higher kinded representation of a {@link Set} back to the standard one.
-     *
-     * @param value the {@link Set} in higher kinded representation
-     * @param <A> the element type
-     * @return the {@link Set} converted back to standard form
-     */
-    @SuppressWarnings("unchecked")
-    public static <A> Set<A> narrow(__<µ, A> value) {
-        return (Set) value;
-    }
-
-    /**
      * Checks whether the set contains a given value.
      *
      * @param value value to check

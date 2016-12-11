@@ -41,36 +41,6 @@ public abstract class Either4<A, B, C, D> implements __4<Either4.µ, A, B, C, D>
     }
 
     /**
-     * Recovers an {@link Either4} value.
-     *
-     * @param value the curried higher kinded type representation
-     * @param <A>   the E1 type
-     * @param <B>   the E2 type
-     * @param <C>   the E3 type
-     * @param <D>   the E4 type
-     * @return the standard representation
-     */
-    @SuppressWarnings("unchecked")
-    public static <A, B, C, D> Either4<A, B, C, D> narrow(__<__<__<__<µ, A>, B>, C>, D> value) {
-        return (Either4) value;
-    }
-
-    /**
-     * Recovers an {@link Either4} value.
-     *
-     * @param value the  higher kinded type representation
-     * @param <A>   the E1 type
-     * @param <B>   the E2 type
-     * @param <C>   the E3 type
-     * @param <D>   the E4 type
-     * @return the standard representation
-     */
-    @SuppressWarnings("unchecked")
-    public static <A, B, C, D> Either4<A, B, C, D> narrow(__4<µ, A, B, C, D> value) {
-        return (Either4) value;
-    }
-
-    /**
      * The catamorphism of {@link Either4}
      *
      * @param fn1 function for E1 values

@@ -34,35 +34,6 @@ public abstract class Either3<A, B, C> implements __3<Either3.µ, A, B, C> {
     }
 
     /**
-     * Recovers an {@link Either3} value.
-     *
-     * @param value the curried higher kinded type representation
-     * @param <A>   the Left type
-     * @param <B>   the Middle type
-     * @param <C>   the Right type
-     * @return the standard representation
-     */
-    @SuppressWarnings("unchecked")
-    public static <A, B, C> Either3<A, B, C> narrow(__<__<__<µ, A>, B>, C> value) {
-        return (Either3) value;
-    }
-
-
-    /**
-     * Recovers an {@link Either3} value.
-     *
-     * @param value the  higher kinded type representation
-     * @param <A>   the Left type
-     * @param <B>   the Middle type
-     * @param <C>   the Right type
-     * @return the standard representation
-     */
-    @SuppressWarnings("unchecked")
-    public static <A, B, C> Either3<A, B, C> narrow(__3<Either3.µ, A, B, C> value) {
-        return (Either3) value;
-    }
-
-    /**
      * The catamorphism of {@link Either3}
      *
      * @param leftFn   function for Left values

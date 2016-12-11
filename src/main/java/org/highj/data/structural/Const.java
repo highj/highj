@@ -22,16 +22,6 @@ public class Const<A, B> implements __2<Const.µ, A, B>, Supplier<A> {
         this.value = value;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <A, B> Const<A, B> narrow(__<__<µ, A>, B> value) {
-        return (Const<A,B>) value;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <A, B> Const<A, B> narrow(__2<µ, A, B> value) {
-        return (Const<A,B>) value;
-    }
-
     public A get() {
         return value;
     }

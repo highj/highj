@@ -11,6 +11,8 @@ import org.highj.data.Either;
 import org.highj.data.transformer.ErrorT;
 import org.highj.typeclass1.monad.MonadError;
 
+import static org.highj.Hkt.asErrorT;
+
 /**
  *
  * @author clintonselke
@@ -25,9 +27,9 @@ public interface ErrorTMonadError<E,M> extends ErrorTMonad<E,M>, MonadError<E,__
     @Override
     public default <A> ErrorT<E, M, A> catchError(__<__<__<ErrorT.µ, E>, M>, A> ma, Function<E, __<__<__<ErrorT.µ, E>, M>, A>> fn) {
         return () -> get().bind(
-            ErrorT.narrow(ma).run(),
+            asErrorT(ma).run(),
             (Either<E,A> a) -> a.either(
-                (E e) -> ErrorT.narrow(fn.apply(e)).run(),
+                (E e) -> asErrorT(fn.apply(e)).run(),
                 (A a2) -> get().pure(Either.<E,A>Right(a2))
             )
         );

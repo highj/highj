@@ -7,6 +7,7 @@ import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asCont;
 import static org.highj.data.continuations.Cont.*;
 
 /**
@@ -27,15 +28,15 @@ public class ContMonad<S>  implements Monad<__<µ, S>> {
     @Override
     public <A, B> Cont<S, B> bind(__<__<µ, S>, A> nestedA, Function<A, __<__<µ, S>, B>> fn) {
         //m >>= k  = Cont $ \c -> runCont m $ \a -> runCont (k a) c
-        Function<Function<A,S>,S> fa = narrow(nestedA).runCont();
-        Function<Function<B,S>,S> fb = c -> fa.apply(b -> narrow(fn.apply(b)).runCont().apply(c));
+        Function<Function<A,S>,S> fa = asCont(nestedA).runCont();
+        Function<Function<B,S>,S> fb = c -> fa.apply(b -> asCont(fn.apply(b)).runCont().apply(c));
         return new Cont<>(fb);
     }
 
     @Override
     public <A, B> Cont<S, B> map(Function<A, B> fn, __<__<µ, S>, A> nestedA) {
         // fmap f m = Cont $ \c -> runCont m (c . f)
-        Function<Function<A,S>,S> fa = narrow(nestedA).runCont();
+        Function<Function<A,S>,S> fa = asCont(nestedA).runCont();
         Function<Function<B,S>,S> fb = c -> fa.apply(x -> c.apply(fn.apply(x)));
         return new Cont<>(fb);
     }

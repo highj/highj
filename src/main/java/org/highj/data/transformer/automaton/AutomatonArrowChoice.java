@@ -12,6 +12,8 @@ import org.highj.data.transformer.Automaton;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.ArrowChoice;
 
+import static org.highj.Hkt.asAutomaton;
+
 /**
  *
  * @author clintonselke
@@ -29,7 +31,7 @@ public interface AutomatonArrowChoice<A> extends AutomatonArrow<A>, ArrowChoice<
                     (D x2) -> T2.of(Either.Right(x2), left(arrow))
                 )
             ),
-            get().left(Automaton.narrow(arrow).unAutomaton())
+            get().left(asAutomaton(arrow).unAutomaton())
         );
     }
 }

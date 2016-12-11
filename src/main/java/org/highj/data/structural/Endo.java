@@ -23,11 +23,6 @@ public class Endo<A> implements __<Endo.µ, A>, UnaryOperator<A> {
         return appEndo.apply(a);
     }
 
-    @SuppressWarnings("unchecked")
-    public static <A> Endo<A> narrow(__<µ, A> nested) {
-        return (Endo) nested;
-    }
-
     public static <A> Monoid<Endo<A>> monoid() {
         return Monoid.create(new Endo<>(UnaryOperator.identity()), (x,y) ->
                 new Endo<>(a -> y.apply(x.apply(a))));

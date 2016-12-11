@@ -12,6 +12,8 @@ import org.highj.data.transformer.StreamArrow;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.ArrowLoop;
 
+import static org.highj.Hkt.asStreamArrow;
+
 /**
  *
  * @author clintonselke
@@ -28,7 +30,7 @@ public interface StreamArrowArrowLoop<A> extends StreamArrowArrow<A>, ArrowLoop<
                 a().dot(
                     a().arr((Stream<T2<C,D>> x2) -> Stream.unzip(x2)),
                     a().dot(
-                        StreamArrow.narrow(x).unstreamArrow(),
+                        asStreamArrow(x).unstreamArrow(),
                         a().arr((T2<Stream<B>,Stream<D>> x2) -> Stream.zip(x2._1(), x2._2()))
                     )
                 )

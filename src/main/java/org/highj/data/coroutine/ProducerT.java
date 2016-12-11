@@ -22,6 +22,9 @@ import org.highj.data.coroutine.producer.ProducerTMonadRec;
 import org.highj.data.coroutine.producer.ProducerTMonadTrans;
 import org.highj.data.transformer.FreeT;
 
+import static org.highj.Hkt.asT1;
+import static org.highj.Hkt.asYieldF;
+
 /**
  * JavaScript / Python style generator, expressed as a Monad.
  * 
@@ -42,10 +45,6 @@ public class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
     public static <E,M,A> ProducerT<E,M,A> producerT(FreeT<__<YieldF.µ,E>,M,A> toFreeT) {
         return new ProducerT<>(toFreeT);
     }
-
-    public static <E,M,A> ProducerT<E,M,A> narrow(__<__<__<µ,E>,M>,A> a) {
-        return (ProducerT<E,M,A>)a;
-    }
     
     public FreeT<__<YieldF.µ,E>,M,A> toFreeT() {
         return _toFreeT;
@@ -64,7 +63,7 @@ public class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
                 x.bimap(
                     (A x2) -> x2,
                     (__<__<YieldF.µ,E>,FreeT<__<YieldF.µ,E>,M,A>> x2) -> {
-                        YieldF<E,FreeT<__<YieldF.µ,E>,M,A>> x3 = YieldF.narrow(x2);
+                        YieldF<E,FreeT<__<YieldF.µ,E>,M,A>> x3 = asYieldF(x2);
                         return T2.of(x3.value(), ProducerT.producerT(x3.next()));
                     }
                 ),
@@ -80,7 +79,7 @@ public class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
      * @return An iterator that will produce the same elements as the generator.
      */
     public static <E> Iterator<E> toIterator(ProducerT<E,T1.µ,T0> generator) {
-        final Maybe<T2<E,ProducerT<E,T1.µ,T0>>> initState = T1.narrow(generator.run(T1.monadRec))._1().maybeRight();
+        final Maybe<T2<E,ProducerT<E,T1.µ,T0>>> initState = asT1(generator.run(T1.monadRec))._1().maybeRight();
         return new Iterator<E>() {
             private Maybe<T2<E,ProducerT<E,T1.µ,T0>>> state = initState;
             @Override
@@ -94,7 +93,7 @@ public class ProducerT<E,M,A> implements __3<ProducerT.µ,E,M,A> {
                 }
                 T2<E,ProducerT<E,T1.µ,T0>> x = state.get();
                 E element = x._1();
-                state = T1.narrow(x._2().run(T1.monadRec))._1().maybeRight();
+                state = asT1(x._2().run(T1.monadRec))._1().maybeRight();
                 return element;
             }
         };

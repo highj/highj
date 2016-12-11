@@ -2,6 +2,7 @@ package org.highj.data.transformer;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
+import org.highj.Hkt;
 import org.highj.data.transformer.identity.*;
 import org.highj.typeclass1.contravariant.Contravariant;
 import org.highj.typeclass1.foldable.Foldable;
@@ -12,6 +13,8 @@ import org.highj.typeclass1.monad.*;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asIdentityT;
+
 public class IdentityT<M, A> implements __2<IdentityT.µ, M, A> {
 
     public interface µ {
@@ -21,11 +24,6 @@ public class IdentityT<M, A> implements __2<IdentityT.µ, M, A> {
 
     public IdentityT(__<M, A> value) {
         this.value = value;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <M, A> IdentityT<M, A> narrow(__<__<µ, M>, A> value) {
-        return (IdentityT<M, A>) value;
     }
 
     public __<M, A> get() {
@@ -40,8 +38,8 @@ public class IdentityT<M, A> implements __2<IdentityT.µ, M, A> {
             final Function<__<M, A>, Function<__<N, B>, __<P, C>>> fn
     ) {
         return nestedA -> nestedB -> {
-            IdentityT<M, A> aId = IdentityT.narrow(nestedA);
-            IdentityT<N, B> bId = IdentityT.narrow(nestedB);
+            IdentityT<M, A> aId = asIdentityT(nestedA);
+            IdentityT<N, B> bId = asIdentityT(nestedB);
             return new IdentityT<>(fn.apply(aId.get()).apply(bId.get()));
         };
     }

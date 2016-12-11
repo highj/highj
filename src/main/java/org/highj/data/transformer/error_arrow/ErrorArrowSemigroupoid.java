@@ -12,6 +12,8 @@ import org.highj.data.transformer.ErrorArrow;
 import org.highj.typeclass2.arrow.ArrowChoice;
 import org.highj.typeclass2.arrow.Semigroupoid;
 
+import static org.highj.Hkt.asErrorArrow;
+
 /**
  *
  * @author clintonselke
@@ -25,9 +27,9 @@ public interface ErrorArrowSemigroupoid<EX,A> extends Semigroupoid<__<__<ErrorAr
         return ErrorArrow.errorArrow(a().dot(
             a().fanin(
                 a().arr(Either::Left),
-                ErrorArrow.narrow(cd).run()
+                asErrorArrow(cd).run()
             ),
-            ErrorArrow.narrow(bc).run()
+            asErrorArrow(bc).run()
         ));
     }
 }

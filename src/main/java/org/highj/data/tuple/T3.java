@@ -169,20 +169,6 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
     }
 
     /**
-     * Converts from the higher kinded representation to the standard one.
-     *
-     * @param value the higher kinded representation
-     * @param <A>   the type of the first value
-     * @param <B>   the type of the second value
-     * @param <C>   the type of the third value
-     * @return the standard representation of the tuple
-     */
-    @SuppressWarnings("unchecked")
-    public static <A, B, C> T3<A, B, C> narrow(__<__<__<µ, A>, B>, C> value) {
-        return (T3) value;
-    }
-
-    /**
      * Maps the first value of the tuple.
      *
      * @param fn   the transformation function

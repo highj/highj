@@ -1,6 +1,7 @@
 package org.highj.data.instance.list;
 
 import org.derive4j.hkt.__;
+import org.highj.Hkt;
 import org.highj.data.List;
 import org.highj.data.Maybe;
 import org.highj.data.tuple.T2;
@@ -10,6 +11,8 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
+
+import static org.highj.Hkt.asZipper;
 
 /**
  * A list zipper allows to have a focus on a certain position in a {@link List}, and to read and
@@ -43,10 +46,6 @@ public class Zipper<A> implements __<Zipper.µ, A> {
         this.front = front;
         this.back = back;
         this.position = position;
-    }
-
-    public static <A> Zipper<A> narrow(__<Zipper.µ, A> zipper) {
-        return (Zipper<A>) zipper;
     }
 
     /**
@@ -555,7 +554,7 @@ public class Zipper<A> implements __<Zipper.µ, A> {
     public static Functor<µ> functor = new Functor<µ>() {
         @Override
         public <A, B> Zipper<B> map(Function<A, B> fn, __<µ, A> nestedA) {
-            return narrow(nestedA).map(fn);
+            return asZipper(nestedA).map(fn);
         }
     };
 

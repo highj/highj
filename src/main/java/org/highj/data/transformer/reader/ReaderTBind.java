@@ -6,6 +6,8 @@ import org.highj.typeclass1.monad.Bind;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asReaderT;
+
 /**
  * @author Clinton Selke
  */
@@ -16,8 +18,8 @@ public interface ReaderTBind<R, M> extends ReaderTApply<R, M>, Bind<__<__<Reader
     @Override
     public default <A, B> ReaderT<R, M, B> bind(__<__<__<ReaderT.µ, R>, M>, A> nestedA, Function<A, __<__<__<ReaderT.µ, R>, M>, B>> fn) {
         return (R r) -> get().bind(
-                ReaderT.narrow(nestedA).run(r),
-                (A a) -> ReaderT.narrow(fn.apply(a)).run(r)
+                asReaderT(nestedA).run(r),
+                (A a) -> asReaderT(fn.apply(a)).run(r)
         );
     }
 }

@@ -12,13 +12,16 @@ import org.highj.typeclass1.monad.MonadRec;
 import java.io.IOException;
 import java.util.function.Function;
 
+import static org.highj.Hkt.asAsyncIO;
+import static org.highj.Hkt.asSafeIO;
+
 public interface AsyncIOMonadRec extends AsyncIOMonad, MonadRec<AsyncIO.µ> {
     @Override
     default <A, B> __<AsyncIO.µ, B> tailRec(Function<A, __<AsyncIO.µ, Either<A, B>>> f, A a0) {
         return (AsyncIO<B>)(F1<Either<IOException,B>,SafeIO<T0>> handler) ->
             SafeIO.monadRec.tailRec(
                 (A a) ->
-                    SafeIO.narrow(
+                    asSafeIO(
                         SafeIO.functor.map(
                             (Maybe<Either<IOException,Either<A,B>>> x) ->
                                 x.map(
@@ -32,13 +35,13 @@ public interface AsyncIOMonadRec extends AsyncIOMonad, MonadRec<AsyncIO.µ> {
                                                 )
                                         )
                                 ).getOrElse(Either.<A,Maybe<Either<IOException,B>>>Right(Maybe.<Either<IOException,B>>Nothing())),
-                            AsyncIO.narrow(f.apply(a)).toIO(
+                            asAsyncIO(f.apply(a)).toIO(
                                 (Either<IOException,Either<A,B>> x) ->
                                     x.either(
                                         (IOException e) -> handler.apply(Either.<IOException,B>Left(e)),
                                         (Either<A,B> x2) ->
                                             x2.either(
-                                                (A a2) -> AsyncIO.narrow(tailRec(f, a2)).run(handler),
+                                                (A a2) -> asAsyncIO(tailRec(f, a2)).run(handler),
                                                 (B b) -> handler.apply(Either.<IOException,B>Right(b))
                                             )
                                     )

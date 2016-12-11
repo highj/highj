@@ -7,14 +7,16 @@ import org.highj.typeclass2.arrow.Category;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
+import static org.highj.Hkt.asDual;
+import static org.highj.Hkt.asF1;
 
 public class DualTest {
 
     @Test
     public void categoryIdentityTest() throws Exception {
         Category<__<Dual.µ,F1.µ>> category = Dual.category(F1.arrow);
-        Dual<F1.µ, Integer, Integer> idDual =  Dual.narrow(category.<Integer>identity());
-        F1<Integer, Integer> id = F1.narrow(idDual.get());
+        Dual<F1.µ, Integer, Integer> idDual =  asDual(category.<Integer>identity());
+        F1<Integer, Integer> id = asF1(idDual.get());
         assertEquals(Integer.valueOf(42), id.apply(42));
     }
 
@@ -24,9 +26,9 @@ public class DualTest {
 
         Dual<F1.µ, Integer, Integer> squareDual = new Dual<>((F1<Integer, Integer>) x -> x*x);
         Dual<F1.µ, Integer, Integer> negateDual = new Dual<>((F1<Integer, Integer>) x -> -x);
-        Dual<F1.µ, Integer, Integer> squareNegateDual = Dual.narrow(category.dot(squareDual, negateDual));
+        Dual<F1.µ, Integer, Integer> squareNegateDual = asDual(category.dot(squareDual, negateDual));
 
-        F1<Integer, Integer> squareNegate = F1.narrow(squareNegateDual.get());
+        F1<Integer, Integer> squareNegate = asF1(squareNegateDual.get());
         // executes square first, and then negate
         // in contrast to category.apply(sqr, negate), which negates first, and squares then
         assertEquals(Integer.valueOf(-16), squareNegate.apply(4));

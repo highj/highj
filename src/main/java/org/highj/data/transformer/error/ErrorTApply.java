@@ -11,6 +11,8 @@ import org.highj.data.Either;
 import org.highj.data.transformer.ErrorT;
 import org.highj.typeclass1.monad.Apply;
 
+import static org.highj.Hkt.asErrorT;
+
 /**
  *
  * @author clintonselke
@@ -29,8 +31,8 @@ public interface ErrorTApply<E,M> extends ErrorTFunctor<E,M>, Apply<__<__<ErrorT
                     (A a2) -> Either.<E,B>Right(fn3.apply(a2))
                 )
             ),
-            ErrorT.narrow(fn).run(),
-            ErrorT.narrow(nestedA).run()
+            asErrorT(fn).run(),
+            asErrorT(nestedA).run()
         );
     }
 }

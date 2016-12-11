@@ -36,19 +36,7 @@ public class StreamArrow<A,B,C> implements __3<StreamArrow.µ,A,B,C> {
     public static <A,B,C> StreamArrow<A,B,C> streamArrow(__2<A,Stream<B>,Stream<C>> unstreamArrow) {
         return new StreamArrow<>(unstreamArrow);
     }
-    
-    public static <A,B,C> StreamArrow<A,B,C> narrow(__3<µ,A,B,C> a) {
-        return (StreamArrow<A,B,C>)a;
-    }
-    
-    public static <A,B,C> StreamArrow<A,B,C> narrow(__2<__<µ,A>,B,C> a) {
-        return (StreamArrow<A,B,C>)a;
-    }
-    
-    public static <A,B,C> StreamArrow<A,B,C> narrow(__<__<__<µ,A>,B>,C> a) {
-        return (StreamArrow<A,B,C>)a;
-    }
-    
+
     public __2<A,Stream<B>,Stream<C>> unstreamArrow() {
         return _unstreamArrow;
     }

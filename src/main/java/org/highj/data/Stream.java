@@ -1,6 +1,7 @@
 package org.highj.data;
 
 import org.derive4j.hkt.__;
+import org.highj.Hkt;
 import org.highj.data.instance.stream.StreamMonad;
 import org.highj.function.Strings;
 import org.highj.data.tuple.T2;
@@ -13,17 +14,15 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static org.highj.Hkt.asList;
+import static org.highj.Hkt.asStream;
+
 /*
  * An infinite list.
  */
 public abstract class Stream<A> implements __<Stream.µ, A>, Iterable<A>, Function<Integer, A> {
 
     public static final class µ {
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <A> Stream<A> narrow(__<µ, A> value) {
-        return (Stream) value;
     }
 
     private Stream() {
@@ -196,14 +195,14 @@ public abstract class Stream<A> implements __<Stream.µ, A>, Iterable<A>, Functi
     }
 
     public static <A> Stream<A> append(__<List.µ, A> list, __<µ, A> stream) {
-        final List<A> listOne = List.narrow(list);
-        final Stream<A> streamTwo = narrow(stream);
+        final List<A> listOne = asList(list);
+        final Stream<A> streamTwo = asStream(stream);
         return listOne.isEmpty() ? streamTwo : newLazyStream(listOne.head(), () -> append(listOne.tail(), streamTwo));
     }
 
     public static <A> Stream<A> interleave(__<µ, A> one, __<µ, A> two) {
        //interleave ~(Cons x xs) ys = Cons x (interleave ys xs)
-        return newLazyStream(narrow(one).head(), () -> interleave(two, narrow(one).tail()));
+        return newLazyStream(asStream(one).head(), () -> interleave(two, asStream(one).tail()));
     }
 
 
@@ -220,23 +219,23 @@ public abstract class Stream<A> implements __<Stream.µ, A>, Iterable<A>, Functi
     }
 
     public static <A, B, C> Stream<C> zipWith(Function<A, Function<B, C>> fn, __<µ, A> streamA, __<µ, B> streamB) {
-        final Stream<A> sA = narrow(streamA);
-        final Stream<B> sB = narrow(streamB);
+        final Stream<A> sA = asStream(streamA);
+        final Stream<B> sB = asStream(streamB);
         return newLazyStream(fn.apply(sA.head()).apply(sB.head()), () -> zipWith(fn, sA.tail(), sB.tail()));
     }
 
     public static <A, B, C, D> Stream<D> zipWith(Function<A, Function<B, Function<C, D>>> fn, __<µ, A> streamA, __<µ, B> streamB, __<µ, C> streamC) {
-        final Stream<A> sA = narrow(streamA);
-        final Stream<B> sB = narrow(streamB);
-        final Stream<C> sC = narrow(streamC);
+        final Stream<A> sA = asStream(streamA);
+        final Stream<B> sB = asStream(streamB);
+        final Stream<C> sC = asStream(streamC);
         return newLazyStream(fn.apply(sA.head()).apply(sB.head()).apply(sC.head()), () -> zipWith(fn, sA.tail(), sB.tail(), sC.tail()));
     }
 
     public static <A, B, C, D, E> Stream<E> zipWith(Function<A, Function<B, Function<C, Function<D, E>>>> fn, __<µ, A> streamA, __<µ, B> streamB, __<µ, C> streamC, __<µ, D> streamD) {
-        final Stream<A> sA = narrow(streamA);
-        final Stream<B> sB = narrow(streamB);
-        final Stream<C> sC = narrow(streamC);
-        final Stream<D> sD = narrow(streamD);
+        final Stream<A> sA = asStream(streamA);
+        final Stream<B> sB = asStream(streamB);
+        final Stream<C> sC = asStream(streamC);
+        final Stream<D> sD = asStream(streamD);
 
         return newLazyStream(fn.apply(sA.head()).apply(sB.head()).apply(sC.head()).apply(sD.head()), () ->
                 zipWith(fn, sA.tail(), sB.tail(), sC.tail(), sD.tail()));

@@ -61,19 +61,6 @@ public class ListT<M, A> implements __2<ListT.µ, M, A> {
     }
 
     /**
-     * Converts the higher kinded type representation of {@link ListT} back to the
-     * normal representation.
-     *
-     * @param nested the HKT representation
-     * @param <M>    nested monadic type
-     * @param <A>    element type
-     * @return the normal representation
-     */
-    public static <M, A> ListT<M, A> narrow(__<__<ListT.µ, M>, A> nested) {
-        return (ListT<M, A>) nested;
-    }
-
-    /**
      * A calculation step of {@link ListT}.
      *
      * @param <M> nested monadic type

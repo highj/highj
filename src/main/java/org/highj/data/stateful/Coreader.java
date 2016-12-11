@@ -18,16 +18,6 @@ public class Coreader<R, A> implements __2<Coreader.µ, R, A> {
         this.extract = extract;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <R,A> Coreader<R,A> narrow(__2<µ, R, A> nested) {
-       return (Coreader<R,A>) nested;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <R,A> Coreader<R,A> narrow(__<__<µ, R>, A> nested) {
-        return (Coreader<R,A>) nested;
-    }
-
     public <B> Coreader<R,B> map(Function<A,B> fn) {
         return new Coreader<>(ask, fn.apply(extract));
     }

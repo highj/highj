@@ -9,6 +9,8 @@ import org.highj.typeclass1.monad.MonadWriter;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asWriterT;
+
 /**
  * @author Clinton Selke
  */
@@ -26,7 +28,7 @@ public interface WriterTMonadWriter<W, M> extends WriterTMonad<W, M>, MonadWrite
     default <A> WriterT<W, M, T2<A, W>> listen(__<__<__<WriterT.µ, W>, M>, A> nestedA) {
         return () -> getM().map(
                 (T2<A, W> x) -> T2.of(x, x._2()),
-                WriterT.narrow(nestedA).run()
+                asWriterT(nestedA).run()
         );
     }
 
@@ -34,7 +36,7 @@ public interface WriterTMonadWriter<W, M> extends WriterTMonad<W, M>, MonadWrite
     default <A> WriterT<W, M, A> pass(__<__<__<WriterT.µ, W>, M>, T2<A, Function<W, W>>> m) {
         return () -> getM().map(
                 (T2<T2<A, Function<W, W>>, W> x) -> T2.of(x._1()._1(), x._1()._2().apply(x._2())),
-                WriterT.narrow(m).run()
+                asWriterT(m).run()
         );
     }
 }

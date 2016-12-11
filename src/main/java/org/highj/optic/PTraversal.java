@@ -3,6 +3,7 @@ package org.highj.optic;
 import java.util.function.Function;
 
 import org.derive4j.hkt.__;
+import org.highj.Hkt;
 import org.highj.data.Either;
 import org.highj.data.List;
 import org.highj.data.Maybe;
@@ -15,6 +16,9 @@ import org.highj.data.tuple.T1;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.foldable.Traversable;
 import org.highj.typeclass1.monad.Applicative;
+
+import static org.highj.Hkt.asConst;
+import static org.highj.Hkt.asT1;
 
 /**
  * A {@link PTraversal} can be seen as a {@link POptional} generalised to 0 to n targets where n can be infinite.
@@ -45,7 +49,7 @@ public abstract class PTraversal<S, T, A, B> {
      * @return the function to fold the source into a monoid value
      */
     public final <M> F1<S, M> foldMap(final Monoid<M> monoid, final Function<A, M> f) {
-        return s -> Const.narrow(modifyF(Const.applicative(monoid), a -> new Const<>(f.apply(a))).apply(s)).get();
+        return s -> asConst(modifyF(Const.applicative(monoid), a -> new Const<>(f.apply(a))).apply(s)).get();
     }
 
     /** Combine all targets using a target's {@link Monoid}
@@ -101,7 +105,7 @@ public abstract class PTraversal<S, T, A, B> {
      * @return the source modifying function
      */
     public final F1<S, T> modify(final Function<A, B> f) {
-        return s -> T1.narrow(modifyF(T1.monad, a -> T1.of(f.apply(a))).apply(s))._1();
+        return s -> asT1(modifyF(T1.monad, a -> T1.of(f.apply(a))).apply(s))._1();
     }
 
     /** Set polymorphically the target of a {@link PTraversal} with a value

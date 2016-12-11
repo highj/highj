@@ -77,17 +77,6 @@ public abstract class T1<A> implements __<T1.µ, A>, Supplier<A> {
         };
     }
 
-    /**
-     * Converts the higher kinded representation of {@link T1} to the standard one.
-     * @param hkt the higher kinded representation
-     * @param <A> the element type
-     * @return the unary tuple
-     */
-    @SuppressWarnings("unchecked")
-    public static <A> T1<A> narrow(__<µ, A> hkt) {
-        return (T1) hkt;
-    }
-
     @Override
     public String toString() {
         return String.format("(%s)", _1());

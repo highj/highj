@@ -7,6 +7,8 @@ import org.highj.data.transformer.ListT;
 import org.highj.typeclass1.monad.Apply;
 import org.highj.typeclass1.monad.Monad;
 
+import static org.highj.Hkt.asListT;
+
 public interface ListTApply<M> extends ListTFunctor<M>, Apply<__<ListT.µ, M>> {
 
     Monad<M> get();
@@ -15,9 +17,9 @@ public interface ListTApply<M> extends ListTFunctor<M>, Apply<__<ListT.µ, M>> {
     default <A, B> ListT<M, B> ap(__<__<ListT.µ, M>, Function<A, B>> fn, __<__<ListT.µ, M>, A> nestedA) {
         return ListT.wrapEffect(get(), get().map(mb ->
                 mb.map(t2 -> ListT.concat(get(),
-                        map(t2._1(), ListT.narrow(nestedA)),
+                        map(t2._1(), asListT(nestedA)),
                         ap(t2._2(), nestedA)))
                         .getOrElse(() -> ListT.nil(get())),
-                ListT.narrow(fn).uncons(get())));
+                asListT(fn).uncons(get())));
     }
 }

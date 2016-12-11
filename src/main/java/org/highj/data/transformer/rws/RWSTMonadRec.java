@@ -12,6 +12,8 @@ import org.highj.data.transformer.RWST;
 import org.highj.data.tuple.T3;
 import org.highj.typeclass1.monad.MonadRec;
 
+import static org.highj.Hkt.asRWST;
+
 /**
  *
  * @author clintonselke
@@ -33,7 +35,7 @@ public interface RWSTMonadRec<R,W,S,M> extends RWSTMonad<R,W,S,M>, MonadRec<__<_
                         (B x3) -> Either.<T3<A,S,W>,T3<B,S,W>>Right(T3.of(x3, nextS, nextW))
                     );
                 },
-                RWST.narrow(f.apply(x._1())).run(r, x._2())
+                asRWST(f.apply(x._1())).run(r, x._2())
             ),
             T3.of(startA, s0, getW().identity())
         );

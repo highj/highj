@@ -23,6 +23,8 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.highj.Hkt.asList;
+import static org.highj.Hkt.asYieldF;
 
 public class ListTest {
 
@@ -245,13 +247,13 @@ public class ListTest {
         ListMonadPlus monadPlus = List.monadPlus;
 
         __<List.µ, Integer> list1 = monadPlus.map(String::length, List.of("ab", "c", "def"));
-        assertThat(List.narrow(list1)).containsExactly(2, 1, 3);
+        assertThat(asList(list1)).containsExactly(2, 1, 3);
 
         __<List.µ, String> list2 = monadPlus.bind(List.of(2, 0, 4), i -> List.replicate(i, "xy"));
-        assertThat(List.narrow(list2)).containsExactly("xy", "xy", "xy", "xy", "xy", "xy");
+        assertThat(asList(list2)).containsExactly("xy", "xy", "xy", "xy", "xy", "xy");
 
         __<List.µ, __<List.µ, Integer>> list3 = List.of(List.of(1, 2), List.of(), List.of(30, 40, 50), List.of(600));
-        assertThat(List.narrow(monadPlus.join(list3))).containsExactly(1, 2, 30, 40, 50, 600);
+        assertThat(asList(monadPlus.join(list3))).containsExactly(1, 2, 30, 40, 50, 600);
 
         List<String> list4 = monadPlus.mplus(List.of("a", "b"), List.of("c", "d", "e"));
         assertThat(list4).containsExactly("a", "b", "c", "d", "e");
@@ -276,13 +278,6 @@ public class ListTest {
 
         List<Character> list5 = monadPlus.tailRec(substrings, "abc");
         assertThat(list5).containsExactly('a', 'a', 'b', 'b', 'b', 'c', 'c');
-    }
-
-    @Test
-    public void testNarrow() {
-        __<List.µ, Integer> list_ = List.of(1, 2, 3);
-        List<Integer> list = List.narrow(list_);
-        assertThat(list).containsExactly(1, 2, 3);
     }
 
     @Test

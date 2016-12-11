@@ -8,6 +8,8 @@ import org.highj.typeclass2.bifunctor.Biapply;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asT3;
+
 public interface T3Biapply<S> extends T3Bifunctor<S>, Biapply<__<T3.µ, S>> {
 
     Semigroup<S> getS();
@@ -16,8 +18,8 @@ public interface T3Biapply<S> extends T3Bifunctor<S>, Biapply<__<T3.µ, S>> {
     default <A, B, C, D> T3<S, B, D> biapply(
             __2<__<T3.µ, S>, Function<A, B>, Function<C, D>> fn,
             __2<__<T3.µ, S>, A, C> ac) {
-        T3<S, Function<A, B>, Function<C, D>> tripleFn = T3.narrow(fn);
-        T3<S, A, C> tripleAc = T3.narrow(ac);
+        T3<S, Function<A, B>, Function<C, D>> tripleFn = asT3(fn);
+        T3<S, A, C> tripleAc = asT3(ac);
         return T3.of(getS().apply(tripleFn._1(), tripleAc._1()),
                 tripleFn._2().apply(tripleAc._2()),
                 tripleFn._3().apply(tripleAc._3()));

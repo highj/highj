@@ -8,6 +8,9 @@ import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.highj.Hkt.asEither;
+import static org.highj.Hkt.asList;
+import static org.highj.Hkt.asMaybe;
 import static org.junit.Assert.assertTrue;
 
 import org.highj.data.Either;
@@ -22,7 +25,7 @@ public class DoTest {
     @Test
     @SuppressWarnings("UnusedAssignment")
     public void testNondeterminism() {
-        List<String> results = List.narrow(
+        List<String> results = asList(
             Do_.<List.µ>do_()
                 .pushM(List.range(1, 1, 3))
                 .pushM(List.range(1, 1, 3))
@@ -42,7 +45,7 @@ public class DoTest {
 
     @Test
     public void testDoBlock() {
-        Maybe<String> onetwo = Maybe.narrow(
+        Maybe<String> onetwo = asMaybe(
             Do_.<Maybe.µ>do_()
                 .push("one")
                 .push("two")
@@ -51,7 +54,7 @@ public class DoTest {
         );
         assertEquals("onetwo", onetwo.get());
 
-        Maybe<String> empty = Maybe.narrow(
+        Maybe<String> empty = asMaybe(
             Do_.<Maybe.µ>do_()
                 .push("one")
                 .pushM(Maybe.<String>Nothing())
@@ -63,7 +66,7 @@ public class DoTest {
 
     @Test
     public void testBind() {
-        Either<String, Integer> handSum = Either.narrow(
+        Either<String, Integer> handSum = asEither(
             Do_.<__<Either.µ,String>>do_()
                 .push(6)
                 .push(7)

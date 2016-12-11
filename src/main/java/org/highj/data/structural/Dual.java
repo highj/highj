@@ -3,11 +3,14 @@ package org.highj.data.structural;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.derive4j.hkt.__3;
+import org.highj.Hkt;
 import org.highj.data.structural.dual.DualCategory;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass2.arrow.Category;
+
+import static org.highj.Hkt.asDual;
 
 public class Dual<M, A, B> implements __3<Dual.µ, M, A, B> {
 
@@ -20,17 +23,12 @@ public class Dual<M, A, B> implements __3<Dual.µ, M, A, B> {
         this.value = value;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <M, A, B> Dual<M, A, B> narrow(__<__<__<µ, M>, A>, B> dual) {
-        return (Dual) dual;
-    }
-
     public __2<M, B, A> get() {
         return value;
     }
 
     public static <M, A, B> __2<M, B, A> get(__<__<__<µ, M>, A>, B> dual) {
-        return narrow(dual).get();
+        return asDual(dual).get();
     }
 
     public static <M, A, B> Semigroup<__<__<__<µ, M>, A>, B>> semigroup(Semigroup<__2<M, B, A>> mSemigroup) {

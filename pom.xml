@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.derive4j.hkt</groupId>
             <artifactId>hkt</artifactId>
-            <version>0.9</version>
+            <version>0.9.1</version>
         </dependency>
         <dependency>
             <groupId>org.derive4j</groupId>

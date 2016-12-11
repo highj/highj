@@ -17,11 +17,6 @@ public class Cont<R, A> implements __2<Cont.µ, R, A> {
         this.fn = fn;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <R,A>  Cont<R,A> narrow(__<__<µ, R>, A> cont) {
-        return (Cont) cont;
-    }
-
     public Function<Function<A,R>,R> runCont() {
        return fn;
     }

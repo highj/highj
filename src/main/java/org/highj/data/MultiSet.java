@@ -40,11 +40,6 @@ public class MultiSet<A> implements __<MultiSet.µ, A>, Iterable<T2<A, Integer>>
         this.left = left;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <A> MultiSet<A> narrow(__<µ, A> value) {
-        return (MultiSet) value;
-    }
-
     @Override
     public Integer apply(A value) {
         if (isEmpty()) {

@@ -6,10 +6,12 @@ import org.highj.typeclass1.functor.Functor;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asEither;
+
 interface EitherFunctor<S> extends Functor<__<Either.µ, S>> {
 
     @Override
     default <A, B> Either<S, B> map(Function<A, B> fn, __<__<Either.µ, S>, A> nestedA) {
-        return Either.narrow(nestedA).rightMap(fn);
+        return asEither(nestedA).rightMap(fn);
     }
 }

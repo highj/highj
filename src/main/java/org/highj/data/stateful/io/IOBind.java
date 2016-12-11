@@ -6,9 +6,11 @@ import org.highj.typeclass1.monad.Bind;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asIO;
+
 public interface IOBind extends IOApply, Bind<IO.µ> {
     @Override
     default <A, B> IO<B> bind(__<IO.µ, A> nestedA, Function<A, __<IO.µ, B>> fn){
-        return () -> IO.narrow(fn.apply(IO.narrow(nestedA).run())).run();
+        return () -> asIO(fn.apply(asIO(nestedA).run())).run();
     }
 }
