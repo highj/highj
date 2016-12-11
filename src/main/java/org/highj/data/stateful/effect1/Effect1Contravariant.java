@@ -10,6 +10,8 @@ import org.derive4j.hkt.__;
 import org.highj.data.stateful.Effect1;
 import org.highj.typeclass1.contravariant.Contravariant;
 
+import static org.highj.Hkt.asEffect1;
+
 /**
  *
  * @author clintonselke
@@ -18,6 +20,6 @@ public interface Effect1Contravariant extends Contravariant<Effect1.µ> {
 
     @Override
     public default <A, B> Effect1<A> contramap(Function<A, B> fn, __<Effect1.µ, B> nestedB) {
-        return (A a) -> Effect1.narrow(nestedB).run(fn.apply(a));
+        return (A a) -> asEffect1(nestedB).run(fn.apply(a));
     }
 }

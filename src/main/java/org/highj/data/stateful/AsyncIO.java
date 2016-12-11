@@ -1,6 +1,7 @@
 package org.highj.data.stateful;
 
 import org.derive4j.hkt.__;
+import org.highj.Hkt;
 import org.highj.data.Either;
 import org.highj.data.Maybe;
 import org.highj.data.stateful.async_io.*;
@@ -9,16 +10,14 @@ import org.highj.function.F1;
 
 import java.io.IOException;
 
+import static org.highj.Hkt.asSafeIO;
+
 /**
  * Mixed Asynchronous/Synchronous IO monad
  * @param <A> The result type of the computation.
  */
 public interface AsyncIO<A> extends __<AsyncIO.µ,A> {
     interface µ {}
-
-    static <A> AsyncIO<A> narrow(__<µ,A> a) {
-        return (AsyncIO<A>)a;
-    }
 
     /**
      * The IO equivalent of this AsyncIO monad.
@@ -42,7 +41,7 @@ public interface AsyncIO<A> extends __<AsyncIO.µ,A> {
      * @return a IO value representing the effect of this method.
      */
     default SafeIO<T0> run(F1<Either<IOException,A>,SafeIO<T0>> handler) {
-        return SafeIO.narrow(SafeIO.bind.bind(
+        return asSafeIO(SafeIO.bind.bind(
             toIO(handler),
             (Maybe<Either<IOException,A>> syncOp) ->
                 syncOp.map(handler).getOrElse(SafeIO.applicative.pure(T0.of()))

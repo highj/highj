@@ -11,6 +11,8 @@ import org.highj.data.Either;
 import org.highj.data.transformer.ErrorT;
 import org.highj.typeclass1.functor.Functor;
 
+import static org.highj.Hkt.asErrorT;
+
 /**
  *
  * @author clintonselke
@@ -23,7 +25,7 @@ public interface ErrorTFunctor<E,M> extends Functor<__<__<ErrorT.µ,E>,M>> {
     public default <A, B> ErrorT<E, M, B> map(Function<A, B> fn, __<__<__<ErrorT.µ, E>, M>, A> nestedA) {
         return () -> get().map(
             (Either<E,A> x) -> x.rightMap(fn),
-            ErrorT.narrow(nestedA).run()
+            asErrorT(nestedA).run()
         );
     }
 }

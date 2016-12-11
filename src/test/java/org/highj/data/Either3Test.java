@@ -16,6 +16,7 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.highj.Hkt.asEither3;
 import static org.highj.data.ord.Ordering.*;
 
 public class Either3Test {
@@ -27,9 +28,9 @@ public class Either3Test {
     public void narrow() {
         Either3<Integer, String, Long> either3 = Either3.Left(42);
         __3<Either3.µ, Integer, String, Long> either3HKT = either3;
-        assertThat(Either3.narrow(either3HKT)).isSameAs(either3);
+        assertThat(asEither3(either3HKT)).isSameAs(either3);
         __<__<__<Either3.µ, Integer>, String>, Long> either3curried = either3;
-        assertThat(Either3.narrow(either3curried)).isSameAs(either3curried);
+        assertThat(asEither3(either3curried)).isSameAs(either3curried);
     }
 
     @Test

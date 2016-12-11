@@ -20,10 +20,6 @@ public interface WriterT<W, M, A> extends __3<WriterT.µ, W, M, A> {
     interface µ {
     }
 
-    static <W, M, A> WriterT<W, M, A> narrow(__<__<__<µ, W>, M>, A> a) {
-        return (WriterT<W, M, A>) a;
-    }
-
     __<M, T2<A, W>> run();
 
     default __<M, W> exec(Functor<M> mFunctor) {

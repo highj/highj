@@ -23,14 +23,6 @@ public interface ErrorT<E, M, A> extends __3<ErrorT.µ, E, M, A> {
     interface µ {
     }
 
-    static <E, M, A> ErrorT<E, M, A> narrow(__3<µ, E, M, A> a) {
-        return (ErrorT<E, M, A>) a;
-    }
-
-    static <E, M, A> ErrorT<E, M, A> narrow(__<__<__<µ, E>, M>, A> a) {
-        return (ErrorT<E, M, A>) a;
-    }
-
     __<M, Either<E, A>> run();
 
     static <E, M> ErrorTFunctor<E, M> functor(Functor<M> mFunctor) {

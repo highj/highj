@@ -3,10 +3,6 @@ package org.highj.data.instance;
 import org.junit.Test;
 
 public class MultiSetTest {
-    @Test
-    public void testNarrow() throws Exception {
-
-    }
 
     @Test
     public void testApply() throws Exception {

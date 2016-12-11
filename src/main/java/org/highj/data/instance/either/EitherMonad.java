@@ -7,6 +7,8 @@ import org.highj.typeclass1.monad.MonadRec;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asEither;
+
 public interface EitherMonad<S> extends EitherFunctor<S>, Monad<__<Either.µ, S>>, MonadRec<__<Either.µ, S>> {
     @Override
     default <A> Either<S, A> pure(A a) {
@@ -16,8 +18,8 @@ public interface EitherMonad<S> extends EitherFunctor<S>, Monad<__<Either.µ, S>
     @Override
     default <A, B> Either<S, B> ap(__<__<Either.µ, S>, Function<A, B>> fn, __<__<Either.µ, S>, A> nestedA) {
         //a <*> b = do x <- a; y <- b; return (x y)
-        return Either.narrow(fn).<Either<S, B>>either(Either::Left,
-                fnRight -> Either.narrow(nestedA).<Either<S, B>>either(
+        return asEither(fn).<Either<S, B>>either(Either::Left,
+                fnRight -> asEither(nestedA).<Either<S, B>>either(
                         Either::Left,
                         right -> Either.Right(fnRight.apply(right))));
     }
@@ -26,14 +28,14 @@ public interface EitherMonad<S> extends EitherFunctor<S>, Monad<__<Either.µ, S>
     default <A, B> Either<S, B> bind(__<__<Either.µ, S>, A> a, Function<A, __<__<Either.µ, S>, B>> fn) {
         //Right$ m >>= k = k m
         //Left$ e  >>= __ = Left$ e
-        return Either.narrow(a).<Either<S,B>>either(Either::Left, right -> Either.narrow(fn.apply(right)));
+        return asEither(a).<Either<S,B>>either(Either::Left, right -> asEither(fn.apply(right)));
     }
 
     @Override
     default <A, B> Either<S, B> tailRec(Function<A, __<__<Either.µ, S>, Either<A, B>>> function, A startValue) {
         Either<S,Either<A, B>> step = Either.Right(Either.Left(startValue));
         while(step.isRight() && step.getRight().isLeft()) {
-            step = Either.narrow(function.apply(step.getRight().getLeft()));
+            step = asEither(function.apply(step.getRight().getLeft()));
         }
         return step.rightMap(Either::getRight);
     }

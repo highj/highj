@@ -15,21 +15,17 @@ import org.highj.data.stateful.effect1.Effect1Semigroup;
  * @author clintonselke
  */
 public interface Effect1<A> extends __<Effect1.µ,A> {
-    public static class µ {}
+    class µ {}
     
-    public static <A> Effect1<A> narrow(__<µ,A> a) {
-        return (Effect1<A>)a;
-    }
+    void run(A a);
     
-    public void run(A a);
-    
-    public static <A> Effect1Semigroup<A> semigroup() {
+    static <A> Effect1Semigroup<A> semigroup() {
         return new Effect1Semigroup<A>() {};
     }
     
-    public static <A> Effect1Monoid<A> monoid() {
+    static <A> Effect1Monoid<A> monoid() {
         return new Effect1Monoid<A>() {};
     }
     
-    public static final Effect1Contravariant contravariant = new Effect1Contravariant() {};
+    Effect1Contravariant contravariant = new Effect1Contravariant() {};
 }

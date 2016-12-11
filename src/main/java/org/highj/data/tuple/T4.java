@@ -143,21 +143,6 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
     }
 
     /**
-     * Converts from the higher kinded representation to the standard one.
-     *
-     * @param value the higher kinded representation
-     * @param <A>   the type of the first value
-     * @param <B>   the type of the second value
-     * @param <C>   the type of the third value
-     * @param <D>   the type of the fourth value
-     * @return the standard representation of the tuple
-     */
-    @SuppressWarnings("unchecked")
-    public static <A, B, C, D> T4<A, B, C, D> narrow(__<__<__<__<µ, A>, B>, C>, D> value) {
-        return (T4) value;
-    }
-
-    /**
      * Maps all values of the tuple at the same time.
      *
      * @param fn1  the first transformation function

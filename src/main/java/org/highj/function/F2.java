@@ -11,11 +11,6 @@ public interface F2<A,B,C>  extends __3<F2.µ,A,B,C>, BiFunction<A,B,C> {
     class µ {
     }
 
-    @SuppressWarnings("unchecked")
-    static <A, B, C> F2<A, B, C> narrow(__<__<__<µ, A>, B>, C> function) {
-        return (F2) function;
-    }
-
     @Override
     C apply(A a, B b);
 

@@ -10,6 +10,8 @@ import org.derive4j.hkt.__2;
 import org.highj.data.transformer.Automaton;
 import org.highj.typeclass2.arrow.ArrowPlus;
 
+import static org.highj.Hkt.asAutomaton;
+
 /**
  *
  * @author clintonselke
@@ -21,8 +23,8 @@ public interface AutomatonArrowPlus<A> extends AutomatonArrowZero<A>, ArrowPlus<
     @Override
     public default <B, C> Automaton<A,B,C> plus(__2<__<Automaton.µ, A>, B, C> arrow1, __2<__<Automaton.µ, A>, B, C> arrow2) {
         return () -> get().plus(
-            Automaton.narrow(arrow1).unAutomaton(),
-            Automaton.narrow(arrow2).unAutomaton()
+            asAutomaton(arrow1).unAutomaton(),
+            asAutomaton(arrow2).unAutomaton()
         );
     }
 }

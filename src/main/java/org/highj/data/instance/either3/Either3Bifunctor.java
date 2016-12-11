@@ -7,14 +7,16 @@ import org.highj.typeclass2.bifunctor.Bifunctor;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asEither3;
+
 public interface Either3Bifunctor<S> extends Bifunctor<__<Either3.µ,S>> {
     @Override
     default <A, B, C> Either3<S, B, C> first(Function<A, B> fn, __2<__<Either3.µ, S>, A, C> nestedAC) {
-        return Either3.narrow(nestedAC).middleMap(fn);
+        return asEither3(nestedAC).middleMap(fn);
     }
 
     @Override
     default <A, B, C> Either3<S, A, C> second(Function<B, C> fn, __2<__<Either3.µ, S>, A, B> nestedAB) {
-        return Either3.narrow(nestedAB).rightMap(fn);
+        return asEither3(nestedAB).rightMap(fn);
     }
 }

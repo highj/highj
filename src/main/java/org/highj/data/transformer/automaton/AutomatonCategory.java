@@ -12,6 +12,8 @@ import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.Arrow;
 import org.highj.typeclass2.arrow.Category;
 
+import static org.highj.Hkt.asAutomaton;
+
 /**
  *
  * @author clintonselke
@@ -30,9 +32,9 @@ public interface AutomatonCategory<A> extends Category<__<Automaton.µ,A>> {
         return () -> get().dot(
             get().dot(
                 get().arr((T2<T2<D,Automaton<A,C,D>>,Automaton<A,B,C>> x) -> T2.of(x._1()._1(), dot(x._1()._2(), x._2()))),
-                get().<C,T2<D,Automaton<A,C,D>>,Automaton<A,B,C>>first(Automaton.narrow(cd).unAutomaton())
+                get().<C,T2<D,Automaton<A,C,D>>,Automaton<A,B,C>>first(asAutomaton(cd).unAutomaton())
             ),
-            Automaton.narrow(bc).unAutomaton()
+            asAutomaton(bc).unAutomaton()
         );
     }
 }

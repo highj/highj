@@ -7,6 +7,8 @@ import org.highj.typeclass1.monad.MonadReader;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asReaderT;
+
 /**
  * @author Clinton Selke
  */
@@ -22,6 +24,6 @@ public interface ReaderTMonadReader<R, M> extends ReaderTMonad<R, M>, MonadReade
 
     @Override
     public default <A> ReaderT<R, M, A> local(Function<R, R> modFn, __<__<__<ReaderT.µ, R>, M>, A> nestedA) {
-        return (R r) -> ReaderT.narrow(nestedA).run(modFn.apply(r));
+        return (R r) -> asReaderT(nestedA).run(modFn.apply(r));
     }
 }

@@ -40,11 +40,6 @@ public class Map<A, B> implements __2<Map.µ, A, B>, Iterable<T2<A, B>>, Functio
         this.left = left;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <A, B> Map<A, B> narrow(__<__<µ, A>, B> value) {
-        return (Map) value;
-    }
-
     public Maybe<B> apply(A key) {
         if (isEmpty()) {
             return Maybe.Nothing();

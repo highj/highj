@@ -6,9 +6,11 @@ import org.highj.typeclass1.functor.Functor;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asIntMap;
+
 public interface IntMapFunctor extends Functor<IntMap.µ> {
     @Override
     default <A, B> IntMap<B> map(Function<A, B> fn, __<IntMap.µ, A> nestedA) {
-        return IntMap.narrow(nestedA).mapValues(fn);
+        return asIntMap(nestedA).mapValues(fn);
     }
 }

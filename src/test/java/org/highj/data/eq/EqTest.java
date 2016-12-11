@@ -10,6 +10,7 @@ import org.junit.rules.ExpectedException;
 import java.awt.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.highj.Hkt.asEq;
 
 public class EqTest {
 
@@ -20,7 +21,7 @@ public class EqTest {
     public void narrow() {
         Eq<String> eq = Eq.fromEquals();
         __<Eq.µ, String> hkt = eq;
-        assertThat(Eq.narrow(hkt)).isSameAs(eq);
+        assertThat(asEq(hkt)).isSameAs(eq);
     }
 
     @Test

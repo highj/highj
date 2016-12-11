@@ -17,6 +17,7 @@ import org.junit.Test;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.highj.Hkt.asT4;
 
 public class T4Test {
 
@@ -111,10 +112,10 @@ public class T4Test {
     public void narrow() {
         T4<Long, String, Integer, Character> t4 = T4.of(4711L, "foo", 42, 'A');
         __<__<__<__<T4.µ, Long>, String>, Integer>, Character> hkt = t4;
-        assertThat(T4.narrow(hkt)).isSameAs(t4);
+        assertThat(asT4(hkt)).isSameAs(t4);
         T4<Long, String, Integer, Character> t4$ = T4.of$(() -> 4711L, () -> "foo", () -> 42, () -> 'A');
         __<__<__<__<T4.µ, Long>, String>, Integer>, Character> hkt$ = t4$;
-        assertThat(T4.narrow(hkt$)).isSameAs(t4$);
+        assertThat(asT4(hkt$)).isSameAs(t4$);
     }
 
     @Test

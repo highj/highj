@@ -12,6 +12,7 @@ import org.junit.rules.ExpectedException;
 import java.awt.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.highj.Hkt.asOrd;
 
 public class OrdTest {
 
@@ -22,7 +23,7 @@ public class OrdTest {
     public void narrow() {
         Ord<String> ord = Ord.fromComparable();
         __<Ord.µ, String> hkt = ord;
-        assertThat(Ord.narrow(hkt)).isSameAs(ord);
+        assertThat(asOrd(hkt)).isSameAs(ord);
     }
 
     @Test

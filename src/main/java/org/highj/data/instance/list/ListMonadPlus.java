@@ -10,6 +10,8 @@ import org.highj.util.Mutable;
 import java.util.Stack;
 import java.util.function.Function;
 
+import static org.highj.Hkt.asList;
+
 public interface ListMonadPlus extends ListFunctor, MonadPlus<List.µ>, MonadRec<List.µ> {
 
     @Override
@@ -19,8 +21,8 @@ public interface ListMonadPlus extends ListFunctor, MonadPlus<List.µ>, MonadRec
 
     @Override
     default <A, B> List<B> ap(__<List.µ, Function<A, B>> fn, __<List.µ, A> nestedA) {
-        List<Function<A, B>> listFn = List.narrow(fn);
-        List<A> listA = List.narrow(nestedA);
+        List<Function<A, B>> listFn = asList(fn);
+        List<A> listA = asList(nestedA);
         Stack<B> stack = new Stack<>();
         for (Function<A, B> f : listFn) {
             for (A a : listA) {
@@ -32,10 +34,10 @@ public interface ListMonadPlus extends ListFunctor, MonadPlus<List.µ>, MonadRec
 
     @Override
     default <A> List<A> join(__<List.µ, __<List.µ, A>> nestedNestedA) {
-        List<__<List.µ, A>> nestedList = List.narrow(nestedNestedA);
+        List<__<List.µ, A>> nestedList = asList(nestedNestedA);
         Stack<A> stack = new Stack<>();
         for (__<List.µ, A> list : nestedList) {
-            for (A a : List.narrow(list)) {
+            for (A a : asList(list)) {
                 stack.push(a);
             }
         }
@@ -49,8 +51,8 @@ public interface ListMonadPlus extends ListFunctor, MonadPlus<List.µ>, MonadRec
 
     @Override
     default <A> List<A> mplus(__<List.µ, A> one, __<List.µ, A> two) {
-        List<A> listOne = List.narrow(one);
-        List<A> listTwo = List.narrow(two);
+        List<A> listOne = asList(one);
+        List<A> listTwo = asList(two);
         return List.append(listOne, listTwo);
     }
 
@@ -63,7 +65,7 @@ public interface ListMonadPlus extends ListFunctor, MonadPlus<List.µ>, MonadRec
             step = step.concatMap(e -> e.either(
                     left -> {
                         hasChanged.set(true);
-                        return List.narrow(function.apply(left));
+                        return asList(function.apply(left));
                     },
                     right -> List.of(e)
             ));

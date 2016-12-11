@@ -7,6 +7,8 @@ import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asListT;
+
 public interface ListTZipApplicative<M> extends ListTFunctor<M>, Applicative<__<ListT.µ, M>> {
     @Override
     Monad<M> get();
@@ -18,6 +20,6 @@ public interface ListTZipApplicative<M> extends ListTFunctor<M>, Applicative<__<
 
     @Override
     default <A, B> ListT<M, B> ap(__<__<ListT.µ, M>, Function<A, B>> fn, __<__<ListT.µ, M>, A> nestedA) {
-        return ListT.zipWith(get(), Function::apply, ListT.narrow(fn), ListT.narrow(nestedA));
+        return ListT.zipWith(get(), Function::apply, asListT(fn), asListT(nestedA));
     }
 }

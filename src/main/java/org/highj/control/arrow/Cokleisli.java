@@ -23,11 +23,6 @@ public class Cokleisli<W, A, B> implements __3<Cokleisli.µ, W, A, B>, Function<
         return fn.apply(a);
     }
 
-    @SuppressWarnings("unchecked")
-    public static <W, A, B> Cokleisli<W, A, B> narrow(__<__<__<µ, W>, A>, B> nested) {
-        return (Cokleisli) nested;
-    }
-
     public static <W> CokleisliArrow<W> arrow(Comonad<W> wComonad) {
         return () -> wComonad;
     }

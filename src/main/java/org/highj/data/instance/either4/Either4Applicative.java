@@ -6,6 +6,8 @@ import org.highj.typeclass1.monad.Applicative;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asEither4;
+
 public interface Either4Applicative<S, T, U> extends Either4Functor<S, T, U>,
         Applicative<__<__<__<Either4.µ, S>, T>,U>> {
     @Override
@@ -16,11 +18,11 @@ public interface Either4Applicative<S, T, U> extends Either4Functor<S, T, U>,
     @Override
     default <A, B> Either4<S, T, U, B> ap(__<__<__<__<Either4.µ, S>, T>, U>, Function<A, B>> fn,
                                           __<__<__<__<Either4.µ, S>, T>, U>, A> nestedA) {
-        return Either4.narrow(fn).either(
+        return asEither4(fn).either(
                 Either4::E1,
                 Either4::E2,
                 Either4::E3,
-                fn4 -> Either4.narrow(nestedA).either(
+                fn4 -> asEither4(nestedA).either(
                         Either4::E1,
                         Either4::E2,
                         Either4::E3,

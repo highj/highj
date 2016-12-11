@@ -13,6 +13,8 @@ import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass2.arrow.Arrow;
 import org.highj.typeclass2.arrow.Semigroupoid;
 
+import static org.highj.Hkt.asWriterArrow;
+
 /**
  *
  * @author clintonselke
@@ -29,8 +31,8 @@ public interface WriterArrowSemigroupoid<W,A> extends Semigroupoid<__<__<WriterA
             a().dot(
                 a().arr((T2<T2<D,W>,W> x) -> T2.of(x._1()._1(), w().apply(x._2(), x._1()._2()))),
                 a().dot(
-                    a().first(WriterArrow.narrow(cd).run()),
-                    WriterArrow.narrow(bc).run()
+                    a().first(asWriterArrow(cd).run()),
+                    asWriterArrow(bc).run()
                 )
             )
         );

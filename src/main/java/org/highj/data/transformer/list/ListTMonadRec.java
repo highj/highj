@@ -8,6 +8,8 @@ import org.highj.typeclass1.monad.MonadRec;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asListT;
+
 public interface ListTMonadRec<M> extends ListTMonad<M>, MonadRec<__<ListT.µ, M>> {
     @Override
     Monad<M> get();
@@ -16,7 +18,7 @@ public interface ListTMonadRec<M> extends ListTMonad<M>, MonadRec<__<ListT.µ, M
     default <A, B> __<__<ListT.µ, M>, B> tailRec(Function<A, __<__<ListT.µ, M>, Either<A, B>>> function, A startValue) {
         return bind(function.apply(startValue),
                 e -> e.either(
-                        a2 -> ListT.wrapLazy(get(), () -> ListT.narrow(tailRec(function, a2))),
+                        a2 -> ListT.wrapLazy(get(), () -> asListT(tailRec(function, a2))),
                         this::pure));
     }
 }

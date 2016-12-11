@@ -7,6 +7,8 @@ import org.highj.data.transformer.ListT;
 import org.highj.typeclass1.monad.Bind;
 import org.highj.typeclass1.monad.Monad;
 
+import static org.highj.Hkt.asListT;
+
 public interface ListTBind<M> extends ListTApply<M>, Bind<__<ListT.µ, M>> {
 
     @Override
@@ -14,10 +16,10 @@ public interface ListTBind<M> extends ListTApply<M>, Bind<__<ListT.µ, M>> {
 
     @Override
     default <A, B> ListT<M, B> bind(__<__<ListT.µ, M>, A> nestedA, Function<A, __<__<ListT.µ, M>, B>> fn) {
-        return ListT.narrow(nestedA).stepMap(get(),
+        return asListT(nestedA).stepMap(get(),
                 stepYield -> ListT.skip(stepYield.mapTail(s ->
                         ListT.concat(get(),
-                                ListT.narrow(fn.apply(stepYield.head())),
+                                asListT(fn.apply(stepYield.head())),
                                 bind(s, fn)))),
                 stepSkip -> ListT.skip(stepSkip.mapTail(s -> bind(s, fn))),
                 () -> ListT.done());

@@ -8,6 +8,8 @@ import org.highj.typeclass1.monad.Apply;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asWriterT;
+
 /**
  * @author Clinton Selke
  */
@@ -21,8 +23,8 @@ public interface WriterTApply<W, M> extends WriterTFunctor<W, M>, Apply<__<__<Wr
     default <A, B> WriterT<W, M, B> ap(__<__<__<WriterT.µ, W>, M>, Function<A, B>> fn, __<__<__<WriterT.µ, W>, M>, A> nestedA) {
         return () -> getM().apply2(
                 (T2<Function<A, B>, W> x1) -> (T2<A, W> x2) -> T2.of(x1._1().apply(x2._1()), getW().apply(x1._2(), x2._2())),
-                WriterT.narrow(fn).run(),
-                WriterT.narrow(nestedA).run()
+                asWriterT(fn).run(),
+                asWriterT(nestedA).run()
         );
     }
 }

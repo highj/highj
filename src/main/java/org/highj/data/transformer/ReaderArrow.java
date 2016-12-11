@@ -33,23 +33,7 @@ public class ReaderArrow<R,A,B,C> implements __4<ReaderArrow.µ,R,A,B,C> {
     public static <R,A,B,C> ReaderArrow<R,A,B,C> readerArrow(__2<A,T2<B,R>,C> run) {
         return new ReaderArrow<>(run);
     }
-    
-    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(__4<µ,R,A,B,C> a) {
-        return (ReaderArrow<R,A,B,C>)a;
-    }
-    
-    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(__3<__<µ,R>,A,B,C> a) {
-        return (ReaderArrow<R,A,B,C>)a;
-    }
-    
-    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(__2<__<__<µ,R>,A>,B,C> a) {
-        return (ReaderArrow<R,A,B,C>)a;
-    }
-    
-    public static <R,A,B,C> ReaderArrow<R,A,B,C> narrow(__<__<__<__<µ,R>,A>,B>,C> a) {
-        return (ReaderArrow<R,A,B,C>)a;
-    }
-    
+
     public __2<A,T2<B,R>,C> run() {
         return _run;
     }

@@ -7,6 +7,8 @@ import org.highj.typeclass1.monad.Bind;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asStateT;
+
 /**
  * @author Clinton Selke
  */
@@ -17,11 +19,11 @@ public interface StateTBind<S, M> extends StateTApply<S, M>, Bind<__<__<StateT.�
     @Override
     public default <A, B> StateT<S, M, B> bind(__<__<__<StateT.µ, S>, M>, A> nestedA, Function<A, __<__<__<StateT.µ, S>, M>, B>> fn) {
         return (S s1) -> m().bind(
-                StateT.narrow(nestedA).run(s1),
+                asStateT(nestedA).run(s1),
                 (T2<A, S> x) -> {
                     A a = x._1();
                     S s2 = x._2();
-                    return StateT.narrow(fn.apply(a)).run(s2);
+                    return asStateT(fn.apply(a)).run(s2);
                 }
         );
     }

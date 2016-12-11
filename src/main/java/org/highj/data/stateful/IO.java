@@ -16,15 +16,11 @@ import org.highj.data.stateful.io.IOMonadRec;
 
 public interface IO<A> extends __<IO.µ, A> {
 
-    public static final class µ {}
-
-    public static <A> IO<A> narrow(__<µ, A> value) {
-        return (IO<A>)value;
-    }
+    final class µ {}
     
-    public A run() throws IOException;
+    A run() throws IOException;
     
-    public default SafeIO<Either<IOException,A>> toSafeIO() {
+    default SafeIO<Either<IOException,A>> toSafeIO() {
         return () -> {
             try {
                 return Either.<IOException,A>Right(run());
@@ -34,31 +30,31 @@ public interface IO<A> extends __<IO.µ, A> {
         };
     }
 
-    public default <B> IO<B> map(Function<A, B> fn) {
+    default <B> IO<B> map(Function<A, B> fn) {
         return functor.map(fn, this);
     }
 
-    public default <B> IO<B> ap(IO<Function<A, B>> fn) {
+    default <B> IO<B> ap(IO<Function<A, B>> fn) {
         return apply.ap(fn, this);
     }
 
-    public default <B> IO<B> bind(Function<A, __<µ, B>> fn) {
+    default <B> IO<B> bind(Function<A, __<µ, B>> fn) {
         return bind.bind(this, fn);
     }
 
-    public static final IOFunctor functor = new IOFunctor() {};
+    IOFunctor functor = new IOFunctor() {};
     
-    public static final IOApply apply = new IOApply() {};
+    IOApply apply = new IOApply() {};
     
-    public static final IOApplicative applicative = new IOApplicative() {};
+    IOApplicative applicative = new IOApplicative() {};
     
-    public static final IOBind bind = new IOBind() {};
+    IOBind bind = new IOBind() {};
 
-    public static final IOMonad monad = new IOMonad() {};
+    IOMonad monad = new IOMonad() {};
     
-    public static final IOMonadError monadError = new IOMonadError() {};
+    IOMonadError monadError = new IOMonadError() {};
     
-    public static final IOMonadIO monadIO = new IOMonadIO() {};
+    IOMonadIO monadIO = new IOMonadIO() {};
     
-    public static final IOMonadRec monadRec = new IOMonadRec() {};
+    IOMonadRec monadRec = new IOMonadRec() {};
 }

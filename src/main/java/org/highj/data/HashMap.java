@@ -15,6 +15,8 @@ import org.highj.function.Strings;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import static org.highj.Hkt.asProducerT;
+
 public class HashMap<K, V> implements Iterable<T2<K, V>> {
     private static final int NUM_BRANCHING_BITS = 5;
     private static final int NUM_BRANCHES = 1 << NUM_BRANCHING_BITS;
@@ -44,7 +46,7 @@ public class HashMap<K, V> implements Iterable<T2<K, V>> {
 
     @Override
     public Iterator<T2<K, V>> iterator() {
-        return ProducerT.toIterator(ProducerT.narrow(root.generator(0, 0)));
+        return ProducerT.toIterator(asProducerT(root.generator(0, 0)));
     }
 
     public int size() {
@@ -227,7 +229,7 @@ public class HashMap<K, V> implements Iterable<T2<K, V>> {
 
         @Override
         public String toString() {
-            return Strings.mkString("(Branch ", " ", ")", nodes);
+            return Strings.mkString("(Branch ", " ", ")", (Object[]) nodes);
         }
 
         @Override

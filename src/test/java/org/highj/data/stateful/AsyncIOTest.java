@@ -14,6 +14,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.highj.Hkt.asAsyncIO;
+import static org.highj.Hkt.asSafeIO;
+
 public class AsyncIOTest {
 
     // XXX: HACK
@@ -45,7 +48,7 @@ public class AsyncIOTest {
                     boolean bAsync;
                 }
                 final Util util = new Util();
-                Maybe<Either<IOException,T>> a3Op = AsyncIO.narrow(a).toIO(
+                Maybe<Either<IOException,T>> a3Op = asAsyncIO(a).toIO(
                     (Either<IOException,T> a2) ->
                         (SafeIO<T0>)() -> {
                             util.aResult = a2;
@@ -57,7 +60,7 @@ public class AsyncIOTest {
                     util.aResult = a3;
                     util.aAsync = false;
                 }
-                Maybe<Either<IOException,T>> b3Op = AsyncIO.narrow(b).toIO(
+                Maybe<Either<IOException,T>> b3Op = asAsyncIO(b).toIO(
                     (Either<IOException,T> b2) ->
                         (SafeIO<T0>)() -> {
                             util.bResult = b2;
@@ -77,7 +80,7 @@ public class AsyncIOTest {
     // XXX: HACK
     private static <A> AsyncIO<A> pureAsync(A a) {
         return (F1<Either<IOException,A>,SafeIO<T0>> handler) ->
-            SafeIO.narrow(
+            asSafeIO(
                 SafeIO.functor.left$(
                     Maybe.<Either<IOException,A>>Nothing(),
                     handler.apply(Either.Right(a))
@@ -86,7 +89,7 @@ public class AsyncIOTest {
     }
 
     private static <A> AsyncIO<A> pureSync(A a) {
-        return AsyncIO.narrow(AsyncIO.applicative.pure(a));
+        return asAsyncIO(AsyncIO.applicative.pure(a));
     }
 
     @Test

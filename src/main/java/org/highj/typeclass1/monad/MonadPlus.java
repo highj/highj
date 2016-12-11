@@ -4,6 +4,8 @@ import org.derive4j.hkt.__;
 import org.highj.data.List;
 import org.highj.typeclass1.alternative.Alternative;
 
+import static org.highj.Hkt.asList;
+
 public interface MonadPlus<M> extends MonadZero<M>, Alternative<M> {
 
     //MonadPlus.(++) (Control.Monad)
@@ -12,7 +14,7 @@ public interface MonadPlus<M> extends MonadZero<M>, Alternative<M> {
 
     //msum (Control.Monad)
     default <A> __<M, A> msum(__<List.µ, __<M, A>> list) {
-        return List.narrow(list).foldr(this::mplus, this.<A>mzero());
+        return asList(list).foldr(this::mplus, this.<A>mzero());
     }
 
     enum Bias {

@@ -10,11 +10,6 @@ public interface F3<A, B, C, D> extends __4<F3.µ, A, B, C, D> {
     class µ {
     }
 
-    @SuppressWarnings("unchecked")
-    static <A, B, C, D> F3<A, B, C, D> narrow(__<__<__<__<µ, A>, B>, C>, D> function) {
-        return (F3) function;
-    }
-
     D apply(A a, B b, C c);
 
     default F1<C, D> apply(A a, B b) {

@@ -14,6 +14,8 @@ import org.highj.data.transformer.ReaderArrow;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.Arrow;
 
+import static org.highj.Hkt.asReaderArrow;
+
 /**
  *
  * @author clintonselke
@@ -29,7 +31,7 @@ public interface ReaderArrowArrow<R,A> extends ReaderArrowCategory<R,A>, Arrow<_
     public default <B, C, D> ReaderArrow<R, A, T2<B, D>, T2<C, D>> first(__2<__<__<ReaderArrow.µ, R>, A>, B, C> arrow) {
         return ReaderArrow.readerArrow(
             a().dot(
-                a().first(ReaderArrow.narrow(arrow).run()),
+                a().first(asReaderArrow(arrow).run()),
                 a().arr((T2<T2<B,D>,R> x) -> T2.of(T2.of(x._1()._1(), x._2()), x._1()._2()))
             )
         );

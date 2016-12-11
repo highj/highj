@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.util.function.Function;
 
 import static junit.framework.Assert.assertEquals;
+import static org.highj.Hkt.asMaybe;
 import static org.highj.data.Maybe.*;
 
 public class FunctorTest {
@@ -20,13 +21,13 @@ public class FunctorTest {
         //3 <$ Just "x"
         //-- Just 3
         Maybe<String> justX = Just("x");
-        Maybe<Integer> three = narrow(functor.left$(3, justX));
+        Maybe<Integer> three = asMaybe(functor.left$(3, justX));
         assertEquals("Just(3)", three.toString());
 
         //3 <$ Nothing
         //-- Nothing
         Maybe<String> nothingString = Nothing();
-        Maybe<Integer> nothingInt = narrow(functor.left$(3, nothingString));
+        Maybe<Integer> nothingInt = asMaybe(functor.left$(3, nothingString));
         assertEquals("Nothing", nothingInt.toString());
     }
 
@@ -35,13 +36,13 @@ public class FunctorTest {
         //void $ Just "x"
         //-- Just ()
         Maybe<String> justX = Just("x");
-        Maybe<T0> justUnit = narrow(functor.voidF(justX));
+        Maybe<T0> justUnit = asMaybe(functor.voidF(justX));
         assertEquals("Just(())", justUnit.toString());
 
         //void $ Nothing
         //-- Nothing
         Maybe<String> nothingString = Nothing();
-        Maybe<T0> nothingUnit = narrow(functor.voidF(nothingString));
+        Maybe<T0> nothingUnit = asMaybe(functor.voidF(nothingString));
         assertEquals("Nothing", nothingUnit.toString());
     }
 
@@ -50,13 +51,13 @@ public class FunctorTest {
         //flip (Just length) "foo"
         //-- Just 3
         Maybe<Function<String, Integer>> justStringLength = Just(String::length);
-        Maybe<Integer> justThree = narrow(functor.flip(justStringLength, "foo"));
+        Maybe<Integer> justThree = asMaybe(functor.flip(justStringLength, "foo"));
         assertEquals("Just(3)", justThree.toString());
         
         //flip Nothing "foo"
         //-- Nothing
         Maybe<Function<String, Integer>> nothingFn = Nothing();
-        Maybe<Integer> nothingInt = narrow(functor.flip(nothingFn, "foo"));
+        Maybe<Integer> nothingInt = asMaybe(functor.flip(nothingFn, "foo"));
         assertEquals("Nothing", nothingInt.toString());
     }
     
@@ -67,13 +68,13 @@ public class FunctorTest {
         //liftM length $ Just "foo"
         //-- Just 3
         Maybe<String> justString = Just("foo");
-        Maybe<Integer> justThree = narrow(liftedFn.apply(justString));
+        Maybe<Integer> justThree = asMaybe(liftedFn.apply(justString));
         assertEquals("Just(3)", justThree.toString());
 
         //liftM length Nothing
         //-- Nothing
         Maybe<String> nothingString = Nothing();
-        Maybe<Integer> nothingInt = narrow(liftedFn.apply(nothingString));
+        Maybe<Integer> nothingInt = asMaybe(liftedFn.apply(nothingString));
         assertEquals("Nothing", nothingInt.toString());
     }
 }

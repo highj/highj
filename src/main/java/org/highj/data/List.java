@@ -68,18 +68,6 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
     }
 
     /**
-     * Converts the higher kinded representation of a {@link List} back to the standard one.
-     *
-     * @param value the {@link List} in higher kinded representation
-     * @param <A>   the element type
-     * @return the {@link List} converted back to standard form
-     */
-    @SuppressWarnings("unchecked")
-    public static <A> List<A> narrow(__<µ, A> value) {
-        return (List) value;
-    }
-
-    /**
      * Widens the type of the list.
      * <p>
      * ... which is safe, as read-only data structures are contravariant.

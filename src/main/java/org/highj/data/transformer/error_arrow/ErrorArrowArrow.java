@@ -15,6 +15,8 @@ import org.highj.data.transformer.ErrorArrow;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.Arrow;
 
+import static org.highj.Hkt.asErrorArrow;
+
 /**
  *
  * @author clintonselke
@@ -40,7 +42,7 @@ public interface ErrorArrowArrow<EX,A> extends ErrorArrowCategory<EX,A>, Arrow<_
         return ErrorArrow.errorArrow(
             a().dot(
                 a().arr(util::rstrength),
-                a().first(ErrorArrow.narrow(arrow).run())
+                a().first(asErrorArrow(arrow).run())
             )
         );
     }

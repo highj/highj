@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.highj.Hkt.asT2;
 
 public class T2Test {
     @Test
@@ -54,7 +55,7 @@ public class T2Test {
     public void narrow() {
         T2<String, Integer> t2 = T2.of("foo", 42);
         __<__<T2.µ, String>, Integer> hkt = t2;
-        assertThat(T2.narrow(hkt)).isSameAs(t2);
+        assertThat(asT2(hkt)).isSameAs(t2);
     }
 
     @Test

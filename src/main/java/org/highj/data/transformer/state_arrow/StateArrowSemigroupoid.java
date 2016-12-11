@@ -10,6 +10,8 @@ import org.derive4j.hkt.__2;
 import org.highj.data.transformer.StateArrow;
 import org.highj.typeclass2.arrow.Semigroupoid;
 
+import static org.highj.Hkt.asStateArrow;
+
 /**
  *
  * @author clintonselke
@@ -21,8 +23,8 @@ public interface StateArrowSemigroupoid<S,A> extends Semigroupoid<__<__<StateArr
     @Override
     public default <B, C, D> StateArrow<S, A, B, D> dot(__2<__<__<StateArrow.µ, S>, A>, C, D> cd, __2<__<__<StateArrow.µ, S>, A>, B, C> bc) {
         return StateArrow.stateArrow(a().dot(
-            StateArrow.narrow(cd).run(),
-            StateArrow.narrow(bc).run()
+            asStateArrow(cd).run(),
+            asStateArrow(bc).run()
         ));
     }
 }

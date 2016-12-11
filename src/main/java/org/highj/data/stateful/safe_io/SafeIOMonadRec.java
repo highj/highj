@@ -7,6 +7,8 @@ import org.highj.typeclass1.monad.MonadRec;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asSafeIO;
+
 public interface SafeIOMonadRec extends SafeIOMonad, MonadRec<SafeIO.µ> {
 
     @Override
@@ -14,7 +16,7 @@ public interface SafeIOMonadRec extends SafeIOMonad, MonadRec<SafeIO.µ> {
         return () -> {
             A a = startA;
             while (true) {
-                Either<A,B> x = SafeIO.narrow(f.apply(a)).run();
+                Either<A,B> x = asSafeIO(f.apply(a)).run();
                 for (A x2 : x.maybeLeft()) {
                     a = x2;
                 }

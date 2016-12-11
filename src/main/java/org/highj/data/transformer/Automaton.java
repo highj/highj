@@ -29,19 +29,11 @@ import org.highj.typeclass2.arrow.ArrowZero;
  */
 // https://hackage.haskell.org/package/arrows-0.4.4.1/docs/src/Control-Arrow-Transformer-Automaton.html#Automaton
 public interface Automaton<A,B,C> extends __3<Automaton.µ, A, B, C> {
-    public static class µ {}
+    class µ {}
     
-    public static <A,B,C> Automaton<A,B,C> narrow(__3<µ, A, B, C> a) {
-        return (Automaton<A,B,C>)a;
-    }
+    __2<A,B,T2<C,Automaton<A,B,C>>> unAutomaton();
     
-    public static <A,B,C> Automaton<A,B,C> narrow(__2<__<µ, A>, B, C> a) {
-        return (Automaton<A,B,C>)a;
-    }
-    
-    public __2<A,B,T2<C,Automaton<A,B,C>>> unAutomaton();
-    
-    public static <A,E,B,C> __2<A,T2<E,Stream<B>>,Stream<C>> run(ArrowLoop<A> aArrowLoop, ArrowApply<A> aArrowApply, Automaton<A,T2<E,B>,C> x) {
+    static <A,E,B,C> __2<A,T2<E,Stream<B>>,Stream<C>> run(ArrowLoop<A> aArrowLoop, ArrowApply<A> aArrowApply, Automaton<A,T2<E,B>,C> x) {
         Arrow<A> a = aArrowApply;
         return a.dot(
             a.arr((T2<C,Stream<C>> x2) -> Stream.newStream(x2._1(), x2._2())),
@@ -58,27 +50,27 @@ public interface Automaton<A,B,C> extends __3<Automaton.µ, A, B, C> {
         );
     }
     
-    public static <A> AutomatonCategory<A> automatonCategory(Arrow<A> aArrow) {
+    static <A> AutomatonCategory<A> automatonCategory(Arrow<A> aArrow) {
         return (AutomatonCategory<A>)() -> aArrow;
     }
     
-    public static <A> AutomatonArrow<A> automatonArrow(Arrow<A> aArrow) {
+    static <A> AutomatonArrow<A> automatonArrow(Arrow<A> aArrow) {
         return (AutomatonArrow<A>)() -> aArrow;
     }
     
-    public static <A> AutomatonArrowZero<A> automatonArrowZero(ArrowZero<A> aArrowZero) {
+    static <A> AutomatonArrowZero<A> automatonArrowZero(ArrowZero<A> aArrowZero) {
         return (AutomatonArrowZero<A>)() -> aArrowZero;
     }
     
-    public static <A> AutomatonArrowPlus<A> automatonArrowPlus(ArrowPlus<A> aArrowPlus) {
+    static <A> AutomatonArrowPlus<A> automatonArrowPlus(ArrowPlus<A> aArrowPlus) {
         return (AutomatonArrowPlus<A>)() -> aArrowPlus;
     }
     
-    public static <A> AutomatonArrowChoice<A> automatonArrowChoice(ArrowChoice<A> aArrowChoice) {
+    static <A> AutomatonArrowChoice<A> automatonArrowChoice(ArrowChoice<A> aArrowChoice) {
         return (AutomatonArrowChoice<A>)() -> aArrowChoice;
     }
     
-    public static <A> AutomatonArrowTransformer<A> arrowTransformer(Arrow<A> aArrow) {
+    static <A> AutomatonArrowTransformer<A> arrowTransformer(Arrow<A> aArrow) {
         return (AutomatonArrowTransformer<A>)() -> aArrow;
     }
 }

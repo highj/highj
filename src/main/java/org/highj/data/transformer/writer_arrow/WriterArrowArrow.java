@@ -14,6 +14,8 @@ import org.highj.data.transformer.WriterArrow;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass2.arrow.Arrow;
 
+import static org.highj.Hkt.asWriterArrow;
+
 /**
  *
  * @author clintonselke
@@ -32,7 +34,7 @@ public interface WriterArrowArrow<W,A> extends WriterArrowCategory<W,A>, Arrow<_
         return WriterArrow.writerArrow(
             a().dot(
                 a().arr((T2<T2<C,W>,D> x) -> T2.of(T2.of(x._1()._1(), x._2()), x._1()._2())),
-                a().first(WriterArrow.narrow(arrow).run())
+                a().first(asWriterArrow(arrow).run())
             )
         );
     }

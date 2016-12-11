@@ -29,11 +29,6 @@ public class MaybeT<M, A> implements __2<MaybeT.µ, M, A> {
         return value;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <M, A> MaybeT<M, A> narrow(__<__<µ, M>, A> value) {
-        return (MaybeT<M, A>) value;
-    }
-
     public static <M> MaybeTFunctor<M> functor(final Functor<M> functorM) {
         return () -> functorM;
     }

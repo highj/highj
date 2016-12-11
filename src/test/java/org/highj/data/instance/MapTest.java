@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
+import static org.highj.Hkt.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -20,16 +21,6 @@ import static org.junit.Assert.fail;
 public class MapTest {
 
     private final static Map<String,Integer> aMap = Map.<String, Integer>empty().plus("x",3).plus("y",5).plus("z",10);
-
-    @Test
-    public void testNarrow() throws Exception {
-        __2<Map.µ,String, Integer> map = aMap;
-        Map<String, Integer> result = Map.narrow(map);
-        assertEquals("Map(x->3,y->5,z->10)", result.toString());
-        __<__<Map.µ,String>, Integer> map1 = aMap;
-        Map<String, Integer> result1 = Map.narrow(map1);
-        assertEquals("Map(x->3,y->5,z->10)", result1.toString());
-    }
 
     @Test
     public void test$() throws Exception {

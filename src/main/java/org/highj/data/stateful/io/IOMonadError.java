@@ -11,6 +11,8 @@ import org.derive4j.hkt.__;
 import org.highj.data.stateful.IO;
 import org.highj.typeclass1.monad.MonadError;
 
+import static org.highj.Hkt.asIO;
+
 /**
  *
  * @author clintonselke
@@ -26,9 +28,9 @@ public interface IOMonadError extends IOMonad, MonadError<IOException,IO.µ> {
     public default <A> IO<A> catchError(__<IO.µ, A> ma, Function<IOException, __<IO.µ, A>> fn) {
         return () -> {
             try {
-                return IO.narrow(ma).run();
+                return asIO(ma).run();
             } catch (IOException ex) {
-                return IO.narrow(fn.apply(ex)).run();
+                return asIO(fn.apply(ex)).run();
             }
         };
     }

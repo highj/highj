@@ -8,15 +8,9 @@ import org.highj.data.tuple.T2;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.highj.Hkt.asDequeue;
 
 public class DequeueTest {
-
-    @Test
-    public void testNarrow() throws Exception {
-        __<Dequeue.µ, String> dqHKT = Dequeue.of("a","b","c");
-        Dequeue<String> dq = Dequeue.narrow(dqHKT);
-        assertThat(dq).containsExactly("a","b","c");
-    }
 
     @Test
     public void testToList() throws Exception {

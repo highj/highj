@@ -17,6 +17,8 @@ import java.util.Objects;
 import java.util.Stack;
 import java.util.function.*;
 
+import static org.highj.Hkt.asMaybe;
+
 /**
  * A data type which may or may not hold a value.
  *
@@ -349,18 +351,6 @@ public abstract class Maybe<A> implements __<Maybe.µ, A>, Iterable<A> {
                                 c -> fn.apply(a,b,c))));
     }
 
-    /**
-     * Converts the higher kinded representation of a {@link Maybe} back to the standard one.
-     *
-     * @param value the {@link Maybe} in higher kinded representation
-     * @param <A> the element type
-     * @return the {@link Maybe} converted back to standard form
-     */
-    @SuppressWarnings("unchecked")
-    public static <A> Maybe<A> narrow(__<µ, A> value) {
-        return (Maybe) value;
-    }
-
     @Override
     public Iterator<A> iterator() {
         return asList().iterator();
@@ -398,8 +388,8 @@ public abstract class Maybe<A> implements __<Maybe.µ, A>, Iterable<A> {
     public static PartialEq<Maybe.µ> partialEq = new PartialEq<µ>() {
         @Override
         public <T> Eq<__<µ, T>> deriveEq(Eq<? super T> eq) {
-            return (one, two) -> narrow(one).cata(narrow(two).isNothing(),
-                     x -> narrow(two).<Boolean>cata(false, y -> eq.eq(x, y)));
+            return (one, two) -> asMaybe(one).cata(asMaybe(two).isNothing(),
+                     x -> asMaybe(two).<Boolean>cata(false, y -> eq.eq(x, y)));
         }
     };
 

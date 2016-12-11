@@ -6,6 +6,8 @@ import org.highj.typeclass1.monad.Apply;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asReaderT;
+
 /**
  * @author Clinton Selke
  */
@@ -16,8 +18,8 @@ public interface ReaderTApply<R, M> extends ReaderTFunctor<R, M>, Apply<__<__<Re
     @Override
     public default <A, B> ReaderT<R, M, B> ap(__<__<__<ReaderT.µ, R>, M>, Function<A, B>> fn, __<__<__<ReaderT.µ, R>, M>, A> nestedA) {
         return (R r) -> get().ap(
-                ReaderT.narrow(fn).run(r),
-                ReaderT.narrow(nestedA).run(r)
+                asReaderT(fn).run(r),
+                asReaderT(nestedA).run(r)
         );
     }
 }

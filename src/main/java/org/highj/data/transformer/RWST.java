@@ -24,14 +24,6 @@ import org.highj.typeclass1.monad.MonadRec;
 public interface RWST<R,W,S,M,A> extends __5<RWST.µ,R,W,S,M,A> {
     interface µ {}
 
-    static <R,W,S,M,A> RWST<R,W,S,M,A> narrow(__5<µ,R,W,S,M,A> a) {
-        return (RWST<R,W,S,M,A>)a;
-    }
-
-    static <R,W,S,M,A> RWST<R,W,S,M,A> narrow(__<__<__<__<__<µ, R>, W>, S>, M>, A> a) {
-        return (RWST<R,W,S,M,A>)a;
-    }
-
     __<M,T3<A,S,W>> run(R r, S s);
 
     static <R,W,S,M> RWSTFunctor<R,W,S,M> functor(Functor<M> mFunctor) {

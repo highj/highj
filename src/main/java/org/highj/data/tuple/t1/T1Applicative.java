@@ -7,6 +7,8 @@ import org.highj.typeclass1.monad.Monad;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asT1;
+
 public interface T1Applicative extends Applicative<T1.µ>, T1Functor {
 
     @Override
@@ -16,7 +18,7 @@ public interface T1Applicative extends Applicative<T1.µ>, T1Functor {
 
     @Override
     default <A, B> T1<B> ap(__<T1.µ, Function<A, B>> nestedFn, __<T1.µ, A> nestedA) {
-        return T1.narrow(nestedA).ap(T1.narrow(nestedFn));
+        return asT1(nestedA).ap(asT1(nestedFn));
     }
 
 }

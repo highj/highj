@@ -11,6 +11,8 @@ import org.highj.data.Either;
 import org.highj.data.transformer.ErrorArrow;
 import org.highj.typeclass2.arrow.ArrowChoice;
 
+import static org.highj.Hkt.asErrorArrow;
+
 /**
  *
  * @author clintonselke
@@ -34,7 +36,7 @@ public interface ErrorArrowArrowChoice<EX,A> extends ErrorArrowArrow<EX,A>, Arro
         return ErrorArrow.errorArrow(
             a().dot(
                 a().arr(util::assocsum),
-                a().left(ErrorArrow.narrow(arrow).run())
+                a().left(asErrorArrow(arrow).run())
             )
         );
     }

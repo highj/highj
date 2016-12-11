@@ -20,6 +20,7 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.highj.Hkt.asEither;
 import static org.highj.data.Either.*;
 
 
@@ -109,13 +110,13 @@ public class EitherTest {
         EitherExtend<String> extend = Either.extend();
         Either<String, Integer> left = Left("Test");
         Either<String, Integer> right = Right(42);
-        assertThat(Either.narrow(extend.duplicate(left)).getLeft()).isEqualTo("Test");
-        assertThat(Either.narrow(Either.narrow(extend.duplicate(right)).getRight()).getRight()).isEqualTo(42);
+        assertThat(asEither(extend.duplicate(left)).getLeft()).isEqualTo("Test");
+        assertThat(asEither(asEither(extend.duplicate(right)).getRight()).getRight()).isEqualTo(42);
 
         Function<__<__<µ, String>,Integer>, __<__<µ, String>,Integer>> fun = extend.extend(
-                either -> Either.narrow(either).rightMap(x -> x / 2).rightOrElse(-1));
-        assertThat(Either.narrow(fun.apply(left)).getLeft()).isEqualTo("Test");
-        assertThat(Either.narrow(fun.apply(right)).getRight()).isEqualTo(21);
+                either -> asEither(either).rightMap(x -> x / 2).rightOrElse(-1));
+        assertThat(asEither(fun.apply(left)).getLeft()).isEqualTo("Test");
+        assertThat(asEither(fun.apply(right)).getRight()).isEqualTo(21);
     }
 
     @Test
@@ -332,16 +333,6 @@ public class EitherTest {
         assertThat(eitherMonadPlus.mplus(right1, left2).getRight()).isEqualTo(1);
         assertThat(eitherMonadPlus.mplus(left1, right2).getRight()).isEqualTo(2);
         assertThat(eitherMonadPlus.mplus(right1, right2).getRight()).isEqualTo(expectedWhenBiased);
-    }
-
-    @Test
-    public void testNarrow() {
-        __2<µ, String, Integer> wideLeft = Left("Test");
-        Either<String, Integer> left = narrow(wideLeft);
-        assertThat(left).isEqualTo(wideLeft);
-        __2<µ, String, Integer> wideRight = Right(42);
-        Either<String, Integer> right = narrow(wideRight);
-        assertThat(right).isEqualTo(wideRight);
     }
 
     @Test

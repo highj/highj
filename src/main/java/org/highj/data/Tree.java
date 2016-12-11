@@ -21,11 +21,6 @@ public abstract class Tree<A> implements __<Tree.µ, A> {
         this.rootLabel = rootLabel;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <A> Tree<A> narrow(__<µ, A> nestedA) {
-        return (Tree) nestedA;
-    }
-
     public static <A> Tree<A> newTree(A rootLabel, List<Tree<A>> subForest) {
         return new Tree<A>(rootLabel) {
             @Override

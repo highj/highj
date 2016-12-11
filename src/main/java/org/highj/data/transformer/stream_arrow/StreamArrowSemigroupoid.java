@@ -10,6 +10,8 @@ import org.derive4j.hkt.__2;
 import org.highj.data.transformer.StreamArrow;
 import org.highj.typeclass2.arrow.Semigroupoid;
 
+import static org.highj.Hkt.asStreamArrow;
+
 /**
  *
  * @author clintonselke
@@ -22,8 +24,8 @@ public interface StreamArrowSemigroupoid<A> extends Semigroupoid<__<StreamArrow.
     public default <B, C, D> StreamArrow<A, B, D> dot(__2<__<StreamArrow.µ, A>, C, D> cd, __2<__<StreamArrow.µ, A>, B, C> bc) {
         return StreamArrow.streamArrow(
             a().dot(
-                StreamArrow.narrow(cd).unstreamArrow(),
-                StreamArrow.narrow(bc).unstreamArrow()
+                asStreamArrow(cd).unstreamArrow(),
+                asStreamArrow(bc).unstreamArrow()
             )
         );
     }

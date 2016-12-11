@@ -14,11 +14,6 @@ public interface Pred<A> extends __<Pred.µ, A>, Predicate<A> {
     interface µ {
     }
 
-    @SuppressWarnings("unchecked")
-    static <A> Pred<A> narrow(__<µ, A> nestedA) {
-        return (Pred) nestedA;
-    }
-
     static <A> Pred<A> fromPredicate(Predicate<A> predicate) {
         return predicate::test;
     }

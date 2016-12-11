@@ -6,9 +6,11 @@ import org.highj.typeclass1.functor.Functor;
 
 import java.util.function.Function;
 
+import static org.highj.Hkt.asList;
+
 public interface ListFunctor extends Functor<List.µ> {
     @Override
     default <A, B> List<B> map(final Function<A, B> fn, __<List.µ, A> nestedA) {
-        return List.narrow(nestedA).map(fn);
+        return asList(nestedA).map(fn);
     }
 }

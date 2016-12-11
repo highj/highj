@@ -11,6 +11,8 @@ import org.junit.Test;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.highj.Hkt.asListT;
+import static org.highj.Hkt.asMaybe;
 import static org.highj.data.Maybe.*;
 
 public class ListTTest {
@@ -19,10 +21,10 @@ public class ListTTest {
         ListT<µ, Integer> listT = listTOf(42);
         // narrow() must convert __ HKTs
         __<__<ListT.µ, µ>, Integer> htk = listT;
-        assertThat(ListT.narrow(htk)).isSameAs(listT);
+        assertThat(asListT(htk)).isSameAs(listT);
         // narrow() must convert __2 HKTs
         __2<ListT.µ, µ, Integer> htk2 = listT;
-        assertThat(ListT.narrow(htk2)).isSameAs(listT);
+        assertThat(asListT(htk2)).isSameAs(listT);
     }
 
     @Test
@@ -59,17 +61,17 @@ public class ListTTest {
     @Test
     public void run() {
         ListT<µ, Integer> listT = listTOf(42);
-        Maybe<ListT.Step<µ, Integer>> maybe = Maybe.narrow(listT.run());
+        Maybe<ListT.Step<µ, Integer>> maybe = asMaybe(listT.run());
         // run() must contain head and tail of the list
         assertThat(maybe.get().map(ListT.Yield::head, s -> 0, () -> 0)).isEqualTo(42);
-        assertThat(maybe.get().map(y -> Maybe.narrow(y.tail().get().head(monad)).get().isNothing(),
+        assertThat(maybe.get().map(y -> asMaybe(y.tail().get().head(monad)).get().isNothing(),
                 s -> false, () -> false)).isTrue();
     }
 
     @Test
     public void nil() {
         ListT<µ, Integer> listT = ListT.nil(monad);
-        Maybe<ListT.Step<µ, Integer>> maybe = Maybe.narrow(listT.run());
+        Maybe<ListT.Step<µ, Integer>> maybe = asMaybe(listT.run());
         // nil() must result in Done
         assertThat(maybe.get().map(y -> false, s -> false, () -> true)).isTrue();
         // the list produced by nil() must be empty
@@ -263,14 +265,14 @@ public class ListTTest {
     public void uncons() {
         // uncons() must return head and tail of a non-empty list
         ListT<µ, Integer> listT = listTOf(12, 13, 14, 15);
-        Maybe<Maybe<T2<Integer, ListT<µ, Integer>>>> maybe = Maybe.narrow(listT.uncons(monad));
+        Maybe<Maybe<T2<Integer, ListT<µ, Integer>>>> maybe = asMaybe(listT.uncons(monad));
         T2<Integer, ListT<µ, Integer>> t2 = maybe.get().get();
         assertThat(t2._1()).isEqualTo(12);
-        ListT<µ, Integer> tail = ListT.narrow(t2._2());
+        ListT<µ, Integer> tail = asListT(t2._2());
         assertListTEquals(tail, 13, 14, 15);
         // uncons() must return Nothing for an empty list
         ListT<µ, Integer> listNil = ListT.nil(monad);
-        Maybe<Maybe<T2<Integer, ListT<µ, Integer>>>> maybeNil = Maybe.narrow(listNil.uncons(monad));
+        Maybe<Maybe<T2<Integer, ListT<µ, Integer>>>> maybeNil = asMaybe(listNil.uncons(monad));
         assertThat(maybeNil.get().isNothing()).isTrue();
     }
 
@@ -278,11 +280,11 @@ public class ListTTest {
     public void head() {
         // head() must return the head of a non-empty list
         ListT<µ, Integer> listT = listTOf(12, 13, 14, 15);
-        Maybe<Maybe<Integer>> maybe = Maybe.narrow(listT.head(monad));
+        Maybe<Maybe<Integer>> maybe = asMaybe(listT.head(monad));
         assertThat(maybe.get().get()).isEqualTo(12);
         // head() must return Nothing for an empty list
         ListT<µ, Integer> listNil = ListT.nil(monad);
-        Maybe<Maybe<Integer>> maybeNil = Maybe.narrow(listNil.head(monad));
+        Maybe<Maybe<Integer>> maybeNil = asMaybe(listNil.head(monad));
         assertThat(maybeNil.get().isNothing()).isTrue();
     }
 
@@ -290,12 +292,12 @@ public class ListTTest {
     public void tail() {
         // tail() must return the tail of a non-empty list
         ListT<µ, Integer> listT = listTOf(12, 13, 14, 15);
-        Maybe<Maybe<ListT<µ, Integer>>> maybe = Maybe.narrow(listT.tail(monad));
+        Maybe<Maybe<ListT<µ, Integer>>> maybe = asMaybe(listT.tail(monad));
         ListT<µ, Integer> tail = maybe.get().get();
         assertListTEquals(tail, 13, 14, 15);
         // tail() must return Nothing for an empty list
         ListT<µ, Integer> listNil = ListT.nil(monad);
-        Maybe<Maybe<ListT<µ, Integer>>> maybeNil = Maybe.narrow(listNil.tail(monad));
+        Maybe<Maybe<ListT<µ, Integer>>> maybeNil = asMaybe(listNil.tail(monad));
         assertThat(maybeNil.get().isNothing()).isTrue();
     }
 
@@ -303,7 +305,7 @@ public class ListTTest {
     public void foldl_() {
         // foldl_ must fold a list
         ListT<µ, Integer> listT = listTOf(1, 2, 3, 4);
-        Maybe<Integer> integer = Maybe.narrow(listT.foldl_(monad,
+        Maybe<Integer> integer = asMaybe(listT.foldl_(monad,
                 (x, y) -> Just(10 * x + y), 0));
         assertThat(integer.get()).isEqualTo(1234);
         // TODO what is the expected result when return Nothing in the function?
@@ -313,7 +315,7 @@ public class ListTTest {
     public void foldl() {
         // foldl must fold a list
         ListT<µ, Integer> listT = listTOf(1, 2, 3, 4);
-        Maybe<Integer> integer = Maybe.narrow(listT.foldl(monad, (x, y) -> 10 * x + y, 0));
+        Maybe<Integer> integer = asMaybe(listT.foldl(monad, (x, y) -> 10 * x + y, 0));
         assertThat(integer.get()).isEqualTo(1234);
     }
 
@@ -512,7 +514,7 @@ public class ListTTest {
             return ListT.functor(monad).map(Either::Left, result);
         };
 
-        ListT<µ, Character> listT = ListT.narrow(ListT.monadRec(monad).tailRec(substrings, "abc"));
+        ListT<µ, Character> listT = asListT(ListT.monadRec(monad).tailRec(substrings, "abc"));
         assertListTEquals(listT, 'c', 'c', 'b', 'b', 'b', 'a', 'a');
     }
 
@@ -521,7 +523,7 @@ public class ListTTest {
         ListT<µ, A> current = list;
         for (A a : as) {
             assertThat(current.head(monad)).isEqualTo(Just(Just(a)));
-            current = Maybe.narrow(current.tail(monad)).get().get();
+            current = asMaybe(current.tail(monad)).get().get();
         }
         assertThat(current.head(monad)).isEqualTo(Just(Nothing()));
     }
@@ -531,7 +533,7 @@ public class ListTTest {
         ListT<µ, A> current = list;
         for (A a : as) {
             assertThat(current.head(monad)).isEqualTo(Just(Just(a)));
-            current = Maybe.narrow(current.tail(monad)).get().get();
+            current = asMaybe(current.tail(monad)).get().get();
         }
     }
 

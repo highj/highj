@@ -11,6 +11,8 @@ import org.highj.data.Either;
 import org.highj.data.transformer.ErrorT;
 import org.highj.typeclass1.monad.MonadRec;
 
+import static org.highj.Hkt.asErrorT;
+
 /**
  *
  * @author clintonselke
@@ -28,7 +30,7 @@ public interface ErrorTMonadRec<E,M> extends ErrorTMonad<E,M>, MonadRec<__<__<Er
                         (E err) -> Either.<A,Either<E,B>>Right(Either.Left(err)),
                         (Either<A,B> x2) -> x2.rightMap((B x3) -> Either.<E,B>Right(x3))
                     ),
-                ErrorT.narrow(f.apply(a)).run()
+                asErrorT(f.apply(a)).run()
             ),
             startA
         );

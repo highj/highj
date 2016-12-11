@@ -21,11 +21,7 @@ import static org.derive4j.hkt.TypeEq.as__2;
 @Data(value=@Derive(inClass = "FreeArrowImpl", withVisibility = Visibility.Package), flavour = Flavour.HighJ)
 public abstract class FreeArrow<F,ARR,B,C> implements __4<FreeArrow.µ,F,ARR,B,C> {
     public static class µ {}
-    
-    public static <F,ARR,B,C> FreeArrow<F,ARR,B,C> narrow(__<__<__<__<FreeArrow.µ,F>,ARR>,B>,C> a) {
-        return (FreeArrow<F,ARR,B,C>)a;
-    }
-    
+
     public interface Cases<R,F,ARR,B,C> {
         R Id(TypeEq<B,C> idTypeEq);
         R Compose(Compose<F,ARR,B,?,C> compose);
