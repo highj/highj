@@ -4,11 +4,9 @@ import org.derive4j.hkt.__;
 import org.highj.Hkt;
 import org.highj.data.List;
 import org.highj.data.Maybe;
+import org.highj.data.eq.Eq;
 import org.highj.data.num.Integers;
-import org.highj.data.structural.compose.ComposeApplicative;
-import org.highj.data.structural.compose.ComposeApply;
-import org.highj.data.structural.compose.ComposeFoldable;
-import org.highj.data.structural.compose.ComposeFunctor;
+import org.highj.data.structural.compose.*;
 import org.junit.Test;
 
 import java.util.function.Function;
@@ -77,4 +75,16 @@ public class ComposeTest {
         assertThat(pure).isEqualTo(expected);
     }
 
+    @Test
+    public void eq1() {
+        ComposeEq1<List.µ, Maybe.µ> eq1 = Compose.eq1(List.eq1, Maybe.eq1);
+        Eq<__<__<__<Compose.µ, List.µ>, Maybe.µ>, Integer>> eqInt = eq1.eq1(Eq.fromEquals());
+        Compose<List.µ, Maybe.µ, Integer> compose1 = new Compose<>(List.of(Maybe.Just(1), Maybe.Nothing(), Maybe.Just(2)));
+        Compose<List.µ, Maybe.µ, Integer> compose2 = new Compose<>(List.of(Maybe.Just(1), Maybe.Nothing(), Maybe.Just(2)));
+        Compose<List.µ, Maybe.µ, Integer> compose3 = new Compose<>(List.of(Maybe.Nothing(), Maybe.Just(1), Maybe.Just(2)));
+        Compose<List.µ, Maybe.µ, Integer> compose4 = new Compose<>(List.of(Maybe.Just(1), Maybe.Nothing()));
+        assertThat(eqInt.eq(compose1, compose2)).isTrue();
+        assertThat(eqInt.eq(compose1, compose3)).isFalse();
+        assertThat(eqInt.eq(compose1, compose4)).isFalse();
+    }
 }

@@ -2,6 +2,7 @@ package org.highj.data.structural;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__3;
+import org.highj.data.eq.Eq1;
 import org.highj.data.structural.compose.*;
 import org.highj.typeclass1.alternative.Alternative;
 import org.highj.typeclass1.foldable.Foldable;
@@ -122,6 +123,20 @@ public final class Compose<F, G, A> implements __3<Compose.µ, F, G, A> {
             @Override
             public Traversable<G> getG() {
                 return gTraversable;
+            }
+        };
+    }
+
+    public static <F, G> ComposeEq1<F, G> eq1(Eq1<F> eq1F, Eq1<G> eq1G) {
+        return new ComposeEq1<F, G>() {
+            @Override
+            public Eq1<F> getF() {
+                return eq1F;
+            }
+
+            @Override
+            public Eq1<G> getG() {
+                return eq1G;
             }
         };
     }

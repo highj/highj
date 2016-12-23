@@ -1,10 +1,11 @@
 package org.highj.data;
 
 import org.derive4j.hkt.__;
+import org.highj.data.eq.Eq1;
 import org.highj.data.instance.list.*;
+import org.highj.data.transformer.list.ListEq1;
 import org.highj.function.F3;
 import org.highj.function.F4;
-import org.highj.function.Functions;
 import org.highj.function.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
@@ -1116,6 +1117,11 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
     };
 
     /**
+     * The {@link Eq1} instance of lists.
+     */
+    public static final ListEq1 eq1 = new ListEq1() {};
+
+    /**
      * The list {@link org.highj.typeclass0.group.Group} using  {@link List#append} as combining operation.
      * @param <A> the element type of the group
      * @return the group
@@ -1123,5 +1129,6 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
     public static <A> Group<List<A>> group() {
         return Group.create(List.empty(), List::append, List::reverse);
     }
+
 
 }
