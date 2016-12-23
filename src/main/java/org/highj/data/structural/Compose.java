@@ -70,7 +70,7 @@ public final class Compose<F, G, A> implements __3<Compose.µ, F, G, A> {
         };
     }
 
-    public static <F, G> ComposeApply<F, G> composeApply(Apply<F> fApply, Apply<G> gApply) {
+    public static <F, G> ComposeApply<F, G> apply(Apply<F> fApply, Apply<G> gApply) {
         return new ComposeApply<F, G>() {
             @Override
             public Apply<F> getF() {
@@ -84,7 +84,7 @@ public final class Compose<F, G, A> implements __3<Compose.µ, F, G, A> {
         };
     }
 
-    public static <F, G> ComposeApplicative<F, G> composeApplicative(Applicative<F> fApplicative, Applicative<G> gApplicative) {
+    public static <F, G> ComposeApplicative<F, G> applicative(Applicative<F> fApplicative, Applicative<G> gApplicative) {
         return new ComposeApplicative<F, G>() {
             @Override
             public Applicative<F> getF() {
@@ -98,7 +98,7 @@ public final class Compose<F, G, A> implements __3<Compose.µ, F, G, A> {
         };
     }
 
-    public static <F, G> ComposeAlternative<F, G> composeAlternative(Alternative<F> fAlternative, Applicative<G> gApplicative) {
+    public static <F, G> ComposeAlternative<F, G> alternative(Alternative<F> fAlternative, Applicative<G> gApplicative) {
         return new ComposeAlternative<F, G>() {
             @Override
             public Alternative<F> getF() {
@@ -112,7 +112,7 @@ public final class Compose<F, G, A> implements __3<Compose.µ, F, G, A> {
         };
     }
 
-    public static <F, G> ComposeTraversable<F, G> composeTraversable(Traversable<F> fTraversable, Traversable<G> gTraversable) {
+    public static <F, G> ComposeTraversable<F, G> traversable(Traversable<F> fTraversable, Traversable<G> gTraversable) {
         return new ComposeTraversable<F, G>() {
             @Override
             public Traversable<F> getF() {
