@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
     <version>0.7-java8-SNAPSHOT</version>
     <name>HighJ - Higher Kinded Types for Java</name>
-    <url>https://github.com/DanielGronau/highj</url>
+    <url>https://github.com/highj/highj</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
