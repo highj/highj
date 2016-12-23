@@ -546,7 +546,7 @@ public class MaybeTest {
                         Gen.rnd.nextDouble() < 0.9 ? Maybe.Just(s) : Maybe.Nothing());
             }
         };
-        new MonadLaw<>(Maybe.monad, partialGen, Maybe.partialEq).testAll();
+        new MonadLaw<>(Maybe.monad, partialGen, Maybe.eq1).testAll();
     }
 
 }

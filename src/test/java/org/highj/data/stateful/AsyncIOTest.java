@@ -4,7 +4,7 @@ import org.derive4j.hkt.__;
 import org.highj.data.Either;
 import org.highj.data.Maybe;
 import org.highj.data.eq.Eq;
-import org.highj.data.eq.PartialEq;
+import org.highj.data.eq.Eq1;
 import org.highj.data.tuple.T0;
 import org.highj.function.F1;
 import org.highj.typeclass1.monad.*;
@@ -32,9 +32,9 @@ public class AsyncIOTest {
     };
 
     // XXX: HACK
-    private final PartialEq<AsyncIO.µ> partialEq = new PartialEq<AsyncIO.µ>() {
+    private final Eq1<AsyncIO.µ> eq1 = new Eq1<AsyncIO.µ>() {
         @Override
-        public <T> Eq<__<AsyncIO.µ, T>> deriveEq(Eq<? super T> eq) {
+        public <T> Eq<__<AsyncIO.µ, T>> eq1(Eq<? super T> eq) {
             @SuppressWarnings("unchecked") Eq<T> eq2 = (Eq<T>)eq;
             Eq<IOException> ioExceptionEq =
                 (IOException e1, IOException e2) ->
@@ -94,7 +94,7 @@ public class AsyncIOTest {
 
     @Test
     public void monadLaw() {
-        new MonadLaw<>(AsyncIO.monad, partialGen, partialEq).testAll();
+        new MonadLaw<>(AsyncIO.monad, partialGen, eq1).testAll();
     }
 
 }

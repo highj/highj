@@ -2,7 +2,7 @@ package org.highj.typeclass1.monad;
 
 import org.derive4j.hkt.__;
 import org.highj.data.eq.Eq;
-import org.highj.data.eq.PartialEq;
+import org.highj.data.eq.Eq1;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.util.Gen;
 import org.highj.util.PartialGen;
@@ -15,12 +15,12 @@ public class FunctorLaw<F> {
 
     private final Functor<F> functor;
     protected final PartialGen<F> partialGen;
-    protected final PartialEq<F> partialEq;
+    protected final Eq1<F> eq1;
 
-    public FunctorLaw(Functor<F> functor, PartialGen<F> partialGen, PartialEq<F> partialEq) {
+    public FunctorLaw(Functor<F> functor, PartialGen<F> partialGen, Eq1<F> eq1) {
         this.functor = functor;
         this.partialGen = partialGen;
-        this.partialEq = partialEq;
+        this.eq1 = eq1;
     }
 
     /**
@@ -28,7 +28,7 @@ public class FunctorLaw<F> {
      * map(x -> x, a) == a
      */
     public void mapIdentity() {
-        Eq<__<F, String>> eq = partialEq.deriveEq(Eq.fromEquals());
+        Eq<__<F, String>> eq = eq1.eq1(Eq.fromEquals());
         Gen<__<F, String>> gen = partialGen.deriveGen(Gen.stringGen);
         for (__<F, String> a : gen.get(20)) {
             __<F, String> mappedA = functor.map(Function.identity(), a);
@@ -45,7 +45,7 @@ public class FunctorLaw<F> {
         Function<String, Integer> fab = String::length;
         Function<Integer, Long> fbc = i -> Long.valueOf(i) * Long.valueOf(i);
         Gen<__<F, String>> gen = partialGen.deriveGen(Gen.stringGen);
-        Eq<__<F, Long>> eq = partialEq.deriveEq(Eq.fromEquals());
+        Eq<__<F, Long>> eq = eq1.eq1(Eq.fromEquals());
         for (__<F, String> a : gen.get(20)) {
             __<F, Long> mapComposed = functor.map(fab.andThen(fbc), a);
             __<F, Long> mapSeparated = functor.map(fbc, functor.map(fab, a));
