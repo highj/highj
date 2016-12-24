@@ -4,7 +4,7 @@ import org.derive4j.hkt.__;
 import org.highj.data.eq.Eq;
 import org.highj.data.eq.Eq1;
 import org.highj.util.Gen;
-import org.highj.util.PartialGen;
+import org.highj.util.Gen1;
 
 import java.util.function.Function;
 
@@ -13,8 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MonadLaw<M> extends ApplicativeLaw<M> {
     private final Monad<M> monad;
 
-    public MonadLaw(Monad<M> monad, PartialGen<M> partialGen, Eq1<M> eq1) {
-        super(monad, partialGen, eq1);
+    public MonadLaw(Monad<M> monad, Gen1<M> gen1, Eq1<M> eq1) {
+        super(monad, gen1, eq1);
         this.monad = monad;
     }
 
@@ -33,7 +33,7 @@ public class MonadLaw<M> extends ApplicativeLaw<M> {
     // m >>= pure ≡ m
     public void rightIdentity() {
         Eq<__<M, String>> eq = eq1.eq1(Eq.fromEquals());
-        Gen<__<M, String>> gen = partialGen.deriveGen(Gen.stringGen);
+        Gen<__<M, String>> gen = gen1.gen(Gen.stringGen);
         for (__<M, String> m : gen.get(20)) {
             __<M,String> lhs = monad.bind(m, monad::pure);
             __<M,String> rhs = m;
@@ -44,7 +44,7 @@ public class MonadLaw<M> extends ApplicativeLaw<M> {
     // (m >>= f) >>= g ≡ m >>= (\x -> f x >>= g)
     public void associativity() {
         Eq<__<M, String>> eq = eq1.eq1(Eq.fromEquals());
-        Gen<__<M, String>> gen = partialGen.deriveGen(Gen.stringGen);
+        Gen<__<M, String>> gen = gen1.gen(Gen.stringGen);
         Function<String,__<M,Integer>> f = (String x) -> monad.pure(x.length());
         Function<Integer,__<M,String>> g = (Integer x) -> monad.pure(Integer.toOctalString(x));
         for (__<M, String> m : gen.get(20)) {

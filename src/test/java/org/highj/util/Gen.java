@@ -8,6 +8,11 @@ import org.highj.data.tuple.T3;
 import java.util.Random;
 import java.util.function.Function;
 
+/**
+ * A generator of values for testing purposes.
+ *
+ * @param <A> the tested type
+ */
 public interface Gen<A> {
 
     Random rnd = new Random();

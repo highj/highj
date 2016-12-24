@@ -5,7 +5,7 @@ import org.highj.data.eq.Eq;
 import org.highj.data.eq.Eq1;
 import org.highj.data.tuple.T3;
 import org.highj.util.Gen;
-import org.highj.util.PartialGen;
+import org.highj.util.Gen1;
 
 import java.util.function.Function;
 
@@ -15,8 +15,8 @@ public class ApplicativeLaw<F> extends FunctorLaw<F> {
 
     private final Applicative<F> applicative;
 
-    public ApplicativeLaw(Applicative<F> applicative, PartialGen<F> partialGen, Eq1<F> eq1) {
-        super(applicative, partialGen, eq1);
+    public ApplicativeLaw(Applicative<F> applicative, Gen1<F> gen1, Eq1<F> eq1) {
+        super(applicative, gen1, eq1);
         this.applicative = applicative;
     }
 
@@ -27,7 +27,7 @@ public class ApplicativeLaw<F> extends FunctorLaw<F> {
      */
     public void pureIdentity() {
         Eq<__<F, String>> eq = eq1.eq1(Eq.fromEquals());
-        Gen<__<F, String>> gen = partialGen.deriveGen(Gen.stringGen);
+        Gen<__<F, String>> gen = gen1.gen(Gen.stringGen);
         for (__<F, String> a : gen.get(20)) {
             __<F, String> result = applicative.ap(applicative.pure(Function.identity()), a);
             assertThat(eq.eq(result, a)).isTrue();
@@ -41,10 +41,10 @@ public class ApplicativeLaw<F> extends FunctorLaw<F> {
     public void apComposition() {
         Eq<__<F, Integer>> eq = eq1.eq1(Eq.fromEquals());
         Gen<Function<Integer, Integer>> fn1Gen = Gen.intGen.map(x -> (y -> y + x));
-        Gen<__<F, Function<Integer, Integer>>> genF1 = partialGen.deriveGen(fn1Gen);
+        Gen<__<F, Function<Integer, Integer>>> genF1 = gen1.gen(fn1Gen);
         Gen<Function<Integer, Integer>> fn2Gen = Gen.intGen.map(x -> (y -> y * x));
-        Gen<__<F, Function<Integer, Integer>>> genF2 = partialGen.deriveGen(fn2Gen);
-        Gen<__<F, Integer>> genInt = partialGen.deriveGen(Gen.intGen);
+        Gen<__<F, Function<Integer, Integer>>> genF2 = gen1.gen(fn2Gen);
+        Gen<__<F, Integer>> genInt = gen1.gen(Gen.intGen);
         for (T3<__<F, Function<Integer, Integer>>, __<F, Function<Integer, Integer>>, __<F, Integer>> t3
                 : Gen.zip(genF1, genF2, genInt).get(20)) {
             __<F, Function<Integer, Integer>> f1 = t3._1();
@@ -79,7 +79,7 @@ public class ApplicativeLaw<F> extends FunctorLaw<F> {
     public void apInterchange() {
         Eq<__<F, Integer>> eq = eq1.eq1(Eq.fromEquals());
         Gen<Function<Integer, Integer>> fnGen = Gen.intGen.map(x -> (y -> y + x));
-        Gen<__<F, Function<Integer, Integer>>> gen = partialGen.deriveGen(fnGen);
+        Gen<__<F, Function<Integer, Integer>>> gen = gen1.gen(fnGen);
         for (__<F, Function<Integer, Integer>> fns : gen.get(20)) {
             __<F, Integer> fnResult = applicative.ap(fns, applicative.pure(10));
             __<F, Integer> applyResult = applicative.ap(applicative.pure(f -> f.apply(10)), fns);
@@ -93,7 +93,7 @@ public class ApplicativeLaw<F> extends FunctorLaw<F> {
      */
     public void canImplementMap() {
         Eq<__<F, Integer>> eq = eq1.eq1(Eq.fromEquals());
-        Gen<__<F, String>> gen = partialGen.deriveGen(Gen.stringGen);
+        Gen<__<F, String>> gen = gen1.gen(Gen.stringGen);
         for (__<F, String> a : gen.get(20)) {
             __<F, Integer> mapResult = applicative.map(String::length, a);
             __<F, Integer> apResult = applicative.ap(applicative.pure(String::length), a);

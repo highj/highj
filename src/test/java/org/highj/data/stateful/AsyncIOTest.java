@@ -9,7 +9,7 @@ import org.highj.data.tuple.T0;
 import org.highj.function.F1;
 import org.highj.typeclass1.monad.*;
 import org.highj.util.Gen;
-import org.highj.util.PartialGen;
+import org.highj.util.Gen1;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,9 +20,9 @@ import static org.highj.Hkt.asSafeIO;
 public class AsyncIOTest {
 
     // XXX: HACK
-    private final PartialGen<AsyncIO.µ> partialGen = new PartialGen<AsyncIO.µ>() {
+    private final Gen1<AsyncIO.µ> gen1 = new Gen1<AsyncIO.µ>() {
         @Override
-        public <T> Gen<__<AsyncIO.µ, T>> deriveGen(Gen<T> gen) {
+        public <T> Gen<__<AsyncIO.µ, T>> gen(Gen<T> gen) {
             return gen.map(s ->
                 Gen.rnd.nextDouble() < 0.5 ?
                     pureAsync(s) :
@@ -94,7 +94,7 @@ public class AsyncIOTest {
 
     @Test
     public void monadLaw() {
-        new MonadLaw<>(AsyncIO.monad, partialGen, eq1).testAll();
+        new MonadLaw<>(AsyncIO.monad, gen1, eq1).testAll();
     }
 
 }

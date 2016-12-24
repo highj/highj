@@ -14,6 +14,8 @@ import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.typeclass0.group.Group;
+import org.highj.typeclass1.monad.MonadLaw;
+import org.highj.util.Gen1;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -507,5 +509,10 @@ public class ListTest {
         Function<Integer, Maybe<T2<Integer, Integer>>> fn =
                 i -> Maybe.JustWhenTrue(i <= 10, () -> T2.of(i*i, i + 1));
         assertThat(List.unfoldable.unfoldr(fn, 1)).containsExactly(1,4,9,16,25,36,49,64,81,100);
+    }
+
+    @Test
+    public void monadLaw() {
+        new MonadLaw<>(List.monadPlus, Gen1.listGen1, List.eq1).testAll();
     }
 }

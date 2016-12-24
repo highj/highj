@@ -14,7 +14,7 @@ import org.highj.typeclass1.comonad.Extend;
 import org.highj.typeclass1.foldable.Traversable;
 import org.highj.typeclass1.monad.*;
 import org.highj.util.Gen;
-import org.highj.util.PartialGen;
+import org.highj.util.Gen1;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -539,14 +539,7 @@ public class MaybeTest {
 
     @Test
     public void monadLaw() {
-        PartialGen<µ> partialGen = new PartialGen<µ>() {
-            @Override
-            public <T> Gen<__<µ, T>> deriveGen(Gen<T> gen) {
-                return gen.map(s ->
-                        Gen.rnd.nextDouble() < 0.9 ? Maybe.Just(s) : Maybe.Nothing());
-            }
-        };
-        new MonadLaw<>(Maybe.monad, partialGen, Maybe.eq1).testAll();
+        new MonadLaw<>(Maybe.monad, Gen1.maybeGen1, Maybe.eq1).testAll();
     }
 
 }
