@@ -15,7 +15,7 @@ public interface Gen<A> {
     Iterable<A> get(int maxSize);
 
     default <B> Gen<B> map(Function<A, B> fn) {
-        return maxSize -> List.of(get(maxSize)).map(fn);
+        return maxSize -> List.fromIterable(get(maxSize)).map(fn);
     }
 
     Gen<String> stringGen = maxSize -> Stream.unfold(s -> {
@@ -34,15 +34,15 @@ public interface Gen<A> {
 
     static <A, B> Gen<T2<A, B>> zip(Gen<A> first, Gen<B> second) {
         return maxSize -> List.zip(
-                List.of(first.get(maxSize)),
-                List.of(second.get(maxSize)));
+                List.fromIterable(first.get(maxSize)),
+                List.fromIterable(second.get(maxSize)));
     }
 
     static <A, B, C> Gen<T3<A, B, C>> zip(Gen<A> first, Gen<B> second, Gen<C> third) {
         return maxSize -> List.zip(
-                List.of(first.get(maxSize)),
-                List.of(second.get(maxSize)),
-                List.of(third.get(maxSize)));
+                List.fromIterable(first.get(maxSize)),
+                List.fromIterable(second.get(maxSize)),
+                List.fromIterable(third.get(maxSize)));
     }
 
 }

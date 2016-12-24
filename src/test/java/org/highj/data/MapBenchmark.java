@@ -43,7 +43,7 @@ public class MapBenchmark {
 
         java.util.List<String> shuffledJList = finalList.toJList();
         Collections.shuffle(shuffledJList);
-        List<String> shuffled = List.of(shuffledJList);
+        List<String> shuffled = List.fromJavaList(shuffledJList);
 
         T2<Map<String,Integer>, Long> delMapT2 = time(() -> mapDelete(shuffled, mapT2._1()));
         System.err.println("delete Map     : " + delMapT2._2());

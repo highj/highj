@@ -154,7 +154,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * @param <A> the element type
      * @return the list
      */
-    public static <A> List<A> of(Iterable<A> as) {
+    public static <A> List<A> fromIterable(Iterable<A> as) {
         List<A> result = Nil();
         for (A a : as) {
             result = result.plus(a);
@@ -171,7 +171,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * @param <A> the element type
      * @return the list
      */
-    public static <A> List<A> of(java.util.List<A> as) {
+    public static <A> List<A> fromJavaList(java.util.List<A> as) {
         List<A> result = Nil();
         for (int i = as.size(); i > 0; i--) {
             result = result.plus(as.get(i - 1));
@@ -1066,7 +1066,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
     public List<A> sort(Comparator<A> comparator) {
         java.util.List<A> jList = toJList();
         Collections.sort(jList, comparator);
-        return List.of(jList);
+        return List.fromJavaList(jList);
     }
 
     /**
