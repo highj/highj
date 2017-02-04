@@ -9,10 +9,12 @@ public class Iterables {
         return Iterators::emptyIterator;
     }
 
+    @SafeVarargs
     public static <T> Iterable<T> valueIterable(T ... ts) {
        return () -> Iterators.valueIterator(ts);
     }
 
+    @SafeVarargs
     public static <T> Iterable<T> cyclicIterable(T ... ts) {
         return () -> Iterators.cyclicIterator(ts);
     }

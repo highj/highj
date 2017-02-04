@@ -77,6 +77,7 @@ public class Dequeue<A> implements __<Dequeue.µ, A>, Iterable<A> {
         return new Dequeue<>(0, List.of(), 0, List.of());
     }
 
+    @SafeVarargs
     public static <A> Dequeue<A> of(A ... values) {
         return fromList(List.of(values));
     }

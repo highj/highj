@@ -79,6 +79,7 @@ public class PriorityQueue<A> implements __<PriorityQueue.µ,A>, Iterable<A> {
      * @param <A> the element type
      * @return the priority queue
      */
+    @SafeVarargs
     public static <A> PriorityQueue<A> minQueueCmp(Comparator<? super A> cmp, A ... as) {
         return new PriorityQueue<A>(cmp, 0, Heap.empty(), QueueType.MIN).plus(as);
     }
@@ -90,6 +91,7 @@ public class PriorityQueue<A> implements __<PriorityQueue.µ,A>, Iterable<A> {
      * @param <A> the element type
      * @return the priority queue
      */
+    @SafeVarargs
     public static <A> PriorityQueue<A> maxQueueCmp(Comparator<? super A> cmp, A ... as) {
         return new PriorityQueue<A>(cmp.reversed(), 0, Heap.empty(), QueueType.MAX).plus(as);
     }
@@ -100,6 +102,7 @@ public class PriorityQueue<A> implements __<PriorityQueue.µ,A>, Iterable<A> {
      * @param <A> the element type
      * @return the priority queue
      */
+    @SafeVarargs
     public static <A extends Comparable<? super A>> PriorityQueue<A> minQueue(A ... as) {
         return new PriorityQueue<>(Comparator.<A>naturalOrder(), 0, Heap.empty(), QueueType.MIN).plus(as);
     }
@@ -110,6 +113,7 @@ public class PriorityQueue<A> implements __<PriorityQueue.µ,A>, Iterable<A> {
      * @param as the elements of the queue
      * @return the priority queue
      */
+    @SafeVarargs
     public static <A extends Comparable<? super A>> PriorityQueue<A> maxQueue(A ... as) {
         return new PriorityQueue<>(Comparator.<A>reverseOrder(), 0, Heap.empty(), QueueType.MAX).plus(as);
     }
@@ -139,7 +143,8 @@ public class PriorityQueue<A> implements __<PriorityQueue.µ,A>, Iterable<A> {
      * @param as the new elements
      * @return a new priority queue
      */
-    public PriorityQueue<A> plus(A ... as) {
+    @SafeVarargs
+    public final PriorityQueue<A> plus(A ... as) {
         Heap<A> result = root;
         int sz = size;
         for(A a : as) {

@@ -481,7 +481,7 @@ public abstract class Either<A, B> implements __2<Either.µ, A, B> {
     public static <S> EitherMonadPlus<S> firstBiasedMonadPlus(Monoid<S> monoid) {
         return new EitherMonadPlus<S>() {
             @Override
-            public Monoid monoid() {
+            public Monoid<S> monoid() {
                 return monoid;
             }
 
@@ -502,7 +502,7 @@ public abstract class Either<A, B> implements __2<Either.µ, A, B> {
     public static <S> EitherMonadPlus<S> lastBiasedMonadPlus(Monoid<S> monoid) {
         return new EitherMonadPlus<S>(){
             @Override
-            public Monoid monoid() {
+            public Monoid<S> monoid() {
                 return monoid;
             }
 

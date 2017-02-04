@@ -84,7 +84,7 @@ public abstract class Node<K, V> {
     }
 
 
-    @SuppressWarnings("unckecked")
+    @SuppressWarnings("unchecked")
     public static <K, V> Node<K, V> empty() {
         return (Node<K, V>) LEAF;
     }

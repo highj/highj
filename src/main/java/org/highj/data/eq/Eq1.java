@@ -5,7 +5,7 @@ import org.derive4j.hkt.__;
 /**
  * An equivalence relation for type constructors.
  *
- * @param <F> the type constructor
+ * @param <F> the type of the type constructor
  */
 public interface Eq1<F> {
     /**

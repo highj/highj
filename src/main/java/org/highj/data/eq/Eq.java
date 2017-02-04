@@ -4,6 +4,11 @@ import org.derive4j.hkt.__;
 import org.highj.data.eq.instances.EqContravariant;
 import org.highj.data.eq.instances.EqDecidable;
 import org.highj.data.eq.instances.EqDivisible;
+import org.highj.typeclass1.contravariant.Contravariant;
+import org.highj.typeclass1.contravariant.Decidable;
+import org.highj.typeclass1.contravariant.Divisible;
+
+import java.util.function.Function;
 
 /**
  * Represents an equivalence relation of a type.
@@ -26,6 +31,17 @@ public interface Eq<T> extends __<Eq.µ, T> {
     boolean eq(T one, T two);
 
     /**
+     * Converts this {@link Eq} instance to a contravariant one.
+     *
+     * @param fn  the contravariant function
+     * @param <U> the element type of the new {@link Eq}
+     * @return the new {@link Eq}
+     */
+    default <U> Eq<U> contraMap(Function<U, T> fn) {
+        return contravariant.contramap(fn, this);
+    }
+
+    /**
      * Constructs an {@link Eq} instance based on {@link Object#equals}.
      *
      * @param <T> the type with equivalence relation
@@ -46,19 +62,19 @@ public interface Eq<T> extends __<Eq.µ, T> {
     }
 
     /**
-     * The {@link org.highj.typeclass1.contravariant.Contravariant} instance of {@link Eq}
+     * The {@link Contravariant} instance of {@link Eq}
      */
     EqContravariant contravariant = new EqContravariant() {
     };
 
     /**
-     * The {@link org.highj.typeclass1.contravariant.Divisible} instance of {@link Eq}
+     * The {@link Divisible} instance of {@link Eq}
      */
     EqDivisible divisible = new EqDivisible() {
     };
 
     /**
-     * The {@link org.highj.typeclass1.contravariant.Decidable} instance of {@link Eq}
+     * The {@link Decidable} instance of {@link Eq}
      */
     EqDecidable decidable = new EqDecidable() {
     };

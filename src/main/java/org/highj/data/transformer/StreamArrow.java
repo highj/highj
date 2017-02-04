@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.highj.data.transformer;
 
-import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.derive4j.hkt.__3;
 import org.highj.data.Stream;
