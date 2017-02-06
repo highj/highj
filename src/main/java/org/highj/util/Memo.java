@@ -4,19 +4,31 @@ import org.highj.data.Either;
 
 import java.util.function.Supplier;
 
-public class Memo<A> implements Supplier<A> {
+public interface Memo<A> extends Supplier<A> {
 
-    private Either<Supplier<A>,A> either;
+    class Memo$<A> implements Memo<A> {
+        private Either<Supplier<A>, A> either;
 
-    public Memo(Supplier<A> supplier) {
-        either = Either.Left(supplier);
+        private Memo$(Supplier<A> supplier) {
+            either = Either.Left(supplier);
+        }
+
+        @Override
+        public A get() {
+            if (either.isLeft()) {
+                either = Either.Right(either.getLeft().get());
+            }
+            return either.getRight();
+        }
     }
 
-    @Override
-    public A get() {
-        if (either.isLeft()) {
-            either = Either.Right(either.getLeft().get());
-        }
-        return either.getRight();
+    static <A> Memo<A> of(Supplier<A> supplier) {
+        return supplier instanceof Memo
+                ? (Memo<A>) supplier
+                : new Memo$<>(supplier);
+    }
+
+    static <A> Memo<A> from(A a) {
+        return () -> a;
     }
 }
