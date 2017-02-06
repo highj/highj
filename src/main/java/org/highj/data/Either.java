@@ -1,6 +1,5 @@
 package org.highj.data;
 
-import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.highj.data.instance.either.*;
 import org.highj.function.Functions;

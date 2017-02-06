@@ -1,6 +1,5 @@
 package org.highj.data;
 
-import org.derive4j.hkt.__;
 import org.derive4j.hkt.__4;
 import org.highj.data.eq.Eq;
 import org.highj.data.instance.either4.Either4Applicative;
