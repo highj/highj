@@ -6,8 +6,8 @@ import java.util.function.Supplier;
 
 public interface Memo<A> extends Supplier<A> {
 
-    class Memo$<A> implements Memo<A> {
-        private Either<Supplier<A>, A> either;
+    final class Memo$<A> implements Memo<A> {
+        private volatile Either<Supplier<A>, A> either;
 
         private Memo$(Supplier<A> supplier) {
             either = Either.Left(supplier);
@@ -16,7 +16,11 @@ public interface Memo<A> extends Supplier<A> {
         @Override
         public A get() {
             if (either.isLeft()) {
-                either = Either.Right(either.getLeft().get());
+                synchronized (this) {
+                    if (either.isLeft()) {
+                        either = Either.Right(either.getLeft().get());
+                    }
+                }
             }
             return either.getRight();
         }
