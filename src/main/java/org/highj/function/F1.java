@@ -46,7 +46,7 @@ public interface F1<A, B> extends __2<F1.µ, A, B>, Function<A, B> {
     }
 
     static <A, B> F1<A, B> constant(final Supplier<B> thunk) {
-        Memo<B> memo = new Memo<>(thunk);
+        Memo<B> memo = Memo.of(thunk);
         return a -> memo.get();
     }
 
