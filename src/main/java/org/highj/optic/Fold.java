@@ -82,7 +82,7 @@ public abstract class Fold<S, A> implements __2<Fold.µ, S, A> {
      * @return the result function
      */
     public final F1<S, Boolean> exist(final Function<A, Boolean> p) {
-        return foldMap(Booleans.orGroup, p);
+        return foldMap(Booleans.orMonoid, p);
     }
 
     /** Check if all targets satisfy the predicate
@@ -90,7 +90,7 @@ public abstract class Fold<S, A> implements __2<Fold.µ, S, A> {
      * @return the result function
      */
     public final F1<S, Boolean> all(final Function<A, Boolean> p) {
-        return foldMap(Booleans.andGroup, p);
+        return foldMap(Booleans.andMonoid, p);
     }
 
     /** Join two {@link Fold} with the same target

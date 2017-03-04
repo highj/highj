@@ -5,12 +5,17 @@ import java.util.function.UnaryOperator;
 
 /**
  * A <code>Monoid</code> where every element has an inverse.
- * x == inverse(inverse(x))
- * inverse(identity) == identity
  */
 public interface Group<A> extends Monoid<A> {
 
     A inverse(A a);
+
+    @Override
+    default A times(A a, int n) {
+        return n < 0
+                ? Monoid.super.times(inverse(a), -n)
+                : Monoid.super.times(a, n);
+    }
 
     static <A> Group<A> create(A identity, BinaryOperator<A> fn, UnaryOperator<A> inv) {
         return new Group<A>() {
@@ -26,7 +31,7 @@ public interface Group<A> extends Monoid<A> {
 
             @Override
             public A apply(A x, A y) {
-                return fn.apply(x,y);
+                return fn.apply(x, y);
             }
         };
     }

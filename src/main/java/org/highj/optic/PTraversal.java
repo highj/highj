@@ -3,7 +3,6 @@ package org.highj.optic;
 import java.util.function.Function;
 
 import org.derive4j.hkt.__;
-import org.highj.Hkt;
 import org.highj.data.Either;
 import org.highj.data.List;
 import org.highj.data.Maybe;
@@ -89,7 +88,7 @@ public abstract class PTraversal<S, T, A, B> {
      * @return the function to test a source
      */
     public final F1<S, Boolean> exist(final Function<A, Boolean> p) {
-        return foldMap(Booleans.orGroup, p);
+        return foldMap(Booleans.orMonoid, p);
     }
 
     /** Check if all targets satisfy the predicate
@@ -97,7 +96,7 @@ public abstract class PTraversal<S, T, A, B> {
      * @return the function to test a source
      */
     public final F1<S, Boolean> all(final Function<A, Boolean> p) {
-        return foldMap(Booleans.andGroup, p);
+        return foldMap(Booleans.andMonoid, p);
     }
 
     /** Modify polymorphically the target of a {@link PTraversal} with a function

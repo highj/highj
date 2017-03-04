@@ -35,7 +35,7 @@ public class MonadLaw<M> extends ApplicativeLaw<M> {
         Eq<__<M, String>> eq = eq1.eq1(Eq.fromEquals());
         Gen<__<M, String>> gen = gen1.gen(Gen.stringGen);
         for (__<M, String> m : gen.get(20)) {
-            __<M,String> lhs = monad.bind(m, monad::pure);
+            __<M,String> lhs = monad.bind(m, monad::<String>pure);
             __<M,String> rhs = m;
             assertThat(eq.eq(lhs, rhs)).isTrue();
         }

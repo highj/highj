@@ -6,12 +6,13 @@ import org.highj.data.eq.Eq1;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.util.Gen;
 import org.highj.util.Gen1;
+import org.highj.util.Law;
 
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FunctorLaw<F> {
+public class FunctorLaw<F> implements Law {
 
     private final Functor<F> functor;
     protected final Gen1<F> gen1;
@@ -53,10 +54,12 @@ public class FunctorLaw<F> {
         }
     }
 
+    @Override
     public void testAll() {
         test();
     }
 
+    @Override
     public void test() {
         mapIdentity();
         mapComposition();

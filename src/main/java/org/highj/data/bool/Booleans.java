@@ -8,14 +8,14 @@ import org.highj.typeclass0.group.*;
 public interface Booleans {
 
     /**
-     * The and {@link Group} of booleans.
+     * The and {@link Monoid} of booleans.
      */
-    Group<Boolean> andGroup = Group.create(Boolean.TRUE, (x,y) -> x && y, z -> !z);
+    Monoid<Boolean> andMonoid = Monoid.create(Boolean.TRUE, (x,y) -> x && y);
 
     /**
-     * The or {@link Group} of booleans.
+     * The or {@link Monoid} of booleans.
      */
-    Group<Boolean> orGroup = Group.create(Boolean.FALSE, (x,y) -> x || y, z -> !z);
+    Monoid<Boolean> orMonoid = Monoid.create(Boolean.FALSE, (x, y) -> x || y);
 
     /**
      * The xor {@link Monoid} of booleans.
