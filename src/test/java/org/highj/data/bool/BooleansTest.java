@@ -18,7 +18,7 @@ public class BooleansTest {
                 assertThat(Booleans.andMonoid.apply(a, b)).isEqualTo(a && b);
             }
         }
-        new MonoidLaw<>(Booleans.andMonoid, Gen.boolGen, Eq.fromEquals()).testAll();
+        new MonoidLaw<>(Booleans.andMonoid, Gen.boolGen, Eq.fromEquals()).test();
     }
 
     @Test
@@ -29,7 +29,7 @@ public class BooleansTest {
                 assertThat(Booleans.orMonoid.apply(a, b)).isEqualTo(a || b);
             }
         }
-        new MonoidLaw<>(Booleans.orMonoid, Gen.boolGen, Eq.fromEquals()).testAll();
+        new MonoidLaw<>(Booleans.orMonoid, Gen.boolGen, Eq.fromEquals()).test();
     }
 
     @Test
@@ -40,6 +40,6 @@ public class BooleansTest {
                 assertThat(Booleans.xorMonoid.apply(a, b)).isEqualTo(a ^ b);
             }
         }
-        new MonoidLaw<>(Booleans.xorMonoid, Gen.boolGen, Eq.fromEquals()).testAll();
+        new MonoidLaw<>(Booleans.xorMonoid, Gen.boolGen, Eq.fromEquals()).test();
     }
 }

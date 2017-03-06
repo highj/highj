@@ -562,7 +562,7 @@ public class MaybeTest {
 
     @Test
     public void monadLaw() {
-        new MonadLaw<>(Maybe.monad, Gen1.maybeGen1, Maybe.eq1).testAll();
+        new MonadLaw<>(Maybe.monad, Gen1.maybeGen1, Maybe.eq1).test();
     }
 
 }

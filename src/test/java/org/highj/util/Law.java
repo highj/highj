@@ -5,7 +5,11 @@ package org.highj.util;
  */
 public interface Law {
 
+    /**
+     * Test all invariants of the given type class.
+     *
+     * If the parent class implements {@link Law}, <code>super.test();</code> must be
+     * called as well.
+     */
     void test();
-
-    void testAll();
 }

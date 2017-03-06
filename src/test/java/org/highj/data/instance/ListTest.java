@@ -513,6 +513,6 @@ public class ListTest {
 
     @Test
     public void monadLaw() {
-        new MonadLaw<>(List.monadPlus, Gen1.listGen1, List.eq1).testAll();
+        new MonadLaw<>(List.monadPlus, Gen1.listGen1, List.eq1).test();
     }
 }

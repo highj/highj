@@ -94,7 +94,7 @@ public class AsyncIOTest {
 
     @Test
     public void monadLaw() {
-        new MonadLaw<>(AsyncIO.monad, gen1, eq1).testAll();
+        new MonadLaw<>(AsyncIO.monad, gen1, eq1).test();
     }
 
 }

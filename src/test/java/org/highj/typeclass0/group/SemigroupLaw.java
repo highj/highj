@@ -35,8 +35,4 @@ public class SemigroupLaw<A> implements Law {
         associativity();
     }
 
-    @Override
-    public void testAll() {
-        test();
-    }
 }

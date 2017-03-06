@@ -41,11 +41,6 @@ public class MonoidLaw<A> extends SemigroupLaw<A>  {
         leftIdentity();
         rightIdentity();
         fold();
-    }
-
-    @Override
-    public void testAll() {
-        test();
-        super.testAll();
+        super.test();
     }
 }

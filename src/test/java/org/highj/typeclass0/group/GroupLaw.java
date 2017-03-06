@@ -38,11 +38,7 @@ public class GroupLaw<A> extends MonoidLaw<A> {
         leftInverse();
         rightInverse();
         identityInverse();
+        super.test();
     }
 
-    @Override
-    public void testAll() {
-        test();
-        super.testAll();
-    }
 }

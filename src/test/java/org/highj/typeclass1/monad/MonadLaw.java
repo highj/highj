@@ -55,16 +55,11 @@ public class MonadLaw<M> extends ApplicativeLaw<M> {
     }
 
     @Override
-    public void testAll() {
-        super.testAll();
-        test();
-    }
-
-    @Override
     public void test() {
         leftIdentity();
         rightIdentity();
         associativity();
+        super.test();
     }
 
 }

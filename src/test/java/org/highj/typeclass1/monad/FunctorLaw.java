@@ -55,11 +55,6 @@ public class FunctorLaw<F> implements Law {
     }
 
     @Override
-    public void testAll() {
-        test();
-    }
-
-    @Override
     public void test() {
         mapIdentity();
         mapComposition();

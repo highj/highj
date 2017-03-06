@@ -102,18 +102,13 @@ public class ApplicativeLaw<F> extends FunctorLaw<F> {
     }
 
     @Override
-    public void testAll() {
-        super.testAll();
-        test();
-    }
-
-    @Override
     public void test() {
         pureIdentity();
         apComposition();
         apHomomorphism();
         apInterchange();
         canImplementMap();
+        super.test();
     }
 
 }
