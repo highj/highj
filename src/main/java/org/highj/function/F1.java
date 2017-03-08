@@ -2,7 +2,6 @@ package org.highj.function;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.Hkt;
 import org.highj.data.Maybe;
 import org.highj.function.f1.F1Arrow;
 import org.highj.function.f1.F1Monad;
@@ -11,7 +10,7 @@ import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.typeclass0.group.Monoid;
-import org.highj.util.Memo;
+import org.highj.data.Memo;
 
 import java.util.Map;
 import java.util.function.Function;
