@@ -1,6 +1,6 @@
 # Welcome to highJ #
 
-[![Build Status](https://travis-ci.org/DanielGronau/highj.svg?branch=master)](https://travis-ci.org/DanielGronau/highj)
+[![Build Status](https://travis-ci.org/highj/highj.svg?branch=master)](https://travis-ci.org/highj/highj)
 
 HighJ tries to overcome Java's lack of higher order type polymorphism (a.k.a. "higher kinded types" in Scala), and translates several well known type-classes (including `Applicative`, `Monad` and `Foldable`) and data structures from Haskell to Java.
 
