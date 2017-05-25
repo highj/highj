@@ -1,5 +1,6 @@
 package org.highj.data;
 
+import org.derive4j.hkt.__2;
 import org.highj.data.impl.treeMap.Node;
 import org.highj.data.tuple.T2;
 import org.highj.function.Strings;
@@ -19,7 +20,10 @@ import java.util.function.Function;
  * @param <K> key type
  * @param <V> value type
  */
-public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K, V>> {
+public class TreeMap<K, V> implements __2<TreeMap.µ, K, V>, Function<K, Maybe<V>>, Iterable<T2<K, V>> {
+
+    public interface µ {
+    }
 
     private final Ord<? super K> ord;
 
@@ -55,7 +59,7 @@ public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K, V>> 
     }
 
     /**
-     * Creates an map with one entry, using the natural order of the key type.
+     * Creates a map with one entry, using the natural order of the key type.
      *
      * @param key   the key
      * @param value the value
@@ -68,7 +72,7 @@ public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K, V>> 
     }
 
     /**
-     * Creates an map with one entry, using the given {@link Ord}.
+     * Creates a map with one entry, using the given {@link Ord}.
      *
      * @param ord   the {@link Ord} instance
      * @param key   the key
@@ -82,7 +86,7 @@ public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K, V>> 
     }
 
     /**
-     * Creates an map from an {@link Iterable} of key-value pairs, using the natural order of the key type.
+     * Creates a map from an {@link Iterable} of key-value pairs, using the natural order of the key type.
      *
      * @param iterable the {@link Iterable}
      * @param <K>      key type
@@ -95,7 +99,7 @@ public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K, V>> 
     }
 
     /**
-     * Creates an map from an {@link Iterable} of key-value pairs, using the given {@link Ord}.
+     * Creates a map from an {@link Iterable} of key-value pairs, using the given {@link Ord}.
      *
      * @param ord      the {@link Ord} instance
      * @param iterable the {@link Iterable}
@@ -106,6 +110,63 @@ public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K, V>> 
     public static <K, V> TreeMap<K, V> of(Ord<K> ord, Iterable<T2<K, V>> iterable) {
         return new TreeMap<>(ord, Node.fromIterable(ord, iterable));
     }
+
+    /**
+     * Creates a map from the given keys and a function to calculate values from these keys, using the natural order of the key type.
+     *
+     * @param getValue the {@link Function} to calculate a value to a given key
+     * @param keys the keys
+     * @param <K> key type
+     * @param <V> value type
+     * @return the map
+     */
+    public static <K extends Comparable<? super K>, V> TreeMap<K,V> fromKeys(Function<? super K, ? extends V> getValue, K ... keys) {
+        Ord<? super K> ord = Ord.fromComparable();
+        return new TreeMap<>(ord, Node.fromIterable(ord, List.of(keys).map(k -> T2.of(k, getValue.apply(k)))));
+    }
+
+    /**
+     * Creates a map from the given keys and a function to calculate values from these keys, using the given {@link Ord}.
+     *
+     * @param ord the {@link Ord} instance
+     * @param getValue the {@link Function} to calculate a value to a given key
+     * @param keys the keys
+     * @param <K> key type
+     * @param <V> value type
+     * @return the map
+     */
+    public static <K, V> TreeMap<K,V> fromKeys(Ord<K> ord, Function<? super K, ? extends V> getValue, K ... keys) {
+        return new TreeMap<>(ord, Node.fromIterable(ord, List.of(keys).map(k -> T2.of(k, getValue.apply(k)))));
+    }
+
+    /**
+     * Creates a map from the given keys and a function to calculate values from these keys, using the natural order of the key type.
+     *
+     * @param getValue the {@link Function} to calculate a value to a given key
+     * @param keys the keys
+     * @param <K> key type
+     * @param <V> value type
+     * @return the map
+     */
+    public static <K extends Comparable<? super K>, V> TreeMap<K,V> fromKeys(Function<? super K, ? extends V> getValue, Iterable<K> keys) {
+        Ord<? super K> ord = Ord.fromComparable();
+        return new TreeMap<K,V>(ord, Node.fromIterable(ord, List.fromIterable(keys).map(k -> T2.of(k, getValue.apply(k)))));
+    }
+
+    /**
+     * Creates a map from the given keys and a function to calculate values from these keys, using the given {@link Ord}.
+     *
+     * @param ord the {@link Ord} instance
+     * @param getValue the {@link Function} to calculate a value to a given key
+     * @param keys the keys
+     * @param <K> key type
+     * @param <V> value type
+     * @return the map
+     */
+    public static <K, V> TreeMap<K,V> fromKeys(Ord<K> ord, Function<? super K, ? extends V> getValue, Iterable<K> keys) {
+        return new TreeMap<>(ord, Node.fromIterable(ord, List.fromIterable(keys).map(k -> T2.of(k, getValue.apply(k)))));
+    }
+
 
     /**
      * Calculates the size of the map.
@@ -160,7 +221,7 @@ public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K, V>> 
 
     /**
      * Constructs a map from the current one, but without the entry with the smallest key.
-     * Calling this method on an empty list returns an empty list.
+     * Calling this method on an empty map returns an empty map.
      *
      * @return the new map
      */
@@ -170,7 +231,7 @@ public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K, V>> 
 
     /**
      * Constructs a map from the current one, but without the entry with the largest key.
-     * Calling this method on an empty list returns an empty list.
+     * Calling this method on an empty map returns an empty map.
      *
      * @return the new map
      */
@@ -184,6 +245,7 @@ public class TreeMap<K, V> implements Function<K, Maybe<V>>, Iterable<T2<K, V>> 
      * @param key the key
      * @return the value wrapped in a {@link Maybe}, if there is any
      */
+    @Override
     public Maybe<V> apply(K key) {
         return root.get(ord, key);
     }

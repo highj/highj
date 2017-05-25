@@ -158,6 +158,15 @@ public interface Ord<T> extends Comparator<T>, Function<T, Function<T, Ordering>
     }
 
     /**
+     * Constructs an {@link Ord} with reversed order.
+     * @return the new {@link Ord}
+     */
+    @Override
+    default Ord<T> reversed() {
+        return (x,y) -> Ord.this.cmp(y,x);
+    }
+
+    /**
      * The {@link org.highj.typeclass1.contravariant.Contravariant} instance of {@link Ord}
      */
     OrdContravariant contravariant = new OrdContravariant() {

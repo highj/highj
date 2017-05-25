@@ -441,7 +441,7 @@ public abstract class Node<K, V> {
 
     private static <K, V> Node<K, V> merge(Node<K, V> t1, Node<K, V> t2) {
         return t1.isEmpty() ? t2
-                : t2.isEmpty() ? t2
+                : t2.isEmpty() ? t1
                 : INTEGER_ORD.cmp(t1.bHeight, t2.bHeight)
                 .caseLT(() -> mergeLT(t1, t2, t1.bHeight))
                 .caseEQ(() -> mergeEQ(t1, t2))
