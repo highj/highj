@@ -17,8 +17,18 @@ public interface ComposeTraversable<F, G> extends ComposeFoldable<F, G>, Compose
     Traversable<G> getG();
 
     @Override
+    default <A, B> __<F, __<G, B>> __map(Function<A, B> fn, __<F, __<G, A>> nestedA) {
+        return ComposeFunctor.super.__map(fn, nestedA);
+    }
+
+    @Override
     default <A, B> Compose<F, G, B> map(Function<A, B> fn, __<__<__<Compose.µ, F>, G>, A> nestedA) {
         return ComposeFunctor.super.map(fn, nestedA);
+    }
+
+    @Override
+    default <A, B> B __foldMap(final Monoid<B> mb, final Function<A, B> fn, __<F, __<G, A>> nestedA) {
+        return ComposeFoldable.super.__foldMap(mb, fn, nestedA);
     }
 
     @Override
@@ -26,12 +36,14 @@ public interface ComposeTraversable<F, G> extends ComposeFoldable<F, G>, Compose
         return ComposeFoldable.super.foldMap(mb, fn, nestedA);
     }
 
+    default <A, B, X> __<X, __<F, __<G, B>>> __traverse(Applicative<X> applicative, Function<A, __<X, B>> fn, __<F, __<G, A>> traversable) {
+        return getF().traverse(applicative,
+                ga -> getG().traverse(applicative, fn, ga),
+                traversable);
+    }
+
     @Override
     default <A, B, X> __<X, __<__<__<Compose.µ, F>, G>, B>> traverse(Applicative<X> applicative, Function<A, __<X, B>> fn, __<__<__<Compose.µ, F>, G>, A> traversable) {
-        __<F, __<G, A>> fga = Hkt.asCompose(traversable).get();
-        return applicative.map(Compose::new,
-                getF().traverse(applicative,
-                        ga -> getG().traverse(applicative, fn, ga),
-                        fga));
+        return applicative.map(Compose::new, __traverse(applicative, fn, Hkt.asCompose(traversable).get()));
     }
 }

@@ -12,8 +12,12 @@ public interface ComposeApplicative<F, G> extends ComposeApply<F, G>, Applicativ
     @Override
     Applicative<G> getG();
 
+    default <A> __<F, __<G, A>> __pure(A a) {
+        return getF().pure(getG().pure(a));
+    }
+
     @Override
     default <A> Compose<F, G, A> pure(A a) {
-        return new Compose<>(getF().pure(getG().pure(a)));
+        return new Compose<>(__pure(a));
     }
 }

@@ -7,16 +7,18 @@ import org.highj.typeclass1.functor.Functor;
 
 import java.util.function.Function;
 
-public interface ComposeFunctor<F,G> extends Functor<__<__<Compose.µ,F>,G>> {
+public interface ComposeFunctor<F, G> extends Functor<__<__<Compose.µ, F>, G>> {
 
     Functor<F> getF();
 
     Functor<G> getG();
 
+    default <A, B> __<F, __<G, B>> __map(Function<A, B> fn, __<F, __<G, A>> nestedA) {
+        return getF().map(ga -> getG().map(fn, ga), nestedA);
+    }
+
     @Override
     default <A, B> Compose<F, G, B> map(Function<A, B> fn, __<__<__<Compose.µ, F>, G>, A> nestedA) {
-        __<F, __<G, A>> fga = Hkt.asCompose(nestedA).get();
-        __<F, __<G, B>> fgb = getF().map(ga -> getG().map(fn, ga), fga);
-        return new Compose<>(fgb);
+        return new Compose<>(__map(fn, Hkt.asCompose(nestedA).get()));
     }
 }

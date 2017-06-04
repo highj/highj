@@ -8,15 +8,18 @@ import org.highj.typeclass1.foldable.Foldable;
 
 import java.util.function.Function;
 
-public interface ComposeFoldable<F,G> extends Foldable<__<__<Compose.µ,F>,G>> {
+public interface ComposeFoldable<F, G> extends Foldable<__<__<Compose.µ, F>, G>> {
 
     Foldable<F> getF();
 
     Foldable<G> getG();
 
+    default <A, B> B __foldMap(final Monoid<B> mb, final Function<A, B> fn, __<F, __<G, A>> nestedA) {
+        return getF().foldMap(mb, ga -> getG().foldMap(mb, fn, ga), nestedA);
+    }
+
     @Override
     default <A, B> B foldMap(final Monoid<B> mb, final Function<A, B> fn, __<__<__<Compose.µ, F>, G>, A> nestedA) {
-        __<F, __<G, A>> fga = Hkt.asCompose(nestedA).get();
-        return getF().foldMap(mb, ga -> getG().foldMap(mb, fn, ga), fga);
+        return __foldMap(mb, fn, Hkt.asCompose(nestedA).get());
     }
 }
