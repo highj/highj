@@ -18,6 +18,7 @@ import org.highj.typeclass1.monad.Applicative;
 
 import static org.highj.Hkt.asConst;
 import static org.highj.Hkt.asT1;
+import static org.highj.data.structural.Const.Const;
 
 /**
  * A {@link PTraversal} can be seen as a {@link POptional} generalised to 0 to n targets where n can be infinite.
@@ -48,7 +49,7 @@ public abstract class PTraversal<S, T, A, B> {
      * @return the function to fold the source into a monoid value
      */
     public final <M> F1<S, M> foldMap(final Monoid<M> monoid, final Function<A, M> f) {
-        return s -> asConst(modifyF(Const.applicative(monoid), a -> new Const<>(f.apply(a))).apply(s)).get();
+        return s -> asConst(modifyF(Const.applicative(monoid), a -> Const(f.apply(a))).apply(s)).get();
     }
 
     /** Combine all targets using a target's {@link Monoid}

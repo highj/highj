@@ -10,11 +10,12 @@ import org.highj.typeclass1.functor.Functor;
 import java.util.function.Function;
 
 import static org.highj.Hkt.asConst;
+import static org.highj.data.structural.Const.*;
 
 /**
  * The Traversable type class.
  *
- * Note that sequence and mapM are not needed, as Monads are Applicatives in highJ,
+ * Note that sequence and mapM are not needed, as monads are applicatives in highJ,
  * so you can replace sequence with sequenceA, and mapM with traverse.
  *
  * Minimal complete definition: 'map' AND ('traverse' OR 'sequenceA').
@@ -35,9 +36,8 @@ public interface Traversable<T> extends Foldable<T>, Functor<T> {
 
     @Override
     default <A, B> B foldMap(Monoid<B> mb, final Function<A, B> fn, __<T, A> nestedA) {
-        //foldMapDefault f = getConst . traverse (Const . f)
-        Applicative<__<Const.µ, B>> applicative = Const.applicative(mb);
-        __<__<Const.µ,B>, __<T, A>> co = traverse(applicative, a -> new Const<>(fn.apply(a)), nestedA);
+        Applicative<__<Const.µ, B>> applicative = applicative(mb);
+        __<__<Const.µ,B>, __<T, A>> co = traverse(applicative, a -> Const(fn.apply(a)), nestedA);
         return asConst(co).get();
     }
 

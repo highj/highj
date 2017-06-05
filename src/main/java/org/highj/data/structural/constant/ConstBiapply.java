@@ -7,13 +7,13 @@ import org.highj.typeclass2.bifunctor.Biapply;
 import java.util.function.Function;
 
 import static org.highj.Hkt.asConst;
+import static org.highj.data.structural.Const.Const;
 
 public interface ConstBiapply extends ConstBifunctor, Biapply<Const.µ> {
 
     @Override
-    public default <A, B, C, D> __2<Const.µ, B, D> biapply(__2<Const.µ, Function<A, B>, Function<C, D>> fn, __2<Const.µ, A, C> ac) {
-        Const<Function<A,B>, Function<C,D>> constFn = asConst(fn);
-        Const<A,C> constAc = asConst(ac);
-        return new Const<>(constFn.get().apply(constAc.get()));
+    default <S, S1, A, A1> Const<S1, A1> biapply(__2<Const.µ, Function<S, S1>, Function<A, A1>> fn, __2<Const.µ, S, A> sa) {
+        Const<Function<S, S1>, Function<A, A1>> constFn = asConst(fn);
+        return Const(constFn.get().apply(asConst(sa).get()));
     }
 }

@@ -7,12 +7,12 @@ import org.highj.typeclass2.bifunctor.Bifunctor;
 import java.util.function.Function;
 
 import static org.highj.Hkt.asConst;
+import static org.highj.data.structural.Const.Const;
 
 public interface ConstBifunctor extends Bifunctor<Const.µ> {
 
     @Override
-    public default <A, B, C, D> Const<B, D> bimap(Function<A, B> fn1, Function<C, D> fn2, __2<Const.µ, A, C> nestedAC) {
-        Const<A,C> constant = asConst(nestedAC);
-        return new Const<>(fn1.apply(constant.get()));
+    default <S, S1, A, A1> Const<S1, A1> bimap(Function<S, S1> fn1, Function<A, A1> fn2, __2<Const.µ, S, A> sa) {
+        return Const(fn1.apply(asConst(sa).get()));
     }
 }
