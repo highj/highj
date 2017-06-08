@@ -3,14 +3,13 @@ package org.highj.function;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.highj.data.Maybe;
-import org.highj.function.f1.F1Arrow;
-import org.highj.function.f1.F1Monad;
+import org.highj.data.Memo;
 import org.highj.data.tuple.T0;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
+import org.highj.function.f1.*;
 import org.highj.typeclass0.group.Monoid;
-import org.highj.data.Memo;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -24,7 +23,7 @@ import static org.highj.Hkt.asF1;
 @FunctionalInterface
 public interface F1<A, B> extends __2<F1.µ, A, B>, Function<A, B> {
 
-    class µ {
+    interface µ {
     }
 
     static <A> F1<A, A> id() {
@@ -69,9 +68,26 @@ public interface F1<A, B> extends __2<F1.µ, A, B>, Function<A, B> {
         return a -> fn -> fn.apply(a);
     }
 
-    static <R> F1Monad<R> monad() {
-        return new F1Monad<R>(){};
+    static <R> F1Functor<R> functor() {
+        return new F1Functor<R>() {
+        };
     }
+
+    static <R> F1Contravariant<R> contravariant() {
+        return new F1Contravariant<R>() {
+        };
+    }
+
+    static <R> F1Monad<R> monad() {
+        return new F1Monad<R>() {
+        };
+    }
+
+    F1Profunctor profunctor = new F1Profunctor() {
+    };
+
+    F1Arrow arrow = new F1Arrow() {
+    };
 
     static <A, B, C> F1<A, T2<B, C>> fanout(__<__<µ, A>, B> fab, __<__<µ, A>, C> fac) {
         final F1<A, B> fnab = asF1(fab);
@@ -112,13 +128,15 @@ public interface F1<A, B> extends __2<F1.µ, A, B>, Function<A, B> {
         return compose(asF1(that), this);
     }
 
-    F1Arrow arrow = new F1Arrow(){};
-    
     static <A, B> F1<A, Maybe<B>> fromJavaMap(Map<A, B> map) {
         return a -> map.containsKey(a) ? Maybe.Just(map.get(a)) : Maybe.<B>Nothing();
     }
 
     static <A, B> F1<A, B> fromJavaMap(Map<A, B> map, B defaultValue) {
         return a -> map.containsKey(a) ? map.get(a) : defaultValue;
+    }
+
+    static <A, B> F1<A, B> fromFunction(Function<A, B> fn) {
+        return fn::apply;
     }
 }

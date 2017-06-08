@@ -1,10 +1,7 @@
 package org.highj.data.structural;
 
 import org.derive4j.hkt.__2;
-import org.highj.data.structural.tagged.TaggedApplicative;
-import org.highj.data.structural.tagged.TaggedApply;
-import org.highj.data.structural.tagged.TaggedFunctor;
-import org.highj.data.structural.tagged.TaggedMonad;
+import org.highj.data.structural.tagged.*;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -63,5 +60,8 @@ public final class Tagged<S, A> implements __2<Tagged.µ, S, A>, Supplier<A> {
         return new TaggedMonad<S>() {
         };
     }
+
+    public static final TaggedProfunctor profunctor = new TaggedProfunctor() {
+    };
 
 }
