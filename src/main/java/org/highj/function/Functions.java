@@ -1,9 +1,10 @@
 package org.highj.function;
 
-import org.highj.data.List;
 import org.highj.data.Maybe;
-import org.highj.data.Stream;
-import org.highj.data.tuple.*;
+import org.highj.data.tuple.T0;
+import org.highj.data.tuple.T2;
+import org.highj.data.tuple.T3;
+import org.highj.data.tuple.T4;
 import org.highj.typeclass0.group.Monoid;
 
 import java.util.Map;
@@ -34,7 +35,7 @@ public enum Functions {
         return a -> b -> c -> d -> fn.apply(T4.of(a, b, c, d));
     }
 
-    public static <A, B, C, D, E>  Function<T4<A, B, C, D>, E> uncurry4(Function<A, Function<B, Function<C, Function<D, E>>>> fn) {
+    public static <A, B, C, D, E> Function<T4<A, B, C, D>, E> uncurry4(Function<A, Function<B, Function<C, Function<D, E>>>> fn) {
         return quadruple -> fn.apply(quadruple._1()).apply(quadruple._2()).apply(quadruple._3()).apply(quadruple._4());
     }
 
@@ -58,7 +59,7 @@ public enum Functions {
         return a -> f.apply(g.apply(h.apply(a)));
     }
 
-    public static <A, B, C> Function<B, Function<A, C>> flip(Function<A, Function<B,C>> fn) {
+    public static <A, B, C> Function<B, Function<A, C>> flip(Function<A, Function<B, C>> fn) {
         return b -> a -> fn.apply(a).apply(b);
     }
 
@@ -66,8 +67,8 @@ public enum Functions {
         return a -> b -> f.apply(g.apply(a).apply(b));
     }
 
-    public static <A> Monoid<Function<A,A>> endoMonoid() {
-        return Monoid.create(Function.<A>identity(), (f,g) -> x -> g.apply(f.apply(x)));
+    public static <A> Monoid<Function<A, A>> endoMonoid() {
+        return Monoid.create(Function.<A>identity(), (f, g) -> x -> g.apply(f.apply(x)));
     }
 
     public static <A, B> Function<A, Function<Function<A, B>, B>> flipApply() {
@@ -140,11 +141,11 @@ public enum Functions {
         return () -> fn.apply(a).apply(b).apply(c).apply(d);
     }
 
-    public static <A,B> Function<A,Maybe<B>> fromJavaMap(Map<A,B> map) {
+    public static <A, B> Function<A, Maybe<B>> fromJavaMap(Map<A, B> map) {
         return a -> Maybe.JustWhenTrue(map.containsKey(a), () -> map.get(a));
     }
 
-    public static <A,B> Function<A,B> fromJavaMap(Map<A,B> map, B defaultValue) {
+    public static <A, B> Function<A, B> fromJavaMap(Map<A, B> map, B defaultValue) {
         return a -> map.containsKey(a) ? map.get(a) : defaultValue;
     }
 
