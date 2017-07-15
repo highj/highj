@@ -5,6 +5,7 @@ import org.derive4j.hkt.__2;
 import org.highj.data.Either;
 import org.highj.data.List;
 import org.highj.data.Maybe;
+import org.highj.data.tuple.T1;
 import org.highj.data.tuple.T2;
 import org.junit.Test;
 
@@ -370,6 +371,14 @@ public class ListTTest {
         ListT<µ, String> listNilNil = ListT.zipWith(monad,
                 (i, s) -> s.substring(0, i), ListTTest.<Integer> listTOf(), ListTTest.<String> listTOf());
         assertListTEquals(listNilNil);
+    }
+    
+    @Test
+    public void toIterator() {
+        ListT<T1.µ, Integer> list = ListT.iterate(T1.applicative, x -> 2 * x, 1).take(T1.applicative, 10);
+        assertThat(ListT.toIterator(list)).containsExactly(1,2,4,8,16,32,64,128,256,512);
+        ListT<T1.µ, Integer> listWithSkip = list.drop(T1.applicative, 2);
+        assertThat(ListT.toIterator(listWithSkip)).containsExactly(4,8,16,32,64,128,256,512);
     }
 
     @Test

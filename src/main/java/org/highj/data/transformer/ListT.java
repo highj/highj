@@ -17,6 +17,7 @@ import org.highj.data.transformer.list.ListTMonadZero;
 import org.highj.data.transformer.list.ListTPlus;
 import org.highj.data.transformer.list.ListTUnfoldable;
 import org.highj.data.transformer.list.ListTZipApplicative;
+import org.highj.data.tuple.T1;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
@@ -34,10 +35,14 @@ import org.highj.typeclass1.monad.MonadTrans;
 import org.highj.typeclass1.monad.MonadZero;
 import org.highj.typeclass1.unfoldable.Unfoldable;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import static org.highj.Hkt.asT1;
 
 /**
  * The ListT monad transformer, which allows to add indeterminism to a
@@ -649,7 +654,40 @@ public class ListT<M, A> implements __2<ListT.µ, M, A> {
      * @return the zipped list.
      */
     public static <M, A, B, C> ListT<M, C> zipWith(Monad<M> monad, BiFunction<A, B, C> fn, ListT<M, A> ma, ListT<M, B> mb) {
-        return zipWith_(monad, fn.andThen(monad::pure), ma, mb);
+        return zipWith_(monad, fn.andThen(monad::<C>pure), ma, mb);
+    }
+
+
+    /**
+     * Converts a {@link ListT} based on the identity monad into a Java {@link Iterator}.
+     *
+     * @param listT the {@link ListT} instance
+     * @param <E> the element type inside the identity monad
+     * @return an iterator that will produce the same elements as the {@link ListT} instance
+     */
+    public static <E> Iterator<E> toIterator(ListT<T1.µ, E> listT) {
+        return new Iterator<E>() {
+
+            private Step<T1.µ, E> state = asT1(listT.run())._1();
+
+            @Override
+            public boolean hasNext() {
+                while(state instanceof Skip) {
+                    state = asT1(((Skip<T1.µ, E>)state).tail().get().run())._1();
+                }
+                return state instanceof Yield;
+            }
+
+            @Override
+            public E next() {
+                if (! hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                Yield<T1.µ, E> yield = (Yield<T1.µ, E>) state;
+                state = asT1(yield.tail.get().run())._1();
+                return yield.head;
+            }
+        };
     }
 
     /**
