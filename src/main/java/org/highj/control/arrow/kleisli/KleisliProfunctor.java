@@ -17,12 +17,12 @@ public interface KleisliProfunctor<M> extends Profunctor<__<Kleisli.µ, M>> {
 
     @Override
     default <A, B, C, D> Kleisli<M, A, D> dimap(Function<A, B> f, Function<C, D> g, __<__<__<Kleisli.µ, M>, B>, C> p) {
-        return new Kleisli<>(getM().lift(g).compose(asKleisli(p)).compose(f));
+        return rmap(g, lmap(f, p));
     }
 
     @Override
     default <A, B, C> Kleisli<M, A, C> lmap(Function<A, B> f, __<__<__<Kleisli.µ, M>, B>, C> p) {
-        return new Kleisli<>(asKleisli(p).compose(f));
+        return asKleisli(p).lmap(f);
     }
 
     @Override

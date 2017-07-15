@@ -24,6 +24,10 @@ public class Kleisli<M, A, B> implements __3<Kleisli.µ, M, A, B>, Function<A, _
         return fn.apply(a);
     }
 
+    public <C> Kleisli<M, C, B> lmap(Function<C,A> f) {
+        return new Kleisli<>(fn.compose(f));
+    }
+
     public static <M> KleisliArrow<M> arrow(Monad<M> monad) {
         return () -> monad;
     }
