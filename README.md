@@ -15,3 +15,13 @@ This project is just an experiment, it relies heavily on Java 8 features, and is
   
 Please consult the wiki for a more detailed description.
 
+## Related
+
+- [functionaljava](https://github.com/functionaljava/functionaljava)
+- [Kotlinz](https://github.com/kotlinz/kotlinz)
+- [Scalaz](https://github.com/scalaz/scalaz)
+- [Swiftz](https://github.com/typelift/Swiftz)
+
+## License
+
+See [LICENSE](LICENSE.txt)
