@@ -4,10 +4,7 @@ import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.highj.data.Maybe;
 import org.highj.data.Memo;
-import org.highj.data.tuple.T0;
-import org.highj.data.tuple.T2;
-import org.highj.data.tuple.T3;
-import org.highj.data.tuple.T4;
+import org.highj.data.tuple.*;
 import org.highj.function.f1.*;
 import org.highj.typeclass0.group.Monoid;
 
@@ -139,4 +136,20 @@ public interface F1<A, B> extends __2<F1.µ, A, B>, Function<A, B> {
     static <A, B> F1<A, B> fromFunction(Function<A, B> fn) {
         return fn::apply;
     }
+
+    static <A> A fix(Function<T1<A>,A> k) {
+        class Util {
+            private Maybe<A> resultOp = Maybe.Nothing();
+        }
+        final Util util = new Util();
+        A result = k.apply(T1.of$(() -> {
+            if (util.resultOp.isNothing()) {
+                throw new RuntimeException("Value read before it was written to.");
+            }
+            return util.resultOp.get();
+        }));
+        util.resultOp = Maybe.Just(result);
+        return result;
+    }
+
 }
