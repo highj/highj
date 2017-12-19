@@ -1,33 +1,27 @@
 package org.highj.data.instance;
 
 import org.derive4j.hkt.__;
-import org.derive4j.hkt.__2;
 import org.highj.data.Either;
 import org.highj.data.List;
 import org.highj.data.Maybe;
+import org.highj.data.eq.Eq;
 import org.highj.data.instance.either.EitherExtend;
 import org.highj.data.instance.either.EitherMonad;
 import org.highj.data.instance.either.EitherMonadPlus;
-import org.highj.function.Strings;
-import org.highj.data.tuple.T2;
-import org.highj.data.eq.Eq;
 import org.highj.data.ord.Ord;
-import org.junit.Rule;
+import org.highj.data.tuple.T2;
+import org.highj.function.Strings;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.highj.Hkt.asEither;
+import static org.assertj.core.api.Assertions.*;
+import static org.highj.Hkt.*;
 import static org.highj.data.Either.*;
-
+import static org.highj.data.Either.eq;
 
 public class EitherTest {
-
-    @Rule
-    public ExpectedException shouldThrow = ExpectedException.none();
 
     @Test
     public void testBiFunctor() {
@@ -113,7 +107,7 @@ public class EitherTest {
         assertThat(asEither(extend.duplicate(left)).getLeft()).isEqualTo("Test");
         assertThat(asEither(asEither(extend.duplicate(right)).getRight()).getRight()).isEqualTo(42);
 
-        Function<__<__<µ, String>,Integer>, __<__<µ, String>,Integer>> fun = extend.extend(
+        Function<__<__<µ, String>, Integer>, __<__<µ, String>, Integer>> fun = extend.extend(
                 either -> asEither(either).rightMap(x -> x / 2).rightOrElse(-1));
         assertThat(asEither(fun.apply(left)).getLeft()).isEqualTo("Test");
         assertThat(asEither(fun.apply(right)).getRight()).isEqualTo(21);
@@ -130,8 +124,8 @@ public class EitherTest {
         Either<String, Integer> left = Left("Test");
         Either<String, Integer> right = Right(42);
         assertThat(left.getLeft()).isEqualTo("Test");
-        shouldThrow.expect(NoSuchElementException.class);
-        right.getLeft();
+        assertThatThrownBy(right::getLeft)
+                .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
@@ -139,8 +133,8 @@ public class EitherTest {
         Either<String, Integer> left = Left("Test");
         Either<String, Integer> right = Right(42);
         assertThat(right.getRight()).isEqualTo(42);
-        shouldThrow.expect(NoSuchElementException.class);
-        left.getRight();
+        assertThatThrownBy(left::getRight)
+                .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
@@ -228,7 +222,6 @@ public class EitherTest {
                 Right(String.class, 1),
                 Right(String.class, 2));
         assertThat(lazyRights(list).take(4)).containsExactly(1, 2, 1, 2);
-
     }
 
     @Test
@@ -304,7 +297,7 @@ public class EitherTest {
         assertThat(eitherMonad.bind(rightOdd, halfEven).getLeft()).isEqualTo("Odd");
 
         //tailRec
-        Function<T2<Integer, Integer>, __<__<µ, String>, Either<T2<Integer,Integer>, Integer>>> factorial = pair ->  {
+        Function<T2<Integer, Integer>, __<__<µ, String>, Either<T2<Integer, Integer>, Integer>>> factorial = pair -> {
             int factor = pair._1();
             int product = pair._2();
             if (factor < 0) {
@@ -352,8 +345,8 @@ public class EitherTest {
     @Test
     public void testOrd() {
         Ord<Either<String, Integer>> ord = Either.ord(
-                Ord.<String>fromComparable(),
-                Ord.<Integer>fromComparable());
+                Ord.<String> fromComparable(),
+                Ord.<Integer> fromComparable());
         List<Either<String, Integer>> list = List.of(
                 Left("a", Integer.class),
                 Left("c", Integer.class),
@@ -429,5 +422,4 @@ public class EitherTest {
         assertThat(unify(left)).isEqualTo("Foo");
         assertThat(unify(right)).isEqualTo("Bar");
     }
-
 }

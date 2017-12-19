@@ -9,29 +9,28 @@ import org.highj.data.instance.list.ListMonadPlus;
 import org.highj.data.instance.list.ListTraversable;
 import org.highj.data.instance.list.ZipApplicative;
 import org.highj.data.num.Integers;
-import org.highj.function.Strings;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
+import org.highj.function.Strings;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass1.monad.MonadLaw;
 import org.highj.util.Gen1;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.highj.Hkt.asList;
-import static org.highj.Hkt.asYieldF;
+import static org.assertj.core.api.Assertions.*;
+import static org.highj.Hkt.*;
 
 public class ListTest {
 
-    @Rule
-    public ExpectedException shouldThrow = ExpectedException.none();
+    @Test
+    public void monadLaw() {
+        new MonadLaw<>(List.monadPlus, Gen1.listGen1, List.eq1).test();
+    }
 
     @Test
     public void testAppend() {
@@ -40,8 +39,8 @@ public class ListTest {
         assertThat(List.append(List.of(), List.of(3, 8, 9))).containsExactly(3, 8, 9);
         assertThat(List.append(List.of(), List.of())).isEmpty();
         //ensure laziness
-        assertThat(List.append(List.of(3), List.cycle(1,2))).startsWith(3,1,2,1,2,1);
-        assertThat(List.append(List.cycle(1,2), List.of(3))).startsWith(1,2,1,2,1,2);
+        assertThat(List.append(List.of(3), List.cycle(1, 2))).startsWith(3, 1, 2, 1, 2, 1);
+        assertThat(List.append(List.cycle(1, 2), List.of(3))).startsWith(1, 2, 1, 2, 1, 2);
     }
 
     @Test
@@ -78,8 +77,8 @@ public class ListTest {
     public void testCycle() {
         assertThat(List.cycle(1, 2, 3).take(9)).containsExactly(1, 2, 3, 1, 2, 3, 1, 2, 3);
         assertThat(List.cycle(42).take(3)).containsExactly(42, 42, 42);
-        shouldThrow.expect(NoSuchElementException.class);
-        List.cycle();
+        assertThatThrownBy(List::cycle)
+                .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
@@ -102,7 +101,7 @@ public class ListTest {
         assertThat(List.of(2, 4, 6, 7, 8, 10).dropWhile(Integers.even)).containsExactly(7, 8, 10);
         assertThat(List.of(7, 8, 10).dropWhile(Integers.even)).containsExactly(7, 8, 10);
 
-        assertThat(List.<Integer>of().dropWhile(Integers.even)).isEmpty();
+        assertThat(List.<Integer> of().dropWhile(Integers.even)).isEmpty();
     }
 
     @Test
@@ -118,7 +117,7 @@ public class ListTest {
         assertThat(list.filter(Integers.negative)).isEmpty();
         assertThat(list.filter(Integers.positive)).containsExactly(2, 5, 3, 8);
 
-        assertThat(List.<Integer>empty().filter(Integers.even)).isEmpty();
+        assertThat(List.<Integer> empty().filter(Integers.even)).isEmpty();
     }
 
     @Test
@@ -148,23 +147,35 @@ public class ListTest {
     @Test
     public void testGet_exceedingIndex() {
         List<Integer> list = List.of(10, 20, 30, 40);
-        shouldThrow.expect(IndexOutOfBoundsException.class);
-        list.get(4);
+        assertThatThrownBy(() -> list.get(4))
+                .isInstanceOf(IndexOutOfBoundsException.class);
     }
 
     @Test
     public void testGet_negativeIndex() {
         List<Integer> list = List.of(10, 20, 30, 40);
-        shouldThrow.expect(IndexOutOfBoundsException.class);
-        list.get(-1);
+        assertThatThrownBy(() -> list.get(-1))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+    }
+
+    @Test
+    public void testGroup() {
+        Group<List<Integer>> group = List.group();
+        assertThat(group.identity()).isEmpty();
+        assertThat(group.apply(group.identity(), group.identity())).isEmpty();
+        assertThat(group.apply(List.of(1, 2, 3), group.identity())).containsExactly(1, 2, 3);
+        assertThat(group.apply(group.identity(), List.of(1, 2, 3))).containsExactly(1, 2, 3);
+        assertThat(group.apply(List.of(1, 2, 3), List.of(4, 5, 6))).containsExactly(1, 2, 3, 4, 5, 6);
+        assertThat(group.inverse(group.identity())).isEmpty();
+        assertThat(group.inverse(List.of(1, 2, 3))).containsExactly(3, 2, 1);
     }
 
     @Test
     public void testHead() {
         assertThat(List.of(42).head()).isEqualTo(42);
         assertThat(List.of(42, 5, 7).head()).isEqualTo(42);
-        shouldThrow.expect(NoSuchElementException.class);
-        List.of().head();
+        assertThatThrownBy(() -> List.of().head())
+                .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
@@ -203,7 +214,7 @@ public class ListTest {
         List<Integer> list = List.of(2, 5, 3, 8);
         assertThat(list.map(Integers.even::test)).containsExactly(true, false, false, true);
 
-        assertThat(List.<Integer>empty().map(Integers.even::test)).isEmpty();
+        assertThat(List.<Integer> empty().map(Integers.even::test)).isEmpty();
     }
 
     @Test
@@ -222,7 +233,7 @@ public class ListTest {
 
     @Test
     public void testMinus() {
-        assertThat(List.<Integer>of().minus(1)).isEmpty();
+        assertThat(List.<Integer> of().minus(1)).isEmpty();
         assertThat(List.of(1).minus(1)).isEmpty();
         assertThat(List.of(4, 1, 2, 3).minus(4)).containsExactly(1, 2, 3);
         assertThat(List.of(1, 2, 4, 3).minus(4)).containsExactly(1, 2, 3);
@@ -233,7 +244,7 @@ public class ListTest {
 
     @Test
     public void testMinusAll() {
-        assertThat(List.<Integer>of().minusAll(1)).isEmpty();
+        assertThat(List.<Integer> of().minusAll(1)).isEmpty();
         assertThat(List.of(1).minusAll(1)).isEmpty();
         assertThat(List.of(1, 1, 1, 1, 1).minusAll(1)).isEmpty();
         assertThat(List.of(4, 1, 2, 3).minusAll(4)).containsExactly(1, 2, 3);
@@ -333,16 +344,16 @@ public class ListTest {
 
     @Test
     public void testSort() {
-        assertThat(List.<Integer>of().sort(Comparator.naturalOrder())).isEmpty();
-        assertThat(List.of(5,7,3,1,3,2).sort(Comparator.naturalOrder())).containsExactly(1,2,3,3,5,7);
+        assertThat(List.<Integer> of().sort(Comparator.naturalOrder())).isEmpty();
+        assertThat(List.of(5, 7, 3, 1, 3, 2).sort(Comparator.naturalOrder())).containsExactly(1, 2, 3, 3, 5, 7);
     }
 
     @Test
     public void testTail() {
         assertThat(List.of(42).tail()).isEmpty();
         assertThat(List.of(42, 5, 7).tail()).containsExactly(5, 7);
-        shouldThrow.expect(NoSuchElementException.class);
-        List.of().tail();
+        assertThatThrownBy(() -> List.of().tail())
+                .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
@@ -367,24 +378,37 @@ public class ListTest {
         assertThat(List.of(2, 4, 6, 7, 8, 10).takeWhile(Integers.even)).containsExactly(2, 4, 6);
         assertThat(List.of(2, 4, 6, 7, 8, 10).takeWhile(Integers.odd)).isEmpty();
 
-        assertThat(List.<Integer>of().takeWhile(Integers.odd)).isEmpty();
+        assertThat(List.<Integer> of().takeWhile(Integers.odd)).isEmpty();
     }
-
 
     @Test
     public void testToJList() {
         java.util.List<Integer> jList = List.of(1, 2, 3, 4, 5).toJList();
         assertThat(jList).containsExactly(1, 2, 3, 4, 5);
 
-        java.util.List<Integer> emptyJList = List.<Integer>of().toJList();
+        java.util.List<Integer> emptyJList = List.<Integer> of().toJList();
         assertThat(emptyJList).isEmpty();
     }
-
 
     @Test
     public void testToString() {
         assertThat(List.of().toString()).isEqualTo("List()");
         assertThat(List.of(2, 5, 3, 8).toString()).isEqualTo("List(2,5,3,8)");
+    }
+
+    @Test
+    public void testTraversable() {
+        ListTraversable traversable = List.traversable;
+        List<__<Maybe.µ, Integer>> list = List.of(0, 8, 15).map(Maybe::Just);
+        assertThat(traversable.sequenceA(Maybe.monad, list)).isEqualTo(Maybe.Just(List.of(0, 8, 15)));
+        assertThat(traversable.sequenceA(Maybe.monad, list.plus(Maybe.Nothing()))).isEqualTo(Maybe.Nothing());
+    }
+
+    @Test
+    public void testUnfoldable() {
+        Function<Integer, Maybe<T2<Integer, Integer>>> fn =
+                i -> Maybe.JustWhenTrue(i <= 10, () -> T2.of(i * i, i + 1));
+        assertThat(List.unfoldable.unfoldr(fn, 1)).containsExactly(1, 4, 9, 16, 25, 36, 49, 64, 81, 100);
     }
 
     @Test
@@ -436,7 +460,6 @@ public class ListTest {
         assertThat(emptyT4._4()).isEmpty();
     }
 
-
     @Test
     public void testZip() {
         List<Integer> intList = List.of(1, 5, 7, 3);
@@ -456,6 +479,17 @@ public class ListTest {
     }
 
     @Test
+    public void testZipApplicative() {
+        ZipApplicative zipAp = List.zipApplicative;
+        assertThat(zipAp.pure(13)).startsWith(13, 13, 13, 13);
+        assertThat(zipAp.ap(List.of(x -> x + 10, x -> x + 20, x -> x + 30), List.of(1, 2, 3))).containsExactly(11, 22, 33);
+        assertThat(zipAp.ap(List.of(x -> x + 10, x -> x + 20, x -> x + 30), List.<Integer> empty())).isEmpty();
+        assertThat(zipAp.ap(List.empty(), List.of(1, 2, 3))).isEmpty();
+        assertThat(zipAp.ap(zipAp.pure(x -> x + 10), List.of(1, 2, 3))).containsExactly(11, 12, 13);
+        assertThat(zipAp.ap(List.of(x -> x + 10, x -> x + 20, x -> x + 30), zipAp.pure(1))).containsExactly(11, 21, 31);
+    }
+
+    @Test
     public void testZipWith() {
         List<Integer> intList = List.of(1, 2, 3, 2);
         List<String> stringList = List.of("one", "two", "three", "four", "blubb");
@@ -471,48 +505,5 @@ public class ListTest {
 
         assertThat(List.zipWith(List.empty(), intList, Strings.repeat)).isEmpty();
         assertThat(List.zipWith(stringList, List.empty(), Strings.repeat)).isEmpty();
-    }
-
-    @Test
-    public void testTraversable() {
-        ListTraversable traversable = List.traversable;
-        List<__<Maybe.µ,Integer>> list = List.of(0,8,15).map(Maybe::Just);
-        assertThat(traversable.sequenceA(Maybe.monad, list)).isEqualTo(Maybe.Just(List.of(0,8,15)));
-        assertThat(traversable.sequenceA(Maybe.monad, list.plus(Maybe.Nothing()))).isEqualTo(Maybe.Nothing());
-    }
-
-    @Test
-    public void testZipApplicative() {
-        ZipApplicative zipAp = List.zipApplicative;
-        assertThat(zipAp.pure(13)).startsWith(13,13,13,13);
-        assertThat(zipAp.ap(List.of(x -> x + 10, x -> x + 20, x -> x + 30), List.of(1,2,3))).containsExactly(11,22,33);
-        assertThat(zipAp.ap(List.of(x -> x + 10, x -> x + 20, x -> x + 30), List.<Integer>empty())).isEmpty();
-        assertThat(zipAp.ap(List.empty(), List.of(1,2,3))).isEmpty();
-        assertThat(zipAp.ap(zipAp.pure(x -> x + 10), List.of(1,2,3))).containsExactly(11,12,13);
-        assertThat(zipAp.ap(List.of(x -> x + 10, x -> x + 20, x -> x + 30), zipAp.pure(1))).containsExactly(11,21,31);
-    }
-
-    @Test
-    public void testGroup() {
-        Group<List<Integer>> group = List.group();
-        assertThat(group.identity()).isEmpty();
-        assertThat(group.apply(group.identity(), group.identity())).isEmpty();
-        assertThat(group.apply(List.of(1,2,3), group.identity())).containsExactly(1,2,3);
-        assertThat(group.apply(group.identity(), List.of(1,2,3))).containsExactly(1,2,3);
-        assertThat(group.apply(List.of(1,2,3), List.of(4,5,6))).containsExactly(1,2,3,4,5,6);
-        assertThat(group.inverse(group.identity())).isEmpty();
-        assertThat(group.inverse(List.of(1,2,3))).containsExactly(3,2,1);
-    }
-
-    @Test
-    public void testUnfoldable() {
-        Function<Integer, Maybe<T2<Integer, Integer>>> fn =
-                i -> Maybe.JustWhenTrue(i <= 10, () -> T2.of(i*i, i + 1));
-        assertThat(List.unfoldable.unfoldr(fn, 1)).containsExactly(1,4,9,16,25,36,49,64,81,100);
-    }
-
-    @Test
-    public void monadLaw() {
-        new MonadLaw<>(List.monadPlus, Gen1.listGen1, List.eq1).test();
     }
 }
