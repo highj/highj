@@ -3,15 +3,28 @@ package org.highj.data;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
 import org.highj.data.instance.these.TheseBifunctor;
+import org.highj.data.instance.these.TheseFoldable;
 import org.highj.data.instance.these.TheseFunctor;
+import org.highj.data.instance.these.TheseTraversable;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass0.group.Semigroup;
+import org.highj.typeclass1.foldable.Foldable;
+import org.highj.typeclass1.foldable.Traversable;
+import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Applicative;
+import org.highj.typeclass2.bifunctor.Bifunctor;
 
-import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+/**
+ * The These type represents values with two non-exclusive possibilities.
+ * The type constructors are This (only the first value), That (only the second value) and
+ * Both (both values).
+ *
+ * @param <A> the first element type
+ * @param <B> the second element type
+ */
 public abstract class These<A, B> implements __2<These.µ, A, B> {
     private These() {
     }
@@ -20,7 +33,7 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
     }
 
     /**
-     * The catamorphism of These.
+     * The catamorphism of {@link These}.
      *
      * @param <C> the result type
      * @return the result
@@ -28,7 +41,7 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
     public abstract <C> C these(Function<A, C> thisFn, Function<B, C> thatFn, BiFunction<A, B, C> bothFn);
 
     /**
-     * Tests if the These is a This
+     * Tests if the {@link These} is a This.
      *
      * @return test result
      */
@@ -37,7 +50,7 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
     }
 
     /**
-     * Tests if the These is a That
+     * Tests if the {@link These} is a That.
      *
      * @return test result
      */
@@ -46,7 +59,7 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
     }
 
     /**
-     * Test if the These is a Both
+     * Test if the {@link These} is a Both.
      *
      * @return test result
      */
@@ -54,34 +67,8 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
         return these(a -> false, b -> false, (a, b) -> true);
     }
 
-    public A getFirst() throws NoSuchElementException {
-        return these(a -> a,
-                b -> {
-                    throw new NoSuchElementException();
-                },
-                (a, b) -> a);
-    }
-
-    public B getSecond() throws NoSuchElementException {
-        return these(a -> {
-                    throw new NoSuchElementException();
-                },
-                b -> b,
-                (a, b) -> b);
-    }
-
-    public T2<A, B> getBoth() throws NoSuchElementException {
-        return these(a -> {
-                    throw new NoSuchElementException();
-                },
-                b -> {
-                    throw new NoSuchElementException();
-                },
-                T2::of);
-    }
-
     /**
-     * Constructs a This instance
+     * Constructs a This instance.
      *
      * @param a   the value
      * @param <A> the first element type
@@ -98,7 +85,7 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
     }
 
     /**
-     * Constructs a That instance
+     * Constructs a That instance.
      *
      * @param b   the value
      * @param <A> the first element type
@@ -115,7 +102,7 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
     }
 
     /**
-     * Constructs a Both instance
+     * Constructs a Both instance.
      *
      * @param a   the first value
      * @param b   the second value
@@ -158,7 +145,7 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
     }
 
     /**
-     * Bimap and coalesce results with the provided operation.
+     * Bimaps and coalesces results with the provided operation.
      *
      * @param aFn     the first map function
      * @param bFn     the second map function
@@ -171,40 +158,63 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
     }
 
     /**
-     * Extracts a value from a This
+     * Extracts a value from a This.
      *
-     * @return maybe the value
+     * @return {@link Maybe} the value
      */
     public Maybe<A> justThis() {
         return these(Maybe::Just,
-                b -> Maybe.<A> Nothing(),
-                (a, b) -> Maybe.<A> Nothing());
+                b -> Maybe.<A>Nothing(),
+                (a, b) -> Maybe.<A>Nothing());
     }
 
     /**
-     * Extracts a value from a That
+     * Extracts a value from a That.
      *
-     * @return maybe the value
+     * @return {@link Maybe} the value
      */
     public Maybe<B> justThat() {
-        return these(a -> Maybe.<B> Nothing(),
+        return these(a -> Maybe.<B>Nothing(),
                 Maybe::Just,
-                (a, b) -> Maybe.<B> Nothing());
+                (a, b) -> Maybe.<B>Nothing());
     }
 
     /**
-     * Extracts the values from a Both
+     * Extracts the values from a Both.
      *
-     * @return maybe the values
+     * @return {@link Maybe} the tuple of values
      */
     public Maybe<T2<A, B>> justBoth() {
-        return these(b -> Maybe.<T2<A, B>> Nothing(),
-                b -> Maybe.<T2<A, B>> Nothing(),
+        return these(b -> Maybe.<T2<A, B>>Nothing(),
+                b -> Maybe.<T2<A, B>>Nothing(),
                 (a, b) -> Maybe.Just(T2.of(a, b)));
     }
 
     /**
-     * Bimap over the instance
+     * Extracts the value from This or the first value from Both.
+     *
+     * @return {@link Maybe} the value
+     */
+    public Maybe<A> justFirst() {
+        return these(Maybe::Just,
+                b -> Maybe.Nothing(),
+                (a, b) -> Maybe.Just(a));
+    }
+
+    /**
+     * Extracts the value from That or the second value from Both.
+     *
+     * @return {@link Maybe} the value
+     */
+    public Maybe<B> justSecond() {
+        return these(a -> Maybe.Nothing(),
+                Maybe::Just,
+                (a, b) -> Maybe.Just(b));
+    }
+
+
+    /**
+     * Bimaps over the instance.
      *
      * @param aFn  the first map function
      * @param bFn  the second map function
@@ -219,7 +229,7 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
     }
 
     /**
-     * Map over the first value
+     * Map over the first value.
      *
      * @param aFn  the first map function
      * @param <A1> the new first element type
@@ -227,12 +237,12 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
      */
     public <A1> These<A1, B> mapThis(Function<A, A1> aFn) {
         return these(a -> This(aFn.apply(a)),
-                These::<A1, B>That,
+                These::That,
                 (a, b) -> Both(aFn.apply(a), b));
     }
 
     /**
-     * Map over the second value
+     * Map over the second value.
      *
      * @param bFn  the second map function
      * @param <B1> the new second element type
@@ -244,86 +254,172 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
                 (a, b) -> Both(a, bFn.apply(b)));
     }
 
+    /**
+     * Reverses the order of the values.
+     *
+     * @return the flipped {@link These} instance
+     */
     public These<B, A> flip() {
         return these(These::That, These::This, (a, b) -> Both(b, a));
     }
 
+    /**
+     * Wrapping the instance in an {@link Applicative} by transforming the first value.
+     *
+     * @param applicative an {@link Applicative}
+     * @param fn          the transformation function
+     * @param <F>         the type of the {@link Applicative}
+     * @param <A1>        the new first element type
+     * @return the transformed instance wrapped in the given {@link Applicative}
+     */
     public <F, A1> __<F, These<A1, B>> here(Applicative<F> applicative, Function<A, __<F, A1>> fn) {
         return these(a -> applicative.map(These::This, fn.apply(a)),
                 b -> applicative.pure(These.That(b)),
                 (a, b) -> applicative.map(a1 -> Both(a1, b), fn.apply(a)));
     }
 
+    /**
+     * Wrapping the instance in an {@link Applicative} by transforming the second value.
+     *
+     * @param applicative an {@link Applicative}
+     * @param fn          the transformation function
+     * @param <F>         the type of the {@link Applicative}
+     * @param <B1>        the new second element type
+     * @return the transformed instance wrapped in the given {@link Applicative}
+     */
     public <F, B1> __<F, These<A, B1>> there(Applicative<F> applicative, Function<B, __<F, B1>> fn) {
         return these(a -> applicative.pure(These.This(a)),
                 b -> applicative.map(These::That, fn.apply(b)),
                 (a, b) -> applicative.map(b1 -> Both(a, b1), fn.apply(b)));
     }
 
+    /**
+     * Extracting the This values from a {@link List} of {@link These}.
+     *
+     * @param list the list
+     * @param <A>  the first element type
+     * @return list of the values of This
+     */
     public static <A> List<A> catThis(List<These<A, ?>> list) {
-        return list.filter(These::isThis).map(These::getFirst);
+        return Maybe.justs(list.map(These::justThis));
     }
 
+    /**
+     * Extracting the That values from a {@link List} of {@link These}.
+     *
+     * @param list the list
+     * @param <B>  the second element type
+     * @return list of the values of That
+     */
     public static <B> List<B> catThat(List<These<?, B>> list) {
-        return list.filter(These::isThat).map(These::getSecond);
+        return Maybe.justs(list.map(These::justThat));
     }
 
-    public static <A> List<A> catFirst(List<These<A, ?>> list) {
-        return list.filter(t -> !t.isThat()).map(These::getFirst);
-    }
-
-    public static <B> List<B> catSecond(List<These<?, B>> list) {
-        return list.filter(t -> !t.isThis()).map(These::getSecond);
-    }
-
+    /**
+     * Extracting both values of Both from a {@link List} of {@link These}.
+     *
+     * @param list the list
+     * @param <A>  the first element type
+     * @param <B>  the second element type
+     * @return list of the tupled values of Both
+     */
     public static <A, B> List<T2<A, B>> catBoth(List<These<A, B>> list) {
-        return list.filter(These::isBoth).map(These::getBoth);
+        return Maybe.justs(list.map(These::justBoth));
     }
 
+    /**
+     * Extracting the first values from a {@link List} of {@link These}.
+     *
+     * @param list the list
+     * @param <A>  the first element type
+     * @return list of the values of This and the first values of Both
+     */
+    public static <A> List<A> catFirst(List<These<A, ?>> list) {
+        return Maybe.justs(list.map(These::justFirst));
+    }
+
+    /**
+     * Extracting the second values from a {@link List} of {@link These}.
+     *
+     * @param list the list
+     * @param <B>  the second element type
+     * @return list of the values of That and the second values of Both
+     */
+    public static <B> List<B> catSecond(List<These<?, B>> list) {
+        return Maybe.justs(list.map(These::justSecond));
+    }
+
+    /**
+     * The {@link Semigroup} instance
+     *
+     * @param semigroupA the semigroup of the first element type
+     * @param semigroupB the semigroup of the second element type
+     * @param <A>        the first element type
+     * @param <B>        the second element type
+     * @return the instance
+     */
     public static <A, B> Semigroup<These<A, B>> semigroup(Semigroup<A> semigroupA, Semigroup<B> semigroupB) {
         return (t1, t2) ->
-                t1.these(
-                        a1 -> t2.these(
-                                a2 -> This(semigroupA.apply(a1, a2)),
-                                b2 -> Both(a1, b2),
-                                (a2, b2) -> Both(semigroupA.apply(a1, a2), b2)),
-                        b1 -> t2.these(
-                                a2 -> Both(a2, b1),
-                                b2 -> That(semigroupB.apply(b1, b2)),
-                                (a2, b2) -> Both(a2, semigroupB.apply(b1, b2))),
-                        (a1, b1) -> t2.these(
-                                a2 -> Both(semigroupA.apply(a1, a2), b1),
-                                b2 -> Both(a1, semigroupB.apply(b1, b2)),
-                                (a2, b2) -> Both(semigroupA.apply(a1, a2), semigroupB.apply(b1, b2)))
-                );
+                       t1.these(
+                               a1 -> t2.these(
+                                       a2 -> This(semigroupA.apply(a1, a2)),
+                                       b2 -> Both(a1, b2),
+                                       (a2, b2) -> Both(semigroupA.apply(a1, a2), b2)),
+                               b1 -> t2.these(
+                                       a2 -> Both(a2, b1),
+                                       b2 -> That(semigroupB.apply(b1, b2)),
+                                       (a2, b2) -> Both(a2, semigroupB.apply(b1, b2))),
+                               (a1, b1) -> t2.these(
+                                       a2 -> Both(semigroupA.apply(a1, a2), b1),
+                                       b2 -> Both(a1, semigroupB.apply(b1, b2)),
+                                       (a2, b2) -> Both(semigroupA.apply(a1, a2), semigroupB.apply(b1, b2)))
+                       );
     }
 
+    /**
+     * The {@link Functor} instance.
+     *
+     * @param <F> the fixed first element type
+     * @return the instance
+     */
     public static <F> TheseFunctor<F> functor() {
         return new TheseFunctor<F>() {
         };
     }
 
+    /**
+     * The {@link Bifunctor} instance.
+     */
     public final TheseBifunctor bifunctor = new TheseBifunctor() {
     };
+
+    /**
+     * The {@link Foldable} instance.
+     *
+     * @param <F> the fixed first element type
+     * @return the instance
+     */
+    public static <F> TheseFoldable<F> foldable() {
+        return new TheseFoldable<F>() {
+        };
+    }
+
+    /**
+     * The {@link Traversable} instance.
+     *
+     * @param <F> the fixed first element type
+     * @return the instance
+     */
+    public static <F> TheseTraversable<F> traversable() {
+        return new TheseTraversable<F>() {
+        };
+    }
 
 
 /*
 
 
 -- | Select each constructor and partition them into separate lists.
-
-instance Foldable (These a) where
-    foldr _ z (This _) = z
-    foldr f z (That x) = f x z
-    foldr f z (These _ x) = f x z
-
-instance Traversable (These a) where
-    traverse _ (This a) = pure $ This a
-    traverse f (That x) = That <$> f x
-    traverse f (These a x) = These a <$> f x
-    sequenceA (This a) = pure $ This a
-    sequenceA (That x) = That <$> x
-    sequenceA (These a x) = These a <$> x
 
 instance Bifoldable These where
     bifold = these id id mappend
@@ -368,47 +464,5 @@ instance (Semigroup a) => Monad (These a) where
     return = pure
     (>>=) = (>>-)
 
-
-instance (FromJSON a, FromJSON b) => FromJSON (These a b) where
-    parseJSON = Aeson.withObject "These a b" (p . HM.toList)
-      where
-        p [("This", a), ("That", b)] = These <$> parseJSON a <*> parseJSON b
-        p [("That", b), ("This", a)] = These <$> parseJSON a <*> parseJSON b
-        p [("This", a)] = This <$> parseJSON a
-        p [("That", b)] = That <$> parseJSON b
-        p _  = fail "Expected object with 'This' and 'That' keys only"
-
-instance Arbitrary2 These where
-    liftArbitrary2 arbA arbB = oneof
-        [ This <$> arbA
-        , That <$> arbB
-        , These <$> arbA <*> arbB
-        ]
-
-    liftShrink2  shrA _shrB (This x) = This <$> shrA x
-    liftShrink2 _shrA  shrB (That y) = That <$> shrB y
-    liftShrink2  shrA  shrB (These x y) =
-        [This x, That y] ++ [These x' y' | (x', y') <- liftShrink2 shrA shrB (x, y)]
-
-instance (Arbitrary a) => Arbitrary1 (These a) where
-    liftArbitrary = liftArbitrary2 arbitrary
-    liftShrink = liftShrink2 shrink
-
-instance (Arbitrary a, Arbitrary b) => Arbitrary (These a b) where
-    arbitrary = arbitrary1
-    shrink = shrink1
-
-instance (Function a, Function b) => Function (These a b) where
-  function = functionMap g f
-    where
-      g (This a)    = Left a
-      g (That b)    = Right (Left b)
-      g (These a b) = Right (Right (a, b))
-
-      f (Left a)               = This a
-      f (Right (Left b))       = That b
-      f (Right (Right (a, b))) = These a b
-
-instance (CoArbitrary a, CoArbitrary b) => CoArbitrary (These a b)
-    * */
+*/
 }
