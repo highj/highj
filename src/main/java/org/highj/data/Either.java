@@ -8,8 +8,11 @@ import org.highj.data.tuple.T2;
 import org.highj.data.eq.Eq;
 import org.highj.data.ord.Ord;
 import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass1.comonad.Extend;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadPlus;
+import org.highj.typeclass2.bifoldable.Bifoldable;
+import org.highj.typeclass2.bifunctor.Bifunctor;
 
 import java.util.NoSuchElementException;
 import java.util.function.Function;
@@ -513,15 +516,21 @@ public abstract class Either<A, B> implements __2<Either.µ, A, B> {
     }
 
     /**
-     * The {@link org.highj.typeclass2.bifunctor.Bifunctor} instance of {@link Either}.
+     * The {@link Bifunctor} instance of {@link Either}.
      */
     public static final EitherBifunctor bifunctor = new EitherBifunctor() {
     };
 
     /**
-     * The {@link org.highj.typeclass1.comonad.Extend} type class instance of {@link Either}.
+     * The {@link Bifoldable} instance of {@link Either}.
+     */
+    public static final Bifoldable bifoldable = new EitherBifoldable() {
+    };
+
+    /**
+     * The {@link Extend} type class instance of {@link Either}.
      * @param <S> the Left type of {@link Either}
-     * @return the {@link org.highj.typeclass1.comonad.Extend} instance
+     * @return the {@link Extend} instance
      */
     public static <S> EitherExtend<S> extend() {
         return new EitherExtend<S>() {

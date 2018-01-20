@@ -13,6 +13,7 @@ import org.highj.typeclass1.contravariant.Divisible;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Applicative;
 import org.highj.typeclass1.monad.Apply;
+import org.highj.typeclass2.bifoldable.Bifoldable;
 import org.highj.typeclass2.bifunctor.Biapplicative;
 
 import java.util.function.Function;
@@ -180,4 +181,10 @@ public class Const<S, A> implements __2<Const.µ, S, A>, Supplier<S> {
     public static <S, A> ConstGroup<S, A> group(Group<S> group) {
         return () -> group;
     }
+
+    /**
+     * The {@link Bifoldable} instance of {@link Const}
+     */
+    public static final ConstBifoldable bifoldable = new ConstBifoldable() {
+    };
 }
