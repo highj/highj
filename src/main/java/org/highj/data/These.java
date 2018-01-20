@@ -2,16 +2,15 @@ package org.highj.data;
 
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__2;
-import org.highj.data.instance.these.TheseBifunctor;
-import org.highj.data.instance.these.TheseFoldable;
-import org.highj.data.instance.these.TheseFunctor;
-import org.highj.data.instance.these.TheseTraversable;
+import org.highj.data.instance.these.*;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass1.foldable.Foldable;
 import org.highj.typeclass1.foldable.Traversable;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Applicative;
+import org.highj.typeclass1.monad.Monad;
+import org.highj.typeclass2.bifoldable.Bifoldable;
 import org.highj.typeclass2.bifunctor.Bifunctor;
 
 import java.util.function.BiFunction;
@@ -388,6 +387,28 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
     }
 
     /**
+     * The {@link Applicative} instance.
+     *
+     * @param semigroup the semigroup of the first element
+     * @param <F>       the fixed first element type
+     * @return the instance
+     */
+    public static <F> TheseApplicative<F> applicative(Semigroup<F> semigroup) {
+        return () -> semigroup;
+    }
+
+    /**
+     * The {@link Monad} instance.
+     *
+     * @param semigroup the semigroup of the first element
+     * @param <F>       the fixed first element type
+     * @return the instance
+     */
+    public static <F> TheseMonad<F> monad(Semigroup<F> semigroup) {
+        return () -> semigroup;
+    }
+
+    /**
      * The {@link Bifunctor} instance.
      */
     public final TheseBifunctor bifunctor = new TheseBifunctor() {
@@ -415,19 +436,17 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
         };
     }
 
+    /**
+     * The {@link Bifoldable} instance.
+     */
+    public static final TheseBifoldable bifoldable = new TheseBifoldable() {
+    };
+
 
 /*
 
 
 -- | Select each constructor and partition them into separate lists.
-
-instance Bifoldable These where
-    bifold = these id id mappend
-    bifoldr f g z = these (`f` z) (`g` z) (\x y -> x `f` (y `g` z))
-    bifoldl f g z = these (z `f`) (z `g`) (\x y -> (z `f` x) `g` y)
-
-instance Bifoldable1 These where
-    bifold1 = these id id (<>)
 
 instance Bitraversable These where
     bitraverse f _ (This x) = This <$> f x
@@ -439,30 +458,6 @@ instance Bitraversable1 These where
     bitraverse1 _ g (That x) = That <$> g x
     bitraverse1 f g (These x y) = These <$> f x <.> g y
 
-instance (Semigroup a) => Apply (These a) where
-    This  a   <.> _         = This a
-    That    _ <.> This  b   = This b
-    That    f <.> That    x = That (f x)
-    That    f <.> These b x = These b (f x)
-    These a _ <.> This  b   = This (a <> b)
-    These a f <.> That    x = These a (f x)
-    These a f <.> These b x = These (a <> b) (f x)
-
-instance (Semigroup a) => Applicative (These a) where
-    pure = That
-    (<*>) = (<.>)
-
-instance (Semigroup a) => Bind (These a) where
-    This  a   >>- _ = This a
-    That    x >>- k = k x
-    These a x >>- k = case k x of
-                          This  b   -> This  (a <> b)
-                          That    y -> These a y
-                          These b y -> These (a <> b) y
-
-instance (Semigroup a) => Monad (These a) where
-    return = pure
-    (>>=) = (>>-)
 
 */
 }
