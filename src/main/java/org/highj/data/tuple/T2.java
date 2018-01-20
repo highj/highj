@@ -6,16 +6,7 @@ import org.highj.data.HList.HCons;
 import org.highj.data.HList.HNil;
 import org.highj.data.eq.Eq;
 import org.highj.data.ord.Ord;
-import org.highj.data.tuple.t2.T2Applicative;
-import org.highj.data.tuple.t2.T2Apply;
-import org.highj.data.tuple.t2.T2Biapplicative;
-import org.highj.data.tuple.t2.T2Biapply;
-import org.highj.data.tuple.t2.T2Bifunctor;
-import org.highj.data.tuple.t2.T2Bind;
-import org.highj.data.tuple.t2.T2Comonad;
-import org.highj.data.tuple.t2.T2Functor;
-import org.highj.data.tuple.t2.T2Monad;
-import org.highj.data.tuple.t2.T2MonadRec;
+import org.highj.data.tuple.t2.*;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
@@ -26,6 +17,7 @@ import org.highj.typeclass1.monad.Apply;
 import org.highj.typeclass1.monad.Bind;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadRec;
+import org.highj.typeclass2.bifoldable.Bifoldable;
 import org.highj.typeclass2.bifunctor.Biapplicative;
 import org.highj.typeclass2.bifunctor.Biapply;
 import org.highj.typeclass2.bifunctor.Bifunctor;
@@ -480,4 +472,11 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
      */
     public static final T2Biapplicative biapplicative = new T2Biapplicative() {
     };
+
+    /**
+     * The {@link Bifoldable} instance.
+     */
+    public static final T2Bifoldable bifoldable = new T2Bifoldable() {
+    };
 }
+
