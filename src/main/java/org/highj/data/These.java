@@ -11,8 +11,10 @@ import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Applicative;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass2.bifoldable.Bifoldable;
+import org.highj.typeclass2.bifoldable.Bitraversable;
 import org.highj.typeclass2.bifunctor.Bifunctor;
 
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -67,14 +69,34 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
     }
 
     /**
+     * Test if the first element is present.
+     *
+     * @return test result
+     */
+    public boolean hasFirst() {
+        return these(a -> true, b -> false, (a, b) -> true);
+    }
+
+    /**
+     * Test if the second element is present.
+     *
+     * @return test result
+     */
+    public boolean hasSecond() {
+        return these(a -> false, b -> true, (a, b) -> true);
+    }
+
+    /**
      * Constructs a This instance.
      *
      * @param a   the value
      * @param <A> the first element type
      * @param <B> the second element type
      * @return the This instance
+     * @throws NullPointerException if the argument is null
      */
-    public static <A, B> These<A, B> This(A a) {
+    public static <A, B> These<A, B> This(A a) throws NullPointerException {
+        Objects.requireNonNull(a);
         return new These<A, B>() {
             @Override
             public <C> C these(Function<A, C> thisFn, Function<B, C> thatFn, BiFunction<A, B, C> bothFn) {
@@ -90,8 +112,10 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
      * @param <A> the first element type
      * @param <B> the second element type
      * @return the That instance
+     * @throws NullPointerException if the argument is null
      */
-    public static <A, B> These<A, B> That(B b) {
+    public static <A, B> These<A, B> That(B b) throws NullPointerException {
+        Objects.requireNonNull(b);
         return new These<A, B>() {
             @Override
             public <C> C these(Function<A, C> thisFn, Function<B, C> thatFn, BiFunction<A, B, C> bothFn) {
@@ -108,8 +132,11 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
      * @param <A> this first element type
      * @param <B> this second element type
      * @return the Both instance
+     * @throws NullPointerException if any of the arguments is null
      */
-    public static <A, B> These<A, B> Both(A a, B b) {
+    public static <A, B> These<A, B> Both(A a, B b) throws NullPointerException {
+        Objects.requireNonNull(a);
+        Objects.requireNonNull(b);
         return new These<A, B>() {
             @Override
             public <C> C these(Function<A, C> thisFn, Function<B, C> thatFn, BiFunction<A, B, C> bothFn) {
@@ -297,9 +324,10 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
      *
      * @param list the list
      * @param <A>  the first element type
+     * @param <B>  the second element type
      * @return list of the values of This
      */
-    public static <A> List<A> catThis(List<These<A, ?>> list) {
+    public static <A, B> List<A> catThis(List<These<A, B>> list) {
         return Maybe.justs(list.map(These::justThis));
     }
 
@@ -307,10 +335,11 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
      * Extracting the That values from a {@link List} of {@link These}.
      *
      * @param list the list
+     * @param <A>  the first element type
      * @param <B>  the second element type
      * @return list of the values of That
      */
-    public static <B> List<B> catThat(List<These<?, B>> list) {
+    public static <A,B> List<B> catThat(List<These<A, B>> list) {
         return Maybe.justs(list.map(These::justThat));
     }
 
@@ -331,9 +360,10 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
      *
      * @param list the list
      * @param <A>  the first element type
+     * @param <B>  the second element type
      * @return list of the values of This and the first values of Both
      */
-    public static <A> List<A> catFirst(List<These<A, ?>> list) {
+    public static <A, B> List<A> catFirst(List<These<A, B>> list) {
         return Maybe.justs(list.map(These::justFirst));
     }
 
@@ -341,11 +371,39 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
      * Extracting the second values from a {@link List} of {@link These}.
      *
      * @param list the list
+     * @param <A>  the first element type
      * @param <B>  the second element type
      * @return list of the values of That and the second values of Both
      */
-    public static <B> List<B> catSecond(List<These<?, B>> list) {
+    public static <A, B> List<B> catSecond(List<These<A, B>> list) {
         return Maybe.justs(list.map(These::justSecond));
+    }
+
+    @Override
+    public String toString() {
+        return these(
+                a -> "This(" + a + ")",
+                b -> "That(" + b + ")",
+                (a, b) -> "Both(" + a + "," + b + ")");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof These)) return false;
+        These<?, ?> second = (These<?, ?>) o;
+        return these(
+                a1 -> second.these(a1::equals, b2 -> false, (a2, b2) -> false),
+                b1 -> second.these(a2 -> false, b1::equals, (a2, b2) -> false),
+                (a1, b1) -> second.these(a2 -> false, b2 -> false, (a2, b2) -> a1.equals(a2) && b1.equals(b2)));
+    }
+
+    @Override
+    public int hashCode() {
+        return these(
+                a -> 37 + a.hashCode(),
+                b -> 41 + b.hashCode(),
+                (a, b) -> 43 * a.hashCode() + 47 * b.hashCode());
     }
 
     /**
@@ -442,22 +500,9 @@ public abstract class These<A, B> implements __2<These.µ, A, B> {
     public static final TheseBifoldable bifoldable = new TheseBifoldable() {
     };
 
-
-/*
-
-
--- | Select each constructor and partition them into separate lists.
-
-instance Bitraversable These where
-    bitraverse f _ (This x) = This <$> f x
-    bitraverse _ g (That x) = That <$> g x
-    bitraverse f g (These x y) = These <$> f x <*> g y
-
-instance Bitraversable1 These where
-    bitraverse1 f _ (This x) = This <$> f x
-    bitraverse1 _ g (That x) = That <$> g x
-    bitraverse1 f g (These x y) = These <$> f x <.> g y
-
-
-*/
+    /**
+     * The {@link Bitraversable} instance.
+     */
+    public static final TheseBitraversable bitraversable = new TheseBitraversable() {
+    };
 }
