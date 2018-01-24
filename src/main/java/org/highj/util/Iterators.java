@@ -1,9 +1,12 @@
 package org.highj.util;
 
+import org.highj.data.tuple.T2;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.BiFunction;
 
 public enum Iterators {
     ;
@@ -89,5 +92,23 @@ public enum Iterators {
             it.next();
         }
         return it;
+    }
+
+    public static <A,B,C> Iterator<C> zipWith(Iterator<A> iteratorA, Iterator<B> iteratorB, BiFunction<A,B,C> fn) {
+        return new Iterator<C>() {
+            @Override
+            public boolean hasNext() {
+                return iteratorA.hasNext() && iteratorB.hasNext();
+            }
+
+            @Override
+            public C next() {
+                return fn.apply(iteratorA.next(), iteratorB.next());
+            }
+        };
+    }
+
+    public static <A,B> Iterator<T2<A,B>> zip(Iterator<A> iteratorA, Iterator<B> iteratorB) {
+        return zipWith(iteratorA, iteratorB, T2::of);
     }
 }

@@ -3,6 +3,7 @@ package org.highj.util;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.highj.data.List;
+import org.highj.data.tuple.T2;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -73,5 +74,27 @@ public class IteratorsTest {
         assertThat(Iterators.drop(3, List.of(0,8,15).iterator())).isEmpty();
         assertThat(Iterators.drop(100, List.of(0,8,15).iterator())).isEmpty();
     }
+
+    @Test
+    public void zipWith() {
+        assertThat(Iterators.zipWith(List.of().iterator(), List.of().iterator(), (x,y) -> 3)).isEmpty();
+        assertThat(Iterators.zipWith(List.of(12, 14).iterator(), List.of().iterator(), (x,y) -> 3)).isEmpty();
+        assertThat(Iterators.zipWith(List.of().iterator(), List.of(12, 14).iterator(), (x,y) -> 3)).isEmpty();
+        assertThat(Iterators.zipWith(List.of(2,4).iterator(), List.of(10, 20).iterator(), (x,y) -> x + y)).containsExactly(12,24);
+        assertThat(Iterators.zipWith(List.of(2,4,6).iterator(), List.of(10, 20).iterator(), (x,y) -> x + y)).containsExactly(12,24);
+        assertThat(Iterators.zipWith(List.of(2,4).iterator(), List.of(10, 20, 30).iterator(), (x,y) -> x + y)).containsExactly(12,24);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void zip() {
+        assertThat(Iterators.zip(List.of().iterator(), List.of().iterator())).isEmpty();
+        assertThat(Iterators.zip(List.of(12, 14).iterator(), List.of().iterator())).isEmpty();
+        assertThat(Iterators.zip(List.of().iterator(), List.of(12, 14).iterator())).isEmpty();
+        assertThat(Iterators.zip(List.of(2,4).iterator(), List.of(10, 20).iterator())).containsExactly(T2.of(2,10), T2.of(4, 20));
+        assertThat(Iterators.zip(List.of(2,4,6).iterator(), List.of(10, 20).iterator())).containsExactly(T2.of(2,10), T2.of(4, 20));
+        assertThat(Iterators.zip(List.of(2,4).iterator(), List.of(10, 20, 30).iterator())).containsExactly(T2.of(2,10), T2.of(4, 20));
+    }
+
 
 }

@@ -1,7 +1,10 @@
 package org.highj.util;
 
+import org.highj.data.tuple.T2;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.BiFunction;
 
 public class Iterables {
 
@@ -73,4 +76,13 @@ public class Iterables {
     public static <A> Iterable<A> drop(int n, Iterable<A> it) {
         return () -> Iterators.drop(n, it.iterator());
     }
+
+    public static <A,B,C> Iterable<C> zipWith(Iterable<A> iterableA, Iterable<B> iterableB, BiFunction<A,B,C> fn) {
+        return () -> Iterators.zipWith(iterableA.iterator(), iterableB.iterator(), fn);
+    }
+
+    public static <A,B> Iterable<T2<A,B>> zip(Iterable<A> iterableA, Iterable<B> iterableB) {
+        return () -> Iterators.zip(iterableA.iterator(), iterableB.iterator());
+    }
+
 }
