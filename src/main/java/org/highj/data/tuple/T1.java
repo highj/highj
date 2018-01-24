@@ -2,13 +2,11 @@ package org.highj.data.tuple;
 
 import org.derive4j.hkt.__;
 import org.highj.data.HList;
-import org.highj.data.tuple.t1.T1Applicative;
-import org.highj.data.tuple.t1.T1Comonad;
-import org.highj.data.tuple.t1.T1Functor;
-import org.highj.data.tuple.t1.T1Monad;
+import org.highj.data.eq.Eq1;
+import org.highj.data.ord.Ord1;
+import org.highj.data.tuple.t1.*;
 import org.highj.data.eq.Eq;
 import org.highj.data.ord.Ord;
-import org.highj.data.tuple.t1.T1MonadRec;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
@@ -203,6 +201,12 @@ public abstract class T1<A> implements __<T1.µ, A>, Supplier<A> {
     }
 
     /**
+     * The {@link Eq1} instance.
+     */
+    public static final T1Eq1 eq1 = new T1Eq1() {
+    };
+
+    /**
      * The {@link Ord} instance.
      * @param ordA the {@link Ord} instance of the element type
      * @param <A> the element type
@@ -211,6 +215,12 @@ public abstract class T1<A> implements __<T1.µ, A>, Supplier<A> {
     public static <A> Ord<T1<A>> ord(Ord<? super A> ordA) {
         return (one, two) -> ordA.cmp(one._1(), two._1());
     }
+
+    /**
+     * The {@link Ord1} instance.
+     */
+    public static final T1Ord1 ord1 = new T1Ord1() {
+    };
 
     /**
      * The {@link Functor} instance.
