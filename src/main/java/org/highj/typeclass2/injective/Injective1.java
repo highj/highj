@@ -11,12 +11,17 @@ import org.derive4j.hkt.__;
  * @param <F> the source type constructor
  * @param <G> the target type constructor
  */
-public interface Injective1<F, G> {
+public interface Injective1<F, G> extends Function1<F,G> {
 
     <A> __<G, A> to(__<F, A> input);
 
     default <A> Injective<__<F,A>, __<G,A>> to() {
         return this::to;
+    }
+
+    @Override
+    default <A> __<G, A> apply1(__<F, A> input) {
+        return to(input);
     }
 
     default <H> Injective1<F, H> andThen(Injective1<G, H> that) {
