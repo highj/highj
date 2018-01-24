@@ -13,7 +13,9 @@ import org.highj.data.eq.Eq1;
  *
  * @param <F> the type of the type constructor
  */
-public interface Ord1<F> {
+public interface Ord1<F> extends __<Ord1.µ, F> {
+
+    interface µ {}
 
     /**
      * Derives an {@link Ord} instance for an instantiated type constructor.

@@ -7,7 +7,10 @@ import org.derive4j.hkt.__;
  *
  * @param <F> the type of the type constructor
  */
-public interface Eq1<F> {
+public interface Eq1<F> extends __<Eq1.µ, F>{
+
+    interface µ {}
+
     /**
      * Derives an {@link Eq} instance for an instantiated type constructor.
      * @param eq an {@link Eq} instance of the element type
