@@ -1,11 +1,15 @@
 package org.highj.function;
 
+import org.derive4j.hkt.__2;
+import org.highj.Hkt;
 import org.highj.data.Maybe;
+import org.highj.data.eq.Eq;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.function.f1.F1Monad;
 import org.highj.typeclass0.group.Monoid;
+import org.highj.typeclass2.arrow.ArrowLaw;
 import org.junit.Test;
 
 import java.sql.Timestamp;
@@ -100,7 +104,7 @@ public class F1Test {
 
     @Test
     public void fanout2() {
-        F1<String, T2<Integer, String>> function =  F1.fanout((F1<String, Integer>) String::length, F1.id());
+        F1<String, T2<Integer, String>> function = F1.fanout((F1<String, Integer>) String::length, F1.id());
         T2<Integer, String> pair = function.apply("abcd");
         assertThat(pair._1()).isEqualTo(4);
         assertThat(pair._2()).isEqualTo("abcd");
@@ -108,8 +112,8 @@ public class F1Test {
 
     @Test
     public void fanout3() {
-        F1<String, T3<Integer, String, Boolean>> function =  F1.fanout(
-                (F1<String, Integer>) String::length, F1.id(), (F1<String,Boolean>) s -> s.startsWith("ab"));
+        F1<String, T3<Integer, String, Boolean>> function = F1.fanout(
+                (F1<String, Integer>) String::length, F1.id(), (F1<String, Boolean>) s -> s.startsWith("ab"));
         T3<Integer, String, Boolean> triple = function.apply("abcd");
         assertThat(triple._1()).isEqualTo(4);
         assertThat(triple._2()).isEqualTo("abcd");
@@ -118,9 +122,9 @@ public class F1Test {
 
     @Test
     public void fanout4() {
-        F1<String, T4<Integer, String, Boolean, String>> function =  F1.fanout(
+        F1<String, T4<Integer, String, Boolean, String>> function = F1.fanout(
                 (F1<String, Integer>) String::length, F1.id(),
-                (F1<String,Boolean>) s -> s.startsWith("ab"), (F1<String, String>) s -> s + s);
+                (F1<String, Boolean>) s -> s.startsWith("ab"), (F1<String, String>) s -> s + s);
         T4<Integer, String, Boolean, String> quad = function.apply("abcd");
         assertThat(quad._1()).isEqualTo(4);
         assertThat(quad._2()).isEqualTo("abcd");
@@ -137,7 +141,10 @@ public class F1Test {
     @Test
     public void lazy() {
         int[] sideEffect = {0};
-        Supplier<Integer> supplier = F1.lazy(s -> { sideEffect[0] = 42; return s.length();}, "abcd");
+        Supplier<Integer> supplier = F1.lazy(s -> {
+            sideEffect[0] = 42;
+            return s.length();
+        }, "abcd");
         assertThat(sideEffect[0]).isEqualTo(0);
         assertThat(supplier.get()).isEqualTo(4);
         assertThat(sideEffect[0]).isEqualTo(42);
@@ -146,7 +153,10 @@ public class F1Test {
     @Test
     public void lazyFunction() {
         int[] sideEffect = {0};
-        F1<String, Integer> f1 = s -> { sideEffect[0] = 42; return s.length();};
+        F1<String, Integer> f1 = s -> {
+            sideEffect[0] = 42;
+            return s.length();
+        };
         Supplier<Integer> supplier = f1.lazy("abcd");
         assertThat(sideEffect[0]).isEqualTo(0);
         assertThat(supplier.get()).isEqualTo(4);
@@ -156,7 +166,7 @@ public class F1Test {
     @Test
     public void then() {
         F1<String, Integer> f = String::length;
-        F1<Integer, Integer> g = x -> x*x;
+        F1<Integer, Integer> g = x -> x * x;
         assertThat(f.then(g).apply("abcd")).isEqualTo(16);
     }
 
@@ -190,7 +200,19 @@ public class F1Test {
         assertThat(dot.apply("foo")).isTrue();
         assertThat(dot.apply("foobar")).isFalse();
     }
-    
+
+    @Test
+    public void arrowLaw() {
+        new ArrowLaw<F1.µ>(F1.arrow) {
+            @Override
+            public <B, C> boolean areEqual(__2<F1.µ, B, C> one, __2<F1.µ, B, C> two, B b, Eq<C> eq) {
+                F1<B, C> f1One = Hkt.asF1(one);
+                F1<B, C> f1Two = Hkt.asF1(two);
+                return eq.eq(f1One.apply(b), f1Two.apply(b));
+            }
+        }.test();
+    }
+
     @Test
     public void profunctor() {
         F1<String, Integer> f1 = String::length;
