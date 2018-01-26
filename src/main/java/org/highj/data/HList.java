@@ -19,6 +19,8 @@ public interface HList<A extends HList<A>> {
 
     <E> Apply<T0, T2<E, A>, HCons<E, A>> extender();
 
+    int size();
+
     HNil nil = new HNil();
 
     static HNil nil() {
@@ -118,6 +120,11 @@ public interface HList<A extends HList<A>> {
             return Apply.cons();
         }
 
+        @Override
+        public int size() {
+            return 1 + l.size();
+        }
+
         public <X> HCons<X, HCons<E, L>> extend(final X e) {
             return cons(e, this);
         }
@@ -139,5 +146,9 @@ public interface HList<A extends HList<A>> {
             return Apply.cons();
         }
 
+        @Override
+        public int size() {
+            return 0;
+        }
     }
 }
