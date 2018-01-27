@@ -5,6 +5,6 @@ import org.derive4j.hkt.__;
 public interface Applicative<M> extends Apply<M> {
 
     // pure (Data.Pointed, Control.Applicative)
-    public <A> __<M, A> pure(A a);
+    <A> __<M, A> pure(A a);
 
 }

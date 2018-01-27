@@ -22,7 +22,6 @@ public abstract class ArrowLaw<A> implements Law {
 
     public abstract <B, C> boolean areEqual(__2<A, B, C> one, __2<A, B, C> two, B b, Eq<C> eq);
 
-
     @Override
     public void test() {
         arrowIdentity();

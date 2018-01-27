@@ -4,6 +4,8 @@ import org.derive4j.hkt.__;
 import org.highj.data.HList;
 import org.highj.data.eq.Eq1;
 import org.highj.data.ord.Ord1;
+import org.highj.data.predicates.Pred;
+import org.highj.data.predicates.Pred1;
 import org.highj.data.tuple.t1.*;
 import org.highj.data.eq.Eq;
 import org.highj.data.ord.Ord;
@@ -279,6 +281,12 @@ public abstract class T1<A> implements __<T1.µ, A>, Supplier<A> {
                 (x, y) -> T1.of(groupA.apply(x._1(), y._1())),
                 z -> T1.of(groupA.inverse(z._1())));
     }
+
+    /**
+     * The {@link Pred1} instance.
+     */
+    public static final T1Pred1 pred1 = new T1Pred1() {
+    };
 
     /**
      * Represents the tuple as heterogenous list.

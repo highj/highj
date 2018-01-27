@@ -2,8 +2,8 @@ package org.highj.data.eq;
 
 import org.derive4j.hkt.__;
 import org.highj.data.eq.instances.Eq1Contravariant1;
+import org.highj.function.NF;
 import org.highj.typeclass1.contravariant.Contravariant1;
-import org.highj.typeclass2.injective.Function1;
 
 /**
  * An equivalence relation for type constructors.
@@ -24,12 +24,12 @@ public interface Eq1<F> extends __<Eq1.µ, F> {
      */
     <T> Eq<__<F, T>> eq1(Eq<? super T> eq);
 
-    default <E> Eq1<E> contramap(Function1<E, F> f1) {
+    default <E> Eq1<E> contramap(NF<E, F> f1) {
         return new Eq1<E>() {
             @Override
             public <T> Eq<__<E, T>> eq1(Eq<? super T> eq) {
                 Eq<__<F, T>> eq1 = Eq1.this.eq1(eq);
-                return (one, two) -> eq1.eq(f1.apply1(one), f1.apply1(two));
+                return (one, two) -> eq1.eq(f1.apply(one), f1.apply(two));
             }
         };
     }

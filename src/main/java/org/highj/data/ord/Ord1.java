@@ -4,8 +4,8 @@ import org.derive4j.hkt.__;
 import org.highj.data.eq.Eq;
 import org.highj.data.eq.Eq1;
 import org.highj.data.ord.instances.Ord1Contravariant1;
+import org.highj.function.NF;
 import org.highj.typeclass1.contravariant.Contravariant1;
-import org.highj.typeclass2.injective.Function1;
 
 /**
  * An sorting order for type constructors.
@@ -18,7 +18,8 @@ import org.highj.typeclass2.injective.Function1;
  */
 public interface Ord1<F> extends __<Ord1.µ, F> {
 
-    interface µ {}
+    interface µ {
+    }
 
     /**
      * Derives an {@link Ord} instance for an instantiated type constructor.
@@ -29,12 +30,12 @@ public interface Ord1<F> extends __<Ord1.µ, F> {
      */
     <A> Ord<__<F, A>> cmp(Ord<? super A> ord);
 
-    default <E> Ord1<E> contramap(Function1<E, F> f1) {
+    default <E> Ord1<E> contramap(NF<E, F> f1) {
         return new Ord1<E>() {
             @Override
             public <T> Ord<__<E, T>> cmp(Ord<? super T> ord) {
                 Ord<__<F, T>> ord1 = Ord1.this.cmp(ord);
-                return (one, two) -> ord1.cmp(f1.apply1(one), f1.apply1(two));
+                return (one, two) -> ord1.cmp(f1.apply(one), f1.apply(two));
             }
         };
     }
