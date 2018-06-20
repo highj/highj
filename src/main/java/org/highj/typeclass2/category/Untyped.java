@@ -1,5 +1,7 @@
 package org.highj.typeclass2.category;
 
+import org.highj.data.Maybe;
+
 public abstract class Untyped {
 
 
@@ -44,6 +46,11 @@ public abstract class Untyped {
 
         private Eval() {
         }
+
+        @Override
+        public boolean isEval() {
+            return true;
+        }
     }
 
     public static class Curry extends Untyped {
@@ -52,6 +59,11 @@ public abstract class Untyped {
         private Curry(Untyped untyped) {
             this.untyped = untyped;
         }
+
+        @Override
+        public Maybe<Curry> asCurry() {
+            return Maybe.Just(this);
+        }
     }
 
     public static class Uncurry extends Untyped {
@@ -59,6 +71,11 @@ public abstract class Untyped {
 
         private Uncurry(Untyped untyped) {
             this.untyped = untyped;
+        }
+
+        @Override
+        public Maybe<Uncurry> asUncurry() {
+            return Maybe.Just(this);
         }
     }
 
@@ -70,6 +87,12 @@ public abstract class Untyped {
             this.first = first;
             this.second = second;
         }
+
+        @Override
+        public Maybe<Fork> asFork() {
+            return Maybe.Just(this);
+        }
+
     }
 
     public static class Exl extends Untyped {
@@ -77,12 +100,21 @@ public abstract class Untyped {
 
         private Exl() {
         }
+
+        public boolean isExl() {
+            return true;
+        }
+
     }
 
     public static class Exr extends Untyped {
         private static final Exr EXR = new Exr();
 
         private Exr() {
+        }
+
+        public boolean isExr() {
+            return true;
         }
     }
 
@@ -91,6 +123,10 @@ public abstract class Untyped {
         private static final Id ID = new Id();
 
         private Id() {
+        }
+
+        public boolean isId() {
+            return true;
         }
     }
 
@@ -103,7 +139,43 @@ public abstract class Untyped {
             this.first = first;
             this.second = second;
         }
+
+        @Override
+        public Maybe<Compose> asCompose() {
+            return Maybe.Just(this);
+        }
     }
 
+    public boolean isEval() {
+        return false;
+    }
+
+    public Maybe<Curry> asCurry() {
+        return Maybe.Nothing();
+    }
+
+    public Maybe<Uncurry> asUncurry() {
+        return Maybe.Nothing();
+    }
+
+    public Maybe<Fork> asFork() {
+        return Maybe.Nothing();
+    }
+
+    public boolean isExl() {
+        return false;
+    }
+
+    public boolean isExr() {
+        return false;
+    }
+
+    public boolean isId() {
+        return false;
+    }
+
+    public Maybe<Compose> asCompose() {
+        return Maybe.Nothing();
+    }
 }
 
