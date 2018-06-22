@@ -16,28 +16,28 @@ public final class K<A_, B_> implements __2<K, A_, B_> {
     }
 
     public K<A_, B_> optimize() {
-        return new K<>(go(untyped));
+        return new K<>(optimizeGo(untyped));
     }
 
-    private static Untyped go(Untyped u) {
+    private static Untyped optimizeGo(Untyped u) {
         return u.asCurry().map(curry -> {
-            Untyped x = go(curry.untyped);
+            Untyped x = optimizeGo(curry.untyped);
             return x.asUncurry().map(uncurry -> uncurry.untyped).getOrElse(() -> Untyped.Curry(x));
         }).orElse(
-            u.asUncurry().map(uncurry -> {
-                Untyped x = go(uncurry.untyped);
+            () -> u.asUncurry().map(uncurry -> {
+                Untyped x = optimizeGo(uncurry.untyped);
                 return x.asCurry().map(curry -> curry.untyped).getOrElse(() -> Untyped.Uncurry(x));
             })
         ).orElse(
-            u.asFork().map(fork -> {
-                Untyped fst = go(fork.first);
-                Untyped snd = go(fork.second);
+            () -> u.asFork().map(fork -> {
+                Untyped fst = optimizeGo(fork.first);
+                Untyped snd = optimizeGo(fork.second);
                 return fst.isExl() && snd.isExr() ? Untyped.Id() : Untyped.Fork(fst, snd);
             })
         ).orElse(
-            u.asCompose().map(compose -> {
-                Untyped fst = go(compose.first);
-                Untyped snd = go(compose.second);
+            () -> u.asCompose().map(compose -> {
+                Untyped fst = optimizeGo(compose.first);
+                Untyped snd = optimizeGo(compose.second);
                 return fst.isId() ? snd
                            : snd.isId() ? fst
                                  : Untyped.Compose(fst, snd);
@@ -45,6 +45,42 @@ public final class K<A_, B_> implements __2<K, A_, B_> {
         ).getOrElse(u);
     }
 
+    public String prettyPrint() {
+        return prettyPrintGo(0, untyped);
+    }
+
+    private static String prettyPrintGo(int d, Untyped u) {
+        if (u.isExl()) {
+            return "fst";
+        }
+        if (u.isExr()) {
+            return "snd";
+        }
+        if (u.isId()) {
+            return "id";
+        }
+        if (u.isEval()) {
+            return "uncurry id";
+        }
+        return u.asCurry().map(
+            curry -> parensIf(d > 10, "curry " + prettyPrintGo(11, curry.untyped))
+        ).orElse(
+            () -> u.asUncurry().map(
+                uncurry -> parensIf(d > 10, "uncurry " + prettyPrintGo(11, uncurry.untyped)))
+        ).orElse(
+            () -> u.asFork().map(
+                fork -> parensIf(d > 3,
+                    prettyPrintGo(4, fork.first) + " &&& " + prettyPrintGo(3, fork.second)))
+        ).orElse(
+            () -> u.asCompose().map(
+                compose -> parensIf(d > 9,
+                    prettyPrintGo(10, compose.first) + " . " + prettyPrintGo(9, compose.second)))
+        ).get();
+    }
+
+    private static String parensIf(boolean check, String s) {
+        return check ? "(" + s + ")" : s;
+    }
 
     public final static Category<K> category = new KCategory();
 
