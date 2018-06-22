@@ -514,6 +514,20 @@ public class MaybeTest {
     }
 
     @Test
+    public void orElseLazy() {
+        Maybe<String> foo = Just("foo");
+        Maybe<String> bar = Just("bar");
+        Maybe<String> nothing = Nothing();
+        assertThat(foo.orElse(() -> bar).get()).isEqualTo("foo");
+        assertThat(foo.orElse(() -> nothing).get()).isEqualTo("foo");
+        assertThat(nothing.orElse(() -> bar).get()).isEqualTo("bar");
+        assertThat(nothing.orElse(() -> nothing).isNothing()).isTrue();
+        
+        //test laziness
+        assertThat(foo.orElse(() -> {throw new RuntimeException();}).get()).isEqualTo("foo");
+    }
+
+    @Test
     public void testToString() {
         assertThat(Nothing().toString()).isEqualTo("Nothing");
         assertThat(Just("foo").toString()).isEqualTo("Just(foo)");

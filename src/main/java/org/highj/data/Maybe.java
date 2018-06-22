@@ -253,6 +253,16 @@ public abstract class Maybe<A> implements __<Maybe.µ, A>, Iterable<A> {
         return this.isJust() ? this : that;
     }
 
+    /**
+     * Replaces the the current {@link Maybe} when it is empty in a lazy fashion.
+     *
+     * @param that the lazy {@link Maybe} for a  to replace the current one.
+     * @return the current {@link Maybe} if it is non-empty, else its replacement
+     */
+    public Maybe<A> orElse(Supplier<Maybe<A>> that) {
+        return this.isJust() ? this : that.get();
+    }
+
     @Override
     public void forEach(Consumer<? super A> consumer) {
         if (isJust()) consumer.accept(get());
