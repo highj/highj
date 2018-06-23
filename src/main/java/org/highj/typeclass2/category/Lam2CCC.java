@@ -57,4 +57,10 @@ public class Lam2CCC<K,Tensor,Hom,Unit> {
     public <I,A,B> __2<K,I,B> apply(__2<K,I,__3<Hom,K,A,B>> f, __2<K,I,A> a) {
         return ccc.dot(ccc.eval(), ccc.fork(f, a));
     }
+
+    // liftCCC :: forall k i a b. CCC k => k a b -> k i a -> k i b
+    // liftCCC = (.)
+    public <I,A,B> __2<K,I,B> liftCCC(__2<K,A,B> ab, __2<K,I,A> a) {
+        return ccc.dot(ab, a);
+    }
 }
