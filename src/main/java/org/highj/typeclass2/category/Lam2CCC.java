@@ -5,6 +5,7 @@ import org.derive4j.hkt.__3;
 import org.highj.function.F1;
 import org.highj.function.F2;
 import org.highj.function.F3;
+import org.highj.function.F4;
 
 public class Lam2CCC<K,Tensor,Hom,Unit> {
     private final CCC<K,Tensor,Hom,Unit> ccc;
@@ -29,12 +30,20 @@ public class Lam2CCC<K,Tensor,Hom,Unit> {
         return lam3Curried(a -> b -> c -> f.apply(a, b, c));
     }
 
+    public <I,A,B,C,D,E> __2<K,I,__3<Hom,K,A,__3<Hom,K,B,__3<Hom,K,C,__3<Hom,K,D,E>>>>> lam4Curried(F4<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>,A>,__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>,B>,__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>,C>,__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>,D>,__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>,E>> f) {
+        return lam4Curried(a -> b -> c -> d -> f.apply(a, b, c, d));
+    }
+
     public <I,A,B,C> __2<K,I,__3<Hom,K,A,__3<Hom,K,B,C>>> lam2Curried(F1<__2<K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,A>,F1<__2<K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,B>,__2<K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>>> f) {
         return lam2Curried(ccc.exl(), f);
     }
 
     public <I,A,B,C,D> __2<K,I,__3<Hom,K,A,__3<Hom,K,B,__3<Hom,K,C,D>>>> lam3Curried(F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,A>,F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,B>,F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,C>,__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>>>> f) {
         return lam3Curried(ccc.dot(ccc.exl(), ccc.exl()), f);
+    }
+
+    public <I,A,B,C,D,E> __2<K,I,__3<Hom,K,A,__3<Hom,K,B,__3<Hom,K,C,__3<Hom,K,D,E>>>>> lam4Curried(F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>,A>,F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>,B>,F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>,C>, F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>,D>,__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>,E>>>>> f) {
+        return lam4Curried(ccc.dot(ccc.exl(), ccc.dot(ccc.exl(), ccc.exl())), f);
     }
 
     // lam :: forall k i a b. CCC k => ((forall x. Cast k x (Tensor k i a) => k x a) -> k (Tensor k i a) b) -> k i (Hom k a b)
@@ -51,6 +60,10 @@ public class Lam2CCC<K,Tensor,Hom,Unit> {
 
     public <X,I,A,B,C,D> __2<K,I,__3<Hom,K,A,__3<Hom,K,B,__3<Hom,K,C,D>>>> lam3Curried(__2<K,X,__3<Tensor,K,I,A>> cast, F1<__2<K,X,A>,F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,B>,F1<__2<K, __3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>, C>, __2<K, __3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>, D>>>> f) {
         return lam(cast, (__2<K, X, A> x) -> lam2Curried(ccc.exl(), f.apply(x)));
+    }
+
+    public <X,I,A,B,C,D,E> __2<K,I,__3<Hom,K,A,__3<Hom,K,B,__3<Hom,K,C,__3<Hom,K,D,E>>>>> lam4Curried(__2<K,X,__3<Tensor,K,I,A>> cast, F1<__2<K,X,A>,F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>,B>,F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>,C>, F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>,D>,__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>,E>>>>> f) {
+        return lam(cast, (__2<K,X,A> x) -> lam3Curried(ccc.dot(ccc.exl(), ccc.exl()), f.apply(x)));
     }
 
     // ($) :: forall k i a b. CCC k => k i (Hom k a b) -> k i a -> k i b
