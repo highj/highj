@@ -24,4 +24,10 @@ public class KTest {
         String result = debug(Lam2CCC.create(K.ccc()).lam1(x -> x));
         assertThat(result).isEqualTo("curry snd");
     }
+
+    @Test
+    public void test7() {
+        String result = debug(Lam2CCC.create(K.ccc()).lam2Curried(x -> _unused -> x));
+        assertThat(result).isEqualTo("curry (curry (snd . fst))");
+    }
 }
