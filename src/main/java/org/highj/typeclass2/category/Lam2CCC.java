@@ -45,6 +45,10 @@ public class Lam2CCC<K,Tensor,Hom,Unit> {
         return ccc.curry(f.apply(ccc.dot(ccc.exr(),cast)));
     }
 
+    public <X,I,A,B,C> __2<K, I, __3<Hom, K, A, __3<Hom, K, B, C>>> lam2Curried(__2<K,X,__3<Tensor,K,I,A>> cast, F1<__2<K,X,A>,F1<__2<K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,B>,__2<K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>>> f) {
+        return lam(cast, (__2<K, X, A> x) -> lam(ccc.identity(), f.apply(x)));
+    }
+
     private void test() {
         // type checks
         apply(lam2Curried(x -> y -> x), null);
