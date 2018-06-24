@@ -18,23 +18,23 @@ public class Lam2CCC<K,Tensor,Hom,Unit> {
     }
 
     public <I,A,B> __2<K,I,__3<Hom,K,A,B>> lam1(F1<__2<K,__3<Tensor,K,I,A>,A>,__2<K,__3<Tensor,K,I,A>,B>> f) {
-        return ccc.curry(f.apply(ccc.exr()));
+        return lam(ccc.identity(), f);
     }
 
     public <I,A,B,C> __2<K,I,__3<Hom,K,A,__3<Hom,K,B,C>>> lam2(F2<__2<K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,A>,__2<K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,B>,__2<K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>> f) {
-        return ccc.curry(ccc.curry(f.apply(ccc.dot(ccc.exr(), ccc.exl()), ccc.exr())));
+        return lam2Curried(a -> b -> f.apply(a, b));
     }
 
     public <I,A,B,C,D> __2<K,I,__3<Hom,K,A,__3<Hom,K,B,__3<Hom,K,C,D>>>> lam3(F3<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,A>,__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,B>,__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,C>,__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>> f) {
-        return ccc.curry(ccc.curry(ccc.curry(f.apply(ccc.dot(ccc.exr(), ccc.dot(ccc.exl(), ccc.exl())), ccc.dot(ccc.exr(), ccc.exl()), ccc.exr()))));
+        return lam3Curried(a -> b -> c -> f.apply(a, b, c));
     }
 
     public <I,A,B,C> __2<K,I,__3<Hom,K,A,__3<Hom,K,B,C>>> lam2Curried(F1<__2<K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,A>,F1<__2<K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,B>,__2<K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>>> f) {
-        return lam2((x, y) -> f.apply(x).apply(y));
+        return lam2Curried(ccc.exl(), f);
     }
 
     public <I,A,B,C,D> __2<K,I,__3<Hom,K,A,__3<Hom,K,B,__3<Hom,K,C,D>>>> lam3Curried(F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,A>,F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,B>,F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,C>,__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,D>>>> f) {
-        return lam3((x, y, z) -> f.apply(x).apply(y).apply(z));
+        return lam3Curried(ccc.dot(ccc.exl(), ccc.exl()), f);
     }
 
     // lam :: forall k i a b. CCC k => ((forall x. Cast k x (Tensor k i a) => k x a) -> k (Tensor k i a) b) -> k i (Hom k a b)
