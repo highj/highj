@@ -50,14 +50,7 @@ public class Lam2CCC<K,Tensor,Hom,Unit> {
     }
 
     public <X,I,A,B,C,D> __2<K,I,__3<Hom,K,A,__3<Hom,K,B,__3<Hom,K,C,D>>>> lam3Curried(__2<K,X,__3<Tensor,K,I,A>> cast, F1<__2<K,X,A>,F1<__2<K,__3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>,B>,F1<__2<K, __3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>, C>, __2<K, __3<Tensor,K,__3<Tensor,K,__3<Tensor,K,I,A>,B>,C>, D>>>> f) {
-        return this.lam(cast, (__2<K, X, A> x) -> lam2Curried(ccc.exl(), f.apply(x)));
-    }
-
-    private void test() {
-        // type checking
-        apply(lam2Curried(x -> y -> x), null);
-        apply(lam2Curried(ccc.exl(), x -> y -> x), null);
-        apply(apply(lam3Curried(ccc.dot(ccc.exl(), ccc.exl()), x -> y -> z -> y), null), null);
+        return lam(cast, (__2<K, X, A> x) -> lam2Curried(ccc.exl(), f.apply(x)));
     }
 
     // ($) :: forall k i a b. CCC k => k i (Hom k a b) -> k i a -> k i b
