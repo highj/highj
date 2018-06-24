@@ -74,7 +74,19 @@ public class Lam2CCC<K,Tensor,Hom,Unit> {
 
     // liftCCC :: forall k i a b. CCC k => k a b -> k i a -> k i b
     // liftCCC = (.)
-    public <I,A,B> __2<K,I,B> liftCCC(__2<K,A,B> ab, __2<K,I,A> a) {
-        return ccc.dot(ab, a);
+    public <I,A,B> __2<K,I,B> liftCCC(__2<K,A,B> f, __2<K,I,A> a) {
+        return ccc.dot(f, a);
+    }
+
+    public <I,A,B,C> __2<K,I,C> liftCCC2(__2<K,A,__3<Hom,K,B,C>> f, __2<K,I,A> a, __2<K,I,B> b) {
+        return ccc.dot(ccc.eval(), ccc.fork(liftCCC(f, a), b));
+    }
+
+    public <I,A,B,C,D> __2<K,I,D> liftCCC3(__2<K,A,__3<Hom,K,B,__3<Hom,K,C,D>>> f, __2<K,I,A> a, __2<K,I,B> b, __2<K,I,C> c) {
+        return ccc.dot(ccc.eval(), ccc.fork(liftCCC2(f, a, b), c));
+    }
+
+    public <I,A,B,C,D,E> __2<K,I,E> liftCCC4(__2<K,A,__3<Hom,K,B,__3<Hom,K,C,__3<Hom,K,D,E>>>> f, __2<K,I,A> a, __2<K,I,B> b, __2<K,I,C> c, __2<K,I,D> d) {
+        return ccc.dot(ccc.eval(), ccc.fork(liftCCC3(f, a, b, c), d));
     }
 }
