@@ -18,6 +18,29 @@ public abstract class LCData<Repr,Hom,A> implements __3<LCData.µ,Repr,Hom,A> {
         R var(int id);
     }
 
+    public static class CasesAdapter<R,Repr,Hom,A> implements Cases<R,Repr,Hom,A> {
+        private final R default_;
+        public CasesAdapter(R default_) {
+            this.default_ = default_;
+        }
+        @Override
+        public R lam(Lam<Repr, Hom, ?, ?, A> lam) {
+            return default_;
+        }
+        @Override
+        public R ap(Ap<Repr, Hom, ?, A> ap) {
+            return default_;
+        }
+        @Override
+        public R lift(Lift<Repr, Hom, ?, ?, A> lift) {
+            return default_;
+        }
+        @Override
+        public R var(int id) {
+            return default_;
+        }
+    }
+
     public abstract <R> R match(Cases<R,Repr,Hom,A> cases);
 
     public static <Repr,Hom,A,B> LCData<Repr,Hom,__3<Hom,Repr,A,B>> lam(int paramIdent, LCData<Repr,Hom,B> body) {
@@ -179,7 +202,7 @@ public abstract class LCData<Repr,Hom,A> implements __3<LCData.µ,Repr,Hom,A> {
         return lam.body().match(new LCData.Cases<Maybe<__2<K,A,B>>,K,Hom,B>() {
             @Override
             public Maybe<__2<K, A, B>> lam(Lam<K, Hom, ?, ?, B> lam) {
-                return null;
+                return lamLamToCCC(ccc, paramIdent, lam);
             }
             @Override
             public Maybe<__2<K, A, B>> ap(Ap<K, Hom, ?, B> ap) {
@@ -199,6 +222,43 @@ public abstract class LCData<Repr,Hom,A> implements __3<LCData.µ,Repr,Hom,A> {
                 return Maybe.Nothing();
             }
         });
+    }
+
+    private static <K,Tensor,Hom,U,A,B,C,D> Maybe<__2<K,D,C>> lamLamToCCC(CCC<K,Tensor,Hom,U> ccc, int paramIdent, Lam<K,Hom,A,B,C> lam) {
+        int paramIdent2 = lam.paramIdent();
+        //noinspection unchecked
+        return (Maybe)toCCC(ccc, LCData.lam(paramIdent, lamLamSubtFstSnd(ccc, paramIdent, paramIdent2, lam.body())));
+    }
+
+    private static <K,Tensor,Hom,U,A> LCData<K,Hom,A> lamLamSubtFstSnd(CCC<K,Tensor,Hom,U> ccc, int paramIdent1, int paramIdent2, LCData<K,Hom,A> body) {
+        return body.substDepthFirst(lamLamSubFstSndNF(ccc, paramIdent1, paramIdent2));
+    }
+
+    private static <K,Tensor,Hom,U> NF<__<__<µ, K>,Hom>,__<__<µ, K>,Hom>> lamLamSubFstSndNF(CCC<K,Tensor,Hom,U> ccc, int paramIdent1, int paramIdent2) {
+        return new NF<__<__<µ, K>,Hom>,__<__<µ, K>,Hom>>() {
+            @Override
+            public <A> __<__<__<LCData.µ, K>, Hom>, A> apply(__<__<__<LCData.µ, K>, Hom>, A> this_) {
+                return Hkt.asLCData(this_).match(new CasesAdapter<__<__<__<LCData.µ, K>, Hom>, A>, K,Hom,A>(this_) {
+                    @Override
+                    public __<__<__<LCData.µ, K>, Hom>, A> var(int id) {
+                        if (id == paramIdent1) {
+                            return LCData.ap(fst(ccc), LCData.var(paramIdent1));
+                        } else if (id == paramIdent2) {
+                            return LCData.ap(snd(ccc), LCData.var(paramIdent1));
+                        }
+                        return this_;
+                    }
+                });
+            }
+        };
+    }
+
+    private static <K,Tensor,Hom,U,A,B> LCData<K,Hom,__3<Hom, K, __3<Tensor, K, A, B>, A>> fst(CCC<K,Tensor,Hom,U> ccc) {
+        return LCData.lift(ccc.exl());
+    }
+
+    private static <K,Tensor,Hom,U,A,B> LCData<K,Hom,__3<Hom, K, __3<Tensor, K, A, B>, B>> snd(CCC<K,Tensor,Hom,U> ccc) {
+        return LCData.lift(ccc.exr());
     }
 
     private static <K,Tensor,Hom,U,A,B,C> Maybe<__2<K,C,B>> lamApToCee(CCC<K,Tensor,Hom,U> ccc, int paramIdent, Ap<K,Hom,A,B> ap) {
