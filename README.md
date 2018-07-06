@@ -18,6 +18,7 @@ Please consult the wiki for a more detailed description.
 ## Related
 
 - [functionaljava](https://github.com/functionaljava/functionaljava)
+- [Cyclops-React](https://github.com/aol/cyclops-react)
 - [Kotlinz](https://github.com/kotlinz/kotlinz)
 - [Scalaz](https://github.com/scalaz/scalaz)
 - [Swiftz](https://github.com/typelift/Swiftz)
