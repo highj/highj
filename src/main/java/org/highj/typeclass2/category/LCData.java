@@ -242,9 +242,11 @@ public abstract class LCData<Repr,Hom,A> implements __3<LCData.µ,Repr,Hom,A> {
                     @Override
                     public __<__<__<LCData.µ, K>, Hom>, A> var(int id) {
                         if (id == paramIdent1) {
-                            return LCData.ap(fst(ccc), LCData.var(paramIdent1));
+                            //noinspection unchecked
+                            return (__)LCData.ap(fst(ccc), LCData.var(paramIdent1));
                         } else if (id == paramIdent2) {
-                            return LCData.ap(snd(ccc), LCData.var(paramIdent1));
+                            //noinspection unchecked
+                            return (__)LCData.ap(snd(ccc), LCData.var(paramIdent1));
                         }
                         return this_;
                     }
@@ -253,12 +255,12 @@ public abstract class LCData<Repr,Hom,A> implements __3<LCData.µ,Repr,Hom,A> {
         };
     }
 
-    private static <K,Tensor,Hom,U,A,B> LCData<K,Hom,__3<Hom, K, __3<Tensor, K, A, B>, A>> fst(CCC<K,Tensor,Hom,U> ccc) {
-        return LCData.lift(ccc.exl());
+    private static <K,Tensor,Hom,U,A,B> LCData<K,Hom,__3<Hom, K, A, __3<Hom, K, B, A>>> fst(CCC<K,Tensor,Hom,U> ccc) {
+        return LCData.lift(ccc.curry(ccc.exl()));
     }
 
-    private static <K,Tensor,Hom,U,A,B> LCData<K,Hom,__3<Hom, K, __3<Tensor, K, A, B>, B>> snd(CCC<K,Tensor,Hom,U> ccc) {
-        return LCData.lift(ccc.exr());
+    private static <K,Tensor,Hom,U,A,B> LCData<K,Hom,__3<Hom, K, A, __3<Hom, K, B, B>>> snd(CCC<K,Tensor,Hom,U> ccc) {
+        return LCData.lift(ccc.curry(ccc.exr()));
     }
 
     private static <K,Tensor,Hom,U,A,B,C> Maybe<__2<K,C,B>> lamApToCee(CCC<K,Tensor,Hom,U> ccc, int paramIdent, Ap<K,Hom,A,B> ap) {
