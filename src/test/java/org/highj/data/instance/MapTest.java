@@ -1,177 +1,161 @@
 package org.highj.data.instance;
 
-import org.derive4j.hkt.__;
-import org.derive4j.hkt.__2;
 import org.highj.data.List;
 import org.highj.data.Map;
 import org.highj.data.Maybe;
-import org.highj.data.tuple.T2;
 import org.highj.data.num.Integers;
+import org.highj.data.tuple.T2;
 import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
-import static org.highj.Hkt.asMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 
 public class MapTest {
 
-    private final static Map<String,Integer> aMap = Map.<String, Integer>empty().plus("x",3).plus("y",5).plus("z",10);
+    private final static Map<String, Integer> aMap = Map.<String, Integer>empty().plus("x", 3).plus("y", 5).plus("z", 10);
 
     @Test
-    public void test$() throws Exception {
-        assertEquals("Just(5)", aMap.apply("y").toString());
-        assertEquals("Nothing", aMap.apply("a").toString());
+    public void test$() {
+        assertThat(aMap.apply("y").toString()).isEqualTo("Just(5)");
+        assertThat(aMap.apply("a").toString()).isEqualTo("Nothing");
     }
 
     @Test
-    public void testGetOrElse() throws Exception {
-        assertEquals("5", aMap.getOrElse("y",42).toString());
-        assertEquals("42", aMap.getOrElse("a", 42).toString());
+    public void testGetOrElse() {
+        assertThat(aMap.getOrElse("y", 42).toString()).isEqualTo("5");
+        assertThat(aMap.getOrElse("a", 42).toString()).isEqualTo("42");
     }
 
     @Test
-    public void testGet() throws Exception {
-        assertEquals("5", aMap.get("y").toString());
-        try {
-            aMap.get("a").toString();
-            fail();
-        } catch (NoSuchElementException ex) {
-            /* expected */
-        }
+    public void testGet() {
+        assertThat(aMap.get("y").toString()).isEqualTo("5");
+        assertThatThrownBy(() -> aMap.get("a"))
+            .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
-    public void testPlusAB() throws Exception {
-        assertEquals("Map(a->20)", Map.empty().plus("a", 20).toString());
-        assertEquals("Map(x->13,y->5,z->10)", aMap.plus("x", 13).toString());
-        assertEquals("Map(a->20,x->3,y->5,z->10)", aMap.plus("a", 20).toString());
+    public void testPlusAB() {
+        assertThat(Map.empty().plus("a", 20).toString()).isEqualTo("Map(a->20)");
+        assertThat(aMap.plus("x", 13).toString()).isEqualTo("Map(x->13,y->5,z->10)");
+        assertThat(aMap.plus("a", 20).toString()).isEqualTo("Map(a->20,x->3,y->5,z->10)");
     }
 
     @Test
-    public void testPlusT2() throws Exception {
+    public void testPlusT2() {
         T2<String, Integer> t2 = T2.of("a", 20);
-        assertEquals("Map(a->20)", Map.<String,Integer>empty().plus(t2).toString());
-        assertEquals("Map(a->20,x->3,y->5,z->10)", aMap.plus(t2).toString());
+        assertThat(Map.<String, Integer>empty().plus(t2).toString()).isEqualTo("Map(a->20)");
+        assertThat(aMap.plus(t2).toString()).isEqualTo("Map(a->20,x->3,y->5,z->10)");
     }
 
     @Test
-    public void testMinus1() throws Exception {
-        assertEquals("Map()", Map.empty().minus("a").toString());
-        assertEquals("Map(x->3,y->5,z->10)", aMap.minus("a").toString());
-        assertEquals("Map(x->3,z->10)", aMap.minus("y").toString());
+    public void testMinus1() {
+        assertThat(Map.empty().minus("a").toString()).isEqualTo("Map()");
+        assertThat(aMap.minus("a").toString()).isEqualTo("Map(x->3,y->5,z->10)");
+        assertThat(aMap.minus("y").toString()).isEqualTo("Map(x->3,z->10)");
     }
 
     @Test
-    public void testIsEmpty() throws Exception {
-        assertTrue(Map.empty().isEmpty());
-        assertTrue(! aMap.isEmpty());
-        assertTrue(aMap.minus("y", "x", "z").isEmpty());
+    public void testIsEmpty() {
+        assertThat(Map.empty().isEmpty()).isTrue();
+        assertThat(aMap.isEmpty()).isFalse();
+        assertThat(aMap.minus("y", "x", "z").isEmpty()).isTrue();
     }
 
 
     @Test
-    public void testEmpty() throws Exception {
-        assertEquals("Map()", Map.empty().toString());
+    public void testEmpty() {
+        assertThat(Map.empty().toString()).isEqualTo("Map()");
     }
 
     @Test
-    public void testOf0() throws Exception {
-        assertEquals("Map()", Map.of().toString());
+    public void testOf0() {
+        assertThat(Map.of().toString()).isEqualTo("Map()");
     }
 
     @Test
-    public void testOfT2() throws Exception {
-        assertEquals("Map(x->3,y->5,z->10)",
-                Map.of(T2.of("y", 5), T2.of("z", 10), T2.of("x", 3)).toString());
+    public void testOfT2() {
+        assertThat(Map.of(T2.of("y", 5), T2.of("z", 10), T2.of("x", 3)).toString())
+            .isEqualTo("Map(x->3,y->5,z->10)");
     }
 
     @Test
-    public void testOfIterable() throws Exception {
-        List<T2<String,Integer>> list = List.of(T2.of("y", 5), T2.of("z", 10), T2.of("x", 3));
-        assertEquals("Map(x->3,y->5,z->10)",
-                Map.of(list).toString());
+    public void testOfIterable() {
+        List<T2<String, Integer>> list = List.of(T2.of("y", 5), T2.of("z", 10), T2.of("x", 3));
+        assertThat(Map.of(list).toString()).isEqualTo("Map(x->3,y->5,z->10)");
     }
 
     @Test
-    public void testPlusT2s() throws Exception {
-        assertEquals("Map(a->1,x->13,y->5,z->10)",
-                aMap.plus(T2.of("a", 1), T2.of("x", 13)).toString());
+    public void testPlusT2s() {
+        assertThat(aMap.plus(T2.of("a", 1), T2.of("x", 13)).toString())
+            .isEqualTo("Map(a->1,x->13,y->5,z->10)");
     }
 
     @Test
-    public void testMinusN() throws Exception {
-        assertEquals("Map(x->3,z->10)", aMap.minus("a","y","b").toString());
+    public void testMinusN() {
+        assertThat(aMap.minus("a", "y", "b").toString()).isEqualTo("Map(x->3,z->10)");
     }
 
     @Test
-    public void testPlusIterable() throws Exception {
-        List<T2<String,Integer>> list = List.of(T2.of("a", 1), T2.of("x", 13));
-        assertEquals("Map(a->1,x->13,y->5,z->10)",
-                aMap.plus(list).toString());
-
+    public void testPlusIterable() {
+        List<T2<String, Integer>> list = List.of(T2.of("a", 1), T2.of("x", 13));
+        assertThat(aMap.plus(list).toString()).isEqualTo("Map(a->1,x->13,y->5,z->10)");
     }
 
     @Test
-    public void testMinusIterable() throws Exception {
+    public void testMinusIterable() {
         List<String> list = List.of("a", "y");
-        assertEquals("Map(x->3,z->10)",
-                aMap.minus(list).toString());
+        assertThat(aMap.minus(list).toString()).isEqualTo("Map(x->3,z->10)");
     }
 
-
     @Test
-    public void testSize() throws Exception {
-        assertEquals(0, Map.empty().size());
-        assertEquals(3, aMap.size());
+    public void testSize() {
+        assertThat(Map.empty().size()).isEqualTo(0);
+        assertThat(aMap.size()).isEqualTo(3);
     }
 
-
     @Test
-    public void testF1() throws Exception {
+    public void testF1() {
         Function<String, Maybe<Integer>> f1 = aMap.apply();
-        assertEquals("Just(5)", f1.apply("y").toString());
-        assertEquals("Nothing", f1.apply("a").toString());
-    }
-
-
-    @Test
-    public void testIterator() throws Exception {
-        assertTrue(! Map.empty().iterator().hasNext());
-
-        Iterator<T2<String,Integer>> it = aMap.iterator();
-        assertEquals("(x,3)", it.next().toString());
-        assertEquals("(y,5)", it.next().toString());
-        assertEquals("(z,10)", it.next().toString());
-        assertTrue(! it.hasNext());
+        assertThat(f1.apply("y").toString()).isEqualTo("Just(5)");
+        assertThat(f1.apply("a").toString()).isEqualTo("Nothing");
     }
 
     @Test
-    public void testToString() throws Exception {
-        assertEquals("Map()", Map.empty().toString());
-        assertEquals("Map(x->3,y->5,z->10)", aMap.toString());
+    public void testIterator() {
+        assertThat(Map.empty().iterator().hasNext()).isFalse();
+
+        Iterator<T2<String, Integer>> it = aMap.iterator();
+        assertThat(it.next().toString()).isEqualTo("(x,3)");
+        assertThat(it.next().toString()).isEqualTo("(y,5)");
+        assertThat(it.next().toString()).isEqualTo("(z,10)");
+        assertThat(it.hasNext()).isFalse();
     }
 
     @Test
-    public void testKeys() throws Exception {
-       assertEquals("Set()", Map.empty().keys().toString());
-       assertEquals("Set(x,y,z)", aMap.keys().toString());
+    public void testToString() {
+        assertThat(Map.empty().toString()).isEqualTo("Map()");
+        assertThat(aMap.toString()).isEqualTo("Map(x->3,y->5,z->10)");
     }
 
     @Test
-    public void testValues() throws Exception {
-        assertEquals("Set()", Map.empty().values().toString());
-        assertEquals("Set(3,5,10)", aMap.values().toString());
+    public void testKeys() {
+        assertThat(Map.empty().keys().toString()).isEqualTo("Set()");
+        assertThat(aMap.keys().toString()).isEqualTo("Set(x,y,z)");
     }
 
     @Test
-    public void testMap() throws Exception {
-        assertEquals("Map(x->-3,y->-5,z->-10)", aMap.map(Integers.negate).toString());
+    public void testValues() {
+        assertThat(Map.empty().values().toString()).isEqualTo("Set()");
+        assertThat(aMap.values().toString()).isEqualTo("Set(3,5,10)");
     }
 
-
+    @Test
+    public void testMap() {
+        assertThat(aMap.map(Integers.negate).toString()).isEqualTo("Map(x->-3,y->-5,z->-10)");
+    }
 }
