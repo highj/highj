@@ -1,21 +1,12 @@
 package org.highj.data.tuple;
 
-import org.derive4j.hkt.__;
 import org.derive4j.hkt.__3;
 import org.highj.data.HList;
 import org.highj.data.HList.HCons;
 import org.highj.data.HList.HNil;
 import org.highj.data.eq.Eq;
 import org.highj.data.ord.Ord;
-import org.highj.data.tuple.t3.T3Applicative;
-import org.highj.data.tuple.t3.T3Apply;
-import org.highj.data.tuple.t3.T3Biapplicative;
-import org.highj.data.tuple.t3.T3Biapply;
-import org.highj.data.tuple.t3.T3Bifunctor;
-import org.highj.data.tuple.t3.T3Bind;
-import org.highj.data.tuple.t3.T3Comonad;
-import org.highj.data.tuple.t3.T3Functor;
-import org.highj.data.tuple.t3.T3Monad;
+import org.highj.data.tuple.t3.*;
 import org.highj.function.F3;
 import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
@@ -144,9 +135,9 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
      * @return the transformed tuple
      */
     public <AA, BB, CC> T3<AA, BB, CC> trimap(
-            Function<? super A, ? extends AA> fn1,
-            Function<? super B, ? extends BB> fn2,
-            Function<? super C, ? extends CC> fn3) {
+        Function<? super A, ? extends AA> fn1,
+        Function<? super B, ? extends BB> fn2,
+        Function<? super C, ? extends CC> fn3) {
         return of(fn1.apply(_1()), fn2.apply(_2()), fn3.apply(_3()));
     }
 
@@ -162,9 +153,9 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
      * @return the transformed tuple
      */
     public <AA, BB, CC> T3<AA, BB, CC> trimap$(
-            Function<? super A, ? extends AA> fn1,
-            Function<? super B, ? extends BB> fn2,
-            Function<? super C, ? extends CC> fn3) {
+        Function<? super A, ? extends AA> fn1,
+        Function<? super B, ? extends BB> fn2,
+        Function<? super C, ? extends CC> fn3) {
         return of$(() -> fn1.apply(_1()), () -> fn2.apply(_2()), () -> fn3.apply(_3()));
     }
 
@@ -255,8 +246,8 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
         if (o instanceof T3) {
             T3<?, ?, ?> that = (T3) o;
             return this._1().equals(that._1())
-                    && this._2().equals(that._2())
-                    && this._3().equals(that._3());
+                       && this._2().equals(that._2())
+                       && this._3().equals(that._3());
         }
         return false;
     }
@@ -264,59 +255,59 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
     /**
      * Merges two tuples using the given functions.
      *
-     * @param a     the first tuple
-     * @param b     the second tuple
-     * @param fn1   the merging function for the first values
-     * @param fn2   the merging function for the second values
-     * @param fn3   the merging function for the third values
-     * @param <A1>   the type of the first element of the first tuple
-     * @param <A2>  the type of the second element of the first tuple
+     * @param a    the first tuple
+     * @param b    the second tuple
+     * @param fn1  the merging function for the first values
+     * @param fn2  the merging function for the second values
+     * @param fn3  the merging function for the third values
+     * @param <A1> the type of the first element of the first tuple
+     * @param <A2> the type of the second element of the first tuple
      * @param <A3> the type of the third element of the first tuple
-     * @param <B1>   the type of the first element of the second tuple
-     * @param <B2>  the type of the second element of the second tuple
+     * @param <B1> the type of the first element of the second tuple
+     * @param <B2> the type of the second element of the second tuple
      * @param <B3> the type of the third element of the second tuple
-     * @param <C1>   the type of the first element of the result
-     * @param <C2>  the type of the second element of the result
+     * @param <C1> the type of the first element of the result
+     * @param <C2> the type of the second element of the result
      * @param <C3> the type of the third element of the result
      * @return the merged tuple
      */
     public static <A1, A2, A3, B1, B2, B3, C1, C2, C3> T3<C1, C2, C3> merge(
-            T3<A1, A2, A3> a, T3<B1, B2, B3> b,
-            BiFunction<A1, B1, C1> fn1,
-            BiFunction<A2, B2, C2> fn2,
-            BiFunction<A3, B3, C3> fn3) {
+        T3<A1, A2, A3> a, T3<B1, B2, B3> b,
+        BiFunction<A1, B1, C1> fn1,
+        BiFunction<A2, B2, C2> fn2,
+        BiFunction<A3, B3, C3> fn3) {
         return of(fn1.apply(a._1(), b._1()),
-                fn2.apply(a._2(), b._2()),
-                fn3.apply(a._3(), b._3()));
+            fn2.apply(a._2(), b._2()),
+            fn3.apply(a._3(), b._3()));
     }
 
     /**
      * Merges two tuples using the given functions in a lazy fashion.
      *
-     * @param a     the first tuple
-     * @param b     the second tuple
-     * @param fn1   the merging function for the first values
-     * @param fn2   the merging function for the second values
-     * @param fn3   the merging function for the third values
-     * @param <A1>   the type of the first element of the first tuple
-     * @param <A2>  the type of the second element of the first tuple
+     * @param a    the first tuple
+     * @param b    the second tuple
+     * @param fn1  the merging function for the first values
+     * @param fn2  the merging function for the second values
+     * @param fn3  the merging function for the third values
+     * @param <A1> the type of the first element of the first tuple
+     * @param <A2> the type of the second element of the first tuple
      * @param <A3> the type of the third element of the first tuple
-     * @param <B1>   the type of the first element of the second tuple
-     * @param <B2>  the type of the second element of the second tuple
+     * @param <B1> the type of the first element of the second tuple
+     * @param <B2> the type of the second element of the second tuple
      * @param <B3> the type of the third element of the second tuple
-     * @param <C1>   the type of the first element of the result
-     * @param <C2>  the type of the second element of the result
+     * @param <C1> the type of the first element of the result
+     * @param <C2> the type of the second element of the result
      * @param <C3> the type of the third element of the result
      * @return the merged tuple
      */
     public static <A1, A2, A3, B1, B2, B3, C1, C2, C3> T3<C1, C2, C3> merge$(
-            T3<A1, A2, A3> a, T3<B1, B2, B3> b,
-            BiFunction<A1, B1, C1> fn1,
-            BiFunction<A2, B2, C2> fn2,
-            BiFunction<A3, B3, C3> fn3) {
+        T3<A1, A2, A3> a, T3<B1, B2, B3> b,
+        BiFunction<A1, B1, C1> fn1,
+        BiFunction<A2, B2, C2> fn2,
+        BiFunction<A3, B3, C3> fn3) {
         return of$(() -> fn1.apply(a._1(), b._1()),
-                () -> fn2.apply(a._2(), b._2()),
-                () -> fn3.apply(a._3(), b._3()));
+            () -> fn2.apply(a._2(), b._2()),
+            () -> fn3.apply(a._3(), b._3()));
     }
 
     /**
@@ -347,8 +338,8 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
      */
     public static <A, B, C> Ord<T3<A, B, C>> ord(Ord<? super A> ordA, Ord<? super B> ordB, Ord<? super C> ordC) {
         return (one, two) -> ordA.cmp(one._1(), two._1())
-                .andThen(ordB.cmp(one._2(), two._2()))
-                .andThen(ordC.cmp(one._3(), two._3()));
+                                 .andThen(ordB.cmp(one._2(), two._2()))
+                                 .andThen(ordC.cmp(one._3(), two._3()));
     }
 
     @Override
@@ -483,13 +474,26 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
      * @param <C>        the type of the third element
      * @return the instance
      */
-    public static <A, B, C> Semigroup<T3<A, B, C>> semigroup(
-            Semigroup<A> semigroupA,
-            Semigroup<B> semigroupB,
-            Semigroup<C> semigroupC) {
-        return (x, y) -> T3.of(semigroupA.apply(x._1(), y._1()),
-                semigroupB.apply(x._2(), y._2()),
-                semigroupC.apply(x._3(), y._3()));
+    public static <A, B, C> T3Semigroup<A, B, C> semigroup(
+        Semigroup<A> semigroupA,
+        Semigroup<B> semigroupB,
+        Semigroup<C> semigroupC) {
+        return new T3Semigroup<A, B, C>() {
+            @Override
+            public Semigroup<A> getA() {
+                return semigroupA;
+            }
+
+            @Override
+            public Semigroup<B> getB() {
+                return semigroupB;
+            }
+
+            @Override
+            public Semigroup<C> getC() {
+                return semigroupC;
+            }
+        };
     }
 
     /**
@@ -503,9 +507,23 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
      * @param <C>     the type of the third element
      * @return the instance
      */
-    public static <A, B, C> Monoid<T3<A, B, C>> monoid(Monoid<A> monoidA, Monoid<B> monoidB, Monoid<C> monoidC) {
-        return Monoid.create(T3.of(monoidA.identity(), monoidB.identity(), monoidC.identity()),
-                (x, y) -> T3.of(monoidA.apply(x._1(), y._1()), monoidB.apply(x._2(), y._2()), monoidC.apply(x._3(), y._3())));
+    public static <A, B, C> T3Monoid<A, B, C> monoid(Monoid<A> monoidA, Monoid<B> monoidB, Monoid<C> monoidC) {
+        return new T3Monoid<A, B, C>() {
+            @Override
+            public Monoid<A> getA() {
+                return monoidA;
+            }
+
+            @Override
+            public Monoid<B> getB() {
+                return monoidB;
+            }
+
+            @Override
+            public Monoid<C> getC() {
+                return monoidC;
+            }
+        };
     }
 
     /**
@@ -519,14 +537,28 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
      * @param <C>    the type of the third element
      * @return the instance
      */
-    public static <A, B, C> Group<T3<A, B, C>> group(Group<A> groupA, Group<B> groupB, Group<C> groupC) {
-        return Group.create(T3.of(groupA.identity(), groupB.identity(), groupC.identity()),
-                (x, y) -> T3.of(groupA.apply(x._1(), y._1()), groupB.apply(x._2(), y._2()), groupC.apply(x._3(), y._3())),
-                z -> T3.of(groupA.inverse(z._1()), groupB.inverse(z._2()), groupC.inverse(z._3())));
+    public static <A, B, C> T3Group<A, B, C> group(Group<A> groupA, Group<B> groupB, Group<C> groupC) {
+        return new T3Group<A, B, C>() {
+            @Override
+            public Group<A> getA() {
+                return groupA;
+            }
+
+            @Override
+            public Group<B> getB() {
+                return groupB;
+            }
+
+            @Override
+            public Group<C> getC() {
+                return groupC;
+            }
+        };
     }
 
     /**
      * The {@link Bifunctor} instance.
+     *
      * @param <S> the type of the first element
      * @return the instance
      */
@@ -537,8 +569,9 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
 
     /**
      * The {@link Biapply} instance.
+     *
      * @param sSemigroup the semigroup of the type of the first element
-     * @param <S> the type of the first element
+     * @param <S>        the type of the first element
      * @return the instance
      */
     public static <S> T3Biapply<S> biapply(Semigroup<S> sSemigroup) {
@@ -547,8 +580,9 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
 
     /**
      * The {@link Biapplicative} instance.
+     *
      * @param sMonoid the monoid of the type of the first element
-     * @param <S> the type of the first element
+     * @param <S>     the type of the first element
      * @return the instance
      */
     public static <S> T3Biapplicative<S> biapplicative(Monoid<S> sMonoid) {
@@ -557,6 +591,7 @@ public abstract class T3<A, B, C> implements __3<T3.µ, A, B, C> {
 
     /**
      * Converts the tuple to a heterogenous list.
+     *
      * @return the {@link HList}
      */
     public HCons<A, HCons<B, HCons<C, HNil>>> toHList() {

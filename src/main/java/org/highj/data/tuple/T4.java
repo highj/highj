@@ -1,6 +1,5 @@
 package org.highj.data.tuple;
 
-import org.derive4j.hkt.__;
 import org.derive4j.hkt.__4;
 import org.highj.data.HList;
 import org.highj.data.HList.HCons;
@@ -114,10 +113,10 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
      * @return the tuple
      */
     public static <A, B, C, D> T4<A, B, C, D> of$(
-            Supplier<A> supplierA,
-            Supplier<B> supplierB,
-            Supplier<C> supplierC,
-            Supplier<D> supplierD) {
+        Supplier<A> supplierA,
+        Supplier<B> supplierB,
+        Supplier<C> supplierC,
+        Supplier<D> supplierD) {
         return new T4<A, B, C, D>() {
 
             @Override
@@ -156,10 +155,10 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
      * @return the transformed tuple
      */
     public <AA, BB, CC, DD> T4<AA, BB, CC, DD> quadmap(
-            Function<? super A, ? extends AA> fn1,
-            Function<? super B, ? extends BB> fn2,
-            Function<? super C, ? extends CC> fn3,
-            Function<? super D, ? extends DD> fn4) {
+        Function<? super A, ? extends AA> fn1,
+        Function<? super B, ? extends BB> fn2,
+        Function<? super C, ? extends CC> fn3,
+        Function<? super D, ? extends DD> fn4) {
         return of(fn1.apply(_1()), fn2.apply(_2()), fn3.apply(_3()), fn4.apply(_4()));
     }
 
@@ -177,10 +176,10 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
      * @return the transformed tuple
      */
     public <AA, BB, CC, DD> T4<AA, BB, CC, DD> quadmap$(
-            Function<? super A, ? extends AA> fn1,
-            Function<? super B, ? extends BB> fn2,
-            Function<? super C, ? extends CC> fn3,
-            Function<? super D, ? extends DD> fn4) {
+        Function<? super A, ? extends AA> fn1,
+        Function<? super B, ? extends BB> fn2,
+        Function<? super C, ? extends CC> fn3,
+        Function<? super D, ? extends DD> fn4) {
         return of$(() -> fn1.apply(_1()), () -> fn2.apply(_2()), () -> fn3.apply(_3()), () -> fn4.apply(_4()));
     }
 
@@ -294,9 +293,9 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
         if (o instanceof T4) {
             T4<?, ?, ?, ?> that = (T4) o;
             return this._1().equals(that._1())
-                    && this._2().equals(that._2())
-                    && this._3().equals(that._3())
-                    && this._4().equals(that._4());
+                       && this._2().equals(that._2())
+                       && this._3().equals(that._3())
+                       && this._4().equals(that._4());
         }
         return false;
     }
@@ -325,13 +324,13 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
      * @return the merged tuple
      */
     public static <A1, A2, A3, A4, B1, B2, B3, B4, C1, C2, C3, C4> T4<C1, C2, C3, C4> merge(
-            T4<A1, A2, A3, A4> a, T4<B1, B2, B3, B4> b,
-            BiFunction<A1, B1, C1> fn1, BiFunction<A2, B2, C2> fn2,
-            BiFunction<A3, B3, C3> fn3, BiFunction<A4, B4, C4> fn4) {
+        T4<A1, A2, A3, A4> a, T4<B1, B2, B3, B4> b,
+        BiFunction<A1, B1, C1> fn1, BiFunction<A2, B2, C2> fn2,
+        BiFunction<A3, B3, C3> fn3, BiFunction<A4, B4, C4> fn4) {
         return of(fn1.apply(a._1(), b._1()),
-                fn2.apply(a._2(), b._2()),
-                fn3.apply(a._3(), b._3()),
-                fn4.apply(a._4(), b._4()));
+            fn2.apply(a._2(), b._2()),
+            fn3.apply(a._3(), b._3()),
+            fn4.apply(a._4(), b._4()));
     }
 
     /**
@@ -358,13 +357,13 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
      * @return the merged tuple
      */
     public static <A1, A2, A3, A4, B1, B2, B3, B4, C1, C2, C3, C4> T4<C1, C2, C3, C4> merge$(
-            T4<A1, A2, A3, A4> a, T4<B1, B2, B3, B4> b,
-            BiFunction<A1, B1, C1> fn1, BiFunction<A2, B2, C2> fn2,
-            BiFunction<A3, B3, C3> fn3, BiFunction<A4, B4, C4> fn4) {
+        T4<A1, A2, A3, A4> a, T4<B1, B2, B3, B4> b,
+        BiFunction<A1, B1, C1> fn1, BiFunction<A2, B2, C2> fn2,
+        BiFunction<A3, B3, C3> fn3, BiFunction<A4, B4, C4> fn4) {
         return of$(() -> fn1.apply(a._1(), b._1()),
-                () -> fn2.apply(a._2(), b._2()),
-                () -> fn3.apply(a._3(), b._3()),
-                () -> fn4.apply(a._4(), b._4()));
+            () -> fn2.apply(a._2(), b._2()),
+            () -> fn3.apply(a._3(), b._3()),
+            () -> fn4.apply(a._4(), b._4()));
     }
 
     /**
@@ -383,9 +382,9 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
     public static <A, B, C, D> Eq<T4<A, B, C, D>> eq(Eq<? super A> eqA, Eq<? super B> eqB,
                                                      Eq<? super C> eqC, Eq<? super D> eqD) {
         return (one, two) -> eqA.eq(one._1(), two._1())
-                && eqB.eq(one._2(), two._2())
-                && eqC.eq(one._3(), two._3())
-                && eqD.eq(one._4(), two._4());
+                                 && eqB.eq(one._2(), two._2())
+                                 && eqC.eq(one._3(), two._3())
+                                 && eqD.eq(one._4(), two._4());
     }
 
     /**
@@ -402,12 +401,12 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
      * @return the instance
      */
     public static <A, B, C, D> Ord<T4<A, B, C, D>> ord(
-            Ord<? super A> ordA, Ord<? super B> ordB,
-            Ord<? super C> ordC, Ord<? super D> ordD) {
+        Ord<? super A> ordA, Ord<? super B> ordB,
+        Ord<? super C> ordC, Ord<? super D> ordD) {
         return (one, two) -> ordA.cmp(one._1(), two._1())
-                .andThen(ordB.cmp(one._2(), two._2()))
-                .andThen(ordC.cmp(one._3(), two._3()))
-                .andThen(ordD.cmp(one._4(), two._4()));
+                                 .andThen(ordB.cmp(one._2(), two._2()))
+                                 .andThen(ordC.cmp(one._3(), two._3()))
+                                 .andThen(ordD.cmp(one._4(), two._4()));
     }
 
 
@@ -575,13 +574,32 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
      * @param <D>        the type of the fourth element
      * @return the instance
      */
-    public static <A, B, C, D> Semigroup<T4<A, B, C, D>> semigroup(
-            Semigroup<A> semigroupA, Semigroup<B> semigroupB,
-            Semigroup<C> semigroupC, Semigroup<D> semigroupD) {
-        return (x, y) -> T4.of(semigroupA.apply(x._1(), y._1()),
-                semigroupB.apply(x._2(), y._2()),
-                semigroupC.apply(x._3(), y._3()),
-                semigroupD.apply(x._4(), y._4()));
+    public static <A, B, C, D> T4Semigroup<A, B, C, D> semigroup(
+        Semigroup<A> semigroupA,
+        Semigroup<B> semigroupB,
+        Semigroup<C> semigroupC,
+        Semigroup<D> semigroupD) {
+        return new T4Semigroup<A, B, C, D>() {
+            @Override
+            public Semigroup<A> getA() {
+                return semigroupA;
+            }
+
+            @Override
+            public Semigroup<B> getB() {
+                return semigroupB;
+            }
+
+            @Override
+            public Semigroup<C> getC() {
+                return semigroupC;
+            }
+
+            @Override
+            public Semigroup<D> getD() {
+                return semigroupD;
+            }
+        };
     }
 
     /**
@@ -597,12 +615,32 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
      * @param <D>     the type of the fourth element
      * @return the instance
      */
-    public static <A, B, C, D> Monoid<T4<A, B, C, D>> monoid(
-            Monoid<A> monoidA, Monoid<B> monoidB, Monoid<C> monoidC, Monoid<D> monoidD) {
-        return Monoid.create(T4.of(monoidA.identity(), monoidB.identity(), monoidC.identity(), monoidD.identity()),
-                (x, y) -> T4.of(monoidA.apply(x._1(), y._1()), monoidB.apply(x._2(), y._2()),
-                        monoidC.apply(x._3(), y._3()), monoidD.apply(x._4(), y._4())));
+    public static <A, B, C, D> T4Monoid<A, B, C, D> monoid(
+        Monoid<A> monoidA,
+        Monoid<B> monoidB,
+        Monoid<C> monoidC,
+        Monoid<D> monoidD) {
+        return new T4Monoid<A, B, C, D>() {
+            @Override
+            public Monoid<A> getA() {
+                return monoidA;
+            }
 
+            @Override
+            public Monoid<B> getB() {
+                return monoidB;
+            }
+
+            @Override
+            public Monoid<C> getC() {
+                return monoidC;
+            }
+
+            @Override
+            public Monoid<D> getD() {
+                return monoidD;
+            }
+        };
     }
 
     /**
@@ -612,19 +650,38 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
      * @param groupB the group of the type of the second element
      * @param groupC the group of the type of the third element
      * @param groupD the group of the type of the fourth element
-     * @param <A>        the type of the first element
-     * @param <B>        the type of the second element
-     * @param <C>        the type of the third element
-     * @param <D>        the type of the fourth element
+     * @param <A>    the type of the first element
+     * @param <B>    the type of the second element
+     * @param <C>    the type of the third element
+     * @param <D>    the type of the fourth element
      * @return the instance
      */
-    public static <A, B, C, D> Group<T4<A, B, C, D>> group(Group<A> groupA, Group<B> groupB, Group<C> groupC,
-                                                           Group<D> groupD) {
-        return Group.create(T4.of(groupA.identity(), groupB.identity(), groupC.identity(), groupD.identity()),
-                (x, y) -> T4.of(groupA.apply(x._1(), y._1()), groupB.apply(x._2(), y._2()),
-                        groupC.apply(x._3(), y._3()), groupD.apply(x._4(), y._4())),
-                z -> T4.of(groupA.inverse(z._1()), groupB.inverse(z._2()),
-                        groupC.inverse(z._3()), groupD.inverse(z._4())));
+    public static <A, B, C, D> T4Group<A, B, C, D> group(
+        Group<A> groupA,
+        Group<B> groupB,
+        Group<C> groupC,
+        Group<D> groupD) {
+        return new T4Group<A, B, C, D>() {
+            @Override
+            public Group<A> getA() {
+                return groupA;
+            }
+
+            @Override
+            public Group<B> getB() {
+                return groupB;
+            }
+
+            @Override
+            public Group<C> getC() {
+                return groupC;
+            }
+
+            @Override
+            public Group<D> getD() {
+                return groupD;
+            }
+        };
     }
 
     /**
@@ -688,6 +745,7 @@ public abstract class T4<A, B, C, D> implements __4<T4.µ, A, B, C, D> {
 
     /**
      * Converts the tuple to a heterogenous list.
+     *
      * @return the {@link HList}
      */
     public HCons<A, HCons<B, HCons<C, HCons<D, HNil>>>> toHList() {

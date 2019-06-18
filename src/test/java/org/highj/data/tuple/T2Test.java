@@ -8,16 +8,16 @@ import org.highj.data.num.Integers;
 import org.highj.data.ord.Ord;
 import org.highj.data.ord.Ordering;
 import org.highj.data.tuple.t2.T2Comonad;
+import org.highj.data.tuple.t2.T2Group;
+import org.highj.data.tuple.t2.T2Monoid;
 import org.highj.function.Strings;
-import org.highj.typeclass0.group.Group;
-import org.highj.typeclass0.group.Monoid;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.highj.Hkt.asT2;
 
 public class T2Test {
@@ -123,7 +123,7 @@ public class T2Test {
     @Test
     public void cata() {
         T2<String, Integer> t2 = T2.of("foo", 42);
-        assertThat(t2.<String> cata((s, i) -> s + ":" + i)).isEqualTo("foo:42");
+        assertThat(t2.<String>cata((s, i) -> s + ":" + i)).isEqualTo("foo:42");
     }
 
     @Test
@@ -149,7 +149,7 @@ public class T2Test {
         T2<String, Integer> t2A = T2.of("foo", 42);
         T2<String, Integer> t2B = T2.of("bar", 8);
         assertThat(T2.merge(t2A, t2B, (s1, s2) -> s1 + s2, (i1, i2) -> i1 + i2))
-                .isEqualTo(T2.of("foobar", 50));
+            .isEqualTo(T2.of("foobar", 50));
     }
 
     @Test
@@ -157,7 +157,7 @@ public class T2Test {
         T2<String, Integer> t2A = T2.of("foo", 42);
         T2<String, Integer> t2B = T2.of("bar", 8);
         assertThat(T2.merge$(t2A, t2B, (s1, s2) -> s1 + s2, (i1, i2) -> i1 + i2))
-                .isEqualTo(T2.of("foobar", 50));
+            .isEqualTo(T2.of("foobar", 50));
         // test laziness
         T2.merge$(T2.of$(() -> {
             throw new RuntimeException();
@@ -260,7 +260,7 @@ public class T2Test {
     public void monoid() {
         T2<String, Integer> t2A = T2.of("foo", 42);
         T2<String, Integer> t2B = T2.of("bar", 8);
-        Monoid<T2<String, Integer>> monoid = T2.monoid(Strings.group, Integers.additiveGroup);
+        T2Monoid<String, Integer> monoid = T2.monoid(Strings.group, Integers.additiveGroup);
         T2<String, Integer> result = monoid.apply(t2A, t2B);
         assertThat(result).isEqualTo(T2.of("foobar", 50));
         T2<String, Integer> identity = monoid.identity();
@@ -271,7 +271,7 @@ public class T2Test {
     public void group() {
         T2<String, Integer> t2A = T2.of("foo", 42);
         T2<String, Integer> t2B = T2.of("bar", 8);
-        Group<T2<String, Integer>> group = T2.group(Strings.group, Integers.additiveGroup);
+        T2Group<String, Integer> group = T2.group(Strings.group, Integers.additiveGroup);
         T2<String, Integer> result = group.apply(t2A, t2B);
         assertThat(result).isEqualTo(T2.of("foobar", 50));
         T2<String, Integer> identity = group.identity();
@@ -312,7 +312,7 @@ public class T2Test {
     @Test
     public void monadRec() {
         Function<Integer, __<__<T2.µ, String>, Either<Integer, Integer>>> fn = i ->
-                i < 10 ? T2.of(i + "-", Either.Left(i + 1)) : T2.of(i + "", Either.Right(i));
+                                                                                   i < 10 ? T2.of(i + "-", Either.Left(i + 1)) : T2.of(i + "", Either.Right(i));
         T2<String, Integer> t2 = T2.monadRec(Strings.group).tailRec(fn, 1);
         assertThat(t2).isEqualTo(T2.of("1-2-3-4-5-6-7-8-9-10", 10));
     }

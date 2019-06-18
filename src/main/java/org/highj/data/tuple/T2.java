@@ -12,11 +12,7 @@ import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass1.comonad.Comonad;
 import org.highj.typeclass1.functor.Functor;
-import org.highj.typeclass1.monad.Applicative;
-import org.highj.typeclass1.monad.Apply;
-import org.highj.typeclass1.monad.Bind;
-import org.highj.typeclass1.monad.Monad;
-import org.highj.typeclass1.monad.MonadRec;
+import org.highj.typeclass1.monad.*;
 import org.highj.typeclass2.bifoldable.Bifoldable;
 import org.highj.typeclass2.bifunctor.Biapplicative;
 import org.highj.typeclass2.bifunctor.Biapply;
@@ -212,11 +208,11 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
      * @param b    the second tuple
      * @param fn1  the first merging function
      * @param fn2  the second merging function
-     * @param <A1>  the type of the first element of the first tuple
+     * @param <A1> the type of the first element of the first tuple
      * @param <A2> the type of the second element of the first tuple
-     * @param <B1>  the type of the first element of the second tuple
+     * @param <B1> the type of the first element of the second tuple
      * @param <B2> the type of the second element of the second tuple
-     * @param <C1>  the type of the first element of the merged tuple
+     * @param <C1> the type of the first element of the merged tuple
      * @param <C2> the type of the second element of the merged tuple
      * @return the merged tuple
      */
@@ -231,11 +227,11 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
      * @param b    the second tuple
      * @param fn1  the first merging function
      * @param fn2  the second merging function
-     * @param <A1>  the type of the first element of the first tuple
+     * @param <A1> the type of the first element of the first tuple
      * @param <A2> the type of the second element of the first tuple
-     * @param <B1>  the type of the first element of the second tuple
+     * @param <B1> the type of the first element of the second tuple
      * @param <B2> the type of the second element of the second tuple
-     * @param <C1>  the type of the first element of the merged tuple
+     * @param <C1> the type of the first element of the merged tuple
      * @param <C2> the type of the second element of the merged tuple
      * @return the merged tuple
      */
@@ -298,7 +294,7 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
         if (o instanceof T2) {
             T2<?, ?> that = (T2) o;
             return this._1().equals(that._1())
-                    && this._2().equals(that._2());
+                       && this._2().equals(that._2());
         }
         return false;
     }
@@ -319,7 +315,7 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
      */
     public static <A, B> Eq<T2<A, B>> eq(Eq<? super A> eqA, Eq<? super B> eqB) {
         return (one, two) -> eqA.eq(one._1(), two._1())
-                && eqB.eq(one._2(), two._2());
+                                 && eqB.eq(one._2(), two._2());
     }
 
     /**
@@ -333,7 +329,7 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
      */
     public static <A, B> Ord<T2<A, B>> ord(Ord<? super A> ordA, Ord<? super B> ordB) {
         return (one, two) -> ordA.cmp(one._1(), two._1())
-                .andThen(ordB.cmp(one._2(), two._2()));
+                                 .andThen(ordB.cmp(one._2(), two._2()));
     }
 
     /**
@@ -345,8 +341,18 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
      * @param <B>        the type of the second element
      * @return the instance
      */
-    public static <A, B> Semigroup<T2<A, B>> semigroup(Semigroup<A> semigroupA, Semigroup<B> semigroupB) {
-        return (x, y) -> T2.of(semigroupA.apply(x._1(), y._1()), semigroupB.apply(x._2(), y._2()));
+    public static <A, B> T2Semigroup<A, B> semigroup(Semigroup<A> semigroupA, Semigroup<B> semigroupB) {
+        return new T2Semigroup<A, B>() {
+            @Override
+            public Semigroup<A> getA() {
+                return semigroupA;
+            }
+
+            @Override
+            public Semigroup<B> getB() {
+                return semigroupB;
+            }
+        };
     }
 
     /**
@@ -358,9 +364,18 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
      * @param <B>     the type of the second element
      * @return the instance
      */
-    public static <A, B> Monoid<T2<A, B>> monoid(Monoid<A> monoidA, Monoid<B> monoidB) {
-        return Monoid.create(T2.of(monoidA.identity(), monoidB.identity()),
-                (x, y) -> T2.of(monoidA.apply(x._1(), y._1()), monoidB.apply(x._2(), y._2())));
+    public static <A, B> T2Monoid<A, B> monoid(Monoid<A> monoidA, Monoid<B> monoidB) {
+        return new T2Monoid<A, B>() {
+            @Override
+            public Monoid<A> getA() {
+                return monoidA;
+            }
+
+            @Override
+            public Monoid<B> getB() {
+                return monoidB;
+            }
+        };
     }
 
     /**
@@ -372,10 +387,18 @@ public abstract class T2<A, B> implements __2<T2.µ, A, B> {
      * @param <B>    the type of the second element
      * @return the instance
      */
-    public static <A, B> Group<T2<A, B>> group(Group<A> groupA, Group<B> groupB) {
-        return Group.create(T2.of(groupA.identity(), groupB.identity()),
-                (x, y) -> T2.of(groupA.apply(x._1(), y._1()), groupB.apply(x._2(), y._2())),
-                z -> T2.of(groupA.inverse(z._1()), groupB.inverse(z._2())));
+    public static <A, B> T2Group<A, B> group(Group<A> groupA, Group<B> groupB) {
+        return new T2Group<A, B>() {
+            @Override
+            public Group<A> getA() {
+                return groupA;
+            }
+
+            @Override
+            public Group<B> getB() {
+                return groupB;
+            }
+        };
     }
 
     /**

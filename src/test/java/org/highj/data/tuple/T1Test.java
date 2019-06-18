@@ -7,9 +7,9 @@ import org.highj.data.eq.Eq;
 import org.highj.data.num.Integers;
 import org.highj.data.ord.Ord;
 import org.highj.data.tuple.t1.T1Comonad;
+import org.highj.data.tuple.t1.T1Group;
 import org.highj.data.tuple.t1.T1MonadRec;
 import org.highj.function.Functions;
-import org.highj.typeclass0.group.Group;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Monad;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import org.junit.Test;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.highj.Hkt.asT1;
 
 public class T1Test {
@@ -34,7 +34,7 @@ public class T1Test {
 
     @Test
     public void of() {
-      assertThat(T1.of(42)._1()).isEqualTo(42);
+        assertThat(T1.of(42)._1()).isEqualTo(42);
     }
 
     @Test
@@ -77,7 +77,9 @@ public class T1Test {
         T1<Integer> five = hello.map$(String::length);
         assertThat(five._1()).isEqualTo(5);
         //test laziness
-        T1<String> exT1 = T1.of$(() -> { throw new RuntimeException(); });
+        T1<String> exT1 = T1.of$(() -> {
+            throw new RuntimeException();
+        });
         exT1.map$(String::length);
     }
 
@@ -97,8 +99,12 @@ public class T1Test {
         assertThat(five._1()).isEqualTo(5);
 
         //test laziness
-        T1<Function<String, Integer>> exFn = T1.of$(() -> { throw new RuntimeException(); });
-        T1<String> exT1 = T1.of$(() -> { throw new RuntimeException(); });
+        T1<Function<String, Integer>> exFn = T1.of$(() -> {
+            throw new RuntimeException();
+        });
+        T1<String> exT1 = T1.of$(() -> {
+            throw new RuntimeException();
+        });
         exT1.ap$(exFn);
     }
 
@@ -117,8 +123,12 @@ public class T1Test {
         assertThat(hello.bind(lengthFn)._1()).isEqualTo(5);
 
         //test laziness
-        Function<String, T1<Integer>> exFn = s -> { throw new RuntimeException(); };
-        T1<String> exT1 = T1.of$(() -> { throw new RuntimeException(); });
+        Function<String, T1<Integer>> exFn = s -> {
+            throw new RuntimeException();
+        };
+        T1<String> exT1 = T1.of$(() -> {
+            throw new RuntimeException();
+        });
         exT1.bind$(exFn);
     }
 
@@ -153,8 +163,12 @@ public class T1Test {
         BiFunction<String, Integer, String> function = (s, i) -> String.format("%s %d!", s, i);
         assertThat(T1.merge$(hello, fortyTwo, function)._1()).isEqualTo("hello 42!");
         //test laziness
-        T1<String> ex1 = T1.of$(() -> { throw new RuntimeException(); });
-        T1<Integer> ex2 = T1.of$(() -> { throw new RuntimeException(); });
+        T1<String> ex1 = T1.of$(() -> {
+            throw new RuntimeException();
+        });
+        T1<Integer> ex2 = T1.of$(() -> {
+            throw new RuntimeException();
+        });
         T1.merge$(ex1, ex2, function);
     }
 
@@ -213,7 +227,7 @@ public class T1Test {
     public void monadRec() {
         T1MonadRec monad = T1.monadRec;
         Function<Integer, __<T1.µ, Either<Integer, Integer>>> digitSum = i ->
-                T1.of(i < 10 ? Either.Right(i) : Either.Left(i / 10 + i % 10));
+                                                                             T1.of(i < 10 ? Either.Right(i) : Either.Left(i / 10 + i % 10));
         assertThat(monad.tailRec(digitSum, 4711)).isEqualTo(T1.of(4));
     }
 
@@ -243,7 +257,7 @@ public class T1Test {
 
     @Test
     public void group() {
-        Group<T1<Integer>> group = T1.group(Integers.additiveGroup);
+        T1Group<Integer> group = T1.group(Integers.additiveGroup);
         assertThat(group.apply(T1.of(2), T1.of(3))).isEqualTo(T1.of(5));
         assertThat(group.identity()).isEqualTo(T1.of(0));
         assertThat(group.inverse(T1.of(2))).isEqualTo(T1.of(-2));
