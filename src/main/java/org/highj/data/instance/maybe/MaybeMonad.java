@@ -1,20 +1,23 @@
 package org.highj.data.instance.maybe;
 
 import org.derive4j.hkt.__;
+import org.highj.Hkt;
 import org.highj.data.Either;
 import org.highj.data.Maybe;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadFix;
 import org.highj.typeclass1.monad.MonadRec;
+import org.highj.typeclass1.monad.MonadZip;
 import org.highj.util.Lazy;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.highj.Hkt.asMaybe;
 import static org.highj.data.Maybe.Just;
 
-public interface MaybeMonad extends MaybeFunctor, Monad<Maybe.µ>, MonadFix<Maybe.µ>, MonadRec<Maybe.µ> {
+public interface MaybeMonad extends MaybeFunctor, Monad<Maybe.µ>, MonadFix<Maybe.µ>, MonadRec<Maybe.µ>, MonadZip<Maybe.µ> {
 
     @Override
     default  <A> Maybe<A> pure(A a) {
@@ -47,5 +50,10 @@ public interface MaybeMonad extends MaybeFunctor, Monad<Maybe.µ>, MonadFix<Mayb
             step = asMaybe(function.apply(step.get().getLeft()));
         }
         return step.map(Either::getRight);
+    }
+
+    @Override
+    default <A, B, C> __<Maybe.µ, C> mzipWith(BiFunction<A, B, C> fn, __<Maybe.µ, A> ma, __<Maybe.µ, B> mb) {
+        return Maybe.zipWith(Hkt.asMaybe(ma), Hkt.asMaybe(mb), fn);
     }
 }

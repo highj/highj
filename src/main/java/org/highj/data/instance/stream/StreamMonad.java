@@ -3,35 +3,43 @@ package org.highj.data.instance.stream;
 import org.derive4j.hkt.__;
 import org.highj.data.Stream;
 import org.highj.typeclass1.monad.Monad;
+import org.highj.typeclass1.monad.MonadZip;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.highj.Hkt.asStream;
+import static org.highj.data.Stream.*;
 
-public class StreamMonad implements Monad<Stream.µ> {
+public interface StreamMonad extends Monad<µ>, MonadZip<µ> {
     @Override
-    public <A> Stream<A> pure(A a) {
-        return Stream.repeat(a);
+    default <A> Stream<A> pure(A a) {
+        return repeat(a);
     }
 
     @Override
-    public <A, B> Stream<B> ap(__<Stream.µ, Function<A, B>> fn, __<Stream.µ, A> nestedA) {
-        return Stream.zipWith(f1 -> f1::apply, fn, nestedA);
+    default <A, B> Stream<B> ap(__<µ, Function<A, B>> fn, __<µ, A> nestedA) {
+        return zipWith(Function::apply, fn, nestedA);
     }
 
     @Override
-    public <A, B> Stream<B> map(Function<A, B> fn, __<Stream.µ, A> nestedA) {
+    default <A, B> Stream<B> map(Function<A, B> fn, __<µ, A> nestedA) {
         return asStream(nestedA).map(fn);
     }
 
     @Override
-    public <A> Stream<A> join(__<Stream.µ, __<Stream.µ, A>> nestedNestedA) {
-        Stream<__<Stream.µ, A>> nestedStream = asStream(nestedNestedA);
+    default <A> Stream<A> join(__<µ, __<µ, A>> nestedNestedA) {
+        Stream<__<µ, A>> nestedStream = asStream(nestedNestedA);
         Stream<A> xs = asStream(nestedStream.head());
-        final Stream<__<Stream.µ, A>> xss = nestedStream.tail();
-        return Stream.newLazyStream(xs.head(), () -> {
-            Stream<__<Stream.µ, A>> tails = xss.<__<Stream.µ, A>>map(as -> asStream(as).tail());
+        final Stream<__<µ, A>> xss = nestedStream.tail();
+        return newLazyStream(xs.head(), () -> {
+            Stream<__<µ, A>> tails = xss.<__<µ, A>>map(as -> asStream(as).tail());
             return join(tails);
         });
+    }
+
+    @Override
+    default <A, B, C> __<µ, C> mzipWith(BiFunction<A, B, C> fn, __<µ, A> ma, __<µ, B> mb) {
+        return zipWith(fn, asStream(ma), asStream(mb));
     }
 }

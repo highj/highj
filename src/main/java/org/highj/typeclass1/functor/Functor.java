@@ -32,6 +32,12 @@ public interface Functor<F> extends Invariant<F> {
         return a -> map(fn, a);
     }
 
+    default <A, B> T2<__<F, A>, __<F, B>> unzip(__<F, T2<A, B>> fab) {
+        return T2.of(
+            lift((Function<T2<A, B>, A>) T2::_1).apply(fab),
+            lift((Function<T2<A, B>, B>) T2::_2).apply(fab));
+    }
+
     static <X, Y, A, B> Function<__<X, __<Y, A>>, __<X, __<Y, B>>> binary(
             Functor<X> fx, Functor<Y> fy, Function<A, B> fn) {
         return fx.lift(fy.lift(fn));

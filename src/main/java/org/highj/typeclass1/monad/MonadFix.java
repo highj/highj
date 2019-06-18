@@ -7,5 +7,5 @@ import java.util.function.Supplier;
 
 public interface MonadFix<M> extends Monad<M> {
     //mfix :: (a -> m a) -> m a
-    public <A> __<M,A> mfix(Function<Supplier<A>, __<M,A>> fn);
+    <A> __<M,A> mfix(Function<Supplier<A>, __<M,A>> fn);
 }

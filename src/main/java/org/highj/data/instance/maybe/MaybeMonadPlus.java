@@ -1,7 +1,6 @@
 package org.highj.data.instance.maybe;
 
 import org.derive4j.hkt.__;
-import org.highj.Hkt;
 import org.highj.data.Maybe;
 import org.highj.typeclass1.monad.MonadPlus;
 

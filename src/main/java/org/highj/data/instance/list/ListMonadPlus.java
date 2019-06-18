@@ -1,18 +1,21 @@
 package org.highj.data.instance.list;
 
 import org.derive4j.hkt.__;
+import org.highj.Hkt;
 import org.highj.data.Either;
 import org.highj.data.List;
 import org.highj.typeclass1.monad.MonadPlus;
 import org.highj.typeclass1.monad.MonadRec;
+import org.highj.typeclass1.monad.MonadZip;
 import org.highj.util.Mutable;
 
 import java.util.Stack;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.highj.Hkt.asList;
 
-public interface ListMonadPlus extends ListFunctor, MonadPlus<List.µ>, MonadRec<List.µ> {
+public interface ListMonadPlus extends ListFunctor, MonadPlus<List.µ>, MonadRec<List.µ>, MonadZip<List.µ> {
 
     @Override
     default <A> List<A> pure(A a) {
@@ -71,5 +74,10 @@ public interface ListMonadPlus extends ListFunctor, MonadPlus<List.µ>, MonadRec
             ));
         } while (hasChanged.get());
         return Either.rights(step);
+    }
+
+    @Override
+    default <A, B, C> __<List.µ, C> mzipWith(BiFunction<A, B, C> fn, __<List.µ, A> ma, __<List.µ, B> mb) {
+        return List.zipWith(Hkt.asList(ma), Hkt.asList(mb), fn);
     }
 }
