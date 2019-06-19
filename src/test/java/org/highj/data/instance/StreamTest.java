@@ -10,77 +10,77 @@ import org.junit.Test;
 
 import java.util.Iterator;
 
-import static junit.framework.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.highj.Hkt.asStream;
 import static org.highj.data.Stream.*;
 
 public class StreamTest {
 
     @Test
-    public void testHead()  {
+    public void testHead() {
         Stream<String> stream = cycle("foo");
-        assertEquals("foo", stream.head());
+        assertThat(stream.head()).isEqualTo("foo");
         stream = newStream("foo", cycle("bar", "baz"));
-        assertEquals("foo", stream.head());
+        assertThat(stream.head()).isEqualTo("foo");
         stream = newLazyStream("foo", () -> cycle("bar", "baz"));
-        assertEquals("foo", stream.head());
+        assertThat(stream.head()).isEqualTo("foo");
         stream = unfold(s -> s + "!", "foo");
-        assertEquals("foo", stream.head());
+        assertThat(stream.head()).isEqualTo("foo");
     }
 
     @Test
-    public void testTail()  {
+    public void testTail() {
         Stream<String> stream = cycle("foo");
-        assertEquals("foo", stream.tail().head());
+        assertThat(stream.tail().head()).isEqualTo("foo");
         stream = newStream("foo", cycle("bar", "baz"));
-        assertEquals("bar", stream.tail().head());
+        assertThat(stream.tail().head()).isEqualTo("bar");
         stream = newLazyStream("foo", () -> cycle("bar", "baz"));
-        assertEquals("bar", stream.tail().head());
+        assertThat(stream.tail().head()).isEqualTo("bar");
         stream = unfold(s -> s + "!", "foo");
-        assertEquals("foo!", stream.tail().head());
+        assertThat(stream.tail().head()).isEqualTo("foo!");
     }
 
     @Test
-    public void testStreamRepeat()  {
+    public void testStreamRepeat() {
         Stream<String> stream = cycle("foo");
         for (int i = 1; i < 10; i++) {
-            assertEquals("foo", stream.head());
+            assertThat(stream.head()).isEqualTo("foo");
             stream = stream.tail();
         }
     }
 
     @Test
-    public void testStreamHeadFn()  {
+    public void testStreamHeadFn() {
         Stream<String> stream = unfold(s -> s + "!", "foo");
-        assertEquals("foo", stream.head());
+        assertThat(stream.head()).isEqualTo("foo");
         stream = stream.tail();
-        assertEquals("foo!", stream.head());
+        assertThat(stream.head()).isEqualTo("foo!");
         stream = stream.tail();
-        assertEquals("foo!!", stream.head());
+        assertThat(stream.head()).isEqualTo("foo!!");
     }
 
     @Test
-    public void testStreamHeadStream()  {
+    public void testStreamHeadStream() {
         Stream<String> stream = newStream("foo", cycle("bar"));
-        assertEquals("foo", stream.head());
+        assertThat(stream.head()).isEqualTo("foo");
         stream = stream.tail();
-        assertEquals("bar", stream.head());
+        assertThat(stream.head()).isEqualTo("bar");
         stream = stream.tail();
-        assertEquals("bar", stream.head());
+        assertThat(stream.head()).isEqualTo("bar");
     }
 
     @Test
-    public void testStreamHeadThunk()  {
+    public void testStreamHeadThunk() {
         Stream<String> stream = newLazyStream("foo", () -> cycle("bar"));
-        assertEquals("foo", stream.head());
+        assertThat(stream.head()).isEqualTo("foo");
         stream = stream.tail();
-        assertEquals("bar", stream.head());
+        assertThat(stream.head()).isEqualTo("bar");
         stream = stream.tail();
-        assertEquals("bar", stream.head());
+        assertThat(stream.head()).isEqualTo("bar");
     }
 
     @Test
-    public void testStreamIterator()  {
+    public void testStreamIterator() {
         Iterator<Integer> myIterator = new Iterator<Integer>() {
 
             private int i = 0;
@@ -97,110 +97,110 @@ public class StreamTest {
         };
 
         Stream<Integer> stream = newLazyStream(myIterator);
-        assertEquals("Stream(0,1,2,3,4,5,6,7,8,9...)", stream.toString());
+        assertThat(stream.toString()).isEqualTo("Stream(0,1,2,3,4,5,6,7,8,9...)");
     }
 
     @Test
-    public void testFilter()  {
+    public void testFilter() {
         Stream<Integer> stream = range(1).filter(Integers.even::test);
-        assertEquals(Integer.valueOf(2), stream.head());
+        assertThat(stream.head()).isEqualTo(Integer.valueOf(2));
         stream = stream.tail();
-        assertEquals(Integer.valueOf(4), stream.head());
+        assertThat(stream.head()).isEqualTo(Integer.valueOf(4));
         stream = stream.tail();
-        assertEquals(Integer.valueOf(6), stream.head());
+        assertThat(stream.head()).isEqualTo(Integer.valueOf(6));
 
     }
 
     @Test
-    public void testToString()  {
+    public void testToString() {
         Stream<Integer> stream = range(1).filter(Integers.even::test);
-        assertEquals("Stream(2,4,6,8,10,12,14,16,18,20...)", stream.toString());
+        assertThat(stream.toString()).isEqualTo("Stream(2,4,6,8,10,12,14,16,18,20...)");
     }
 
     @Test
-    public void testTake()  {
+    public void testTake() {
         Stream<Integer> stream = range(1).filter(Integers.odd::test);
-        assertEquals("List(1,3,5,7)", stream.take(4).toString());
-        assertEquals("List()", stream.take(0).toString());
-        assertEquals("List()", stream.take(-4).toString());
+        assertThat(stream.take(4).toString()).isEqualTo("List(1,3,5,7)");
+        assertThat(stream.take(0).toString()).isEqualTo("List()");
+        assertThat(stream.take(-4).toString()).isEqualTo("List()");
     }
 
     @Test
-    public void testTakeWhile()  {
+    public void testTakeWhile() {
         Stream<Integer> stream = range(10, -3);
-        assertEquals("List(10,7,4,1)", stream.takeWhile(Integers.positive).toString());
-        assertEquals("List()", stream.takeWhile(Integers.negative).toString());
+        assertThat(stream.takeWhile(Integers.positive).toString()).isEqualTo("List(10,7,4,1)");
+        assertThat(stream.takeWhile(Integers.negative).toString()).isEqualTo("List()");
     }
 
     @Test
-    public void testDrop()  {
+    public void testDrop() {
         Stream<Integer> stream = range(1);
-        assertEquals(Integer.valueOf(5), stream.drop(4).head());
-        assertEquals(Integer.valueOf(1), stream.drop(0).head());
-        assertEquals(Integer.valueOf(1), stream.drop(-4).head());
+        assertThat(stream.drop(4).head()).isEqualTo(Integer.valueOf(5));
+        assertThat(stream.drop(0).head()).isEqualTo(Integer.valueOf(1));
+        assertThat(stream.drop(-4).head()).isEqualTo(Integer.valueOf(1));
     }
 
     @Test
-    public void testDropWhile()  {
+    public void testDropWhile() {
         Stream<Integer> stream = range(10, -3);
-        assertEquals(Integer.valueOf(-2), stream.dropWhile(Integers.positive).head());
-        assertEquals(Integer.valueOf(10), stream.dropWhile(Integers.negative).head());
+        assertThat(stream.dropWhile(Integers.positive).head()).isEqualTo(Integer.valueOf(-2));
+        assertThat(stream.dropWhile(Integers.negative).head()).isEqualTo(Integer.valueOf(10));
     }
 
     @Test
-    public void testRangeFrom()  {
+    public void testRangeFrom() {
         Stream<Integer> stream = range(10);
-        assertEquals("Stream(10,11,12,13...)", stream.toString(4));
+        assertThat(stream.toString(4)).isEqualTo("Stream(10,11,12,13...)");
     }
 
     @Test
-    public void testRangeFromTo()  {
+    public void testRangeFromTo() {
         Stream<Integer> stream = range(10, 3);
-        assertEquals("Stream(10,13,16,19...)", stream.toString(4));
+        assertThat(stream.toString(4)).isEqualTo("Stream(10,13,16,19...)");
         stream = range(10, 0);
-        assertEquals("Stream(10,10,10,10...)", stream.toString(4));
+        assertThat(stream.toString(4)).isEqualTo("Stream(10,10,10,10...)");
         stream = range(10, -3);
-        assertEquals("Stream(10,7,4,1...)", stream.toString(4));
+        assertThat(stream.toString(4)).isEqualTo("Stream(10,7,4,1...)");
     }
 
     @Test
-    public void testCycle()  {
+    public void testCycle() {
         Stream<String> stream = cycle("foo", "bar", "baz");
-        assertEquals("Stream(foo,bar,baz,foo,bar,baz,foo,bar,baz,foo...)", stream.toString());
+        assertThat(stream.toString()).isEqualTo("Stream(foo,bar,baz,foo,bar,baz,foo,bar,baz,foo...)");
     }
 
     @Test
-    public void testMap()  {
+    public void testMap() {
         Stream<Integer> stream = cycle("one", "two", "three").map(String::length);
-        assertEquals("Stream(3,3,5,3,3,5,3,3,5,3...)", stream.toString());
+        assertThat(stream.toString()).isEqualTo("Stream(3,3,5,3,3,5,3,3,5,3...)");
 
     }
 
     @Test
-    public void testZip()  {
+    public void testZip() {
         Stream<T2<Integer, String>> stream = zip(range(1), cycle("foo", "bar", "baz"));
-        assertEquals("Stream((1,foo),(2,bar),(3,baz),(4,foo)...)", stream.toString(4));
+        assertThat(stream.toString(4)).isEqualTo("Stream((1,foo),(2,bar),(3,baz),(4,foo)...)");
     }
 
     @Test
-    public void testZipWith()  {
+    public void testZipWith() {
         Stream<String> stream = zipWith(Strings.repeat::apply, cycle("foo", "bar", "baz"), range(2));
-        assertEquals("Stream(foofoo,barbarbar,bazbazbazbaz,foofoofoofoofoo...)", stream.toString(4));
+        assertThat(stream.toString(4)).isEqualTo("Stream(foofoo,barbarbar,bazbazbazbaz,foofoofoofoofoo...)");
     }
 
     @Test
-    public void testUnzip()  {
+    public void testUnzip() {
         Stream<T2<Integer, String>> stream = zip(range(1), cycle("foo", "bar", "baz"));
         T2<Stream<Integer>, Stream<String>> t2 = unzip(stream);
-        assertEquals("Stream(1,2,3,4,5,6,7,8,9,10...)", t2._1().toString());
-        assertEquals("Stream(foo,bar,baz,foo,bar,baz,foo,bar,baz,foo...)", t2._2().toString());
+        assertThat(t2._1().toString()).isEqualTo("Stream(1,2,3,4,5,6,7,8,9,10...)");
+        assertThat(t2._2().toString()).isEqualTo("Stream(foo,bar,baz,foo,bar,baz,foo,bar,baz,foo...)");
     }
 
     @Test
-    public void testIterator()  {
+    public void testIterator() {
         int n = 3;
         for (int i : range(3)) {
-            assertEquals(n, i);
+            assertThat(i).isEqualTo(n);
             n++;
             if (n > 10) {
                 return;
@@ -209,47 +209,47 @@ public class StreamTest {
     }
 
     @Test
-    public void testMonad()  {
+    public void testMonad() {
         Monad<Stream.µ> monad = Stream.monad;
 
         Stream<String> foobars = newStream("foo", repeat("bars"));
         Stream<Integer> foobarsLength = asStream(monad.map(String::length, foobars));
-        assertEquals("Stream(3,4,4,4,4,4,4,4,4,4...)", foobarsLength.toString());
+        assertThat(foobarsLength.toString()).isEqualTo("Stream(3,4,4,4,4,4,4,4,4,4...)");
 
         Stream<String> foos = asStream(monad.pure("foo"));
-        assertEquals("Stream(foo,foo,foo,foo,foo,foo,foo,foo,foo,foo...)", foos.toString());
+        assertThat(foos.toString()).isEqualTo("Stream(foo,foo,foo,foo,foo,foo,foo,foo,foo,foo...)");
 
         Stream<Integer> absSqr = asStream(monad.ap(cycle(Integers.negate, Integers.sqr), range(1)));
-        assertEquals("Stream(-1,4,-3,16,-5,36,-7,64,-9,100...)", absSqr.toString());
+        assertThat(absSqr.toString()).isEqualTo("Stream(-1,4,-3,16,-5,36,-7,64,-9,100...)");
 
         Stream<Integer> streamOfStream = asStream(monad.bind(range(1),
             integer -> range(1, integer)));
-        assertEquals("Stream(1,3,7,13,21,31,43,57,73,91...)", streamOfStream.toString());
+        assertThat(streamOfStream.toString()).isEqualTo("Stream(1,3,7,13,21,31,43,57,73,91...)");
     }
 
     @Test
-    public void testInits()  {
+    public void testInits() {
         Stream<List<Integer>> stream = range(1).inits();
-        assertEquals("Stream(List(),List(1),List(1,2),List(1,2,3)...)", stream.toString(4));
+        assertThat(stream.toString(4)).isEqualTo("Stream(List(),List(1),List(1,2),List(1,2,3)...)");
     }
 
     @Test
-    public void testTails()  {
+    public void testTails() {
         Stream<Stream<Integer>> stream = range(1).tails();
-        assertEquals("Stream(List(1,2,3),List(2,3,4),List(3,4,5),List(4,5,6)...)",
-            stream.map(x -> x.take(3)).toString(4));
+        assertThat(stream.map(x -> x.take(3)).toString(4))
+            .isEqualTo("Stream(List(1,2,3),List(2,3,4),List(3,4,5),List(4,5,6)...)");
     }
 
     @Test
-    public void testIntersperse()  {
+    public void testIntersperse() {
         Stream<Integer> stream = range(3).intersperse(0);
-        assertEquals("Stream(3,0,4,0,5,0,6,0,7,0...)", stream.toString());
+        assertThat(stream.toString()).isEqualTo("Stream(3,0,4,0,5,0,6,0,7,0...)");
     }
 
     @Test
-    public void testInterleave()  {
+    public void testInterleave() {
         Stream<Integer> stream = interleave(range(3), range(1));
-        assertEquals("Stream(3,1,4,2,5,3,6,4,7,5...)", stream.toString());
+        assertThat(stream.toString()).isEqualTo("Stream(3,1,4,2,5,3,6,4,7,5...)");
     }
 
 }

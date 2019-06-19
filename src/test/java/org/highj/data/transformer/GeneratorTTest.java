@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import java.util.Iterator;
 
-import static junit.framework.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.highj.Hkt.asProducerT;
 
 public class GeneratorTTest {
@@ -21,30 +21,29 @@ public class GeneratorTTest {
     //     hanoi (n-1) from other to
     //     yield (from, to)
     //     hanoi (n-1) other to from
-    private static <A> ProducerT<T2<A,A>,T1.µ,T0> hanoi(int n, A from, A to, A other) {
+    private static <A> ProducerT<T2<A, A>, T1.µ, T0> hanoi(int n, A from, A to, A other) {
         if (n == 0) {
             return ProducerT.done(T0.of());
         }
-        return ProducerT.suspend(() ->
-            asProducerT(
-                Do_.<__<__<ProducerT.µ,T2<A,A>>,T1.µ>>do_()
-                    .__(hanoi(n-1, from, other, to))
-                    .__(ProducerT.yield(T2.of(from, to)))
-                    .__(hanoi(n-1, other, to, from))
-                    .runNoResultNoTailRec(ProducerT.monad())
+        return ProducerT.suspend(() -> asProducerT(
+            Do_.<__<__<ProducerT.µ, T2<A, A>>, T1.µ>>do_()
+                .__(hanoi(n - 1, from, other, to))
+                .__(ProducerT.yield(T2.of(from, to)))
+                .__(hanoi(n - 1, other, to, from))
+                .runNoResultNoTailRec(ProducerT.monad())
             )
         );
     }
 
     @Test
     public void testHanoi() {
-        Iterator<T2<Character,Character>> iterator = ProducerT.toIterator(hanoi(3, 'A', 'B', 'C'));
-        char[][] expectedResult = {{'A','B'},{'A','C'},{'B','C'},{'A','B'},{'C','A'},{'C','B'},{'A','B'}};
+        Iterator<T2<Character, Character>> iterator = ProducerT.toIterator(hanoi(3, 'A', 'B', 'C'));
+        char[][] expectedResult = {{'A', 'B'}, {'A', 'C'}, {'B', 'C'}, {'A', 'B'}, {'C', 'A'}, {'C', 'B'}, {'A', 'B'}};
         int i = 0;
         while (iterator.hasNext()) {
-            T2<Character,Character> x = iterator.next();
-            assertEquals(x._1().charValue(), expectedResult[i][0]);
-            assertEquals(x._2().charValue(), expectedResult[i][1]);
+            T2<Character, Character> x = iterator.next();
+            assertThat(expectedResult[i][0]).isEqualTo(x._1().charValue());
+            assertThat(expectedResult[i][1]).isEqualTo(x._2().charValue());
             ++i;
         }
     }
