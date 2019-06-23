@@ -3,7 +3,8 @@ package org.highj.data;
 import org.derive4j.hkt.__;
 import org.highj.data.eq.Eq1;
 import org.highj.data.instance.list.*;
-import org.highj.data.transformer.list.ListEq1;
+import org.highj.data.instance.list.ListEq1;
+import org.highj.data.ord.Ord1;
 import org.highj.function.F3;
 import org.highj.function.F4;
 import org.highj.function.Strings;
@@ -11,6 +12,7 @@ import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.typeclass0.group.Group;
+import org.highj.typeclass1.comonad.Extend;
 import org.highj.typeclass1.monad.MonadPlus;
 import org.highj.typeclass1.unfoldable.Unfoldable;
 import org.highj.util.ArrayUtils;
@@ -22,6 +24,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.StreamSupport;
 
 /**
  * Immutable list implementation (a.k.a. immutable Stack).
@@ -64,7 +67,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
             index--;
         }
         return (index < 0 || current.isEmpty())
-                ? Maybe.<A>Nothing()
+                ? Maybe.Nothing()
                 : Maybe.Just(current.head());
     }
 
@@ -660,6 +663,15 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
     }
 
     /**
+     * Converts the list to a {@link java.util.stream.Stream}
+     *
+     * @return the stream
+     */
+    public java.util.stream.Stream<A> toJavaStream() {
+        return StreamSupport.stream(spliterator(), false);
+    }
+
+    /**
      * Constructs a bounded list of integers in arithmetic progression in a lazy fashion.
      *
      * @param from the start value
@@ -1065,7 +1077,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      */
     public List<A> sort(Comparator<A> comparator) {
         java.util.List<A> jList = toJList();
-        Collections.sort(jList, comparator);
+        jList.sort(comparator);
         return List.fromJavaList(jList);
     }
 
@@ -1117,9 +1129,20 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
     };
 
     /**
+     * The {@link Extend} instance of lists.
+     */
+    public static final ListExtend extend = new ListExtend() {
+    };
+
+    /**
      * The {@link Eq1} instance of lists.
      */
     public static final ListEq1 eq1 = new ListEq1() {};
+
+   /**
+     * The {@link Ord1} instance of lists.
+     */
+    public static final ListOrd1 ord1 = new ListOrd1() {};
 
     /**
      * The list {@link org.highj.typeclass0.group.Group} using  {@link List#append} as combining operation.
@@ -1129,6 +1152,5 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
     public static <A> Group<List<A>> group() {
         return Group.create(List.empty(), List::append, List::reverse);
     }
-
 
 }

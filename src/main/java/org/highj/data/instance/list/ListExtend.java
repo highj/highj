@@ -6,7 +6,7 @@ import org.highj.typeclass1.comonad.Extend;
 
 import static org.highj.Hkt.asList;
 
-public interface  ListExtend extends ListFunctor, Extend<List.µ> {
+public interface ListExtend extends ListFunctor, Extend<List.µ> {
     @Override
     default <A> List<__<List.µ, A>> duplicate(__<List.µ, A> nestedA) {
         //init . tails

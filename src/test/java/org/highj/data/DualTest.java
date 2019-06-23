@@ -28,7 +28,7 @@ public class DualTest {
     @Test
     public void categoryIdentity() {
         Category<__<Dual.µ, F1.µ>> category = Dual.category(F1.arrow);
-        Dual<F1.µ, Integer, Integer> idDual = asDual(category.<Integer>identity());
+        Dual<F1.µ, Integer, Integer> idDual = asDual(category.identity());
         F1<Integer, Integer> id = asF1(idDual.get());
         assertThat(id.apply(42)).isEqualTo(Integer.valueOf(42));
     }
@@ -67,8 +67,7 @@ public class DualTest {
         __3<Dual.µ, T2.µ, String, Integer> d1 = Dual.of(T2.of(42, "foo"));
         __3<Dual.µ, T2.µ, String, Integer> d2 = Dual.of(T2.of(23, "bar"));
 
-        Monoid<__2<T2.µ, Integer, String>> t2Monoid = (Monoid)
-            T2.monoid(Integers.additiveGroup, Strings.group);
+        Monoid<__2<T2.µ, Integer, String>> t2Monoid = T2.monoid(Integers.additiveGroup, Strings.group);
         DualMonoid<T2.µ, String, Integer> monoid = Dual.monoid(t2Monoid);
 
         assertThat(monoid.fold(d1, d2, d2)).isEqualTo(Dual.of(T2.of(88, "barbarfoo")));
@@ -78,7 +77,7 @@ public class DualTest {
     public void group() {
         __3<Dual.µ, T2.µ, String, Integer> d1 = Dual.of(T2.of(42, "foo"));
 
-        Group<__2<T2.µ, Integer, String>> t2Group = (Group) T2.group(Integers.additiveGroup, Strings.group);
+        Group<__2<T2.µ, Integer, String>> t2Group = T2.group(Integers.additiveGroup, Strings.group);
         DualGroup<T2.µ, String, Integer> group = Dual.group(t2Group);
 
         assertThat(group.inverse(d1)).isEqualTo(Dual.of(T2.of(-42, "oof")));

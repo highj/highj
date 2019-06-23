@@ -15,16 +15,19 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.StreamSupport;
 
 import static org.highj.Hkt.asList;
 import static org.highj.Hkt.asStream;
 
-/*
- * An infinite list.
+/**
+ * An immutable infinite lazy list.
+ *
+ * @param <A> the element type
  */
 public abstract class Stream<A> implements __<Stream.µ, A>, Iterable<A>, Function<Integer, A> {
 
-    public static final class µ {
+    public interface µ {
     }
 
     private Stream() {
@@ -34,6 +37,7 @@ public abstract class Stream<A> implements __<Stream.µ, A>, Iterable<A>, Functi
 
     public abstract Stream<A> tail();
 
+    @Override
     public A apply(Integer index) {
         if (index < 0) {
             throw new IndexOutOfBoundsException("Negative index " + index);
@@ -118,8 +122,8 @@ public abstract class Stream<A> implements __<Stream.µ, A>, Iterable<A>, Functi
             () -> maybeFromIterator(iterator));
     }
 
-    public Stream<A> filter(Function<A, Boolean> predicate) {
-        final Stream<A> result = dropWhile((A a) -> !predicate.apply(a));
+    public Stream<A> filter(Predicate<? super A> predicate) {
+        final Stream<A> result = dropWhile((A a) -> !predicate.test(a));
         return newLazyStream(result.head(), () -> result.tail().filter(predicate));
     }
 
@@ -133,11 +137,15 @@ public abstract class Stream<A> implements __<Stream.µ, A>, Iterable<A>, Functi
     }
 
     public List<A> take(int n) {
-        return n <= 0 ? List.Nil() : List.Cons$(head(), () -> tail().take(n - 1));
+        return n <= 0
+                   ? List.Nil()
+                   : List.Cons$(head(), () -> tail().take(n - 1));
     }
 
     public List<A> takeWhile(Predicate<A> predicate) {
-        return !predicate.test(head()) ? List.Nil() : List.Cons$(head(), () -> tail().takeWhile(predicate));
+        return !predicate.test(head())
+                   ? List.Nil()
+                   : List.Cons$(head(), () -> tail().takeWhile(predicate));
     }
 
     public Stream<A> drop(int n) {
@@ -172,6 +180,16 @@ public abstract class Stream<A> implements __<Stream.µ, A>, Iterable<A>, Functi
         return newLazyStream(fn.apply(head()), () -> tail().map(fn));
     }
 
+    public static <A> Stream<A> join(Stream<Stream<A>> nestedStream) {
+        return newLazyStream(
+            nestedStream.head().head(),
+            () -> join(nestedStream.tail().map(Stream::tail)));
+    }
+
+    public <B> Stream<B> flatMap(Function<A, Stream<B>> fn) {
+        return join(map(fn));
+    }
+
     public static Stream<Integer> range(int from, int step) {
         return unfold(x -> x + step, from);
     }
@@ -202,7 +220,6 @@ public abstract class Stream<A> implements __<Stream.µ, A>, Iterable<A>, Functi
     public static <A> Stream<A> interleave(__<µ, A> one, __<µ, A> two) {
         return newLazyStream(asStream(one).head(), () -> interleave(two, asStream(one).tail()));
     }
-
 
     public static <A, B> Stream<T2<A, B>> zip(__<µ, A> streamA, __<µ, B> streamB) {
         return zipWith(T2::of, streamA, streamB);
@@ -272,5 +289,9 @@ public abstract class Stream<A> implements __<Stream.µ, A>, Iterable<A>, Functi
                 return a;
             }
         };
+    }
+
+    public java.util.stream.Stream<A> javaStream() {
+        return StreamSupport.stream(spliterator(), false);
     }
 }

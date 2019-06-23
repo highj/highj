@@ -1,6 +1,7 @@
 package org.highj.data.instance.stream;
 
 import org.derive4j.hkt.__;
+import org.highj.Hkt;
 import org.highj.data.Stream;
 import org.highj.typeclass1.monad.Monad;
 import org.highj.typeclass1.monad.MonadZip;
@@ -11,7 +12,7 @@ import java.util.function.Function;
 import static org.highj.Hkt.asStream;
 import static org.highj.data.Stream.*;
 
-public interface StreamMonad extends Monad<µ>, MonadZip<µ> {
+public interface StreamMonad extends StreamFunctor, Monad<µ>, MonadZip<µ> {
     @Override
     default <A> Stream<A> pure(A a) {
         return repeat(a);
@@ -23,19 +24,8 @@ public interface StreamMonad extends Monad<µ>, MonadZip<µ> {
     }
 
     @Override
-    default <A, B> Stream<B> map(Function<A, B> fn, __<µ, A> nestedA) {
-        return asStream(nestedA).map(fn);
-    }
-
-    @Override
     default <A> Stream<A> join(__<µ, __<µ, A>> nestedNestedA) {
-        Stream<__<µ, A>> nestedStream = asStream(nestedNestedA);
-        Stream<A> xs = asStream(nestedStream.head());
-        final Stream<__<µ, A>> xss = nestedStream.tail();
-        return newLazyStream(xs.head(), () -> {
-            Stream<__<µ, A>> tails = xss.<__<µ, A>>map(as -> asStream(as).tail());
-            return join(tails);
-        });
+        return Stream.join(asStream(nestedNestedA).map(Hkt::asStream));
     }
 
     @Override
