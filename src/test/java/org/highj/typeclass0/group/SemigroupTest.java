@@ -1,7 +1,7 @@
 package org.highj.typeclass0.group;
 
 import org.highj.data.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

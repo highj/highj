@@ -3,7 +3,7 @@ package org.highj.data.instance.list;
 import org.highj.data.List;
 import org.highj.data.tuple.T2;
 import org.highj.typeclass1.functor.Functor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.highj.Hkt.asZipper;
@@ -217,20 +217,20 @@ public class ZipperTest {
     public void testRemoveNext() {
         List<String> list = List.of("foo", "bar", "baz", "ding", "dong");
         assertThat(Zipper.fromList(list)
-                .forwards()
-                .removeNext()
-                .removeNext()
-                .toList()).containsExactly("foo", "ding", "dong");
+                         .forwards()
+                         .removeNext()
+                         .removeNext()
+                         .toList()).containsExactly("foo", "ding", "dong");
     }
 
     @Test
     public void testRemoveBefore() {
         List<String> list = List.of("foo", "bar", "baz", "ding", "dong");
         assertThat(Zipper.fromListEnd(list)
-                .backwards()
-                .removeBefore()
-                .removeBefore()
-                .toList()).containsExactly("foo", "bar", "dong");
+                         .backwards()
+                         .removeBefore()
+                         .removeBefore()
+                         .toList()).containsExactly("foo", "bar", "dong");
     }
 
     @Test
@@ -239,10 +239,10 @@ public class ZipperTest {
         assertThat(Zipper.empty().maybeRemoveNext().isNothing()).isTrue();
         assertThat(Zipper.fromListEnd(list).maybeRemoveNext().isNothing()).isTrue();
         assertThat(Zipper.fromList(list)
-                .forwards()
-                .maybeRemoveNext().get()
-                .maybeRemoveNext().get()
-                .toList()).containsExactly("foo", "ding", "dong");
+                         .forwards()
+                         .maybeRemoveNext().get()
+                         .maybeRemoveNext().get()
+                         .toList()).containsExactly("foo", "ding", "dong");
     }
 
     @Test
@@ -251,10 +251,10 @@ public class ZipperTest {
         assertThat(Zipper.empty().maybeRemoveBefore().isNothing()).isTrue();
         assertThat(Zipper.fromList(list).maybeRemoveBefore().isNothing()).isTrue();
         assertThat(Zipper.fromListEnd(list)
-                .backwards()
-                .maybeRemoveBefore().get()
-                .maybeRemoveBefore().get()
-                .toList()).containsExactly("foo", "bar", "dong");
+                         .backwards()
+                         .maybeRemoveBefore().get()
+                         .maybeRemoveBefore().get()
+                         .toList()).containsExactly("foo", "bar", "dong");
     }
 
     @Test
@@ -263,48 +263,48 @@ public class ZipperTest {
 
         List<String> list = List.of("foo", "bar", "baz");
         assertThat(Zipper.fromList(list)
-                .forwards()
-                .insertNext("foo1")
-                .forwards(2)
-                .insertNext("bar1", "bar2")
-                .forwards(3)
-                .insertNext("baz1")
-                .toList()).containsExactly("foo", "foo1", "bar", "bar1", "bar2", "baz", "baz1");
+                         .forwards()
+                         .insertNext("foo1")
+                         .forwards(2)
+                         .insertNext("bar1", "bar2")
+                         .forwards(3)
+                         .insertNext("baz1")
+                         .toList()).containsExactly("foo", "foo1", "bar", "bar1", "bar2", "baz", "baz1");
     }
 
     @Test
     public void testInsertBefore() {
         List<String> list = List.of("foo", "bar", "baz");
         assertThat(Zipper.fromList(list)
-                .forwards()
-                .insertBefore("foo1")
-                .forwards()
-                .insertBefore("bar1", "bar2")
-                .forwards()
-                .insertBefore("baz1")
-                .toList()).containsExactly("foo", "foo1", "bar", "bar2", "bar1", "baz", "baz1");
+                         .forwards()
+                         .insertBefore("foo1")
+                         .forwards()
+                         .insertBefore("bar1", "bar2")
+                         .forwards()
+                         .insertBefore("baz1")
+                         .toList()).containsExactly("foo", "foo1", "bar", "bar2", "bar1", "baz", "baz1");
     }
 
     @Test
     public void testReplaceNext() {
         List<String> list = List.of("foo", "bar", "baz");
         assertThat(Zipper.fromList(list)
-                .forwards()
-                .replaceNext("bar1")
-                .forwards()
-                .replaceNext("baz1")
-                .toList()).containsExactly("foo", "bar1", "baz1");
+                         .forwards()
+                         .replaceNext("bar1")
+                         .forwards()
+                         .replaceNext("baz1")
+                         .toList()).containsExactly("foo", "bar1", "baz1");
     }
 
     @Test
     public void testReplaceBefore() {
         List<String> list = List.of("foo", "bar", "baz");
         assertThat(Zipper.fromList(list)
-                .forwards()
-                .replaceBefore("foo1")
-                .forwards()
-                .replaceBefore("bar1")
-                .toList()).containsExactly("foo1", "bar1", "baz");
+                         .forwards()
+                         .replaceBefore("foo1")
+                         .forwards()
+                         .replaceBefore("bar1")
+                         .toList()).containsExactly("foo1", "bar1", "baz");
     }
 
     @Test
@@ -312,11 +312,11 @@ public class ZipperTest {
         assertThat(Zipper.<String>empty().maybeReplaceNext("foo").isNothing()).isTrue();
         List<String> list = List.of("foo", "bar", "baz");
         assertThat(Zipper.fromList(list)
-                .forwards()
-                .maybeReplaceNext("bar1").get()
-                .forwards()
-                .maybeReplaceNext("baz1").get()
-                .toList()).containsExactly("foo", "bar1", "baz1");
+                         .forwards()
+                         .maybeReplaceNext("bar1").get()
+                         .forwards()
+                         .maybeReplaceNext("baz1").get()
+                         .toList()).containsExactly("foo", "bar1", "baz1");
     }
 
     @Test
@@ -324,33 +324,33 @@ public class ZipperTest {
         assertThat(Zipper.<String>empty().maybeReplaceBefore("foo").isNothing()).isTrue();
         List<String> list = List.of("foo", "bar", "baz");
         assertThat(Zipper.fromList(list)
-                .forwards()
-                .maybeReplaceBefore("foo1").get()
-                .forwards()
-                .maybeReplaceBefore("bar1").get()
-                .toList()).containsExactly("foo1", "bar1", "baz");
+                         .forwards()
+                         .maybeReplaceBefore("foo1").get()
+                         .forwards()
+                         .maybeReplaceBefore("bar1").get()
+                         .toList()).containsExactly("foo1", "bar1", "baz");
     }
 
     @Test
     public void testModifyNext() {
         List<String> list = List.of("foo", "bar", "baz");
         assertThat(Zipper.fromList(list)
-                .forwards()
-                .modifyNext(s -> s + "1")
-                .forwards()
-                .modifyNext(s -> s + "1")
-                .toList()).containsExactly("foo", "bar1", "baz1");
+                         .forwards()
+                         .modifyNext(s -> s + "1")
+                         .forwards()
+                         .modifyNext(s -> s + "1")
+                         .toList()).containsExactly("foo", "bar1", "baz1");
     }
 
     @Test
     public void testModifyBefore() {
         List<String> list = List.of("foo", "bar", "baz");
         assertThat(Zipper.fromList(list)
-                .forwards()
-                .modifyBefore(s -> s + "1")
-                .forwards()
-                .modifyBefore(s -> s + "1")
-                .toList()).containsExactly("foo1", "bar1", "baz");
+                         .forwards()
+                         .modifyBefore(s -> s + "1")
+                         .forwards()
+                         .modifyBefore(s -> s + "1")
+                         .toList()).containsExactly("foo1", "bar1", "baz");
     }
 
     @Test
@@ -358,11 +358,11 @@ public class ZipperTest {
         assertThat(Zipper.<String>empty().maybeModifyNext(s -> s + "1").isNothing()).isTrue();
         List<String> list = List.of("foo", "bar", "baz");
         assertThat(Zipper.fromList(list)
-                .forwards()
-                .maybeModifyNext(s -> s + "1").get()
-                .forwards()
-                .maybeModifyNext(s -> s + "1").get()
-                .toList()).containsExactly("foo", "bar1", "baz1");
+                         .forwards()
+                         .maybeModifyNext(s -> s + "1").get()
+                         .forwards()
+                         .maybeModifyNext(s -> s + "1").get()
+                         .toList()).containsExactly("foo", "bar1", "baz1");
     }
 
     @Test
@@ -370,11 +370,11 @@ public class ZipperTest {
         assertThat(Zipper.<String>empty().maybeModifyBefore(s -> s + "1").isNothing()).isTrue();
         List<String> list = List.of("foo", "bar", "baz");
         assertThat(Zipper.fromList(list)
-                .forwards()
-                .maybeModifyBefore(s -> s + "1").get()
-                .forwards()
-                .maybeModifyBefore(s -> s + "1").get()
-                .toList()).containsExactly("foo1", "bar1", "baz");
+                         .forwards()
+                         .maybeModifyBefore(s -> s + "1").get()
+                         .forwards()
+                         .maybeModifyBefore(s -> s + "1").get()
+                         .toList()).containsExactly("foo1", "bar1", "baz");
     }
 
 
@@ -449,7 +449,7 @@ public class ZipperTest {
         assertThat(Zipper.fromList(list).split()).isEqualTo(T2.of(List.<String>empty(), list));
         assertThat(Zipper.fromListEnd(list).split()).isEqualTo(T2.of(list.reverse(), List.<String>empty()));
         assertThat(Zipper.fromList(list).forwards(2).split()).isEqualTo(
-                T2.of(List.of("bar", "foo"), List.of("baz")));
+            T2.of(List.of("bar", "foo"), List.of("baz")));
     }
 
     @Test

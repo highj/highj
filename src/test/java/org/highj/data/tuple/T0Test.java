@@ -3,9 +3,9 @@ package org.highj.data.tuple;
 import org.highj.data.HList;
 import org.highj.data.ord.Ordering;
 import org.highj.typeclass0.group.Group;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class T0Test {
     @Test

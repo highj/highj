@@ -11,15 +11,15 @@ import org.highj.data.instance.either.EitherMonadPlus;
 import org.highj.data.ord.Ord;
 import org.highj.data.tuple.T2;
 import org.highj.function.Strings;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.highj.Hkt.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.highj.Hkt.asEither;
 import static org.highj.data.Either.*;
-import static org.highj.data.Either.eq;
 
 public class EitherTest {
 
@@ -108,7 +108,7 @@ public class EitherTest {
         assertThat(asEither(asEither(extend.duplicate(right)).getRight()).getRight()).isEqualTo(42);
 
         Function<__<__<µ, String>, Integer>, __<__<µ, String>, Integer>> fun = extend.extend(
-                either -> asEither(either).rightMap(x -> x / 2).rightOrElse(-1));
+            either -> asEither(either).rightMap(x -> x / 2).rightOrElse(-1));
         assertThat(asEither(fun.apply(left)).getLeft()).isEqualTo("Test");
         assertThat(asEither(fun.apply(right)).getRight()).isEqualTo(21);
     }
@@ -125,7 +125,7 @@ public class EitherTest {
         Either<String, Integer> right = Right(42);
         assertThat(left.getLeft()).isEqualTo("Test");
         assertThatThrownBy(right::getLeft)
-                .isInstanceOf(NoSuchElementException.class);
+            .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
@@ -134,7 +134,7 @@ public class EitherTest {
         Either<String, Integer> right = Right(42);
         assertThat(right.getRight()).isEqualTo(42);
         assertThatThrownBy(left::getRight)
-                .isInstanceOf(NoSuchElementException.class);
+            .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
@@ -196,9 +196,9 @@ public class EitherTest {
     @Test
     public void testLazyLefts() {
         List<Either<String, Integer>> list = List.cycle(
-                Left("a", Integer.class),
-                Left("b", Integer.class),
-                Right(String.class, 1));
+            Left("a", Integer.class),
+            Left("b", Integer.class),
+            Right(String.class, 1));
         assertThat(lazyLefts(list).take(4)).containsExactly("a", "b", "a", "b");
     }
 
@@ -218,9 +218,9 @@ public class EitherTest {
     @Test
     public void testLazyRights() {
         List<Either<String, Integer>> list = List.cycle(
-                Left("a", Integer.class),
-                Right(String.class, 1),
-                Right(String.class, 2));
+            Left("a", Integer.class),
+            Right(String.class, 1),
+            Right(String.class, 2));
         assertThat(lazyRights(list).take(4)).containsExactly(1, 2, 1, 2);
     }
 
@@ -243,11 +243,11 @@ public class EitherTest {
     @Test
     public void testLefts() {
         List<Either<String, Integer>> list = List.of(
-                Left("a", Integer.class),
-                Left("b", Integer.class),
-                Right(String.class, 1),
-                Left("c", Integer.class),
-                Right(String.class, 2));
+            Left("a", Integer.class),
+            Left("b", Integer.class),
+            Right(String.class, 1),
+            Left("c", Integer.class),
+            Right(String.class, 2));
         assertThat(lefts(list)).containsExactly("a", "b", "c");
     }
 
@@ -291,7 +291,7 @@ public class EitherTest {
         //bind
         Either<String, Integer> rightOdd = Right(43);
         Function<Integer, __<__<µ, String>, Integer>> halfEven =
-                x -> x % 2 == 0 ? Right(x / 2) : Left("Odd");
+            x -> x % 2 == 0 ? Right(x / 2) : Left("Odd");
         assertThat(eitherMonad.bind(left, halfEven).getLeft()).isEqualTo("Test");
         assertThat(eitherMonad.bind(right, halfEven).getRight()).isEqualTo(21);
         assertThat(eitherMonad.bind(rightOdd, halfEven).getLeft()).isEqualTo("Odd");
@@ -345,20 +345,20 @@ public class EitherTest {
     @Test
     public void testOrd() {
         Ord<Either<String, Integer>> ord = Either.ord(
-                Ord.<String> fromComparable(),
-                Ord.<Integer> fromComparable());
+            Ord.<String>fromComparable(),
+            Ord.<Integer>fromComparable());
         List<Either<String, Integer>> list = List.of(
-                Left("a", Integer.class),
-                Left("c", Integer.class),
-                Right(String.class, 2),
-                Left("b", Integer.class),
-                Right(String.class, 1));
+            Left("a", Integer.class),
+            Left("c", Integer.class),
+            Right(String.class, 2),
+            Left("b", Integer.class),
+            Right(String.class, 1));
         assertThat(list.sort(ord)).containsExactly(
-                Left("a", Integer.class),
-                Left("b", Integer.class),
-                Left("c", Integer.class),
-                Right(String.class, 1),
-                Right(String.class, 2));
+            Left("a", Integer.class),
+            Left("b", Integer.class),
+            Left("c", Integer.class),
+            Right(String.class, 1),
+            Right(String.class, 2));
     }
 
     @Test
@@ -380,22 +380,22 @@ public class EitherTest {
     @Test
     public void testRights() {
         List<Either<String, Integer>> list = List.of(
-                Left("a", Integer.class),
-                Left("b", Integer.class),
-                Right(String.class, 1),
-                Left("c", Integer.class),
-                Right(String.class, 2));
+            Left("a", Integer.class),
+            Left("b", Integer.class),
+            Right(String.class, 1),
+            Left("c", Integer.class),
+            Right(String.class, 2));
         assertThat(rights(list)).containsExactly(1, 2);
     }
 
     @Test
     public void testSplit() {
         List<Either<String, Integer>> list = List.of(
-                Left("a", Integer.class),
-                Left("b", Integer.class),
-                Right(String.class, 1),
-                Left("c", Integer.class),
-                Right(String.class, 2));
+            Left("a", Integer.class),
+            Left("b", Integer.class),
+            Right(String.class, 1),
+            Left("c", Integer.class),
+            Right(String.class, 2));
         T2<List<String>, List<Integer>> t2 = split(list);
         assertThat(t2._1()).containsExactly("a", "b", "c");
         assertThat(t2._2()).containsExactly(1, 2);

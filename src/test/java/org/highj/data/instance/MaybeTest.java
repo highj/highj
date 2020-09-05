@@ -16,7 +16,7 @@ import org.highj.typeclass1.comonad.Extend;
 import org.highj.typeclass1.foldable.Traversable;
 import org.highj.typeclass1.monad.*;
 import org.highj.util.Gen1;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
@@ -41,8 +41,8 @@ public class MaybeTest {
     @Test
     public void bind() {
         Function<Integer, Maybe<String>> halfFn = i -> i % 2 == 0
-                ? Just("half:" + i / 2)
-                : Nothing();
+                                                           ? Just("half:" + i / 2)
+                                                           : Nothing();
 
         Maybe<Integer> nothing = Nothing();
         assertThat(nothing.bind(halfFn).isNothing()).isTrue();
@@ -57,7 +57,7 @@ public class MaybeTest {
     @Test
     public void cata() {
         Maybe<String> nothing = Nothing();
-        assertThat(nothing.cata("foo", Functions.<String, String>constant("bar"))).isEqualTo("foo");
+        assertThat(nothing.cata("foo", Functions.constant("bar"))).isEqualTo("foo");
 
         Maybe<String> baz = Just("baz");
         assertThat(baz.cata("foo", Functions.constant("bar"))).isEqualTo("bar");
@@ -131,11 +131,11 @@ public class MaybeTest {
         assertThat(asMaybe(monadPlus.mplus(foo, bar)).get()).isEqualTo("foo");
 
         //msum
-        List<__<µ, String>> fooBarBaz = List.<__<µ, String>, Maybe<String>>contravariant(List.of(foo, bar, baz));
+        List<__<µ, String>> fooBarBaz = List.contravariant(List.of(foo, bar, baz));
         assertThat(asMaybe(monadPlus.msum(fooBarBaz)).get()).isEqualTo("foo");
-        List<__<µ, String>> fooBarNothing = List.<__<µ, String>, Maybe<String>>contravariant(List.of(foo, bar, nothing));
+        List<__<µ, String>> fooBarNothing = List.contravariant(List.of(foo, bar, nothing));
         assertThat(asMaybe(monadPlus.msum(fooBarNothing)).get()).isEqualTo("foo");
-        List<__<µ, String>> fooNothingBaz = List.<__<µ, String>, Maybe<String>>contravariant(List.of(foo, nothing, baz));
+        List<__<µ, String>> fooNothingBaz = List.contravariant(List.of(foo, nothing, baz));
         assertThat(asMaybe(monadPlus.msum(fooNothingBaz)).get()).isEqualTo("foo");
     }
 
@@ -177,7 +177,7 @@ public class MaybeTest {
         assertThat(bar.get()).isEqualTo("bar");
 
         assertThatThrownBy(() -> Nothing().get())
-                .isInstanceOf(NoSuchElementException.class);
+            .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
@@ -203,7 +203,7 @@ public class MaybeTest {
         assertThat(bar.getOrException(NoSuchElementException.class)).isEqualTo("bar");
 
         assertThatThrownBy(() -> Nothing().getOrException(IllegalArgumentException.class))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -212,8 +212,8 @@ public class MaybeTest {
         assertThat(bar.getOrException("argh!")).isEqualTo("bar");
 
         assertThatThrownBy(() -> Nothing().getOrException("argh!"))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("argh!");
+            .isInstanceOf(RuntimeException.class)
+            .hasMessage("argh!");
     }
 
     @Test
@@ -222,8 +222,8 @@ public class MaybeTest {
         assertThat(bar.getOrException(IllegalArgumentException.class, "argh!")).isEqualTo("bar");
 
         assertThatThrownBy(() -> Nothing().getOrException(IllegalArgumentException.class, "argh!"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("argh!");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("argh!");
     }
 
     @Test
@@ -245,17 +245,17 @@ public class MaybeTest {
     @Test
     public void iterator() {
         assertThat(Nothing()).isEmpty();
-        assertThat(Just("bar").iterator()).containsExactly("bar");
+        assertThat(Just("bar")).containsExactly("bar");
     }
 
     @Test
     public void justs() {
         List<Maybe<String>> maybes = List.of(
-                Maybe.Nothing(),
-                Just("foo"),
-                Maybe.Nothing(),
-                Maybe.Just$(() -> "bar"),
-                Maybe.Nothing());
+            Maybe.Nothing(),
+            Just("foo"),
+            Maybe.Nothing(),
+            Maybe.Just$(() -> "bar"),
+            Maybe.Nothing());
         List<String> strings = Maybe.justs(maybes);
         assertThat(strings).containsExactly("foo", "bar");
     }
@@ -391,7 +391,7 @@ public class MaybeTest {
         //bind
         Maybe<String> fool = Just("fool");
         Function<String, __<µ, Integer>> lenIfEven =
-                s -> s.length() % 2 == 0 ? Just(s.length()) : Maybe.Nothing();
+            s -> s.length() % 2 == 0 ? Just(s.length()) : Maybe.Nothing();
         assertThat(asMaybe(monad.bind(nothing, lenIfEven)).isNothing()).isTrue();
         assertThat(asMaybe(monad.bind(foo, lenIfEven)).isNothing()).isTrue();
         assertThat(asMaybe(monad.bind(fool, lenIfEven)).get()).isEqualTo(4);
@@ -446,8 +446,8 @@ public class MaybeTest {
         Function<Integer, __<µ, Either<Integer, String>>> divisibleBy3 = i -> {
             if (i < 10) {
                 return i == 0 || i == 3 || i == 6 || i == 9
-                        ? Maybe.Just(Either.Right("divisible"))
-                        : Maybe.Nothing();
+                           ? Maybe.Just(Either.Right("divisible"))
+                           : Maybe.Nothing();
             } else {
                 return Maybe.Just(Either.Left(i / 10 + i % 10));
             }
@@ -465,7 +465,7 @@ public class MaybeTest {
 
 
         Function<__<µ, String>, __<µ, Integer>> fun = extend.extend(
-                (__<µ, String> maybe) -> asMaybe(maybe).map(String::length).getOrElse(-1));
+            (__<µ, String> maybe) -> asMaybe(maybe).map(String::length).getOrElse(-1));
         assertThat(asMaybe(fun.apply(Just("foo"))).get()).isEqualTo(3);
         assertThat(asMaybe(fun.apply(Nothing())).isNothing()).isTrue();
     }
@@ -531,7 +531,7 @@ public class MaybeTest {
 
     @Test
     public void eq1() {
-        Eq<__<Maybe.µ, String>> eq = Maybe.eq1.eq1(Eq.<String>fromEquals());
+        Eq<__<Maybe.µ, String>> eq = Maybe.eq1.eq1(Eq.fromEquals());
         Maybe<String> nothing1 = Nothing();
         Maybe<String> nothing2 = Nothing();
         Maybe<String> foo1 = Just("foo");
@@ -546,16 +546,16 @@ public class MaybeTest {
 
     @Test
     public void ord1withNothingFirst() {
-        Ord<__<µ, String>> ord = Maybe.ord1withNothingFirst.cmp(Ord.<String>fromComparable());
-        List<__<Maybe.µ,String>> list = List.of(Nothing(), Just("a"), Nothing(), Just("c"), Just("b"), Nothing());
+        Ord<__<µ, String>> ord = Maybe.ord1withNothingFirst.cmp(Ord.fromComparable());
+        List<__<Maybe.µ, String>> list = List.of(Nothing(), Just("a"), Nothing(), Just("c"), Just("b"), Nothing());
         list.sort(ord);
         assertThat(list.sort(ord)).isEqualTo(List.of(Nothing(), Nothing(), Nothing(), Just("a"), Just("b"), Just("c")));
     }
 
     @Test
     public void ord1withNothingLast() {
-        Ord<__<µ, String>> ord = Maybe.ord1withNothingLast.cmp(Ord.<String>fromComparable());
-        List<__<Maybe.µ,String>> list = List.of(Nothing(), Just("a"), Nothing(), Just("c"), Just("b"), Nothing());
+        Ord<__<µ, String>> ord = Maybe.ord1withNothingLast.cmp(Ord.fromComparable());
+        List<__<Maybe.µ, String>> list = List.of(Nothing(), Just("a"), Nothing(), Just("c"), Just("b"), Nothing());
         list.sort(ord);
         assertThat(list.sort(ord)).isEqualTo(List.of(Just("a"), Just("b"), Just("c"), Nothing(), Nothing(), Nothing()));
     }

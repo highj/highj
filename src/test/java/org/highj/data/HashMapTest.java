@@ -1,7 +1,7 @@
 package org.highj.data;
 
 import org.highj.data.tuple.T2;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -20,23 +20,23 @@ public class HashMapTest {
     @Test
     public void isEmpty() {
         assertThat(HashMap.empty().isEmpty()).isTrue();
-        assertThat(HashMap.empty().insert("one",1).isEmpty()).isFalse();
-        assertThat(HashMap.empty().insert("one",1).delete("one").isEmpty()).isTrue();
+        assertThat(HashMap.empty().insert("one", 1).isEmpty()).isFalse();
+        assertThat(HashMap.empty().insert("one", 1).delete("one").isEmpty()).isTrue();
     }
 
     @Test
     public void testIterator() {
-        HashMap<String,Integer> m = HashMap.empty();
-        java.util.List<Integer> ints = List.range(0,1,999).toJList();
+        HashMap<String, Integer> m = HashMap.empty();
+        java.util.List<Integer> ints = List.range(0, 1, 999).toJList();
         Collections.shuffle(ints, new Random(123));
         for (int i : ints) {
             m = m.insert(Integer.toHexString(i), i);
         }
-        Iterator<T2<String,Integer>> iterator = m.iterator();
+        Iterator<T2<String, Integer>> iterator = m.iterator();
         int count = 0;
         while (iterator.hasNext()) {
             count++;
-            T2<String,Integer> x = iterator.next();
+            T2<String, Integer> x = iterator.next();
             assertThat(Integer.toHexString(x._2())).isEqualTo(x._1());
         }
         assertThat(count).isEqualTo(1000);
@@ -48,8 +48,8 @@ public class HashMapTest {
         HashMap<String, Integer> map = HashMap.<String, Integer>empty().insert("one", 1).insert("two", 2).insert("three", 3);
         assertThat(map.size()).isEqualTo(3);
 
-        HashMap<String,Integer> m = HashMap.empty();
-        java.util.List<Integer> ints = List.range(0,1,999).toJList();
+        HashMap<String, Integer> m = HashMap.empty();
+        java.util.List<Integer> ints = List.range(0, 1, 999).toJList();
         Collections.shuffle(ints, new Random(123));
         for (int i : ints) {
             m = m.insert(Integer.toHexString(i), i);
@@ -60,7 +60,7 @@ public class HashMapTest {
     @Test
     public void testInsert() {
         HashMap<String, Integer> map = HashMap.<String, Integer>empty()
-                .insert("one", 1).insert("two", 2).insert("three", 3).insert("one",100).insert("four",4);
+                                           .insert("one", 1).insert("two", 2).insert("three", 3).insert("one", 100).insert("four", 4);
         assertThat(map.lookup("one").get()).isEqualTo(100);
     }
 
@@ -74,8 +74,8 @@ public class HashMapTest {
     @Test
     public void testDelete() {
         HashMap<String, Integer> map = HashMap.<String, Integer>empty()
-                .insert("one", 1).insert("two", 2).insert("three", 3)
-                .delete("four").delete("two");
+                                           .insert("one", 1).insert("two", 2).insert("three", 3)
+                                           .delete("four").delete("two");
         assertThat(map.lookup("one").isJust()).isTrue();
         assertThat(map.lookup("two").isNothing()).isTrue();
         assertThat(map.lookup("three").isJust()).isTrue();
@@ -91,10 +91,10 @@ public class HashMapTest {
 
     @Test
     public void testCollisions() {
-        HashMap<HashCollider, Integer> map = HashMap.<HashCollider,Integer>empty()
-                .insert(new HashCollider("one"), 1)
-                .insert(new HashCollider("two"), 2)
-                .insert(new HashCollider("three"), 3);
+        HashMap<HashCollider, Integer> map = HashMap.<HashCollider, Integer>empty()
+                                                 .insert(new HashCollider("one"), 1)
+                                                 .insert(new HashCollider("two"), 2)
+                                                 .insert(new HashCollider("three"), 3);
         assertThat(map.size()).isEqualTo(3);
         assertThat(map.lookup(new HashCollider("one")).get()).isEqualTo(1);
         assertThat(map.lookup(new HashCollider("two")).get()).isEqualTo(2);

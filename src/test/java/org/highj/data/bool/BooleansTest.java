@@ -3,7 +3,7 @@ package org.highj.data.bool;
 import org.highj.data.eq.Eq;
 import org.highj.typeclass0.group.MonoidLaw;
 import org.highj.util.Gen;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 

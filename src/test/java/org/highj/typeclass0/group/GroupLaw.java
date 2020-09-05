@@ -15,14 +15,14 @@ public class GroupLaw<A> extends MonoidLaw<A> {
     }
 
     public void leftInverse() {
-        for(A a : gen.get(20)) {
+        for (A a : gen.get(20)) {
             A result = group.apply(group.inverse(a), a);
             assertThat(eq.eq(result, group.identity())).isTrue();
         }
     }
 
     public void rightInverse() {
-        for(A a : gen.get(20)) {
+        for (A a : gen.get(20)) {
             A result = group.apply(a, group.inverse(a));
             assertThat(eq.eq(result, group.identity())).isTrue();
         }

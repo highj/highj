@@ -12,7 +12,7 @@ import org.highj.data.tuple.t4.T4Monoid;
 import org.highj.data.tuple.t4.T4Semigroup;
 import org.highj.function.Strings;
 import org.highj.typeclass0.group.Semigroup;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 

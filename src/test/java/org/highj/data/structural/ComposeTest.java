@@ -7,7 +7,7 @@ import org.highj.data.Maybe;
 import org.highj.data.eq.Eq;
 import org.highj.data.num.Integers;
 import org.highj.data.structural.compose.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 
@@ -59,12 +59,12 @@ public class ComposeTest {
         ComposeApply<List.µ, Maybe.µ> apply = Compose.apply(List.monadPlus, Maybe.monad);
         Compose<List.µ, Maybe.µ, Integer> compose = new Compose<>(List.of(Maybe.Just(1), Maybe.Nothing(), Maybe.Just(2)));
         Compose<List.µ, Maybe.µ, Function<Integer, String>> fns =
-                new Compose<>(List.of(Maybe.Just(i -> i + "!"), Maybe.Nothing(), Maybe.Just(i -> i + "?")));
+            new Compose<>(List.of(Maybe.Just(i -> i + "!"), Maybe.Nothing(), Maybe.Just(i -> i + "?")));
         Compose<List.µ, Maybe.µ, String> apCompose = apply.ap(fns, compose);
         assertThat(Hkt.asList(apCompose.get())).containsExactly(
-                Maybe.Just("1!"), Maybe.Nothing(), Maybe.Just("2!"),
-                Maybe.Nothing(),  Maybe.Nothing(),  Maybe.Nothing(),
-                Maybe.Just("1?"), Maybe.Nothing(), Maybe.Just("2?"));
+            Maybe.Just("1!"), Maybe.Nothing(), Maybe.Just("2!"),
+            Maybe.Nothing(), Maybe.Nothing(), Maybe.Nothing(),
+            Maybe.Just("1?"), Maybe.Nothing(), Maybe.Just("2?"));
     }
 
     @Test
@@ -101,10 +101,10 @@ public class ComposeTest {
     @Test
     public void traversable() {
         ComposeTraversable<List.µ, Maybe.µ> traversable = Compose.traversable(List.traversable, Maybe.traversable);
-        List<__<Maybe.µ,__<Maybe.µ, Integer>>> maybeList = List.of(Maybe.Just(Maybe.Just(1)), Maybe.Just(Maybe.Just(2)), Maybe.Nothing());
+        List<__<Maybe.µ, __<Maybe.µ, Integer>>> maybeList = List.of(Maybe.Just(Maybe.Just(1)), Maybe.Just(Maybe.Just(2)), Maybe.Nothing());
         Compose<List.µ, Maybe.µ, __<Maybe.µ, Integer>> compose1 = new Compose<>(maybeList);
         Compose<List.µ, Maybe.µ, __<Maybe.µ, Integer>> compose2 = new Compose<>(maybeList.plus(Maybe.Just(Maybe.Nothing())));
-        assertThat(traversable.sequenceA(Maybe.monad, compose1)).isEqualTo(Maybe.Just(new Compose<>(List.of(Maybe.Just(1),Maybe.Just(2), Maybe.Nothing()))));
+        assertThat(traversable.sequenceA(Maybe.monad, compose1)).isEqualTo(Maybe.Just(new Compose<>(List.of(Maybe.Just(1), Maybe.Just(2), Maybe.Nothing()))));
         assertThat(traversable.sequenceA(Maybe.monad, compose2)).isEqualTo(Maybe.Nothing());
     }
 }

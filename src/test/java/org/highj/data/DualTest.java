@@ -16,7 +16,7 @@ import org.highj.typeclass0.group.Group;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 import org.highj.typeclass2.arrow.Category;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.highj.Hkt.asDual;

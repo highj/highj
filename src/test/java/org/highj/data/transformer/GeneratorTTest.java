@@ -6,7 +6,7 @@ import org.highj.data.tuple.T0;
 import org.highj.data.tuple.T1;
 import org.highj.data.tuple.T2;
 import org.highj.do_.Do_;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 

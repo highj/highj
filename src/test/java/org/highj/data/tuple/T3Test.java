@@ -10,7 +10,7 @@ import org.highj.data.tuple.t3.T3Group;
 import org.highj.data.tuple.t3.T3Monoid;
 import org.highj.data.tuple.t3.T3Semigroup;
 import org.highj.function.Strings;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 

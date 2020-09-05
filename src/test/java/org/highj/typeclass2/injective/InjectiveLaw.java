@@ -6,9 +6,9 @@ import org.highj.util.Law;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class InjectiveLaw<A,B> implements Law {
+public class InjectiveLaw<A, B> implements Law {
 
-    private final Injective<A,B> injective;
+    private final Injective<A, B> injective;
     protected final Gen<A> genA;
     protected final Eq<A> eqA;
     protected final Eq<B> eqB;
@@ -20,13 +20,13 @@ public class InjectiveLaw<A,B> implements Law {
         this.eqB = eqB;
     }
 
-    public void injectivity(){
-        for(A a1 : genA.get(10)) {
+    public void injectivity() {
+        for (A a1 : genA.get(10)) {
             B b1 = injective.to(a1);
-           for(A a2 : genA.get(10)) {
-               B b2 = injective.to(a2);
-               assertThat(eqA.eq(a1, a2) == eqB.eq(b1, b2)).isTrue();
-           }
+            for (A a2 : genA.get(10)) {
+                B b2 = injective.to(a2);
+                assertThat(eqA.eq(a1, a2) == eqB.eq(b1, b2)).isTrue();
+            }
         }
     }
 

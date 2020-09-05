@@ -5,7 +5,7 @@ import org.highj.data.Map;
 import org.highj.data.Maybe;
 import org.highj.data.num.Integers;
 import org.highj.data.tuple.T2;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

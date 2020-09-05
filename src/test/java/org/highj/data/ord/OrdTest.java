@@ -5,12 +5,13 @@ import org.highj.data.Either;
 import org.highj.data.eq.Eq;
 import org.highj.data.tuple.T2;
 import org.highj.function.Strings;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.highj.Hkt.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.highj.Hkt.asOrd;
 
 public class OrdTest {
 
@@ -33,9 +34,9 @@ public class OrdTest {
     @Test
     public void decidable() {
         Ord<Integer> evenFirst = Ord.decidable.choose(
-                i -> i % 2 == 0 ? Either.Left(i) : Either.Right(i),
-                Ord.<Integer> fromComparable(),
-                Ord.<Integer> fromComparable());
+            i -> i % 2 == 0 ? Either.Left(i) : Either.Right(i),
+            Ord.<Integer>fromComparable(),
+            Ord.<Integer>fromComparable());
         //even numbers have normal order
         assertThat(evenFirst.cmp(2, 6)).isEqualTo(Ordering.LT);
         assertThat(evenFirst.cmp(4, 4)).isEqualTo(Ordering.EQ);
@@ -49,7 +50,7 @@ public class OrdTest {
         assertThat(evenFirst.cmp(1, 6)).isEqualTo(Ordering.GT);
 
         assertThatThrownBy(() -> Ord.decidable.lose(p -> null))
-                .isInstanceOf(AssertionError.class);
+            .isInstanceOf(AssertionError.class);
     }
 
     @Test
@@ -59,8 +60,8 @@ public class OrdTest {
         assertThat(conq.cmp(new Point(3, 8), new Point(2, 4))).isEqualTo(Ordering.EQ);
 
         Ord<Point> div = Ord.divisible.divide(p -> T2.of(p.x, p.y),
-                Ord.<Integer> fromComparable(),
-                Ord.<Integer> fromComparable());
+            Ord.<Integer>fromComparable(),
+            Ord.<Integer>fromComparable());
         assertThat(div.cmp(new Point(1, 8), new Point(8, 1))).isEqualTo(Ordering.LT);
         assertThat(div.cmp(new Point(8, 1), new Point(8, 2))).isEqualTo(Ordering.LT);
         assertThat(div.cmp(new Point(3, 2), new Point(3, 2))).isEqualTo(Ordering.EQ);
@@ -149,7 +150,7 @@ public class OrdTest {
 
     @Test
     public void toEq() {
-        Eq<String> eq = Ord.<String> fromComparable().toEq();
+        Eq<String> eq = Ord.<String>fromComparable().toEq();
         assertThat(eq.eq("a", "b")).isFalse();
         assertThat(eq.eq("a", "a")).isTrue();
         assertThat(eq.eq("b", "a")).isFalse();

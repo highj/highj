@@ -23,7 +23,7 @@ public interface Gen2<F> {
         @Override
         public <T, U> Gen<__2<Either.µ, T, U>> gen(Gen<T> gen1, Gen<U> gen2) {
             return Gen.zip(gen1, gen2).map(
-                    t2 -> Gen.rnd.nextBoolean() ? Either.Left(t2._1()) : Either.Right(t2._2()));
+                t2 -> Gen.rnd.nextBoolean() ? Either.Left(t2._1()) : Either.Right(t2._2()));
         }
     };
 

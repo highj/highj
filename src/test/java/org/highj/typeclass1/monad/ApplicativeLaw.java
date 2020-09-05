@@ -46,12 +46,12 @@ public class ApplicativeLaw<F> extends FunctorLaw<F> {
         Gen<__<F, Function<Integer, Integer>>> genF2 = gen1.gen(fn2Gen);
         Gen<__<F, Integer>> genInt = gen1.gen(Gen.intGen);
         for (T3<__<F, Function<Integer, Integer>>, __<F, Function<Integer, Integer>>, __<F, Integer>> t3
-                : Gen.zip(genF1, genF2, genInt).get(20)) {
+            : Gen.zip(genF1, genF2, genInt).get(20)) {
             __<F, Function<Integer, Integer>> f1 = t3._1();
             __<F, Function<Integer, Integer>> f2 = t3._2();
             __<F, Integer> v = t3._3();
             __<F, Function<Function<Integer, Integer>, Function<Function<Integer, Integer>, Function<Integer, Integer>>>> pureComp
-                    = applicative.pure(f -> g -> a -> f.apply(g.apply(a)));
+                = applicative.pure(f -> g -> a -> f.apply(g.apply(a)));
             __<F, Integer> compResult = applicative.ap(applicative.ap(applicative.ap(pureComp, f1), f2), v);
             __<F, Integer> eliminatedResult = applicative.ap(f1, applicative.ap(f2, v));
             assertThat(eq.eq(compResult, eliminatedResult)).isTrue();

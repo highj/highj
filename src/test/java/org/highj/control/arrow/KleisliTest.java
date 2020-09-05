@@ -6,7 +6,7 @@ import org.highj.Hkt;
 import org.highj.data.Maybe;
 import org.highj.data.eq.Eq;
 import org.highj.typeclass2.arrow.ArrowLaw;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 

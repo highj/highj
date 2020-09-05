@@ -1,6 +1,6 @@
 package org.highj.data.ord;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Supplier;
 
@@ -9,14 +9,14 @@ import static org.highj.data.ord.Ordering.*;
 
 public class OrderingTest {
     @Test
-    public void testCmpResult() throws Exception {
+    public void testCmpResult() {
         assertThat(LT.cmpResult()).isEqualTo(-1);
         assertThat(EQ.cmpResult()).isEqualTo(0);
         assertThat(GT.cmpResult()).isEqualTo(1);
     }
 
     @Test
-    public void testGroup() throws Exception {
+    public void testGroup() {
         assertThat(group.identity()).isEqualTo(EQ);
         assertThat(group.inverse(GT)).isEqualTo(LT);
         assertThat(group.inverse(EQ)).isEqualTo(EQ);

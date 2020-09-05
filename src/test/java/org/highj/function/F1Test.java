@@ -10,7 +10,7 @@ import org.highj.data.tuple.T4;
 import org.highj.function.f1.F1Monad;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass2.arrow.ArrowLaw;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -113,7 +113,7 @@ public class F1Test {
     @Test
     public void fanout3() {
         F1<String, T3<Integer, String, Boolean>> function = F1.fanout(
-                (F1<String, Integer>) String::length, F1.id(), (F1<String, Boolean>) s -> s.startsWith("ab"));
+            (F1<String, Integer>) String::length, F1.id(), (F1<String, Boolean>) s -> s.startsWith("ab"));
         T3<Integer, String, Boolean> triple = function.apply("abcd");
         assertThat(triple._1()).isEqualTo(4);
         assertThat(triple._2()).isEqualTo("abcd");
@@ -123,8 +123,8 @@ public class F1Test {
     @Test
     public void fanout4() {
         F1<String, T4<Integer, String, Boolean, String>> function = F1.fanout(
-                (F1<String, Integer>) String::length, F1.id(),
-                (F1<String, Boolean>) s -> s.startsWith("ab"), (F1<String, String>) s -> s + s);
+            (F1<String, Integer>) String::length, F1.id(),
+            (F1<String, Boolean>) s -> s.startsWith("ab"), (F1<String, String>) s -> s + s);
         T4<Integer, String, Boolean, String> quad = function.apply("abcd");
         assertThat(quad._1()).isEqualTo(4);
         assertThat(quad._2()).isEqualTo("abcd");

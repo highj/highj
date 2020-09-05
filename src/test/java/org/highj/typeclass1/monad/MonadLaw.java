@@ -22,10 +22,10 @@ public class MonadLaw<M> extends ApplicativeLaw<M> {
     public void leftIdentity() {
         Eq<__<M, Integer>> eq = eq1.eq1(Eq.fromEquals());
         Gen<String> gen = Gen.stringGen;
-        Function<String, __<M,Integer>> f = (String x) -> monad.pure(x.length());
+        Function<String, __<M, Integer>> f = (String x) -> monad.pure(x.length());
         for (String a : gen.get(20)) {
-            __<M,Integer> lhs = monad.bind(monad.pure(a), f);
-            __<M,Integer> rhs = f.apply(a);
+            __<M, Integer> lhs = monad.bind(monad.pure(a), f);
+            __<M, Integer> rhs = f.apply(a);
             assertThat(eq.eq(lhs, rhs)).isTrue();
         }
     }
@@ -35,8 +35,8 @@ public class MonadLaw<M> extends ApplicativeLaw<M> {
         Eq<__<M, String>> eq = eq1.eq1(Eq.fromEquals());
         Gen<__<M, String>> gen = gen1.gen(Gen.stringGen);
         for (__<M, String> m : gen.get(20)) {
-            __<M,String> lhs = monad.bind(m, monad::<String>pure);
-            __<M,String> rhs = m;
+            __<M, String> lhs = monad.bind(m, monad::<String>pure);
+            __<M, String> rhs = m;
             assertThat(eq.eq(lhs, rhs)).isTrue();
         }
     }
@@ -45,11 +45,11 @@ public class MonadLaw<M> extends ApplicativeLaw<M> {
     public void associativity() {
         Eq<__<M, String>> eq = eq1.eq1(Eq.fromEquals());
         Gen<__<M, String>> gen = gen1.gen(Gen.stringGen);
-        Function<String,__<M,Integer>> f = (String x) -> monad.pure(x.length());
-        Function<Integer,__<M,String>> g = (Integer x) -> monad.pure(Integer.toOctalString(x));
+        Function<String, __<M, Integer>> f = (String x) -> monad.pure(x.length());
+        Function<Integer, __<M, String>> g = (Integer x) -> monad.pure(Integer.toOctalString(x));
         for (__<M, String> m : gen.get(20)) {
-            __<M,String> lhs = monad.bind(monad.bind(m, f), g);
-            __<M,String> rhs = monad.bind(m, x -> monad.bind(f.apply(x), g));
+            __<M, String> lhs = monad.bind(monad.bind(m, f), g);
+            __<M, String> rhs = monad.bind(m, x -> monad.bind(f.apply(x), g));
             assertThat(eq.eq(lhs, rhs)).isTrue();
         }
     }

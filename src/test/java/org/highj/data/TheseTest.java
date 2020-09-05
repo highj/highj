@@ -2,7 +2,7 @@ package org.highj.data;
 
 import org.derive4j.hkt.__;
 import org.highj.data.tuple.T2;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 
@@ -182,9 +182,9 @@ public class TheseTest {
         These<Integer, String> this_ = This(6);
         These<Integer, String> that = That("foo");
         These<Integer, String> both = Both(3, "quux");
-        assertThat(this_.mapThese(a -> a+3, String::length)).isEqualTo(This(9));
-        assertThat(that.mapThese(a -> a+3, String::length)).isEqualTo(That(3));
-        assertThat(both.mapThese(a -> a+3, String::length)).isEqualTo(Both(6,4));
+        assertThat(this_.mapThese(a -> a + 3, String::length)).isEqualTo(This(9));
+        assertThat(that.mapThese(a -> a + 3, String::length)).isEqualTo(That(3));
+        assertThat(both.mapThese(a -> a + 3, String::length)).isEqualTo(Both(6, 4));
     }
 
     @Test
@@ -192,9 +192,9 @@ public class TheseTest {
         These<Integer, String> this_ = This(6);
         These<Integer, String> that = That("foo");
         These<Integer, String> both = Both(3, "quux");
-        assertThat(this_.mapThis(a -> a+3)).isEqualTo(This(9));
-        assertThat(that.mapThis(a -> a+3)).isEqualTo(That("foo"));
-        assertThat(both.mapThis(a -> a+3)).isEqualTo(Both(6, "quux"));
+        assertThat(this_.mapThis(a -> a + 3)).isEqualTo(This(9));
+        assertThat(that.mapThis(a -> a + 3)).isEqualTo(That("foo"));
+        assertThat(both.mapThis(a -> a + 3)).isEqualTo(Both(6, "quux"));
     }
 
     @Test
@@ -204,7 +204,7 @@ public class TheseTest {
         These<Integer, String> both = Both(3, "quux");
         assertThat(this_.mapThat(String::length)).isEqualTo(This(6));
         assertThat(that.mapThat(String::length)).isEqualTo(That(3));
-        assertThat(both.mapThat(String::length)).isEqualTo(Both(3,4));
+        assertThat(both.mapThat(String::length)).isEqualTo(Both(3, 4));
     }
 
     @Test
@@ -214,7 +214,7 @@ public class TheseTest {
         These<Integer, String> both = Both(3, "quux");
         assertThat(this_.flip()).isEqualTo(That(6));
         assertThat(that.flip()).isEqualTo(This("foo"));
-        assertThat(both.flip()).isEqualTo(Both("quux",3));
+        assertThat(both.flip()).isEqualTo(Both("quux", 3));
     }
 
     @Test
@@ -240,42 +240,42 @@ public class TheseTest {
         These<Integer, String> both1 = Both(3, "quux");
         These<Integer, String> both2 = Both(3, "quux!");
         Function<String, __<Maybe.µ, Integer>> halfIfEven =
-                a -> a.length() % 2 == 0 ? Just(a.length() / 2) : Nothing();
+            a -> a.length() % 2 == 0 ? Just(a.length() / 2) : Nothing();
         assertThat(this_.there(Maybe.monad, halfIfEven)).isEqualTo(Just(This(6)));
         assertThat(that1.there(Maybe.monad, halfIfEven)).isEqualTo(Just(That(2)));
         assertThat(that2.there(Maybe.monad, halfIfEven)).isEqualTo(Nothing());
-        assertThat(both1.there(Maybe.monad, halfIfEven)).isEqualTo(Just(Both(3,2)));
+        assertThat(both1.there(Maybe.monad, halfIfEven)).isEqualTo(Just(Both(3, 2)));
         assertThat(both2.there(Maybe.monad, halfIfEven)).isEqualTo(Nothing());
     }
 
     @Test
     public void catThis() {
-        List<These<Integer, String>> list = List.of(This(3), That("foo"), That("bar"), Both(3,"quux"),This(12),Both(2,"baz"));
+        List<These<Integer, String>> list = List.of(This(3), That("foo"), That("bar"), Both(3, "quux"), This(12), Both(2, "baz"));
         assertThat(These.catThis(list)).containsExactly(3, 12);
     }
 
     @Test
     public void catThat() {
-        List<These<Integer, String>> list = List.of(This(3), That("foo"), That("bar"), Both(3,"quux"),This(12),Both(2,"baz"));
+        List<These<Integer, String>> list = List.of(This(3), That("foo"), That("bar"), Both(3, "quux"), This(12), Both(2, "baz"));
         assertThat(These.catThat(list)).containsExactly("foo", "bar");
     }
 
     @Test
     public void catBoth() {
-        List<These<Integer, String>> list = List.of(This(3), That("foo"), That("bar"), Both(3,"quux"),This(12),Both(2,"baz"));
-        assertThat(These.catBoth(list)).containsExactly(T2.of(3,"quux"), T2.of(2, "baz"));
+        List<These<Integer, String>> list = List.of(This(3), That("foo"), That("bar"), Both(3, "quux"), This(12), Both(2, "baz"));
+        assertThat(These.catBoth(list)).containsExactly(T2.of(3, "quux"), T2.of(2, "baz"));
     }
 
     @Test
     public void catFirst() {
-        List<These<Integer, String>> list = List.of(This(3), That("foo"), That("bar"), Both(3,"quux"),This(12),Both(2,"baz"));
-        assertThat(These.catFirst(list)).containsExactly(3,3,12,2);
+        List<These<Integer, String>> list = List.of(This(3), That("foo"), That("bar"), Both(3, "quux"), This(12), Both(2, "baz"));
+        assertThat(These.catFirst(list)).containsExactly(3, 3, 12, 2);
     }
 
     @Test
     public void catSecond() {
-        List<These<Integer, String>> list = List.of(This(3), That("foo"), That("bar"), Both(3,"quux"),This(12),Both(2,"baz"));
-        assertThat(These.catSecond(list)).containsExactly("foo","bar","quux","baz");
+        List<These<Integer, String>> list = List.of(This(3), That("foo"), That("bar"), Both(3, "quux"), This(12), Both(2, "baz"));
+        assertThat(These.catSecond(list)).containsExactly("foo", "bar", "quux", "baz");
     }
 
     @Test
@@ -294,20 +294,20 @@ public class TheseTest {
         assertThat(This(6).equals(null)).isFalse();
         assertThat(This(6).equals(This(9))).isFalse();
         assertThat(This(6).equals(That(6))).isFalse();
-        assertThat(This(6).equals(Both(6,6))).isFalse();
+        assertThat(This(6).equals(Both(6, 6))).isFalse();
 
         assertThat(That(6).equals(That(6))).isTrue();
         assertThat(That(6).equals(null)).isFalse();
         assertThat(That(6).equals(That(9))).isFalse();
         assertThat(That(6).equals(This(6))).isFalse();
-        assertThat(That(6).equals(Both(6,6))).isFalse();
+        assertThat(That(6).equals(Both(6, 6))).isFalse();
 
-        assertThat(Both(6,7).equals(Both(6,7))).isTrue();
-        assertThat(Both(6,7).equals(null)).isFalse();
-        assertThat(Both(6,7).equals(Both(6,8))).isFalse();
-        assertThat(Both(6,7).equals(Both(5,7))).isFalse();
-        assertThat(Both(6,7).equals(Both(5,8))).isFalse();
-        assertThat(Both(6,7).equals(This(6))).isFalse();
-        assertThat(Both(6,7).equals(That(7))).isFalse();
+        assertThat(Both(6, 7).equals(Both(6, 7))).isTrue();
+        assertThat(Both(6, 7).equals(null)).isFalse();
+        assertThat(Both(6, 7).equals(Both(6, 8))).isFalse();
+        assertThat(Both(6, 7).equals(Both(5, 7))).isFalse();
+        assertThat(Both(6, 7).equals(Both(5, 8))).isFalse();
+        assertThat(Both(6, 7).equals(This(6))).isFalse();
+        assertThat(Both(6, 7).equals(That(7))).isFalse();
     }
 }

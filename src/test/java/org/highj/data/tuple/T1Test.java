@@ -12,7 +12,7 @@ import org.highj.data.tuple.t1.T1MonadRec;
 import org.highj.function.Functions;
 import org.highj.typeclass1.functor.Functor;
 import org.highj.typeclass1.monad.Monad;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;

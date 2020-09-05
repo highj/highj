@@ -9,12 +9,13 @@ import org.highj.typeclass1.monad.FunctorLaw;
 import org.highj.typeclass1.monad.MonadLaw;
 import org.highj.util.Gen;
 import org.highj.util.Gen1;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class MemoTest {
 

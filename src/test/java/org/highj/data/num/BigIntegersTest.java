@@ -6,7 +6,7 @@ import org.highj.typeclass0.num.Integral;
 import org.highj.typeclass0.num.Num;
 import org.highj.typeclass0.num.Real;
 import org.highj.util.ArrayUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 
@@ -152,7 +152,7 @@ public class BigIntegersTest {
         assertThat(enumeration.enumFromThenTo($(-10), $(-12), $(-16))).containsExactly($$(-10, -12, -14, -16));
         assertThat(enumeration.enumFromThenTo($(-10), $(-12), $(-17))).containsExactly($$(-10, -12, -14, -16));
         assertThat(enumeration.enumFromThenTo($(10), $(8), $(15))).isEmpty();
-        assertThat(enumeration.enumFromThenTo($(10), $(10), $(10))).startsWith($$(10,10,10,10));
+        assertThat(enumeration.enumFromThenTo($(10), $(10), $(10))).startsWith($$(10, 10, 10, 10));
     }
 
     @Test
@@ -182,7 +182,7 @@ public class BigIntegersTest {
     public void real() {
         Real<BigInteger> real = BigIntegers.real;
         assertThat(real.toRational($(23))).isEqualTo(
-                Rational.rational($(23), $(1)));
+            Rational.rational($(23), $(1)));
     }
 
     @Test
@@ -198,7 +198,7 @@ public class BigIntegersTest {
         return BigInteger.valueOf(i);
     }
 
-    private static BigInteger[] $$(Integer ... is) {
+    private static BigInteger[] $$(Integer... is) {
         return ArrayUtils.map(is, BigIntegersTest::$, new BigInteger[is.length]);
     }
 

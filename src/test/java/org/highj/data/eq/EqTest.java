@@ -3,12 +3,13 @@ package org.highj.data.eq;
 import org.derive4j.hkt.__;
 import org.highj.data.Either;
 import org.highj.data.tuple.T2;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.highj.Hkt.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.highj.Hkt.asEq;
 
 public class EqTest {
 
@@ -22,9 +23,9 @@ public class EqTest {
     @Test
     public void decidable() {
         Eq<Integer> evenFirst = Eq.decidable.choose(
-                i -> i % 2 == 0 ? Either.Left(i) : Either.Right(i),
-                Eq.divisible.conquer(),
-                Eq.divisible.conquer());
+            i -> i % 2 == 0 ? Either.Left(i) : Either.Right(i),
+            Eq.divisible.conquer(),
+            Eq.divisible.conquer());
         //all even numbers are "equal"
         assertThat(evenFirst.eq(2, 6)).isTrue();
         assertThat(evenFirst.eq(4, 4)).isTrue();
@@ -36,7 +37,7 @@ public class EqTest {
         assertThat(evenFirst.eq(1, 6)).isFalse();
 
         assertThatThrownBy(() -> Eq.decidable.lose(p -> null))
-                .isInstanceOf(AssertionError.class);
+            .isInstanceOf(AssertionError.class);
     }
 
     @Test
@@ -59,8 +60,8 @@ public class EqTest {
     @Test
     public void fromObjectIdentity() {
         Eq<String> eq = Eq.fromObjectIdentity();
-        String a1 = new String("a");
-        String a2 = new String("a");
+        String a1 = "a";
+        String a2 = "a";
         assertThat(eq.eq(a1, a1)).isTrue();
         assertThat(eq.eq(a1, a2)).isFalse();
     }

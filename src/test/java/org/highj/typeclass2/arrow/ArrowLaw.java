@@ -60,7 +60,7 @@ public abstract class ArrowLaw<A> implements Law {
         __2<A, T2<String, Boolean>, T2<Integer, Boolean>> arrFirst = arrow.arr(F1.arrow.first(fn));
         for (T2<String, Boolean> t2 : Gen.zip(Gen.stringGen, Gen.boolGen).get(20)) {
             assertThat(areEqual(firstArr, arrFirst, t2,
-                    T2.eq(Eq.fromEquals(), Eq.fromEquals()))).isTrue();
+                T2.eq(Eq.fromEquals(), Eq.fromEquals()))).isTrue();
         }
     }
 
@@ -69,12 +69,12 @@ public abstract class ArrowLaw<A> implements Law {
         __2<A, String, Integer> f = arrow.arr(String::length);
         __2<A, Integer, Integer> g = arrow.arr(x -> x * x);
         __2<A, T2<String, Boolean>, T2<Integer, Boolean>> firstOfComposed =
-                arrow.first(arrow.then(f, g));
+            arrow.first(arrow.then(f, g));
         __2<A, T2<String, Boolean>, T2<Integer, Boolean>> composedFirst =
-                arrow.then(arrow.first(f), arrow.first(g));
+            arrow.then(arrow.first(f), arrow.first(g));
         for (T2<String, Boolean> t2 : Gen.zip(Gen.stringGen, Gen.boolGen).get(20)) {
             assertThat(areEqual(firstOfComposed, composedFirst, t2,
-                    T2.eq(Eq.fromEquals(), Eq.fromEquals()))).isTrue();
+                T2.eq(Eq.fromEquals(), Eq.fromEquals()))).isTrue();
         }
     }
 
@@ -103,7 +103,7 @@ public abstract class ArrowLaw<A> implements Law {
 
         for (T2<String, Long> t2 : Gen.zip(Gen.stringGen, Gen.longGen).get(20)) {
             assertThat(areEqual(firstSplitted, splittedFirst, t2,
-                    T2.eq(Eq.fromEquals(), Eq.fromEquals()))).isTrue();
+                T2.eq(Eq.fromEquals(), Eq.fromEquals()))).isTrue();
         }
     }
 
@@ -112,22 +112,22 @@ public abstract class ArrowLaw<A> implements Law {
         __2<A, String, Integer> f = arrow.arr(String::length);
 
         __2<A, T2<T2<String, Boolean>, Long>, T2<T2<Integer, Boolean>, Long>> firstFirst =
-                arrow.first(arrow.first(f));
+            arrow.first(arrow.first(f));
         __2<A, T2<T2<Integer, Boolean>, Long>, T2<Integer, T2<Boolean, Long>>> arrAssoc1 =
-                arrow.arr(t2 -> T2.of(t2._1()._1(), T2.of(t2._1()._2(), t2._2())));
+            arrow.arr(t2 -> T2.of(t2._1()._1(), T2.of(t2._1()._2(), t2._2())));
         __2<A, T2<T2<String, Boolean>, Long>, T2<Integer, T2<Boolean, Long>>> firstAssoc =
-                arrow.then(firstFirst, arrAssoc1);
+            arrow.then(firstFirst, arrAssoc1);
 
         __2<A, T2<T2<String, Boolean>, Long>, T2<String, T2<Boolean, Long>>> arrAssoc2 =
-                arrow.arr(t2 -> T2.of(t2._1()._1(), T2.of(t2._1()._2(), t2._2())));
+            arrow.arr(t2 -> T2.of(t2._1()._1(), T2.of(t2._1()._2(), t2._2())));
         __2<A, T2<String, T2<Boolean, Long>>, T2<Integer, T2<Boolean, Long>>> first =
-                arrow.first(f);
+            arrow.first(f);
         __2<A, T2<T2<String, Boolean>, Long>, T2<Integer, T2<Boolean, Long>>> assocFirst =
-                arrow.then(arrAssoc2, first);
+            arrow.then(arrAssoc2, first);
 
-        for (T2<T2<String, Boolean>, Long> t2 : Gen.zip(Gen.zip(Gen.stringGen, Gen.boolGen),Gen.longGen).get(20)) {
+        for (T2<T2<String, Boolean>, Long> t2 : Gen.zip(Gen.zip(Gen.stringGen, Gen.boolGen), Gen.longGen).get(20)) {
             assertThat(areEqual(firstAssoc, assocFirst, t2,
-                    T2.eq(Eq.fromEquals(), T2.eq(Eq.fromEquals(), Eq.fromEquals())))).isTrue();
+                T2.eq(Eq.fromEquals(), T2.eq(Eq.fromEquals(), Eq.fromEquals())))).isTrue();
         }
     }
 

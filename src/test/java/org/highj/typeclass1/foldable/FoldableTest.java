@@ -4,7 +4,7 @@ import org.highj.data.List;
 import org.highj.data.Maybe;
 import org.highj.data.num.Integers;
 import org.highj.function.Strings;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;

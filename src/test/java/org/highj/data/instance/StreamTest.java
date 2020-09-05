@@ -6,7 +6,7 @@ import org.highj.data.num.Integers;
 import org.highj.data.tuple.T2;
 import org.highj.function.Strings;
 import org.highj.typeclass1.monad.Monad;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 

@@ -3,22 +3,18 @@ package org.highj.data;
 import org.derive4j.hkt.__;
 import org.derive4j.hkt.__3;
 import org.highj.data.eq.Eq;
-import org.highj.data.instance.either3.Either3Applicative;
-import org.highj.data.instance.either3.Either3Bifunctor;
-import org.highj.data.instance.either3.Either3Eq;
-import org.highj.data.instance.either3.Either3Functor;
-import org.highj.data.instance.either3.Either3Monad;
-import org.highj.data.instance.either3.Either3Ord;
+import org.highj.data.instance.either3.*;
 import org.highj.data.ord.Ord;
 import org.highj.data.tuple.T2;
 import org.highj.function.Strings;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.highj.Hkt.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.highj.Hkt.asEither3;
 import static org.highj.data.ord.Ordering.*;
 
 public class Either3Test {
@@ -73,19 +69,19 @@ public class Either3Test {
         Either3<Integer, String, Long> middle = Either3.Middle("foo");
         Either3<Integer, String, Long> right = Either3.Right(4711L);
         assertThat(left
-                .caseLeft(x -> "L" + (x * 2))
-                .caseMiddle(s -> "M" + s + "!")
-                .caseRight(k -> "R" + (k + 1))
+                       .caseLeft(x -> "L" + (x * 2))
+                       .caseMiddle(s -> "M" + s + "!")
+                       .caseRight(k -> "R" + (k + 1))
         ).isEqualTo("L84");
         assertThat(middle
-                .caseLeft(x -> "L" + (x * 2))
-                .caseMiddle(s -> "M" + s + "!")
-                .caseRight(k -> "R" + (k + 1))
+                       .caseLeft(x -> "L" + (x * 2))
+                       .caseMiddle(s -> "M" + s + "!")
+                       .caseRight(k -> "R" + (k + 1))
         ).isEqualTo("Mfoo!");
         assertThat(right
-                .caseLeft(x -> "L" + (x * 2))
-                .caseMiddle(s -> "M" + s + "!")
-                .caseRight(k -> "R" + (k + 1))
+                       .caseLeft(x -> "L" + (x * 2))
+                       .caseMiddle(s -> "M" + s + "!")
+                       .caseRight(k -> "R" + (k + 1))
         ).isEqualTo("R4712");
     }
 
@@ -124,17 +120,17 @@ public class Either3Test {
         Either3<Integer, String, Long> left = Either3.Left(42);
         Either3<Integer, String, Long> middle = Either3.Middle("foo");
         Either3<Integer, String, Long> right = Either3.Right(4711L);
-        assertThat(left.<String> either(x -> "L" + (x * 2), s -> "M" + s + "!", k -> "R" + (k + 1))).isEqualTo("L84");
-        assertThat(middle.<String> either(x -> "L" + (x * 2), s -> "M" + s + "!", k -> "R" + (k + 1))).isEqualTo("Mfoo!");
-        assertThat(right.<String> either(x -> "L" + (x * 2), s -> "M" + s + "!", k -> "R" + (k + 1))).isEqualTo("R4712");
+        assertThat(left.<String>either(x -> "L" + (x * 2), s -> "M" + s + "!", k -> "R" + (k + 1))).isEqualTo("L84");
+        assertThat(middle.<String>either(x -> "L" + (x * 2), s -> "M" + s + "!", k -> "R" + (k + 1))).isEqualTo("Mfoo!");
+        assertThat(right.<String>either(x -> "L" + (x * 2), s -> "M" + s + "!", k -> "R" + (k + 1))).isEqualTo("R4712");
     }
 
     @Test
     public void eq() {
         Either3Eq<Integer, String, Long> eq = Either3.eq(
-                Eq.fromEquals(),
-                Strings.eqIgnoreCase,
-                Eq.fromEquals());
+            Eq.fromEquals(),
+            Strings.eqIgnoreCase,
+            Eq.fromEquals());
         Either3<Integer, String, Long> left = Either3.Left(42);
         Either3<Integer, String, Long> middle = Either3.Middle("foo");
         Either3<Integer, String, Long> right = Either3.Right(4711L);
@@ -434,9 +430,9 @@ public class Either3Test {
     @Test
     public void ord() {
         Either3Ord<Integer, String, Long> ord = Either3.ord(
-                Ord.<Integer> fromComparable(),
-                Strings.ordIgnoreCase,
-                Ord.<Long> fromComparable());
+            Ord.<Integer>fromComparable(),
+            Strings.ordIgnoreCase,
+            Ord.<Long>fromComparable());
         Either3<Integer, String, Long> left = Either3.Left(42);
         Either3<Integer, String, Long> middle = Either3.Middle("foo");
         Either3<Integer, String, Long> right = Either3.Right(4711L);

@@ -5,7 +5,7 @@ import org.highj.data.num.Integers;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.t2.T2Bifoldable;
 import org.highj.function.Strings;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

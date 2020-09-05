@@ -1,97 +1,97 @@
 package org.highj.data.instance;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MultiSetTest {
 
     @Test
-    public void testApply() throws Exception {
+    public void testApply() {
 
     }
 
     @Test
-    public void testSet() throws Exception {
+    public void testSet() {
 
     }
 
     @Test
-    public void testPlus1() throws Exception {
+    public void testPlus1() {
 
     }
 
     @Test
-    public void testPlus() throws Exception {
+    public void testPlus() {
 
     }
 
 
     @Test
-    public void testMinus1() throws Exception {
+    public void testMinus1() {
 
     }
 
     @Test
-    public void testMinus() throws Exception {
+    public void testMinus() {
 
     }
 
     @Test
-    public void testIsEmpty() throws Exception {
+    public void testIsEmpty() {
 
     }
 
     @Test
-    public void testEmpty() throws Exception {
+    public void testEmpty() {
 
     }
 
     @Test
-    public void testOf1() throws Exception {
+    public void testOf1() {
 
     }
 
     @Test
-    public void testSize() throws Exception {
+    public void testSize() {
 
     }
 
     @Test
-    public void testIterator() throws Exception {
+    public void testIterator() {
 
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() {
 
     }
 
     @Test
-    public void testToSet() throws Exception {
+    public void testToSet() {
 
     }
 
     @Test
-    public void testMap() throws Exception {
+    public void testMap() {
 
     }
 
     @Test
-    public void testToJMap() throws Exception {
+    public void testToJMap() {
 
     }
 
     @Test
-    public void testEquals() throws Exception {
+    public void testEquals() {
 
     }
 
     @Test
-    public void testHashCode() throws Exception {
+    public void testHashCode() {
 
     }
 
     @Test
-    public void testMonoid() throws Exception {
+    public void testMonoid() {
 
     }
 }

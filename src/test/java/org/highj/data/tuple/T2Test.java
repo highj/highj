@@ -11,7 +11,7 @@ import org.highj.data.tuple.t2.T2Comonad;
 import org.highj.data.tuple.t2.T2Group;
 import org.highj.data.tuple.t2.T2Monoid;
 import org.highj.function.Strings;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -19,10 +19,10 @@ public class SemigroupLaw<A> implements Law {
     }
 
     private void associativity() {
-        for(A a : gen.get(10)) {
-            for(A b : gen.get(10)) {
-                for(A c : gen.get(10)) {
-                    A result1 = semigroup.apply(a, semigroup.apply(b,c));
+        for (A a : gen.get(10)) {
+            for (A b : gen.get(10)) {
+                for (A c : gen.get(10)) {
+                    A result1 = semigroup.apply(a, semigroup.apply(b, c));
                     A result2 = semigroup.apply(semigroup.apply(a, b), c);
                     assertThat(eq.eq(result1, result2)).isTrue();
                 }

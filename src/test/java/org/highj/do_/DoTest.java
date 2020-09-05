@@ -5,7 +5,7 @@ import org.derive4j.hkt.__;
 import org.highj.data.Either;
 import org.highj.data.List;
 import org.highj.data.Maybe;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.highj.Hkt.*;
@@ -65,9 +65,9 @@ public class DoTest {
                 .pushBind2(TypeEq.refl(), (Integer a, Integer b) -> {
                     int r = a + b;
                     if (r > 10) {
-                        return Either.<String, Integer>Left("Not enough fingers!");
+                        return Either.Left("Not enough fingers!");
                     } else {
-                        return Either.<String, Integer>Right(r);
+                        return Either.Right(r);
                     }
                 })
                 .runWithResult(TypeEq.refl(), Either.monad())
