@@ -59,9 +59,9 @@ public class EqTest {
 
     @Test
     public void fromObjectIdentity() {
-        Eq<String> eq = Eq.fromObjectIdentity();
-        String a1 = "a";
-        String a2 = "a";
+        Eq<StringBuilder> eq = Eq.fromObjectIdentity();
+        StringBuilder a1 = new StringBuilder("a");
+        StringBuilder a2 = new StringBuilder("a");
         assertThat(eq.eq(a1, a1)).isTrue();
         assertThat(eq.eq(a1, a2)).isFalse();
     }
