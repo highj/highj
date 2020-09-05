@@ -1,8 +1,11 @@
 language: java
 
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install oracle-java8-installer
+matrix:
+  include:
+    - jdk: openjdk8
+    - jdk: openjdk11
+  allow_failures:
+    - jdk: openjdk11
 
-jdk:
-  - oraclejdk8
+before_install:
+  - unset _JAVA_OPTIONS
