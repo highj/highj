@@ -26,6 +26,9 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.StreamSupport;
 
+import static java.util.Spliterator.*;
+import static java.util.Spliterator.IMMUTABLE;
+
 /**
  * Immutable list implementation (a.k.a. immutable Stack).
  * <p>
@@ -668,7 +671,10 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      * @return the stream
      */
     public java.util.stream.Stream<A> toJavaStream() {
-        return StreamSupport.stream(spliterator(), false);
+        return StreamSupport.stream(
+            Spliterators.spliterator(iterator(), 0L, NONNULL + IMMUTABLE),
+            false);
+
     }
 
     /**

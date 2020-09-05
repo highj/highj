@@ -191,6 +191,13 @@ public class SetTest {
     }
 
     @Test
+    public void toJavaStream() {
+        assertThat(Set.empty().toJavaStream()).isEmpty();
+        assertThat(Set.of(23, 17, 12, 23, 55, 26, 73, 33, 12).toJavaStream())
+            .containsExactlyInAnyOrder(12, 17, 23, 26, 33, 55, 73);
+    }
+
+    @Test
     public void testToString() {
         assertThat(Set.empty().toString()).isEqualTo("Set()");
         assertThat(Set.of(0, 8, 15).toString()).isEqualTo("Set(0,8,15)");

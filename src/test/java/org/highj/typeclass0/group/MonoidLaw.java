@@ -15,7 +15,6 @@ public class MonoidLaw<A> extends SemigroupLaw<A> {
         this.monoid = monoid;
     }
 
-
     public void leftIdentity() {
         for (A a : gen.get(20)) {
             A result = monoid.apply(monoid.identity(), a);

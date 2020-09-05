@@ -9,11 +9,12 @@ import org.highj.typeclass0.group.Monoid;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Iterators;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.StreamSupport;
+
+import static java.util.Spliterator.*;
 
 /**
  * A crude, hash-based, immutable set implementation.
@@ -346,6 +347,12 @@ public class Set<A> implements __<Set.µ, A>, Iterable<A>, Predicate<A> {
                 return result;
             }
         };
+    }
+
+    public java.util.stream.Stream<A> toJavaStream() {
+        return StreamSupport.stream(
+            Spliterators.spliterator(iterator(), 0L, NONNULL + DISTINCT + IMMUTABLE),
+            false);
     }
 
 

@@ -218,6 +218,12 @@ public class ListTest {
     }
 
     @Test
+    public void toJavaStream() {
+        assertThat(List.empty().toJavaStream()).isEmpty();
+        assertThat(List.of(0, 8, 15, 47, 11).toJavaStream()).containsExactly(0, 8, 15, 47, 11);
+    }
+
+    @Test
     public void join() {
         List<List<Integer>> list = List.of(List.of(1, 2), List.of(), List.of(30, 40, 50), List.of(600));
         assertThat(List.join(list)).containsExactly(1, 2, 30, 40, 50, 600);

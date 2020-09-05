@@ -7,12 +7,17 @@ import org.highj.data.tuple.T2;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Contracts;
+import org.highj.util.Iterables;
 import org.highj.util.Iterators;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Spliterators;
 import java.util.function.Function;
+import java.util.stream.StreamSupport;
+
+import static java.util.Spliterator.*;
 
 /**
  * A crude, hash-based Multiset implementation.
@@ -25,7 +30,6 @@ public class MultiSet<A> implements __<MultiSet.µ, A>, Iterable<T2<A, Integer>>
     public static class µ {
     }
 
-    @SuppressWarnings("unchecked")
     private final static MultiSet<?> EMPTY = new MultiSet<>(Integer.MIN_VALUE, List.Nil(), null, null);
 
     private final MultiSet<A> left;
@@ -71,7 +75,10 @@ public class MultiSet<A> implements __<MultiSet.µ, A>, Iterable<T2<A, Integer>>
     }
 
     public MultiSet<A> set(A a, int value) {
-        Contracts.require(value > 0, "Value must be positive.");
+        Contracts.require(value >= 0, "Value must be non-negative.");
+        if (value == 0) {
+            return remove(a);
+        }
         if (isEmpty()) {
             return new MultiSet<>(a.hashCode(), List.of(T2.of(a, value)), MultiSet.<A>empty(), MultiSet.<A>empty());
         }
@@ -137,7 +144,7 @@ public class MultiSet<A> implements __<MultiSet.µ, A>, Iterable<T2<A, Integer>>
             return this;
         }
         if (isEmpty()) {
-            throw new IllegalArgumentException("Negative count");
+            return this;
         }
         int ahc = a.hashCode();
         switch (Ordering.compare(ahc, hc)) {
@@ -164,15 +171,40 @@ public class MultiSet<A> implements __<MultiSet.µ, A>, Iterable<T2<A, Integer>>
         }
     }
 
+    public MultiSet<A> remove(A a) {
+        int ahc = a.hashCode();
+        switch (Ordering.compare(ahc, hc)) {
+            case EQ:
+                List<T2<A, Integer>> newBucket = bucketWithout(a);
+                if (!newBucket.isEmpty()) {
+                    return new MultiSet<>(hc, newBucket, left, right);
+                } else if (left.isEmpty()) {
+                    return right;
+                } else if (right.isEmpty()) {
+                    return left;
+                } else {
+                    T2<MultiSet<A>, MultiSet<A>> pair = right.removeMin();
+                    return new MultiSet<>(pair._1().hc, pair._1().bucket, left, pair._2());
+                }
+            case LT:
+                MultiSet<A> newLeft = left == null ? null : left.remove(a);
+                return left == newLeft ? this : new MultiSet<>(hc, bucket, newLeft, right);
+            case GT:
+                MultiSet<A> newRight = right == null ? null :  right.remove(a);
+                return right == newRight ? this : new MultiSet<>(hc, bucket, left, newRight);
+            default:
+                throw new AssertionError();
+        }
+    }
+
     private List<T2<A, Integer>> bucketMinus(A a, int value) {
         int v = bucketValue(a);
         switch (Ordering.compare(v, value)) {
             case EQ:
+            case LT:
                 return bucketWithout(a);
             case GT:
                 return bucketWithout(a).plus(T2.of(a, v - value));
-            case LT:
-                throw new IllegalArgumentException("Negative count");
             default:
                 throw new AssertionError();
         }
@@ -295,6 +327,10 @@ public class MultiSet<A> implements __<MultiSet.µ, A>, Iterable<T2<A, Integer>>
         return isEmpty() ? 0 : left.size() + bucket.size() + right.size();
     }
 
+    public int totalCount() {
+        return isEmpty() ? 0 : left.totalCount() + bucket.foldl(0, (s, t2) -> s + t2._2()) + right.totalCount();
+    }
+
     //we need to output the hashCodes in order, else different insertion orders would lead to different iteration orders
     public Iterator<T2<A, Integer>> iterator() {
         return (isEmpty()) ? Iterators.emptyIterator() :
@@ -338,15 +374,21 @@ public class MultiSet<A> implements __<MultiSet.µ, A>, Iterable<T2<A, Integer>>
                 };
     }
 
+    public java.util.stream.Stream<T2<A, Integer>> toJavaStream() {
+        return StreamSupport.stream(
+            Spliterators.spliterator(iterator(), 0L, NONNULL + DISTINCT + IMMUTABLE),
+            false);
+    }
+
     @Override
     public String toString() {
-        return Strings.mkString("Set(", ",", ")", this);
+        return Strings.mkString("MultiSet(", ",", ")", this);
     }
 
     public Set<A> toSet() {
         Set<A> result = Set.empty();
         for (T2<A, Integer> pair : this) {
-            result.plus(pair._1());
+            result = result.plus(pair._1());
         }
         return result;
     }
