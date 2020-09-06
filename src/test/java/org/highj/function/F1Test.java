@@ -1,15 +1,11 @@
 package org.highj.function;
 
-import org.derive4j.hkt.__2;
-import org.highj.Hkt;
 import org.highj.data.Maybe;
-import org.highj.data.eq.Eq;
 import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.function.f1.F1Monad;
 import org.highj.typeclass0.group.Monoid;
-import org.highj.typeclass2.arrow.ArrowLaw;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
@@ -199,18 +195,6 @@ public class F1Test {
         F1<String, Boolean> dot = F1.arrow.dot(isThree, arr);
         assertThat(dot.apply("foo")).isTrue();
         assertThat(dot.apply("foobar")).isFalse();
-    }
-
-    @Test
-    public void arrowLaw() {
-        new ArrowLaw<F1.µ>(F1.arrow) {
-            @Override
-            public <B, C> boolean areEqual(__2<F1.µ, B, C> one, __2<F1.µ, B, C> two, B b, Eq<C> eq) {
-                F1<B, C> f1One = Hkt.asF1(one);
-                F1<B, C> f1Two = Hkt.asF1(two);
-                return eq.eq(f1One.apply(b), f1Two.apply(b));
-            }
-        }.test();
     }
 
     @Test
