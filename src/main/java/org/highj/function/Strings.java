@@ -3,6 +3,7 @@ package org.highj.function;
 import org.highj.data.eq.Eq;
 import org.highj.data.ord.Ord;
 import org.highj.typeclass0.group.Group;
+import org.highj.typeclass0.group.Monoid;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -12,8 +13,11 @@ import java.util.function.Function;
 
 import static org.highj.util.Contracts.require;
 
-public enum Strings {
-    ;
+public final class Strings {
+
+    private Strings() {
+        //do not instantiate
+    }
 
     public static String reverse(String s) {
         return new StringBuilder(s).reverse().toString();
@@ -39,7 +43,7 @@ public enum Strings {
 
     public static final Ord<String> ordIgnoreCase = Ord.fromComparator(String.CASE_INSENSITIVE_ORDER);
 
-    public static final Group<String> group = Group.create("", Strings::concat, Strings::reverse);
+    public static final Monoid<String> monoid = Monoid.create("", Strings::concat);
 
     public static String mkString(String sep, Object... values) {
         return mkString(sep, Arrays.asList(values));
@@ -56,11 +60,11 @@ public enum Strings {
         return sb.toString();
     }
 
-    public static String mkString(String start, String sep, String end, Object... values) {
+    public static String mkEnclosed(String start, String sep, String end, Object... values) {
         return start + mkString(sep, values) + end;
     }
 
-    public static String mkString(String start, String sep, String end, Iterable<?> values) {
+    public static String mkEnclosed(String start, String sep, String end, Iterable<?> values) {
         return start + mkString(sep, values) + end;
     }
 

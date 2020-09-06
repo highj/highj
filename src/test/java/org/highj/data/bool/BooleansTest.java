@@ -1,45 +1,40 @@
 package org.highj.data.bool;
 
-import org.highj.data.eq.Eq;
-import org.highj.typeclass0.group.MonoidLaw;
-import org.highj.util.Gen;
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BooleansTest {
+
+    private static final boolean[] BOOLS = {true, false};
+
     @Test
-    public void andGroup() {
+    public void andMonoid() {
         assertThat(Booleans.andMonoid.identity()).isTrue();
-        for (boolean a : Arrays.asList(true, false)) {
-            for (boolean b : Arrays.asList(true, false)) {
+        for (boolean a : BOOLS) {
+            for (boolean b : BOOLS) {
                 assertThat(Booleans.andMonoid.apply(a, b)).isEqualTo(a && b);
             }
         }
-        new MonoidLaw<>(Booleans.andMonoid, Gen.boolGen, Eq.fromEquals()).test();
     }
 
     @Test
-    public void orGroup() {
+    public void orMonoid() {
         assertThat(Booleans.orMonoid.identity()).isFalse();
-        for (boolean a : Arrays.asList(true, false)) {
-            for (boolean b : Arrays.asList(true, false)) {
+        for (boolean a : BOOLS) {
+            for (boolean b : BOOLS) {
                 assertThat(Booleans.orMonoid.apply(a, b)).isEqualTo(a || b);
             }
         }
-        new MonoidLaw<>(Booleans.orMonoid, Gen.boolGen, Eq.fromEquals()).test();
     }
 
     @Test
     public void xorMonoid() {
         assertThat(Booleans.xorMonoid.identity()).isFalse();
-        for (boolean a : Arrays.asList(true, false)) {
-            for (boolean b : Arrays.asList(true, false)) {
+        for (boolean a : BOOLS) {
+            for (boolean b : BOOLS) {
                 assertThat(Booleans.xorMonoid.apply(a, b)).isEqualTo(a ^ b);
             }
         }
-        new MonoidLaw<>(Booleans.xorMonoid, Gen.boolGen, Eq.fromEquals()).test();
     }
 }

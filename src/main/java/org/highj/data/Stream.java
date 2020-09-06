@@ -128,7 +128,7 @@ public abstract class Stream<A> implements __<Stream.µ, A>, Iterable<A>, Functi
     }
 
     public String toString(int n) {
-        return Strings.mkString("Stream(", ",", "...)", this.take(n));
+        return Strings.mkEnclosed("Stream(", ",", "...)", this.take(n));
     }
 
     @Override

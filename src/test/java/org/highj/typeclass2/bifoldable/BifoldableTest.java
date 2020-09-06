@@ -15,14 +15,14 @@ public class BifoldableTest {
     @Test
     public void bifold() {
         T2Bifoldable bifoldable = T2.bifoldable;
-        String result = bifoldable.bifold(Strings.group, T2.of("foo", "bar"));
+        String result = bifoldable.bifold(Strings.monoid, T2.of("foo", "bar"));
         assertThat(result).isEqualTo("foobar");
     }
 
     @Test
     public void bifold1() {
         T2Bifoldable bifoldable = T2.bifoldable;
-        Maybe<String> result = bifoldable.bifold1(Strings.group, T2.of("foo", "bar"));
+        Maybe<String> result = bifoldable.bifold1(Strings.monoid, T2.of("foo", "bar"));
         assertThat(result).containsExactly("foobar");
     }
 

@@ -7,7 +7,6 @@ import org.highj.data.tuple.T2;
 import org.highj.typeclass0.group.Monoid;
 import org.highj.util.ArrayUtils;
 import org.highj.util.Contracts;
-import org.highj.util.Iterables;
 import org.highj.util.Iterators;
 
 import java.util.HashMap;
@@ -382,7 +381,7 @@ public class MultiSet<A> implements __<MultiSet.µ, A>, Iterable<T2<A, Integer>>
 
     @Override
     public String toString() {
-        return Strings.mkString("MultiSet(", ",", ")", this);
+        return Strings.mkEnclosed("MultiSet(", ",", ")", this);
     }
 
     public Set<A> toSet() {

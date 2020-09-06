@@ -1,8 +1,5 @@
-package org.highj.data.instance;
+package org.highj.data;
 
-import org.highj.data.Dequeue;
-import org.highj.data.List;
-import org.highj.data.Maybe;
 import org.highj.data.tuple.T2;
 import org.junit.jupiter.api.Test;
 

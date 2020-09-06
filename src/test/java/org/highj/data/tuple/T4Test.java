@@ -309,20 +309,20 @@ public class T4Test {
         T4<Long, String, Integer, Character> t4 = T4.of(4700L, "bar", 42, 'A');
         T4<Long, String, Integer, Function<Character, Character>> fn = T4.of(11L, "foo", 8, c -> (char) (c + 1));
         Semigroup<Long> longSemigroup = Long::sum;
-        T4<Long, String, Integer, Character> ap = T4.apply(longSemigroup, Strings.group, Integers.additiveGroup).ap(fn, t4);
+        T4<Long, String, Integer, Character> ap = T4.apply(longSemigroup, Strings.monoid, Integers.additiveGroup).ap(fn, t4);
         assertThat(ap).isEqualTo(T4.of(4711L, "foobar", 50, 'B'));
     }
 
     @Test
     public void applicative() {
-        T4<Integer, String, Integer, Character> pure = T4.applicative(Integers.multiplicativeMonoid, Strings.group, Integers.additiveGroup).pure('A');
+        T4<Integer, String, Integer, Character> pure = T4.applicative(Integers.multiplicativeMonoid, Strings.monoid, Integers.additiveGroup).pure('A');
         assertThat(pure).isEqualTo(T4.of(1, "", 0, 'A'));
     }
 
     @Test
     public void bind() {
         T4<Integer, String, Integer, Character> t4 = T4.of(47, "foo", 42, 'A');
-        T4<Integer, String, Integer, Character> bind = T4.monad(Integers.multiplicativeMonoid, Strings.group, Integers.additiveGroup)
+        T4<Integer, String, Integer, Character> bind = T4.monad(Integers.multiplicativeMonoid, Strings.monoid, Integers.additiveGroup)
                                                          .bind(t4, c -> T4.of((int) c, "" + c, (int) c, c));
         assertThat(bind).isEqualTo(T4.of(47 * 65, "fooA", 42 + 65, 'A'));
     }
@@ -341,14 +341,14 @@ public class T4Test {
 
     @Test
     public void semigroup() {
-        T4Semigroup<Integer, String, Integer, Integer> semigroup = T4.semigroup(Integers.maxMonoid, Strings.group,
+        T4Semigroup<Integer, String, Integer, Integer> semigroup = T4.semigroup(Integers.maxMonoid, Strings.monoid,
             Integers.additiveGroup, Integers.multiplicativeMonoid);
         assertThat(semigroup.apply(T4.of(10, "foo", 5, 5), T4.of(5, "bar", 2, 2))).isEqualTo(T4.of(10, "foobar", 7, 10));
     }
 
     @Test
     public void monoid() {
-        T4Monoid<Integer, String, Integer, Integer> monoid = T4.monoid(Integers.maxMonoid, Strings.group,
+        T4Monoid<Integer, String, Integer, Integer> monoid = T4.monoid(Integers.maxMonoid, Strings.monoid,
             Integers.additiveGroup, Integers.multiplicativeMonoid);
         assertThat(monoid.apply(T4.of(10, "foo", 5, 5), T4.of(5, "bar", 2, 2))).isEqualTo(T4.of(10, "foobar", 7, 10));
         assertThat(monoid.identity()).isEqualTo(T4.of(Integer.MIN_VALUE, "", 0, 1));
@@ -356,11 +356,11 @@ public class T4Test {
 
     @Test
     public void group() {
-        T4Group<Integer, String, Integer, Integer> group = T4.group(Integers.additiveGroup, Strings.group,
+        T4Group<Integer, Integer, Integer, Integer> group = T4.group(Integers.additiveGroup, Integers.additiveGroup,
             Integers.additiveGroup, Integers.additiveGroup);
-        assertThat(group.apply(T4.of(10, "foo", 5, 5), T4.of(12, "bar", 2, 2))).isEqualTo(T4.of(22, "foobar", 7, 7));
-        assertThat(group.identity()).isEqualTo(T4.of(0, "", 0, 0));
-        assertThat(group.inverse(T4.of(10, "foo", 2, 2))).isEqualTo(T4.of(-10, "oof", -2, -2));
+        assertThat(group.apply(T4.of(10, 4, 5, 5), T4.of(12, 0, 2, 2))).isEqualTo(T4.of(22, 4, 7, 7));
+        assertThat(group.identity()).isEqualTo(T4.of(0, 0, 0, 0));
+        assertThat(group.inverse(T4.of(10, -3, 2, 2))).isEqualTo(T4.of(-10, 3, -2, -2));
     }
 
     @Test
@@ -376,13 +376,13 @@ public class T4Test {
         T4<Integer, String, Integer, Character> t4 = T4.of(4700, "bar", 42, 'A');
         T4<Integer, String, Function<Integer, Integer>, Function<Character, String>> fn =
             T4.of(11, "foo", i -> i + 8, c -> c + "!");
-        T4<Integer, String, Integer, String> biapply = T4.biapply(Integers.additiveGroup, Strings.group).biapply(fn, t4);
+        T4<Integer, String, Integer, String> biapply = T4.biapply(Integers.additiveGroup, Strings.monoid).biapply(fn, t4);
         assertThat(biapply).isEqualTo(T4.of(4711, "foobar", 50, "A!"));
     }
 
     @Test
     public void biapplicative() {
-        T4<Integer, String, Integer, Character> t4 = T4.biapplicative(Integers.additiveGroup, Strings.group).bipure(42, 'A');
+        T4<Integer, String, Integer, Character> t4 = T4.biapplicative(Integers.additiveGroup, Strings.monoid).bipure(42, 'A');
         assertThat(t4).isEqualTo(T4.of(0, "", 42, 'A'));
     }
 

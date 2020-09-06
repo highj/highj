@@ -1,6 +1,5 @@
-package org.highj.data.instance;
+package org.highj.data;
 
-import org.highj.data.Tree;
 import org.highj.data.tuple.T2;
 import org.junit.jupiter.api.Test;
 

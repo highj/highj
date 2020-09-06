@@ -3,6 +3,7 @@ package org.highj.data.predicates;
 import org.derive4j.hkt.__;
 import org.highj.data.predicates.pred.PredContravariant;
 import org.highj.typeclass0.group.Group;
+import org.highj.typeclass0.group.Monoid;
 
 import java.util.Set;
 import java.util.function.Function;
@@ -78,12 +79,12 @@ public interface Pred<A> extends __<Pred.µ, A>, Predicate<A> {
         };
     }
 
-    static <A> Group<Pred<A>> andGroup() {
-        return Group.create(Pred.True(), (f,g) -> x -> f.test(x) && g.test(x), Pred::not);
+    static <A> Monoid<Pred<A>> andMonoid() {
+        return Monoid.create(Pred.True(), (f,g) -> x -> f.test(x) && g.test(x));
     }
 
-    static <A> Group<Pred<A>> orGroup() {
-        return Group.create(Pred.False(), (f,g) -> x -> f.test(x) || g.test(x), Pred::not);
+    static <A> Monoid<Pred<A>> orMonoid() {
+        return Monoid.create(Pred.False(), (f,g) -> x -> f.test(x) || g.test(x));
     }
 
     PredContravariant contravariant = new PredContravariant(){};

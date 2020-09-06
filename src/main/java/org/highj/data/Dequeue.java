@@ -168,7 +168,7 @@ public class Dequeue<A> implements __<Dequeue.µ, A>, Iterable<A> {
 
     @Override
     public String toString() {
-        return Strings.mkString("Dequeue(", ",", ")", this);
+        return Strings.mkEnclosed("Dequeue(", ",", ")", this);
     }
 
     @Override

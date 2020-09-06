@@ -1,10 +1,6 @@
-package org.highj.data.instance;
+package org.highj.data;
 
 import org.derive4j.hkt.__;
-import org.highj.data.Either;
-import org.highj.data.List;
-import org.highj.data.Maybe;
-import org.highj.data.Stream;
 import org.highj.data.eq.Eq;
 import org.highj.data.instance.list.ListMonadPlus;
 import org.highj.data.instance.list.ListTraversable;
@@ -16,7 +12,7 @@ import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.function.Strings;
-import org.highj.typeclass0.group.Group;
+import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.monad.MonadLaw;
 import org.highj.util.Gen1;
 import org.junit.jupiter.api.Test;
@@ -173,18 +169,6 @@ public class ListTest {
         List<Integer> list = List.of(10, 20, 30, 40);
         assertThatThrownBy(() -> list.get(-1))
             .isInstanceOf(IndexOutOfBoundsException.class);
-    }
-
-    @Test
-    public void group() {
-        Group<List<Integer>> group = List.group();
-        assertThat(group.identity()).isEmpty();
-        assertThat(group.apply(group.identity(), group.identity())).isEmpty();
-        assertThat(group.apply(List.of(1, 2, 3), group.identity())).containsExactly(1, 2, 3);
-        assertThat(group.apply(group.identity(), List.of(1, 2, 3))).containsExactly(1, 2, 3);
-        assertThat(group.apply(List.of(1, 2, 3), List.of(4, 5, 6))).containsExactly(1, 2, 3, 4, 5, 6);
-        assertThat(group.inverse(group.identity())).isEmpty();
-        assertThat(group.inverse(List.of(1, 2, 3))).containsExactly(3, 2, 1);
     }
 
     @Test

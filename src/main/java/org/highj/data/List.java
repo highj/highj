@@ -12,6 +12,7 @@ import org.highj.data.tuple.T2;
 import org.highj.data.tuple.T3;
 import org.highj.data.tuple.T4;
 import org.highj.typeclass0.group.Group;
+import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass1.comonad.Extend;
 import org.highj.typeclass1.monad.MonadPlus;
 import org.highj.typeclass1.unfoldable.Unfoldable;
@@ -771,7 +772,7 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
      */
     @Override
     public String toString() {
-        return Strings.mkString("List(", ",", ")", this);
+        return Strings.mkEnclosed("List(", ",", ")", this);
     }
 
     //won't terminate for equal infinite Lists
@@ -1151,12 +1152,12 @@ public abstract class List<A> implements __<List.µ, A>, Iterable<A>, Function<I
     public static final ListOrd1 ord1 = new ListOrd1() {};
 
     /**
-     * The list {@link org.highj.typeclass0.group.Group} using  {@link List#append} as combining operation.
-     * @param <A> the element type of the group
-     * @return the group
+     * The list {@link org.highj.typeclass0.group.Monoid} using  {@link List#append} as combining operation.
+     * @param <A> the element type of the monoid
+     * @return the monoid
      */
-    public static <A> Group<List<A>> group() {
-        return Group.create(List.empty(), List::append, List::reverse);
+    public static <A> Monoid<List<A>> monoid() {
+        return Monoid.create(List.empty(), List::append);
     }
 
 }

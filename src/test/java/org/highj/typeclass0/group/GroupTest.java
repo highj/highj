@@ -23,7 +23,7 @@ public class GroupTest {
 
     @Test
     public void create() {
-        Group<Integer> group = Group.create(0, (x, y) -> x + y, z -> -z);
+        Group<Integer> group = Group.create(0, Integer::sum, z -> -z);
         assertThat(group.identity()).isEqualTo(0);
         assertThat(group.apply(46, 54)).isEqualTo(100);
         assertThat(group.inverse(42)).isEqualTo(-42);

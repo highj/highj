@@ -1,8 +1,5 @@
-package org.highj.data.instance;
+package org.highj.data;
 
-import org.highj.data.List;
-import org.highj.data.Map;
-import org.highj.data.Maybe;
 import org.highj.data.num.Integers;
 import org.highj.data.tuple.T2;
 import org.junit.jupiter.api.Test;
@@ -13,7 +10,6 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 
 public class MapTest {
 

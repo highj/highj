@@ -3,11 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.highj.data.instance;
+package org.highj.data;
 
-import org.highj.data.IntMap;
-import org.highj.data.List;
-import org.highj.data.Maybe;
 import org.highj.data.tuple.T2;
 import org.junit.jupiter.api.Test;
 

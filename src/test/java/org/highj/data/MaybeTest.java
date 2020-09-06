@@ -1,10 +1,7 @@
-package org.highj.data.instance;
+package org.highj.data;
 
 import org.derive4j.hkt.__;
 import org.highj.Hkt;
-import org.highj.data.Either;
-import org.highj.data.List;
-import org.highj.data.Maybe;
 import org.highj.data.eq.Eq;
 import org.highj.data.num.Integers;
 import org.highj.data.ord.Ord;

@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MonoidTest {
     @Test
     public void fold() {
-        Monoid<String> monoid = Strings.group;
+        Monoid<String> monoid = Strings.monoid;
 
         assertThat(monoid.fold(List.empty())).isEqualTo("");
 
@@ -20,7 +20,7 @@ public class MonoidTest {
 
     @Test
     public void times() {
-        Monoid<String> monoid = Strings.group;
+        Monoid<String> monoid = Strings.monoid;
 
         assertThat(monoid.times("foo", 0)).isEqualTo("");
         assertThat(monoid.times("foo", 1)).isEqualTo("foo");
@@ -30,7 +30,7 @@ public class MonoidTest {
 
     @Test
     public void dual() {
-        Monoid<String> monoid = Monoid.dual(Strings.group);
+        Monoid<String> monoid = Monoid.dual(Strings.monoid);
 
         assertThat(monoid.identity()).isEqualTo("");
         assertThat(monoid.apply("foo", "bar")).isEqualTo("barfoo");

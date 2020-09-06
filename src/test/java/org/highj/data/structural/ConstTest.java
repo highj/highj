@@ -2,6 +2,7 @@ package org.highj.data.structural;
 
 import org.derive4j.hkt.__;
 import org.highj.data.eq.Eq;
+import org.highj.data.num.BigIntegers;
 import org.highj.data.structural.constant.ConstDivisible;
 import org.highj.data.structural.constant.ConstEq1;
 import org.highj.data.tuple.T2;
@@ -11,6 +12,7 @@ import org.highj.typeclass0.group.Monoid;
 import org.highj.typeclass0.group.Semigroup;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigInteger;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,14 +51,14 @@ public class ConstTest {
     public void apply() {
         Const<String, Function<Integer, Double>> fn = Const("foo");
         Const<String, Integer> c = Const("bar");
-        Const<String, Double> result = Const.apply(Strings.group).ap(fn, c);
+        Const<String, Double> result = Const.apply(Strings.monoid).ap(fn, c);
         assertThat(result.get()).isEqualTo("foobar");
     }
 
     @Test
     public void applicative() {
-        Const<String, Integer> result = Const.applicative(Strings.group).pure(42);
-        assertThat(result.get()).isEqualTo(Strings.group.identity());
+        Const<String, Integer> result = Const.applicative(Strings.monoid).pure(42);
+        assertThat(result.get()).isEqualTo(Strings.monoid.identity());
     }
 
     @Test
@@ -68,8 +70,8 @@ public class ConstTest {
 
     @Test
     public void divisible() {
-        ConstDivisible<String> divisible = Const.divisible(Strings.group);
-        assertThat(divisible.conquer().get()).isEqualTo(Strings.group.identity());
+        ConstDivisible<String> divisible = Const.divisible(Strings.monoid);
+        assertThat(divisible.conquer().get()).isEqualTo(Strings.monoid.identity());
 
         Const<String, Integer> result = divisible.divide(i -> T2.of(Math.sqrt(i), i > 5), Const("foo"), Const("bar"));
         assertThat(result.get()).isEqualTo("foobar");
@@ -85,20 +87,20 @@ public class ConstTest {
 
     @Test
     public void semigroup() {
-        Semigroup<Const<String, Integer>> semigroup = Const.semigroup(Strings.group);
+        Semigroup<Const<String, Integer>> semigroup = Const.semigroup(Strings.monoid);
         assertThat(semigroup.apply(Const("foo"), Const("bar")).get()).isEqualTo("foobar");
     }
 
     @Test
     public void monoid() {
-        Monoid<Const<String, Integer>> monoid = Const.monoid(Strings.group);
-        assertThat(monoid.identity().get()).isEqualTo(Strings.group.identity());
+        Monoid<Const<String, Integer>> monoid = Const.monoid(Strings.monoid);
+        assertThat(monoid.identity().get()).isEqualTo(Strings.monoid.identity());
     }
 
     @Test
     public void group() {
-        Group<Const<String, Integer>> group = Const.group(Strings.group);
-        assertThat(group.inverse(Const("foo")).get()).isEqualTo("oof");
+        Group<Const<BigInteger, Integer>> group = Const.group(BigIntegers.additiveGroup);
+        assertThat(group.inverse(Const(BigInteger.TEN)).get()).isEqualTo(BigInteger.valueOf(-10));
     }
 
     @Test

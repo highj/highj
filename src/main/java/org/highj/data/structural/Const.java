@@ -16,6 +16,7 @@ import org.highj.typeclass1.monad.Apply;
 import org.highj.typeclass2.bifoldable.Bifoldable;
 import org.highj.typeclass2.bifunctor.Biapplicative;
 
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -180,6 +181,20 @@ public class Const<S, A> implements __2<Const.µ, S, A>, Supplier<S> {
      */
     public static <S, A> ConstGroup<S, A> group(Group<S> group) {
         return () -> group;
+    }
+
+    //note that this method can't check for different A type parameters
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Const)) return false;
+        Const<?, ?> aConst = (Const<?, ?>) o;
+        return value.equals(aConst.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 
     /**

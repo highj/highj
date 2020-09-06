@@ -2,7 +2,6 @@ package org.highj.data;
 
 import org.derive4j.hkt.__;
 import org.highj.data.instance.tree.TreeMonad;
-import org.highj.function.Functions;
 import org.highj.function.Strings;
 import org.highj.data.tuple.T2;
 
@@ -60,7 +59,7 @@ public abstract class Tree<A> implements __<Tree.µ, A> {
     }
 
     public String toString() {
-        return "Tree(" + rootLabel + Strings.mkString(",[",",","])", subForest().map(Tree::toString));
+        return "Tree(" + rootLabel + Strings.mkEnclosed(",[",",","])", subForest().map(Tree::toString));
     }
 
     public String drawTree() {

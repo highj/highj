@@ -1,9 +1,6 @@
-package org.highj.data.instance;
+package org.highj.data;
 
 import org.derive4j.hkt.__;
-import org.highj.data.Either;
-import org.highj.data.List;
-import org.highj.data.Set;
 import org.highj.data.instance.set.SetMonadPlus;
 import org.highj.typeclass0.group.Monoid;
 import org.junit.jupiter.api.Test;

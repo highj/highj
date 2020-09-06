@@ -281,7 +281,7 @@ public class TreeSet<E> implements __<TreeSet.µ, E>, Predicate<E>, Iterable<E> 
 
     @Override
     public String toString() {
-        return Strings.mkString("Set(", ",", ")", toList());
+        return Strings.mkEnclosed("Set(", ",", ")", toList());
     }
 
     /**

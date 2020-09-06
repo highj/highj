@@ -83,9 +83,9 @@ public class FoldableTest {
     @Test
     public void fold1() {
         List<String> strings = List.of("a", "e", "i", "o", "u");
-        assertThat(List.traversable.fold1(Strings.group, strings)).isEqualTo("aeiou");
+        assertThat(List.traversable.fold1(Strings.monoid, strings)).isEqualTo("aeiou");
 
-        assertThatThrownBy(() -> List.traversable.fold1(Strings.group, List.of()))
+        assertThatThrownBy(() -> List.traversable.fold1(Strings.monoid, List.of()))
             .isInstanceOf(RuntimeException.class);
     }
 

@@ -147,7 +147,7 @@ public class HashMap<K, V> implements Iterable<T2<K, V>> {
 
         @Override
         public String toString() {
-            return "(Leaf " + Strings.mkString("", "", "", bucket) + ")";
+            return "(Leaf " + Strings.mkEnclosed("", "", "", bucket) + ")";
         }
 
         @Override
@@ -229,7 +229,7 @@ public class HashMap<K, V> implements Iterable<T2<K, V>> {
 
         @Override
         public String toString() {
-            return Strings.mkString("(Branch ", " ", ")", (Object[]) nodes);
+            return Strings.mkEnclosed("(Branch ", " ", ")", (Object[]) nodes);
         }
 
         @Override

@@ -1,14 +1,6 @@
-package org.highj.data.instance;
+package org.highj.data;
 
-import org.highj.Hkt;
-import org.highj.data.List;
-import org.highj.data.MultiSet;
-import org.highj.data.eq.Eq;
 import org.highj.data.tuple.T2;
-import org.highj.typeclass0.group.Monoid;
-import org.highj.typeclass0.group.MonoidLaw;
-import org.highj.util.Gen;
-import org.highj.util.Gen1;
 import org.junit.jupiter.api.Test;
 
 import java.util.AbstractMap;
@@ -173,14 +165,6 @@ public class MultiSetTest {
         assertThat(MultiSet.of1("x", "x", "y").hashCode()).isEqualTo(MultiSet.of1("x", "y", "x").hashCode());
         assertThat(MultiSet.of1("x", "x", "y").hashCode()).isNotEqualTo(MultiSet.of1("x", "y", "z").hashCode());
         assertThat(MultiSet.of1("x", "x", "y").hashCode()).isNotEqualTo(MultiSet.of1("x", "y", "x", "y").hashCode());
-    }
-
-    @Test
-    public void monoid() {
-        Monoid<MultiSet<String>> monoid = MultiSet.monoid();
-        Gen<MultiSet<String>> gen = Gen1.listGen1.gen(Gen.stringGen).map(list -> MultiSet.of1(Hkt.asList(list)));
-        Eq<MultiSet<String>> eq = Eq.fromEquals();
-        new MonoidLaw<>(monoid, gen, eq).test();
     }
 
     private static <T> Iterable<T> toIterable(Iterator<T> it) {

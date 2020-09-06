@@ -1,4 +1,4 @@
-package org.highj.data.instance;
+package org.highj.data;
 
 import org.derive4j.hkt.__;
 import org.highj.data.Either;
@@ -115,7 +115,7 @@ public class EitherTest {
 
     @Test
     public void testFirstBiasedMonadPlus() {
-        EitherMonadPlus<String> eitherMonadPlus = Either.firstBiasedMonadPlus(Strings.group);
+        EitherMonadPlus<String> eitherMonadPlus = Either.firstBiasedMonadPlus(Strings.monoid);
         testMonadPlus(eitherMonadPlus, 1);
     }
 
@@ -176,7 +176,7 @@ public class EitherTest {
 
     @Test
     public void testLastBiasedMonadPlus() {
-        EitherMonadPlus<String> eitherMonadPlus = Either.lastBiasedMonadPlus(Strings.group);
+        EitherMonadPlus<String> eitherMonadPlus = Either.lastBiasedMonadPlus(Strings.monoid);
         testMonadPlus(eitherMonadPlus, 2);
     }
 

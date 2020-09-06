@@ -404,7 +404,7 @@ public class TreeMap<K, V> implements __2<TreeMap.µ, K, V>, Function<K, Maybe<V
 
     @Override
     public String toString() {
-        return Strings.mkString("Map(", ",", ")", toList((k, v) -> k + "->" + v));
+        return Strings.mkEnclosed("Map(", ",", ")", toList((k, v) -> k + "->" + v));
     }
 
     /**

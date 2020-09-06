@@ -365,7 +365,7 @@ public class Set<A> implements __<Set.µ, A>, Iterable<A>, Predicate<A> {
      */
     @Override
     public String toString() {
-        return Strings.mkString("Set(", ",", ")", this);
+        return Strings.mkEnclosed("Set(", ",", ")", this);
     }
 
     /**

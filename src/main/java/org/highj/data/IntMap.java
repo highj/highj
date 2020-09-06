@@ -289,7 +289,7 @@ public class IntMap<A> implements __<IntMap.µ, A>, Iterable<T2<Integer,A>>{
 
         @Override
         public String toString() {
-            return Strings.mkString("(Branch ", " ", ")", (Object[]) nodes);
+            return Strings.mkEnclosed("(Branch ", " ", ")", (Object[]) nodes);
         }
 
         @Override
