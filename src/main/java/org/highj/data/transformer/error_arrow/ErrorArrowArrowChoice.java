@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.highj.data.transformer.error_arrow;
 
 import org.derive4j.hkt.__;
@@ -20,7 +15,7 @@ import static org.highj.Hkt.asErrorArrow;
 public interface ErrorArrowArrowChoice<EX,A> extends ErrorArrowArrow<EX,A>, ArrowChoice<__<__<ErrorArrow.µ,EX>,A>> {
 
     @Override
-    public default <B, C, D> ErrorArrow<EX, A, Either<B, D>, Either<C, D>> left(__2<__<__<ErrorArrow.µ, EX>, A>, B, C> arrow) {
+    default <B, C, D> ErrorArrow<EX, A, Either<B, D>, Either<C, D>> left(__2<__<__<ErrorArrow.µ, EX>, A>, B, C> arrow) {
         class Util {
             <X,Y,Z> Either<X,Either<Y,Z>> assocsum(Either<Either<X,Y>,Z> x) {
                 return x.either(
