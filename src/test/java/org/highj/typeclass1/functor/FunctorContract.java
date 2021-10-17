@@ -1,9 +1,7 @@
 package org.highj.typeclass1.functor;
 
-import com.pholser.junit.quickcheck.From;
 import com.pholser.junit.quickcheck.Property;
 import org.derive4j.hkt.__;
-import org.derive4j.hkt.__Gen;
 
 import java.util.function.Function;
 
