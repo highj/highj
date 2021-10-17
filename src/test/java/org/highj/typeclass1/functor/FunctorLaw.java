@@ -1,9 +1,8 @@
-package org.highj.typeclass1.monad;
+package org.highj.typeclass1.functor;
 
 import org.derive4j.hkt.__;
 import org.highj.data.eq.Eq;
 import org.highj.data.eq.Eq1;
-import org.highj.typeclass1.functor.Functor;
 import org.highj.util.Gen;
 import org.highj.util.Gen1;
 import org.highj.util.Law;

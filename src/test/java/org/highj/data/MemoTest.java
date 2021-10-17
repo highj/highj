@@ -5,7 +5,7 @@ import org.highj.Hkt;
 import org.highj.data.eq.Eq;
 import org.highj.data.eq.Eq1;
 import org.highj.typeclass1.monad.ApplicativeLaw;
-import org.highj.typeclass1.monad.FunctorLaw;
+import org.highj.typeclass1.functor.FunctorLaw;
 import org.highj.typeclass1.monad.MonadLaw;
 import org.highj.util.Gen;
 import org.highj.util.Gen1;
