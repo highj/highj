@@ -1,6 +1,7 @@
 language: java
 
 matrix:
+  fast_finish: true
   include:
     - jdk: openjdk8
     - jdk: openjdk11
@@ -9,3 +10,6 @@ matrix:
 
 before_install:
   - unset _JAVA_OPTIONS
+cache:
+  directories:
+  - $HOME/.m2
